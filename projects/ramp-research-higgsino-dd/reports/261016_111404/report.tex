@@ -1,0 +1,281 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{The Thermal Pure Higgsino near 1.1 TeV versus Planck 2018, LZ 2024 and XENONnT: A Literature-Based Assessment}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-research-higgsino-dd}
+\date{2026-10-16}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+We report a tool-assisted literature survey of the pure-higgsino thermal relic target (1.0--1.2 TeV) and its position relative to the Planck 2018 abundance and current xenon direct-detection limits. The request was to compute the relic density at several masses with inelastic-dark-matter tools. That could not be done. The environment provided no relic-density or inelastic-DM compute tool and no input data, so every relic-density value reported here is either read from the literature or is a labelled rescaling of a literature value.
+
+The only published pure-higgsino relic-density point found is $\Omega h^2 = 0.127$ (perturbative) and $0.126$ (Sommerfeld) in arXiv:1411.6930. Its associated mass, 1172.31 GeV, was inferred from context and is contested. Rescaling this point as $m^2$ to the Planck 2018 value $\Omega_c h^2 = 0.120 \pm 0.001$ gives a thermal mass of about 1.14 TeV.
+
+For elastic scattering, Chen and Hill (arXiv:1912.07795) bound the pure-higgsino spin-independent (SI) cross section below $10^{-48}\,\mathrm{cm^2}$ at TeV masses, below the xenon neutrino floor. LZ 2024 reaches $2.2\times10^{-48}\,\mathrm{cm^2}$ at 40 GeV. A linear extrapolation, not a read value, puts the LZ limit at 1.1 TeV near $6\times10^{-47}\,\mathrm{cm^2}$, at least about 60 times above the higgsino bound.
+
+A hand calculation gives a kinematic ceiling of 364--368 keV for inelastic up-scattering on xenon at 1.0--1.1 TeV. Recent one-loop inelastic benchmarks with splittings of 9--36 keV predict at most about one LZ event.
+
+On the evidence gathered, a thermal pure higgsino is not excluded by current direct detection. The 1 TeV experimental limits, a numeric neutrino-fog value and an independent bound-state-inclusive thermal mass were not obtained.
+\end{abstract}
+
+\section{Introduction}
+The user asked one question, posed identically in two consecutive turns. The request was to survey recent arXiv work on the higgsino thermal relic target (1.0--1.2 TeV), to use inelastic-dark-matter tools to compute the relic density at several masses, and to compare with LZ and XENONnT sensitivities and the Planck abundance. The final question was where the higgsino sits relative to current limits.
+
+The first assistant turn returned only a research board: two dead ends and a ranked list of open directions, with no substantive results shown. The question was then repeated, and the second assistant turn carried out the investigation reported here.
+
+That investigation was organised into three primary lines:
+\begin{enumerate}
+\item the pure-higgsino relic density as a function of mass ($\approx 0.9$--$1.3$ TeV) with and without Sommerfeld enhancement, and the mass at which it matches Planck 2018;
+\item the elastic SI cross section at 1.0--1.2 TeV against LZ 2024, XENONnT and the xenon neutrino fog;
+\item the routes by which a higgsino can become visible: mass splittings, the inelastic $Z$-exchange threshold, LZ inelastic constraints, mixing-induced Higgs couplings, and the $\Omega h^2/0.12$ rescaling for sub-thermal higgsinos.
+\end{enumerate}
+Three follow-up lines were also opened: a second independent thermal mass, direct reads of the 1 TeV limits, and verification of contested numbers.
+
+The scope is a literature survey with hand arithmetic. No numerical relic-density or scattering computation was performed.
+
+\section{Methods}
+All work ran under local execution. Two tool servers were used, \texttt{hep-research-aid} and \texttt{local}.
+
+The workspace was probed first. Calls to \texttt{list\_agent\_files}, \texttt{list\_input\_files} and \texttt{list\_datasets} returned empty lists. The assistant reported that the tool catalog contained only statistics/histogram, test-job and literature tools, with no relic-density, Boltzmann-solver or inelastic-scattering code. The planning critic explicitly required that no test-job output be presented as a computed relic curve.
+
+Literature was gathered as follows:
+\begin{itemize}
+\item searches with \texttt{search\_arxiv} and \texttt{search\_arxiv\_abstracts};
+\item metadata checks with \texttt{get\_arxiv\_metadata} (arXiv:2609.09830, 2606.31013, 2607.20588, 2107.09688, 2205.04486);
+\item full-text downloads and targeted chunk reads (\texttt{download\_arxiv\_full\_text}, \texttt{read\_arxiv\_chunk}) of arXiv:1104.0228, 1411.6930, 2609.09830, 2410.17036, 2606.31013, hep-ph/0610249, 1912.07795 and 1807.06209;
+\item figure extraction with \texttt{get\_paper\_figures} from arXiv:1411.6930, 2410.17036 and 2303.14729.
+\end{itemize}
+Findings were recorded on a research board with evidence links, and a critic reviewed each wave.
+
+The only quantitative operations beyond reading were by hand. The first is the inelastic kinematic threshold on xenon. With $m_A = 131\times0.9315$ GeV and reduced mass $\mu_A = m m_A/(m+m_A)$, the largest accessible neutral splitting is
+\begin{equation}
+\delta_{\max} = \tfrac12\,\mu_A\,\beta_{\max}^2,\qquad \beta_{\max} = v_{\max}/c,\quad v_{\max} = 544 + 232\ \mathrm{km/s}.
+\end{equation}
+This follows from $v_{\min}=\sqrt{2\delta/\mu_A}$ (Eq. A7 of arXiv:2609.09830).
+
+The second is an $m^2$ rescaling of the single published relic point,
+\begin{equation}
+\Omega h^2(m) = 0.126\,\left(\frac{m}{1172.31\ \mathrm{GeV}}\right)^2 ,
+\end{equation}
+solved for $\Omega h^2 = 0.120$.
+
+The third is a linear-in-mass extrapolation of the LZ 2024 SI limit from 40 GeV to 1.1 TeV. The full tool-call log is provided in the supplement.
+
+\section{Results}
+
+\subsection{Planck target and absence of a compute tool}
+Planck 2018 (arXiv:1807.06209) states in its abstract: ``A combined analysis gives dark matter density $\Omega_c h^2 = 0.120\pm0.001$'' (68\% confidence, base $\Lambda$CDM, polarization, temperature and lensing combined). This is the target abundance used throughout.
+
+Because no compute tool or input data existed, the requested computation of the relic density at several masses could not be carried out. This is the principal unmet element of the original request.
+
+\subsection{Relic density versus mass}
+Beneke, Hellmann and Ruiz-Femen\'ia (arXiv:1411.6930, Sec. 3) report two relevant results.
+\begin{itemize}
+\item \textbf{Pure-higgsino model} (sfermions and heavy Higgs bosons decoupled): $\Omega h^2 = 0.127$ with perturbative rates and $0.126$ with Sommerfeld enhancement including off-diagonal rates. They state that the relic abundances obtained with perturbative or Sommerfeld-enhanced rates ``almost coincide'', with an ``almost vanishing net Sommerfeld correction''. The reason given is that enhancement in neutral channels cancels suppression in the $\chi^0\chi^\pm$ channels.
+\item \textbf{Higgsino-like pMSSM point 1627006} (higgsino fraction 0.98, $\delta m_+ = 1.8$ GeV, $\delta m_0 = 9.5$ GeV): $\Omega h^2 = 0.108$ (perturbative) and $0.100$ (Sommerfeld), an 8\% reduction.
+\end{itemize}
+The paper quotes Sommerfeld accuracy of about 5\% at best and normalises to the Planck 2013 value $0.1187\pm0.0017$.
+
+The mass of 1172.31 GeV is that of the pMSSM comparison point. Its attribution to the pure-higgsino numbers was inferred from context and is not stated in the text read. The critic marked this finding as contested, and it remained unconfirmed at the end of the session.
+
+
+
+
+
+
+Figure~\ref{fig:6} reproduces Fig. 7 of arXiv:1411.6930. It shows the yield ratio $Y/Y_{\rm pert}$ as a function of $x$ for three cases: the pMSSM higgsino-like point with and without off-diagonal rates, and the pure-higgsino model. It shows the size of the Sommerfeld correction to the yield, not $\Omega h^2$ as a function of mass. The pure-higgsino curve corresponds to the sub-percent net effect quoted in the text. No published $\Omega h^2(m)$ curve for the pure higgsino was found.
+
+An earlier analysis, hep-ph/0610249 (Hisano et al.), expected a Sommerfeld effect of roughly 10\% for the higgsino-like case, against a 50\% reduction for the wino. That paper performed its full calculation for the wino only, giving $2.7\lesssim m\lesssim 3.0$ TeV.
+
+Table~\ref{tab:rescale} lists the $m^2$ rescaling of the single 1411.6930 point. These are derived interpolations, not published values. They depend on the contested mass attribution, and the corresponding board finding carries low confidence.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+$m$ (TeV) & 0.9 & 1.0 & 1.1 & 1.2 & 1.3\\
+\midrule
+$\Omega h^2$ (rescaled, Sommerfeld) & 0.074 & 0.092 & 0.111 & 0.132 & 0.155\\
+\bottomrule
+\end{tabular}
+\caption{Pure-higgsino relic density obtained by rescaling $\Omega h^2=0.126$ at the inferred mass 1172.31 GeV as $m^2$. Not computed and not read from any paper.}
+\label{tab:rescale}
+\end{table}
+
+Setting $\Omega h^2 = 0.120$ gives $m \simeq 1144$ GeV from the Sommerfeld value and $\simeq 1139$ GeV from the perturbative value, i.e. about 1.14 TeV. The survey summary also noted that arXiv:2606.31013 quotes a thermal mass of about 1 TeV.
+
+An independent thermal mass that includes Sommerfeld enhancement and bound-state formation was identified but not read. Bottaro et al., ``The last Complex WIMPs standing'' (arXiv:2205.04486), computes thermal masses for complex electroweak $n$-plets including the $Y=1/2$ doublet. Its companion arXiv:2107.09688 describes the method as including ``Sommerfeld enhancement and bound states formation at leading order''. The doublet value itself was not extracted, so the spread between independent determinations could not be quantified. This finding has medium confidence and rests on abstracts only.
+
+\subsection{Elastic SI cross section versus LZ and XENONnT}
+
+\paragraph{Prediction.} Hisano, Ishiwata, Nagata and Takesako (arXiv:1104.0228) compute the leading-order electroweak-loop SI cross section of pure SU(2)$_L$-multiplet dark matter, including the higgsino ($n=2$, $Y=1/2$, evaluated at $M = 1$ TeV). They find it to be $\mathcal{O}(10^{-46}$--$10^{-48})\,\mathrm{cm^2}$ and nearly mass-independent above about 1 TeV. The value is suppressed by an accidental cancellation: positive twist-2 contributions against negative Higgs-exchange, gluon and box-induced scalar contributions of similar size. The calculation scans the Higgs mass, as it predates the Higgs measurement. The critic noted that the numeric range was not directly visible in the excerpts read.
+
+The more complete calculation of Chen and Hill (arXiv:1912.07795) adds $\mathcal{O}(m_W/M)$ power corrections, perturbative QCD to NNNLO and chiral-EFT nuclear effects. It states: ``The upper limit for the pure doublet is less than $10^{-48}\,\mathrm{cm^2}$ in the TeV mass regime, consistent with the leading order estimate [18, 19], and lower than the estimated Xenon neutrino floor [26].'' Its Sec. 4 states that ``in the pure Higgsino limit, the cross section upper limit remains at or below $10^{-48}\,\mathrm{cm^2}$ for masses above a few hundred GeV''.
+
+Away from the pure limit, Chen and Hill find that the TeV cross section depends on the gaugino admixture $\tilde c_H/g_2^2$. For $\tilde c_H/g_2^2\approx 0.1$ it is within reach of next-generation detectors, and for $\approx 0.01$ it is close to the neutrino floor. The board finding recording these verbatim quotes was marked contested by the critic, and only an upper bound was obtained, not a central value with an uncertainty.
+
+A 2026 paper, arXiv:2607.20588 (Bisal et al., metadata only), reports that near a two-particle kinematic threshold NLO corrections lower the higgsino--nucleon cross section below the neutrino floor, and it identifies regions where the SI cross section may vanish.
+
+\paragraph{Limits.} LZ 2024 (arXiv:2410.17036; $4.2\pm0.1$ tonne-years, 280 live days) gives a strongest SI exclusion of $2.2\times10^{-48}\,\mathrm{cm^2}$ (90\% CL) and a best median sensitivity of $5.1\times10^{-48}\,\mathrm{cm^2}$, both at 40 GeV$/c^2$. No 1 TeV value was read from the text. The XENONnT first-results paper (arXiv:2303.14729) was located, but no SI limit value was read from it.
+
+\paragraph{Comparison.} An intermediate board statement compared the higgsino bound with the 40 GeV LZ minimum and called the gap ``about 2 orders of magnitude''. That was later corrected. A bound below $10^{-48}\,\mathrm{cm^2}$ against $2.2\times10^{-48}\,\mathrm{cm^2}$ is a factor greater than 2.2, i.e. more than 0.34 decades.
+
+The relevant comparison is at equal mass. Scaling the LZ limit linearly gives $2.2\times10^{-48}\times1100/40 \approx 6\times10^{-47}\,\mathrm{cm^2}$ at 1.1 TeV, at least about 60 times (about 1.8 decades) above the higgsino bound. This ratio rests on an extrapolation.
+
+The initial survey text in the session had quoted $10^{-46}$--$10^{-45}\,\mathrm{cm^2}$ for the LZ/XENONnT limits at 1 TeV. That was flagged at the time as an unverified estimate and was superseded by the extrapolation above.
+
+\subsection{Inelastic threshold and LZ inelastic sensitivity}
+
+\paragraph{Threshold.} With $m_A = 122.0$ GeV, the reduced mass is $\mu_A = 108.7$ GeV at $m = 1.0$ TeV and $109.8$ GeV at $1.1$ TeV. For $v_{\max} = 776$ km/s, $\beta_{\max}^2 = 6.70\times10^{-6}$, which gives $\delta_{\max} \approx 364$ keV at 1.0 TeV and $\approx 368$ keV at 1.1 TeV. These values depend on the assumed escape speed and Earth velocity. arXiv:2609.09830 itself integrates to infinite $v_{\max}$ and uses a Maxwell--Boltzmann halo with $v_0 = 220$ km/s and the Helm form factor.
+
+\paragraph{One-loop benchmarks.} Chatterjee, Das, Pasha, Pukhov and Puri (arXiv:2609.09830) compute one-loop electroweak corrections to the $\tilde\chi^0_1\tilde\chi^0_i h_j$ vertices in the on-shell scheme. Their calculation uses SPheno-4.0.4 with SARAH-4.14.5 model files. They compare total elastic plus inelastic event numbers with the LZ null result through the criterion $N < \log 10 \approx 2.3$.
+
+Their scan takes $\mu = \pm0.5, \pm1$ TeV, $-21\le M_1\le -1$ TeV and $1\le M_2 \le 21$ TeV. It selects $\delta\le 0.1$ GeV and requires the chargino--neutralino splitting to exceed $m_e$.
+
+The paper does not quote an LZ-excluded $\delta m_0$ range. Its five benchmarks are listed in Table~\ref{tab:bp}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+ & BP1 & BP2 & BP3 & BP4 & BP5\\
+\midrule
+$\mu$ (GeV) & $-739.63$ & $-606.64$ & $-814.26$ & 1282.11 & 1400.0\\
+$M_1$ (GeV) & $-7830$ & $-6292$ & $-5838$ & 11354 & 12875\\
+$M_2$ (GeV) & 17055 & 42000 & 30925 & 12627 & 12050\\
+$\delta$ (keV, one-loop OS) & 36.37 & 8.90 & 16.39 & 10.81 & 10.59\\
+$\sigma^{\rm el}_{\rm LO}$ ($10^{-12}$ pb) & 0.218 & 0.284 & 0.271 & 6.109 & 6.317\\
+$\sigma^{\rm el}_{\rm NLO}$ ($10^{-12}$ pb) & 8.122 & 0.504 & 1.021 & 5.595 & 7.503\\
+$\sigma^{\rm inel}_{\rm LO}$ ($10^{-12}$ pb) & 0.0869 & 0.178 & 0.120 & 4.754 & 4.878\\
+$\sigma^{\rm inel}_{\rm NLO}$ ($10^{-12}$ pb) & 0.0034 & 0.507 & 0.555 & 2.751 & 2.750\\
+Elastic events (NLO) & 1.0280 & 0.07729 & 0.1176 & 0.4127 & 0.5074\\
+Inelastic events (NLO) & 0.00022 & 0.07039 & 0.0518 & 0.1806 & 0.1661\\
+Combined events (NLO) & 1.02822 & 0.14768 & 0.1694 & 0.5933 & 0.6735\\
+Required exposure (t\,y) & 9.41 & 65.50 & 57.10 & 16.30 & 14.36\\
+\bottomrule
+\end{tabular}
+\caption{Benchmarks of arXiv:2609.09830 (Tables III, VI, VII as read); $\tan\beta = 10.88$--$26.46$.}
+\label{tab:bp}
+\end{table}
+
+All benchmarks are consistent with LZ at its 4.2 t\,y exposure. NLO vertex corrections can exceed 100\%. In BP2 the NLO inelastic cross section, $0.507\times10^{-12}$ pb, is 1.785 times the LO elastic one. The paper states that the mass splitting is generically $\mathcal{O}(10$--$100)$ MeV for gaugino masses of $\mathcal{O}(10)$ TeV. All benchmark splittings lie far below the $\approx 364$ keV ceiling.
+
+The first-wave summary of these numbers was contested by the critic because the table rows were not visible in the displayed excerpts. A later verification read of the full text recorded the Table III, VI and VII values above, and that verification finding is supported.
+
+\subsection{Splittings and mixing}
+Hamaguchi, Nagata and Osaki (arXiv:2606.31013) give the pure-limit radiative charged--neutral splitting (Eq. 13):
+\begin{equation}
+\Delta m_+|_{\rm rad} \simeq \tfrac12\alpha_2 M_Z \sin^2\theta_W\left(1-\frac{3M_Z}{2\pi M_{\chi^+}}\right),
+\end{equation}
+which tends to about 356 MeV for $M_{\chi^+}\gg M_Z$. This replaces the ``about 340 MeV'' figure used in the initial survey summary.
+
+The dominant SI coupling comes from Higgs exchange. For $M_Z\ll M_{1,2}-|\mu|$ (Eq. 33, approximating Eq. 32) it reads
+\begin{equation}
+f_q \simeq -\frac{g^2}{8M_h^2}\left[\frac{1}{M_2-|\mu|}+\frac{\tan^2\theta_W}{M_1-|\mu|}\right](1+\mathrm{sgn}(\mu)\sin2\beta).
+\end{equation}
+This coupling is suppressed at large gaugino mass and, through an accidental cancellation, at small $\tan\beta$ with $\mu<0$.
+
+The paper's scan covers $150 < |\mu| < 1000$ GeV, $1.6<\tan\beta<50$ and $0.5<M_1<10$ TeV, with $M_2 = 2M_1$. Rates are rescaled as $\sigma_{\rm eff} = (\Omega_{\tilde H}h^2/0.12)\,\sigma$ (Eq. 38), with the relic abundance computed by micrOMEGAs 6.3.0.
+
+The paper concludes that direct detection is sensitive mainly where mixing produces sizable charged--neutral splittings, reaching the $\approx1$ TeV thermal mass. It also finds that electroweak precision measurements probe higgsinos with masses $\lesssim 500$ GeV. Its reach figures were not extracted.
+
+The tree-level neutral-splitting formula $\delta m_0 \approx m_Z^2 s_W^2/M_1 + m_Z^2 c_W^2/M_2$ remained unsourced. arXiv:2609.09830 refers only to ``Eq. (9) of Ref. [28]'' and states that the $M_Z^2/M_1$ and $M_Z^2/M_2$ terms depend on the relative signs of $M_1$ and $M_2$ and can partially cancel.
+
+An assistant estimate based on the unsourced formula had claimed that same-sign $M_2 = 2M_1$ needs $M_1\approx1.4\times10^7$ GeV for $\delta<364$ keV. The session itself said this estimate should be disregarded. The critic remarked that a same-sign tree-level splitting at about 12 TeV would be only about 0.5--0.7 MeV.
+
+Because BP4 and BP5 reach $\approx 10.6$--$10.8$ keV with $M_1$, $M_2$ and $\mu$ all positive, the earlier claim that only opposite-sign gauginos yield $\mathcal{O}(10)$ keV splittings was revised. On-shell one-loop corrections and relative signs with respect to $\mu$ also contribute.
+
+\section{Discussion}
+The gathered evidence places a thermal pure higgsino near 1.1 TeV, inside the 1.0--1.2 TeV window. The single rescaled point gives about 1.14 TeV. The net Sommerfeld effect in the pure limit is below 1\% according to arXiv:1411.6930, smaller than the roughly 10\% anticipated in hep-ph/0610249.
+
+The headline mass has three weaknesses:
+\begin{itemize}
+\item it rests on one published point;
+\item it depends on an inferred, contested mass attribution;
+\item it uses an $m^2$ scaling that was assumed rather than read.
+\end{itemize}
+The independent determination with bound-state formation (arXiv:2205.04486) was identified but its number was never read. The thermal mass therefore stands as a low-confidence derived value, not an established result.
+
+For elastic scattering, the literature conclusion is that the pure higgsino lies below current LZ reach at 1.1 TeV and below the xenon neutrino floor. The basis is the Chen and Hill bound of $10^{-48}\,\mathrm{cm^2}$, quoted verbatim but contested on the board. The quantitative gap of at least about 60 rests entirely on extrapolating the LZ limit linearly from 40 GeV. The direct reads of the LZ and XENONnT curves near 1 TeV and a numeric neutrino-fog value were not obtained.
+
+Figure extraction from arXiv:2410.17036 returned only the fiducial-volume data plot and a salt-distribution supplementary figure. From arXiv:2303.14729 it returned only calibration and spatial-distribution plots. None contained an exclusion curve, and the LZ text chunk read contained no 1 TeV value. This was recorded as a dead end.
+
+The XLZD Design Book (arXiv:2410.17137) was identified but not read, so no next-generation projection is available. The ICRC 2025 review (arXiv:2510.17473) was found to state that XENONnT and PandaX-4T are now limited by solar neutrinos.
+
+On visibility, the two 2026 papers indicate that a higgsino becomes detectable either through gaugino mixing that enlarges $f_q$ and the splittings (arXiv:2606.31013), or through neutral splittings tiny enough for inelastic scattering (arXiv:2609.09830). The latter requires $\delta$ well below the $\approx 364$ keV kinematic ceiling estimated here. The paper's generic $\mathcal{O}(10$--$100)$ MeV splittings at $\mathcal{O}(10)$ TeV gaugino masses lie above that ceiling, which points to tuned regions. Without the tree-level formula, however, the boundary in $(M_1, M_2)$ space could not be mapped. Even the keV-scale benchmarks predict at most about one LZ event. Sub-thermal higgsinos are further diluted by the $\Omega h^2/0.12$ factor.
+
+A second dead end was an abstract search for recent thermal-mass work, which returned unrelated LEP notes. Direct ID lookup worked where keyword search failed.
+
+Other methodological limits apply. The analysis is restricted to direct detection; no indirect-detection limits were consulted. The paper arXiv:1007.2601 on gluon contributions was cited in the initial summary but not read. Several verbatim quotes were recorded on the board without being added to the bibliography file.
+
+\section{Conclusions}
+The session established the following, from the literature and hand arithmetic only.
+\begin{itemize}
+\item The Planck 2018 target is $\Omega_c h^2 = 0.120\pm0.001$.
+\item The single published pure-higgsino relic point, $0.127$/$0.126$ (perturbative/Sommerfeld), rescaled as $m^2$, gives a thermal mass near 1.14 TeV. This value is low-confidence and depends on an inferred mass.
+\item The pure-higgsino SI cross section is bounded below $10^{-48}\,\mathrm{cm^2}$ at TeV masses (contested quote), below the xenon neutrino floor and an estimated factor of at least about 60 below the extrapolated LZ 2024 limit at 1.1 TeV.
+\item Inelastic up-scattering on xenon requires $\delta \lesssim 364$--$368$ keV at 1.0--1.1 TeV, and the recent one-loop keV-scale benchmarks are all allowed by LZ.
+\end{itemize}
+A thermal pure higgsino is therefore not excluded by current direct detection on the evidence gathered. The requested computation of relic densities was not possible in this environment.
+
+The open directions, in the board's ranked order, are:
+\begin{enumerate}
+\item Pin down the pure-higgsino thermal mass from at least two independent published calculations, including bound-state formation, because only one rescaled determination exists.
+\item Replace the linear 40 GeV extrapolation with direct reads of the LZ 2024 and XENONnT SI limits near 1 TeV, since the ratio of about 60 rests on that extrapolation.
+\item Obtain a numeric xenon neutrino-fog value near 1 TeV and a next-generation (XLZD/DARWIN) projection, because the below-the-floor statement rests only on Chen and Hill's text.
+\item Confirm the 1172.31 GeV attribution in arXiv:1411.6930, on which the $m^2$ rescaling and the 1.14 TeV thermal mass depend.
+\item Identify Ref. [28] of arXiv:2609.09830 and quote its Eq. (9) for the neutral splitting, so that the region where inelastic scattering switches on in gaugino-mass space can be mapped.
+\item Add a sourced statement on indirect-detection limits for TeV higgsinos, since the current-limits answer rests on direct detection alone.
+\item Establish the relic density as a function of mass (0.9--1.3 TeV) with and without Sommerfeld enhancement by computation, which the task requested and which no available tool could provide.
+\end{enumerate}
+
+\section*{References}
+\begin{itemize}
+\item arXiv:1411.6930 --- M. Beneke, C. Hellmann, P. Ruiz-Femen\'ia, ``Heavy neutralino relic abundance with Sommerfeld enhancements - a study of pMSSM scenarios''.
+\item arXiv:1104.0228 --- J. Hisano, K. Ishiwata, N. Nagata, T. Takesako, ``Direct Detection of Electroweak-Interacting Dark Matter''.
+\item arXiv:1007.2601 --- ``Gluon contribution to the dark matter direct detection''.
+\item arXiv:1912.07795 --- Q. Chen, R. J. Hill, ``Direct detection rate of heavy Higgsino-like and Wino-like dark matter''.
+\item arXiv:2410.17036 --- J. Aalbers et al. (LZ), ``Dark Matter Search Results from 4.2 Tonne-Years of Exposure of the LUX-ZEPLIN (LZ) Experiment''.
+\item arXiv:2303.14729 --- XENON Collaboration, E. Aprile et al., ``First Dark Matter Search with Nuclear Recoils from the XENONnT Experiment''.
+\item arXiv:1807.06209 --- Planck Collaboration, N. Aghanim et al., ``Planck 2018 results. VI. Cosmological parameters''.
+\item arXiv:2606.31013 --- K. Hamaguchi, N. Nagata, G. Osaki, ``Complementary Probes of Light Higgsinos: Electroweak Precision Measurements and Dark Matter Direct Detection''.
+\item arXiv:2609.09830 --- A. Chatterjee, D. Das, S. A. Pasha, A. Pukhov, R. Puri, ``Radiative Corrections to the Direct Detection of Inelastic Scattering of Higgsino-like Neutralino Dark Matter''.
+\item arXiv:2607.20588 --- S. Bisal, A. Chatterjee, D. Das, S. A. Pasha, R. Puri, ``Unveiling the Vanishing Higgsino-Nucleon Scattering in the MSSM at Next-to-Leading Order''.
+\item hep-ph/0610249 --- J. Hisano, S. Matsumoto, M. Nagai, O. Saito, M. Senami, ``Non-perturbative Effect on Thermal Relic Abundance of Dark Matter''.
+\item arXiv:2107.09688 --- S. Bottaro, D. Buttazzo, M. Costa, R. Franceschini, P. Panci, D. Redigolo, L. Vittorio, ``Closing the window on WIMP Dark Matter''.
+\item arXiv:2205.04486 --- S. Bottaro, D. Buttazzo, M. Costa, R. Franceschini, P. Panci, D. Redigolo, L. Vittorio, ``The last Complex WIMPs standing''.
+\item arXiv:2410.17137 --- ``The XLZD Design Book: Towards the Next-Generation Liquid Xenon Observatory for Dark Matter and Neutrino Physics''.
+\item arXiv:2510.17473 --- ``The Dark Matters at ICRC 2025''.
+\end{itemize}
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}ramp-research-higgsino-dd}}.
+The session produced 8 data files; the supplement lists them.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}
