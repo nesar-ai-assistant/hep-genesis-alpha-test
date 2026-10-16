@@ -24,11 +24,14 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
 - Evidence: runs/2026-10-15/cases/09-research-arxiv.out lines ~287–330.
 
 ### 3. `arxiv_agent` full-text extraction broken **[GH#3]** — open
-- v0.3.16. All sub-agent PDF/TXT downloads fail:
+- v0.3.16. Sub-agent PDF/TXT downloads fail:
   `RuntimeError: 'Search' object has no attribute 'results'` (python-arxiv API
   misuse). Degrades to abstract-level synthesis (honestly, to its credit).
-  Direct `download_arxiv_paper` / `download_full_arxiv_paper` work fine.
-- Evidence: tool-call tc-261015_2-w1-d-01-18; report Methods section.
+- 2026-10-16 correction: `download_full_arxiv_paper` ALSO crashes with the
+  same 'Search'.results error (pm-combo tc-261016_1-w1-d-04-53,
+  tc-261016_1-w2-d-03-81). `download_arxiv_full_text` itself works — 8/8
+  succeeded in the midday run (files on disk) — so the bug is confined to
+  the sub-agent extraction path. Commented on GH#3.
 
 ## Environment / packaging notes **[local]**
 
@@ -76,12 +79,47 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
   harmless, but the report PDF then has no figures; consider omitting.
 
 ### 13. hydroemu predict_observable returns files but no bin values inline
-- In runs 261016_083303 and 261015_223937, predict_observable writes the CSV
+- In runs 261016_083303 and 20261015_223937, predict_observable writes the CSV
   and PNG but the tool response carries only file paths + a one-line message,
   so the CLI agent cannot quote amplitudes/ratios and falls back to
   qualitative interpretation ("check them against Figure 10"). Consider
   embedding a compact summary (bin centers/values or knee/endpoint stats) in
   the tool payload. (Nesar's server, not the app.)
+
+### 14. arXiv API transient failures (HTTP 429/503) reported as "Paper not found" **[GH#5]** — open
+- v0.3.16 (found 2026-10-16 pm-combo). `get_arxiv_metadata`,
+  `download_arxiv_full_text` and `cite()` surface arXiv export-API rate
+  limits (HTTP 429) and outages (HTTP 503) as the message "Paper <id> not
+  found" — with no HTTP status, no retry, and no hint the paper exists.
+  Consequences in one run: research direction d-03 closed as **blocked**
+  ("no full text could be read and no quote could be validated with cite()"),
+  and the board asserted "these results say nothing about whether the papers
+  exist". The agent even flagged the OpenAlex mirror returned June-Oct 2026
+  "papers" that should be verified on arxiv.org before citing.
+- Proof it is masking, not truth: arXiv:1807.06209 (Planck 2018) downloaded
+  fine at 11:08 (442 KB on disk, midday run) and returned "not found" at
+  14:35 in the pm-combo run — same wheel v0.3.16, same machine, same day.
+  Meanwhile `search_arxiv_abstracts` in the same failing calls returned the
+  real "Search failed: Page request resulted in HTTP 503/429 (export.arxiv.org)"
+  errors, proving the underlying API was rate-limiting.
+- Fix suggestion: propagate the HTTP status ("arXiv API returned 429 Too Many
+  Requests — transient, retry with backoff"), add retry/backoff, and have
+  `cite()` fall back to OpenAlex metadata instead of hard-failing.
+- Evidence: runs/2026-10-16-pm-combo/cases/C1-multi-server-research.out
+  lines 599-608, 822-836; runs/2026-10-16-midday-research (8/8 downloads OK).
+
+### 15. Token-usage line prints "82K in (701 cached)" — units bug **[local]** — open
+- v0.3.16 (found 2026-10-16 pm-combo). The per-phase token summary line
+  prints the cached-token figure for the report phase as "(701 cached)"
+  instead of e.g. "(701K cached)" or "(701,000 cached)" — inconsistent with
+  every other phase, which uses K-scaled values ("813K cached"). Compare:
+  pm-combo: "report 82K in (701 cached) · 16K out"; midday: "report 46K in ·
+  8.0K out · 1 call" (no cached figure at all when the value is small).
+- Cosmetic but confusing: a human skimming the line reads "701 cached" as
+  701 tokens (or 701K?) and cannot tell which. Likely a missing `K` suffix or
+  a division slip in the report-phase token formatter.
+- Evidence: runs/2026-10-16-pm-combo/cases/C1-multi-server-research.out
+  line 858; runs/2026-10-16-midday-research/cases/R1-higgsino-dd.out line 802.
 
 ---
 
@@ -108,6 +146,11 @@ Clean run — no flags.
 
 
 ## 2026-10-16-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-16-pm-combo — 3 pass / 0 flagged
 
 Clean run — no flags.
 
