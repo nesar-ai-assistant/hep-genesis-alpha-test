@@ -1,0 +1,610 @@
+{
+  "schema": 1,
+  "thread_id": "default",
+  "task": "Give a rough estimate, with reasoning, of how many arXiv papers on galaxy cluster physics were published in 2025.",
+  "updated_at": "2026-10-15T22:50:13",
+  "runs": [
+    {
+      "run_id": "261015_224454-4811",
+      "task": "Give a rough estimate, with reasoning, of how many arXiv papers on galaxy cluster physics were published in 2025.",
+      "budget": {
+        "max_waves": 1,
+        "parallel_workers": 1,
+        "tool_calls_total": 15,
+        "wall_clock_min": 10
+      },
+      "waves": [
+        1
+      ],
+      "report": "runs/261015_224454-4811/report.md"
+    }
+  ],
+  "brief": {
+    "run_id": "261015_224454-4811",
+    "summary": "This is a rough estimate. The tools did not return a count of 2025 galaxy cluster papers, so the figure combines an approximate count of all astro-ph papers with a topic share that I assumed. Step 1, the baseline: an unverified web snippet says the Open Journal of Astrophysics published 213 papers in 2025, 'just over 1%' of astro-ph submissions. That puts astro-ph at roughly 18,000-21,000 new papers in 2025 (excluding replacements, possibly including cross-lists), which matches the growth described in 2602.12303 ('Astrophysics Wrapped 2025') and the size of the 408,590-paper corpus covering 1992 to July 2025 (2511.12353). Step 2, the cluster share, which is my own assumption and not from any source: papers mainly about galaxy cluster physics (intracluster medium in X-ray and SZ, cluster cosmology and mass calibration, cluster lensing, radio halos and relics, cluster mergers, brightest cluster galaxies and intracluster light, cluster galaxy evolution, protoclusters) are probably about 5-8% of astro-ph, mostly in astro-ph.CO and astro-ph.GA. That gives about 1,000-1,600 papers. Counting any paper where clusters are an important secondary topic (group-scale work, cluster-calibrated cosmology, simulations with cluster analyses, high-energy work using clusters as targets) gives about 2,000-3,000. Central estimate: about 1,500 arXiv papers in 2025 on galaxy cluster physics under a strict definition (plausible range 1,000-2,500), and up to about 3,000 under a broad definition. Large 2025 data releases and follow-up work (eROSITA, Euclid, ACT/SPT, LOFAR, XRISM, JWST protoclusters) probably make 2025 a high-output year, which argues for the upper half of the strict range.",
+    "tools": [
+      {
+        "name": "web_search",
+        "server": "local",
+        "note": "Search web for scientific info. NOT quotable - use only to find arxiv IDs."
+      },
+      {
+        "name": "search_arxiv_abstracts",
+        "server": "local",
+        "note": "Search arxiv for papers. Returns titles and abstracts only, NOT full text."
+      },
+      {
+        "name": "get_arxiv_metadata",
+        "server": "local",
+        "note": "Get paper metadata without downloading. Use for quick checks."
+      },
+      {
+        "name": "download_arxiv_full_text",
+        "server": "local",
+        "note": "Download paper PDF and extract full text. Use for finding quotable text."
+      },
+      {
+        "name": "read_arxiv_chunk",
+        "server": "local",
+        "note": "Read a chunk of downloaded paper text. Use to find exact quotes for cite()."
+      },
+      {
+        "name": "get_paper_figures",
+        "server": "local",
+        "note": "Extract a paper's figures (plot images + captions) from its arXiv HTML rendering."
+      },
+      {
+        "name": "cite",
+        "server": "local",
+        "note": "Add paper to .bib file with validated verbatim quotes."
+      },
+      {
+        "name": "load_skill",
+        "server": "local",
+        "note": "Load the full instructions of a named skill. Use this when the"
+      },
+      {
+        "name": "remember",
+        "server": "local",
+        "note": "Save a one-line lesson to persistent memory for future runs. Use"
+      },
+      {
+        "name": "",
+        "server": "",
+        "note": "search_arxiv_abstracts cannot filter by date or return result counts. It mostly returns older papers, so it cannot count papers directly."
+      },
+      {
+        "name": "",
+        "server": "",
+        "note": "web_search returned useful leads (the year-in-review paper and the OJAp '1% of astro-ph' figure), but these are unverified snippets. One query failed with a DNS error."
+      },
+      {
+        "name": "",
+        "server": "",
+        "note": "An accurate count needs the arXiv API or an ADS query with date and keyword filters. The available tools can only supply the reasoning framework and the baseline literature."
+      },
+      {
+        "name": "",
+        "server": "",
+        "note": "Warning: the 5-8% cluster share is my own prior, not a published figure. Replace it with a real keyword count before using it in any analysis."
+      }
+    ],
+    "probes": [],
+    "literature": [
+      {
+        "arxiv_id": "2602.12303",
+        "title": "Astrophysics Wrapped 2025: Year-in-Review of Every Astrophysics arXiv Paper from 2025",
+        "relevance": "Statistics on every astro-ph paper from 2025, including subfield and keyword breakdowns. Probably the best source for both the total paper count and the share of cluster-related papers. Only the abstract was read; the actual numbers need to be pulled from the full text."
+      },
+      {
+        "arxiv_id": "2511.12353",
+        "title": "AstroMLab 5: Structured Summaries and Concept Extraction for 400,000 Astrophysics Papers",
+        "relevance": "Covers 408,590 astro-ph papers (1992 to July 2025) with extracted concepts and a public GitHub release. Concept tags such as 'galaxy clusters' or 'intracluster medium' could give a topic share for the first half of 2025, which can be scaled to the full year."
+      },
+      {
+        "arxiv_id": "2311.06338",
+        "title": "Introducing the TNG-Cluster Simulation: overview and physical properties of the gaseous intracluster medium",
+        "relevance": "Shown only as an example of the subject-matter scope (cluster simulations, ICM). Not a source for counts."
+      }
+    ],
+    "quantities_to_check": [
+      "Total new astro-ph submissions in 2025, primary category versus including cross-lists (arXiv annual report, or the arXiv listing API by date)",
+      "Number of 2025 astro-ph papers whose title or abstract matches 'galaxy cluster', 'cluster of galaxies', 'intracluster', 'ICM', 'protocluster', 'radio halo/relic', 'BCG' (excluding star clusters and globular clusters)",
+      "The same query run for 2020-2024, to check the growth trend and that the 2025 number is reasonable",
+      "Share of cluster-tagged papers in the AstroMLab concept dataset for January-July 2025, scaled to the full year",
+      "Strict versus broad definition: how many papers have clusters as the main topic versus a secondary mention"
+    ],
+    "reproducible_analyses": [
+      "Keyword count with the arXiv API (export.arxiv.org) or NASA ADS: query abs:\"galaxy cluster\" OR abs:\"clusters of galaxies\" OR abs:intracluster, year 2025, collection astronomy. ADS facet counts give this directly.",
+      "Topic-share estimate from the public AstroMLab concept vocabulary and embeddings (github.com/tingyuansen/astro-ph_knowledge_graph)",
+      "Check the counts against the subfield and keyword statistics in 2602.12303"
+    ]
+  },
+  "directions": [
+    {
+      "id": "d-01",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "origin": "lead",
+      "goal": "Produce a sourced, rough estimate of how many 2025 arXiv papers concern galaxy cluster physics, under a strict and a broad definition. Replace the survey's assumed 5-8% topic share and its unverified total astro-ph count with numbers quoted from papers wherever the literature allows.",
+      "rationale": "The survey estimate (about 1,500 strict, range 1,000-2,500; up to about 3,000 broad) rests on two weak inputs: an unverified web snippet for total astro-ph volume, and an assumed cluster share. 'Astrophysics Wrapped 2025' (2602.12303) and AstroMLab 5 (2511.12353) are full-text sources that may state both quantities directly, as a 2025 paper count and as subfield or concept statistics. With no ADS or arXiv-API counting tool available, this paper-based route is the most direct one. One direction is enough because both inputs come from the same few papers.",
+      "steps": [
+        "Download the full text of arXiv:2602.12303 (Astrophysics Wrapped 2025). Read chunks to find (a) the total number of 2025 astro-ph papers, noting whether it counts primary-category papers only or includes cross-lists, and the split by subcategory (astro-ph.CO, astro-ph.GA, astro-ph.HE); (b) any topic, cluster or keyword statistics that mention galaxy clusters, the ICM, the SZ effect, cluster cosmology, protoclusters or radio halos. Use get_paper_figures only if the topic breakdown is given only in a figure, and record the figure number.",
+        "Download the full text of arXiv:2511.12353 (AstroMLab 5). Look for per-year paper counts (2020-2025) and any concept or topic-frequency tables that include galaxy clusters or the intracluster medium. Record the share of papers tagged with cluster-related concepts. If only the 1992-July 2025 aggregate exists, record it and note that it is an aggregate.",
+        "If neither paper gives a cluster share, look for an independent anchor. Use search_arxiv_abstracts and web_search for arXiv submission statistics (the arXiv annual report with astro-ph counts for 2024 or 2025) and for bibliometric studies of astro-ph topic distributions, such as subfield shares or extragalactic/cosmology topic modelling. Use get_arxiv_metadata to confirm IDs and dates.",
+        "Sanity-check the density of cluster papers. Run a handful of focused search_arxiv_abstracts queries ('galaxy cluster 2025', 'intracluster medium', 'protocluster JWST', 'radio halo relic LOFAR', 'eROSITA cluster cosmology', 'Sunyaev-Zeldovich cluster'). For each, note how many results fall in 2025 and whether they are galaxy-cluster papers rather than star clusters. Treat this as a qualitative check on topic breadth only, not as a count.",
+        "Combine the inputs: total 2025 astro-ph papers (with the cross-list caveat) times the strict cluster share, and times the broad share. Propagate the ranges on both factors. Where the share is still an assumption, label it as one and justify it from the closest sourced proxy, for example the astro-ph.CO plus astro-ph.GA fraction multiplied by a cluster fraction within those categories.",
+        "Cite every number used, with verbatim quotes, through cite(). Record clearly which inputs are sourced and which are assumed."
+      ],
+      "success_criteria": [
+        "A sourced 2025 astro-ph total, with a quote and an explicit statement of whether cross-lists are included, or a documented dead end if the papers do not give one.",
+        "A cluster share taken from a quoted source, or explicitly marked as an assumption with a stated proxy.",
+        "A final strict estimate and a broad estimate, each with a range and a short calculation, and a note on whether the survey's central figure of about 1,500 survives.",
+        "At least two papers cited with validated verbatim quotes."
+      ],
+      "tools": [
+        "download_arxiv_full_text",
+        "read_arxiv_chunk",
+        "get_paper_figures",
+        "search_arxiv_abstracts",
+        "get_arxiv_metadata",
+        "web_search",
+        "cite"
+      ],
+      "status": "closed",
+      "block_reason": null,
+      "parent_id": null,
+      "priority": 1,
+      "progress": "",
+      "result": {
+        "status": "done",
+        "summary": "Sourced base (f-001, high confidence): arXiv:2602.12303 (Astrophysics Wrapped 2025, Sec. 2.1) gives 18,660 astro-ph papers for 2025. Quote: 'This does not include replacement submissions ... The dataset also does not include cross-submissions'. The base is therefore primary-category papers only, which answers q-01. This is the low end of the survey's unverified 18,000-21,000. Sourced split (f-002, Table 1 of 2602.12303): GA 4,761; HE 3,869; SR 2,958; CO 2,789; EP 2,293; IM 1,722; general 268. GA plus CO is 40.5% of the total; GA plus CO plus HE is 61.2%. Neither 2602.12303 nor AstroMLab 5 (arXiv:2511.12353) gives a numerical galaxy-cluster share (dead end x-01). 2602.12303 gives keyword and subfield statistics only as figures. Its Figs. 12 and 13 were extracted to the run directory (/Users/nramachandra/hep-genesis-testing/projects/ramp-features/runs/261015_224454/figures_2602.12303/) but not read numerically. 2511.12353 gives only example concepts and the aggregate for 1992 to July 2025, with no per-year counts. Its ADS keyword table lists 'galaxies: evolution' at 5.5% and 'dark matter' at 3.0%, with no cluster row. The cluster share is therefore still an assumption, applied per category on top of the sourced split (f-003, low confidence): CO 15-25%, GA 8-12%, HE 3-5%, other categories about 30-80 papers. That gives a strict estimate of about 950-1,550 papers, central about 1,200 (about 6.5% of 18,660). The broad estimate, which adds papers where clusters are a secondary topic plus gr-qc/hep-ph papers cross-listed into astro-ph, is about 2,000-3,000. The survey's central figure of about 1,500 survives, at the upper edge of the strict range; a central value near 1,200 is better supported by the confirmed primary-only base of 18,660. The abstract searches mostly returned galaxy-cluster papers but also star clusters, so keyword counts must exclude star clusters. Limitations: the full-text files are 2602.12303.txt and 2511.12353.txt in the run directory. No cite() calls were made because the budget ran out, so the verbatim quotes are recorded in the finding notes but not yet validated in references.bib. Open: q-05 asks for a measured share, either by reading Figs. 12-13 numerically or by running the ADS query.",
+        "finding_ids": [
+          "f-001",
+          "f-002",
+          "f-003"
+        ],
+        "tool_call_ids": [
+          "tc-261015_2-w1-d-01-13",
+          "tc-261015_2-w1-d-01-14",
+          "tc-261015_2-w1-d-01-15",
+          "tc-261015_2-w1-d-01-16",
+          "tc-261015_2-w1-d-01-17",
+          "tc-261015_2-w1-d-01-18",
+          "tc-261015_2-w1-d-01-19",
+          "tc-261015_2-w1-d-01-20",
+          "tc-261015_2-w1-d-01-21",
+          "tc-261015_2-w1-d-01-22",
+          "tc-261015_2-w1-d-01-23",
+          "tc-261015_2-w1-d-01-24",
+          "tc-261015_2-w1-d-01-25",
+          "tc-261015_2-w1-d-01-26",
+          "tc-261015_2-w1-d-01-27",
+          "tc-261015_2-w1-d-01-28",
+          "tc-261015_2-w1-d-01-29",
+          "tc-261015_2-w1-d-01-30",
+          "tc-261015_2-w1-d-01-31",
+          "tc-261015_2-w1-d-01-32"
+        ],
+        "block_reason": null
+      }
+    },
+    {
+      "id": "d-02",
+      "run_id": "261015_224454-4811",
+      "wave": 0,
+      "origin": "critic",
+      "goal": "Independently derive the share of galaxy-cluster papers and the 2020-2025 trend from AstroMLab 5 (2511.12353) and other citable bibliometric sources, as a cross-check on d-01.",
+      "rationale": "d-01 depends heavily on 2602.12303. A second, separately budgeted check on the cluster share (concept-level tagging over 408k papers) and on the per-year growth is the only way to test the assumed 5-8% share and the high-output-year claim. It also frees d-01's budget.",
+      "steps": [
+        "Download 2511.12353. Read chunks for per-year paper counts (2020-2025) and for concept or topic frequency tables or examples involving galaxy clusters, the ICM, SZ, cluster cosmology, protoclusters or radio halos and relics.",
+        "If concept frequencies are only shown in figures, use get_paper_figures once and record the figure number and caption.",
+        "Use search_arxiv_abstracts (at most 3 queries) to find citable bibliometric or topic-modelling studies of astro-ph that report subfield or topic shares, including any that report a cluster or large-scale-structure share. Verify each with get_arxiv_metadata.",
+        "Compute the cluster share under the strict and broad label sets defined in d-01. Scale January-July 2025 to the full year with a stated allowance.",
+        "cite() each number used with a verbatim quote, and pass the share, the trend, and their ranges to d-01's synthesis."
+      ],
+      "success_criteria": [
+        "Either a quoted cluster-related concept share or topic share, or a documented statement that 2511.12353 does not provide one.",
+        "Per-year astro-ph counts for at least three years between 2020 and 2025, quoted, or a documented absence.",
+        "A strict and a broad share range, each labelled as sourced or assumed."
+      ],
+      "tools": [
+        "download_arxiv_full_text",
+        "read_arxiv_chunk",
+        "get_paper_figures",
+        "search_arxiv_abstracts",
+        "get_arxiv_metadata",
+        "cite"
+      ],
+      "status": "open",
+      "block_reason": null,
+      "parent_id": null,
+      "priority": 2,
+      "progress": "",
+      "result": null
+    },
+    {
+      "id": "d-03",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "origin": "lead",
+      "goal": "Run ADS query abs:(\"galaxy cluster\" OR \"clusters of galaxies\" OR intracluster) year:2025 collection:astronomy, excluding star clusters",
+      "rationale": "Replaces the assumed 5-8% cluster share with a measured count; no source gave a numerical share",
+      "steps": [],
+      "success_criteria": [],
+      "tools": [],
+      "status": "open",
+      "block_reason": null,
+      "parent_id": null,
+      "priority": 1,
+      "progress": "",
+      "result": null
+    },
+    {
+      "id": "d-04",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "origin": "lead",
+      "goal": "Numerically read Figs. 12-13 of arXiv:2602.12303 for a galaxy-cluster keyword or subfield bar",
+      "rationale": "Figures were extracted but not read; they are the most direct sourced share for 2025",
+      "steps": [],
+      "success_criteria": [],
+      "tools": [],
+      "status": "open",
+      "block_reason": null,
+      "parent_id": null,
+      "priority": 2,
+      "progress": "",
+      "result": null
+    },
+    {
+      "id": "d-05",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "origin": "lead",
+      "goal": "Re-read and cite() the 18,660 total, cross-submission exclusion and Table 1 counts from arXiv:2602.12303",
+      "rationale": "Critic contested the base because the quoted values are absent from the evidence excerpts",
+      "steps": [],
+      "success_criteria": [],
+      "tools": [],
+      "status": "open",
+      "block_reason": null,
+      "parent_id": null,
+      "priority": 3,
+      "progress": "",
+      "result": null
+    },
+    {
+      "id": "d-06",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "origin": "lead",
+      "goal": "Quantify gr-qc/hep-ph cross-list contribution to cluster papers",
+      "rationale": "The broad 2,000-3,000 range mixes a primary-only base with unquantified cross-lists",
+      "steps": [],
+      "success_criteria": [],
+      "tools": [],
+      "status": "open",
+      "block_reason": null,
+      "parent_id": null,
+      "priority": 5,
+      "progress": "",
+      "result": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "f-001",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "direction_id": "d-01",
+      "claim": "Astrophysics Wrapped 2025 (arXiv:2602.12303, Sec. 2.1) states that 18,660 papers were uploaded to astro-ph in 2025. The count excludes both replacements and cross-submissions, so it covers primary-category papers only.",
+      "evidence": [
+        {
+          "tool_call_id": "tc-261015_2-w1-d-01-15",
+          "note": "Verbatim from the paper: 'all 18660 papers uploaded to the arXiv in 2025 under Astrophysics. This does not include replacement submissions ... The dataset also does not include cross-submissions'. This answers q-01: the figure is primary-only. It falls inside the survey's unverified range of 18,000-21,000."
+        }
+      ],
+      "figures": [],
+      "files": [],
+      "confidence": "high",
+      "status": "contested",
+      "critique_id": "c-02",
+      "created_at": "2026-10-15T22:48:07"
+    },
+    {
+      "id": "f-002",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "direction_id": "d-01",
+      "claim": "Table 1 of arXiv:2602.12303 gives the 2025 primary-subject counts: astro-ph.GA 4,761; astro-ph.HE 3,869; astro-ph.SR 2,958; astro-ph.CO 2,789; astro-ph.EP 2,293; astro-ph.IM 1,722; astro-ph (general) 268. Of the 18,660 total, GA plus CO is 7,550 (40.5%) and GA plus CO plus HE is 11,419 (61.2%).",
+      "evidence": [
+        {
+          "tool_call_id": "tc-261015_2-w1-d-01-17",
+          "note": "Table 2 lists secondary subjects of these primary papers, e.g. GA 2,049, gr-qc 1,205, CO 892, hep-ph 831. These are cross-lists going out of astro-ph, not cross-lists coming in, so the paper gives no count of inbound cross-lists."
+        }
+      ],
+      "figures": [],
+      "files": [],
+      "confidence": "high",
+      "status": "contested",
+      "critique_id": "c-02",
+      "created_at": "2026-10-15T22:48:07"
+    },
+    {
+      "id": "f-003",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "direction_id": "d-01",
+      "claim": "Estimate built on a sourced base and an assumed share: about 1,200 papers on galaxy cluster physics among the 18,660 primary astro-ph papers of 2025 (strict range about 950-1,550, i.e. about 5-8%), and about 2,000-3,000 under a broad definition. The survey's central figure of about 1,500 sits at the top of the strict range, so it is somewhat high but not ruled out.",
+      "evidence": [
+        {
+          "tool_call_id": "tc-261015_2-w1-d-01-15",
+          "note": "The per-category cluster fractions are assumptions, not sourced numbers. Strict calculation: CO 2,789 x 15-25% = 420-700; GA 4,761 x 8-12% = 380-570; HE 3,869 x 3-5% = 115-195; IM/SR/EP/general about 30-80. Total about 950-1,550, central about 1,240 with CO 20%, GA 10%, HE 4% plus 50. Broad case: add papers where clusters are a secondary topic (group-scale work, cluster-calibrated cosmology, dark-matter or high-energy work using clusters as targets) at a factor of about 1.6-2.0, plus gr-qc/hep-ph papers cross-listed into astro-ph, which the 18,660 base excludes. That gives about 2,000-3,000. Abstract searches on eROSITA and the ICM mostly returned galaxy-cluster papers, but they also picked up star clusters (e.g. the eta Cha open cluster), which confirms that keyword counts need star-cluster exclusion. Those searches were not counts."
+        },
+        {
+          "tool_call_id": "tc-261015_2-w1-d-01-17",
+          "note": "The per-category cluster fractions are assumptions, not sourced numbers. Strict calculation: CO 2,789 x 15-25% = 420-700; GA 4,761 x 8-12% = 380-570; HE 3,869 x 3-5% = 115-195; IM/SR/EP/general about 30-80. Total about 950-1,550, central about 1,240 with CO 20%, GA 10%, HE 4% plus 50. Broad case: add papers where clusters are a secondary topic (group-scale work, cluster-calibrated cosmology, dark-matter or high-energy work using clusters as targets) at a factor of about 1.6-2.0, plus gr-qc/hep-ph papers cross-listed into astro-ph, which the 18,660 base excludes. That gives about 2,000-3,000. Abstract searches on eROSITA and the ICM mostly returned galaxy-cluster papers, but they also picked up star clusters (e.g. the eta Cha open cluster), which confirms that keyword counts need star-cluster exclusion. Those searches were not counts."
+        }
+      ],
+      "figures": [],
+      "files": [],
+      "confidence": "low",
+      "status": "contested",
+      "critique_id": "c-02",
+      "created_at": "2026-10-15T22:48:07"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-01",
+      "text": "Does the 2025 total in 2602.12303 count primary astro-ph submissions only, or does it include cross-lists from gr-qc, hep-ph and physics? This difference can change the base by roughly 20-30%.",
+      "direction_id": "plan",
+      "status": "open",
+      "answered_by": null
+    },
+    {
+      "id": "q-02",
+      "text": "How should borderline categories be treated: galaxy groups, cluster-scale cosmological simulations, and high-energy or dark-matter searches that use clusters only as targets?",
+      "direction_id": "plan",
+      "status": "open",
+      "answered_by": null
+    },
+    {
+      "id": "q-03",
+      "text": "If AstroMLab concept tags cover only January-July 2025, is it valid to scale linearly to the full year, given seasonal submission patterns and large data releases mid-year?",
+      "direction_id": "plan",
+      "status": "open",
+      "answered_by": null
+    },
+    {
+      "id": "q-04",
+      "text": "Without a direct ADS or arXiv API facet count, the estimate stays a model-based figure. Note this limitation, and recommend the reproducible ADS query for a later run.",
+      "direction_id": "plan",
+      "status": "open",
+      "answered_by": null
+    },
+    {
+      "id": "q-05",
+      "text": "Can the d-02 worker, or a later run, read the numerical values in Figs. 12-13 of arXiv:2602.12303 (look for a 'galaxy clusters' keyword or subfield bar) or run the ADS query abs:(\"galaxy cluster\" OR \"clusters of galaxies\" OR intracluster) year:2025 collection:astronomy, so that the assumed 5-8% cluster share is replaced by a measured one?",
+      "direction_id": "d-01",
+      "status": "open",
+      "answered_by": null
+    }
+  ],
+  "dead_ends": [
+    {
+      "id": "x-01",
+      "direction_id": "d-01",
+      "what": "Getting a sourced galaxy-cluster topic share from arXiv:2602.12303 (keywords in Fig. 12, the top-25 subfields in Fig. 13, citation table 9) and from arXiv:2511.12353 (concept tables 1-3).",
+      "why": "Neither text gives a numerical cluster, ICM, SZ or protocluster count. 2602.12303 names only the top keywords (accretion, galaxy evolution, AGN, exoplanets, star formation, cosmology) and gives subfield statistics only as figure images. Figs. 12 and 13 were extracted to the run directory but not read numerically. AstroMLab 5 gives only example concepts (e.g. CMB 9,166 papers) and the aggregate for 1992 to July 2025, with no per-year counts and no cluster concept. The ADS keyword table in 2511.12353 lists 'galaxies: evolution' at 5.5% and 'dark matter' at 3.0%, but has no cluster row.",
+      "evidence": [
+        "tc-261015_2-w1-d-01-20",
+        "tc-261015_2-w1-d-01-21",
+        "tc-261015_2-w1-d-01-22",
+        "tc-261015_2-w1-d-01-23"
+      ]
+    }
+  ],
+  "critiques": [
+    {
+      "id": "c-01",
+      "run_id": "261015_224454-4811",
+      "wave": 0,
+      "scope": "plan",
+      "verdict": "revise",
+      "new_supported_findings": [],
+      "contested": [],
+      "issues": [
+        {
+          "direction_id": "d-01",
+          "severity": "high",
+          "text": "The plan does not fit the 23-call budget. Two full-text downloads, several read_arxiv_chunk passes per paper, possible figure extraction, a conditional external search, six sanity-check queries and multiple cite() calls add up to well over 23. Split the work: d-01 covers 2602.12303 and the final synthesis; the added direction covers 2511.12353 and the independent anchors. Cap the sanity-check queries at about 3."
+        },
+        {
+          "direction_id": "d-01",
+          "severity": "high",
+          "text": "There is no fallback for the likely case that 2602.12303 gives subfield or category shares but no galaxy-cluster share. Define the proxy now: (astro-ph.CO + astro-ph.GA + astro-ph.HE share) x (cluster fraction within those categories). Also state how the within-category fraction will be justified, for example from a quoted concept or topic table, or failing that as a labelled assumption with a range. Otherwise the final number simply repeats the survey's 5-8% assumption."
+        },
+        {
+          "direction_id": "d-01",
+          "severity": "medium",
+          "text": "The brief asks for a 2020-2024 trend check, and the plan has no step for it. Add one: extract per-year astro-ph totals, and per-year cluster or concept counts if available, from either paper. Use them to test the survey's claim that 2025 was a high-output year, rather than asserting it from the data-release list (eROSITA, Euclid, XRISM)."
+        },
+        {
+          "direction_id": "d-01",
+          "severity": "medium",
+          "text": "Strict and broad are not defined well enough to apply to sourced numbers. State in advance which concept or topic labels count as strict (ICM, cluster cosmology, cluster lensing, radio halos and relics, BCG and ICL, protoclusters) and which count as broad (groups, simulations with cluster analyses, high-energy work using clusters as targets). Exclude star, globular and open clusters explicitly. Also note that if source counts include cross-lists, cluster papers listed in both astro-ph.CO and astro-ph.GA must not be counted twice."
+        },
+        {
+          "direction_id": "d-01",
+          "severity": "medium",
+          "text": "The survey's 'just over 1%' OJAp snippet and any arXiv annual-report figure found through web_search cannot be quoted. Either find a citable arXiv source for the 2025 total (2602.12303 is the best candidate) or label the total as unverified. Do not let a web-only number appear as sourced."
+        },
+        {
+          "direction_id": "d-01",
+          "severity": "low",
+          "text": "Step 4 cannot support any quantitative claim, because search_arxiv_abstracts returns a ranked subset, not hit counts. Keep it out of the arithmetic and report it only as a check of topic breadth and star-cluster contamination."
+        },
+        {
+          "direction_id": "d-01",
+          "severity": "low",
+          "text": "AstroMLab 5 data ends in July 2025. Scaling January-July to a full year should account for uneven submission rates across the year, with at least a stated +/-10% allowance. Confirm the exact coverage cutoff with get_arxiv_metadata or the text before scaling."
+        }
+      ],
+      "suggested_directions": [],
+      "stop_reason": null
+    },
+    {
+      "id": "c-02",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "scope": "wave",
+      "verdict": "continue",
+      "new_supported_findings": [],
+      "contested": [
+        {
+          "finding_id": "f-001",
+          "reason": "The cited excerpt from tc-261015_2-w1-d-01-15 shows only the title page (chars 0-15000, truncated after the affiliations). It contains neither the 18,660 figure nor the quote on excluding replacements and cross-submissions. The value may well be correct, since it matches the Table 1 sum exactly, but the posted evidence does not show it and no cite() call validated it."
+        },
+        {
+          "finding_id": "f-002",
+          "reason": "The cited excerpt from tc-261015_2-w1-d-01-17 (chars 35000-55000) shows the telescopes and objects section and the Fig. 2 caption, not Table 1. The per-category counts do not appear in it. The numbers are internally consistent: they sum to 18,660, GA+CO = 7,550 (40.5%), and GA+CO+HE = 11,419 (61.2%). That consistency is not evidence of the source values."
+        },
+        {
+          "finding_id": "f-003",
+          "reason": "The arithmetic reproduces from the stated assumptions: CO 15-25% gives 418-697, GA 8-12% gives 381-571, HE 3-5% gives 116-193, and others add 30-80, for a total of about 945-1,541. However, the base inputs rest on f-001 and f-002, whose excerpts do not show them. The per-category cluster fractions are unsourced, so the evidence supports none of the cluster-specific content. The broad range of 2,000-3,000 is asserted without any derivation."
+        }
+      ],
+      "issues": [
+        {
+          "direction_id": "d-01",
+          "finding_id": "f-001",
+          "severity": "high",
+          "text": "Quoted values (18,660 and the cross-submission exclusion) are not present in the evidence excerpts. The relevant chunk of 2602.12303 needs to be re-read and passed to cite() so the quote is validated in references.bib."
+        },
+        {
+          "direction_id": "d-01",
+          "finding_id": "f-002",
+          "severity": "high",
+          "text": "The Table 1 counts are not in the cited excerpt. The tool call or chunk range containing Table 1 needs to be identified and cited."
+        },
+        {
+          "direction_id": "d-01",
+          "finding_id": "f-003",
+          "severity": "medium",
+          "text": "The cluster fractions per category (CO 15-25%, GA 8-12%, HE 3-5%) are labelled assumptions with no anchor. The broad range of 2,000-3,000 has no derivation. It also mixes a primary-only base with cross-listed gr-qc and hep-ph papers without quantifying the cross-list contribution. The final number therefore still rests on the survey's unverified 5-8% share."
+        },
+        {
+          "direction_id": "d-01",
+          "finding_id": null,
+          "severity": "medium",
+          "text": "The 2020-2024 trend check flagged in c-01 was not done. The claim that 2025 was a high-output year for cluster science, driven by eROSITA, Euclid and XRISM, remains unverified."
+        },
+        {
+          "direction_id": "d-02",
+          "finding_id": null,
+          "severity": "low",
+          "text": "d-02 is still open and has produced nothing. Before final synthesis, either merge it into the follow-up below or close it explicitly."
+        }
+      ],
+      "suggested_directions": [
+        {
+          "goal": "Validate the base numbers from 2602.12303 with cite(). Then replace the assumed cluster share with a measured one by reading Figs. 12-13 of 2602.12303 numerically, or by sampling 2025 astro-ph.CO and astro-ph.GA abstracts and classifying them as galaxy-cluster versus not.",
+          "rationale": "The total and category split are probably right but are not backed by the posted evidence. The cluster share, the quantity that actually drives the answer, is still an assumption. A measured within-category fraction, even from a small classified sample, would turn the low-confidence estimate into a defensible one.",
+          "steps": [
+            "Re-read the 2602.12303.txt chunks containing Sec. 2.1 and Table 1, and cite() the 18,660 total, the replacement and cross-submission exclusion, and the per-category counts",
+            "Inspect the extracted Figs. 12 and 13 in the run directory for any cluster, ICM, SZ or protocluster bar, and read off its value",
+            "If no cluster bar exists, draw about 50-100 random 2025 abstracts each from astro-ph.CO and astro-ph.GA (arXiv listing or search tool), classify each as strict-cluster, broad-cluster, or none, excluding star, globular and open clusters, and compute fractions with binomial uncertainties",
+            "Recompute the strict and broad totals from the measured fractions applied to the cited category counts, and compare them with the assumed 15-25% (CO) and 8-12% (GA)"
+          ],
+          "success_criteria": [
+            "f-001 and f-002 values appear verbatim in cited excerpts",
+            "The within-category cluster fraction for CO and GA is measured, with a stated sample size and uncertainty",
+            "A revised strict estimate with an uncertainty propagated from the sample, and a broad estimate with an explicit derivation"
+          ],
+          "tools": [
+            "read_arxiv_chunk",
+            "cite",
+            "search_arxiv_abstracts",
+            "figure inspection"
+          ],
+          "parent_id": "d-01",
+          "priority": 1
+        }
+      ],
+      "stop_reason": null
+    },
+    {
+      "id": "c-03",
+      "run_id": "261015_224454-4811",
+      "wave": 1,
+      "scope": "report",
+      "verdict": "revise",
+      "new_supported_findings": [],
+      "contested": [],
+      "issues": [
+        {
+          "severity": "high",
+          "text": "unsupported: A follow-up web search to confirm the snippet failed with a DNS error, so the snippet remains uncitable. \u2014 The board records no follow-up web search and no DNS error. It says only that the OJAp snippet is unverified and that web-only numbers cannot be quoted (c-01). This is an invented process event."
+        },
+        {
+          "severity": "high",
+          "text": "unsupported: Each paper has about 10 extracted concepts, clustered into 9,999 concept classes \u2014 Neither figure appears on the board. The board gives only the 408,590 papers, the 1992 to July 2025 coverage, example concepts (CMB 9,166) and the public GitHub release."
+        },
+        {
+          "severity": "high",
+          "text": "unsupported: Its stated aim is \"a summary of statistics for every paper uploaded onto the Astrophysics arXiv over the past year \u2013 2025\". It reports subfield, keyword, country and citation statistics. \u2014 The verbatim aim quote is not on the board, and neither are country statistics. The board mentions subfield and keyword breakdowns and citation table 9. The quoted figure captions (\"Most Common Keywords for 2025\", \"Top 25 sub-fields and research areas\") are likewise not recorded verbatim."
+        },
+        {
+          "severity": "high",
+          "text": "unsupported: This settles the question of whether cross-lists are included \u2014 The finding behind this (f-001) is contested by c-02 because the quote is absent from the evidence excerpts, and q-01 is still marked open on the board. \"Settles\" overstates it, even though the report adds a verification caveat later."
+        }
+      ],
+      "suggested_directions": [],
+      "stop_reason": null
+    }
+  ],
+  "steers": [],
+  "waves": [
+    {
+      "run_id": "261015_224454-4811",
+      "n": 1,
+      "direction_ids": [
+        "d-01"
+      ],
+      "started_at": "2026-10-15T22:46:51",
+      "ended_at": "2026-10-15T22:48:17",
+      "tool_calls": 15,
+      "critique_id": "c-02",
+      "decision": "stop:budget: 1/1 waves used"
+    }
+  ],
+  "open_directions_ranked": [
+    {
+      "direction_id": "d-03",
+      "rank": 1,
+      "why": "Replaces the assumed 5-8% cluster share with a measured count; no source gave a numerical share"
+    },
+    {
+      "direction_id": "d-04",
+      "rank": 2,
+      "why": "Figures were extracted but not read; they are the most direct sourced share for 2025"
+    },
+    {
+      "direction_id": "d-05",
+      "rank": 3,
+      "why": "Critic contested the base because the quoted values are absent from the evidence excerpts"
+    },
+    {
+      "direction_id": "d-02",
+      "rank": 4,
+      "why": "Independent cross-check and test of the untested high-output-year claim"
+    },
+    {
+      "direction_id": "d-06",
+      "rank": 5,
+      "why": "The broad 2,000-3,000 range mixes a primary-only base with unquantified cross-lists"
+    }
+  ]
+}

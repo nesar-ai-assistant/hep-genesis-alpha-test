@@ -1,0 +1,94 @@
+# BBN predictions at N_eff = 3.0, 3.044 and 3.4, and the 1% Y_p threshold
+
+**Short answer:** Y_p rises 1% above its standard value at **N_eff ≈ 3.23**, i.e. ΔN_eff ≈ 0.18–0.19.
+
+## Method
+
+None of the tools accepts N_eff as a direct input; they only take sterile-neutrino parameters.
+
+- **N_eff = 3.044 and 3.4:** I got these from `predict_sterile_nu`. I used a 5 keV Dodelson-Widrow sterile neutrino and only varied the mixing to set ΔN_eff:
+  - sin²2θ = 10⁻¹⁵ gives N_eff = 3.0440, effectively the Standard Model.
+  - sin²2θ = 7.62×10⁻⁸ gives N_eff = 3.4000.
+  - The 3.4 point overproduces dark matter (Ω_s h² = 19.1). That doesn't affect the BBN numbers; the particle is only a way to inject ΔN_eff = 0.356.
+- **N_eff = 3.0 (estimate):** this needs ΔN_eff < 0, which a sterile neutrino can't produce. So no tool computed it directly. I estimated it from the slopes that `plot_sterile_nu_bbn_impact` reports near the Standard Model value: dY_p/dN_eff = 0.01351 and d(D/H×10⁵)/dN_eff = 0.3308.
+
+BBN uses the PRyMordial-calibrated fit (accurate to better than 0.3% for N_eff from 2.044 to 6.044), with Ω_b h² = 0.02237 and τ_n = 878.4 s.
+
+## Results
+
+| N_eff | Y_p | D/H × 10⁵ | ΔY_p / Y_p,SM | Δ(D/H) / (D/H)_SM | Source |
+|---|---|---|---|---|---|
+| 3.0 | 0.24623 | 2.4287 | −0.24% | −0.60% | estimate from the slopes |
+| 3.044 (Standard Model) | 0.24682 | 2.4433 | 0 | 0 | `predict_sterile_nu` |
+| 3.4 | 0.25153 | 2.5616 | +1.91% | +4.84% | `predict_sterile_nu` |
+
+For comparison, the observed values are Y_p = 0.2449 ± 0.004 (Aver+ 2021) and D/H × 10⁵ = 2.547 ± 0.025 (Cooke+ 2018). The N_eff = 3.4 point is still allowed by BBN (Δχ² vs the Standard Model = +0.01).
+
+## When does ΔY_p exceed 1%?
+
+One percent of the Standard Model value is 0.0024682, so Y_p must exceed **0.24929**.
+
+- **From the slope:** ΔN_eff = 0.0024682 / 0.01351 = 0.183, giving N_eff ≈ 3.227.
+- **Checked with two direct tool points:**
+
+| N_eff | Y_p | ΔY_p / Y_p,SM |
+|---|---|---|
+| 3.2262 | 0.24925 | 0.985% (just below) |
+| 3.2285 | 0.24928 | 0.997% (just below) |
+
+Extending these two points linearly puts the crossing at about N_eff ≈ 3.229. Y_p is reported to five digits, which leaves roughly ±0.0005 of uncertainty in N_eff.
+
+## Context
+
+- Y_p responds almost linearly to extra radiation: about 0.0135 per unit of N_eff. More radiation speeds up the expansion, so neutron-proton freeze-out happens earlier and at a higher temperature. That leaves more neutrons, which end up in helium-4.
+- A 1% shift in Y_p is about 0.0025. That is only about 0.6σ of the current Y_p measurement error (0.004), so a 1% change is not yet detectable from helium alone.
+- The BBN-only 95% limit from the tool is ΔN_eff < 0.55, and it is driven mostly by D/H, whose relative error is smaller.
+- Figure 1 shows Y_p and D/H against N_eff with the observed bands.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261015_223807/`:
+- `bbn_vs_neff.png` (Figure 1)
+- `sterile_nu_grid_DW_b5feb8.csv` (the mixing sweep used to locate N_eff = 3.4 and the 1% threshold)
+
+[Tool ledger — exact record of this turn]
+- describe_sterile_nu_tools ok — obs Yp 0.2449±0.004, D/H 2.547±0.025, Neff_CMB 2.99±0.17; BBN fit validity N_eff [2.044, 6.044]
+- plot_sterile_nu_bbn_impact ok — file .../261015_223807/bbn_vs_neff.png (Figure 1); SM Yp 0.24682, DH5 2.4433 at 3.044; Yp 0.25956, DH5 2.7769 at 4.044; slopes dYp/dNeff 0.01351, dDH5/dNeff 0.3308; BBN ΔN_eff < 0.548 (95%)
+- predict_sterile_nu_grid ok — m_s 5000 eV, sin²2θ 3e-8…9e-8; CSV .../sterile_nu_grid_DW_b5feb8.csv; e.g. sin²2θ 7.6e-8 → ΔN_eff 0.3551
+- predict_sterile_nu (5000 eV, 1e-15) — N_eff 3.0440, Yp 0.24682, DH5 2.4433
+- predict_sterile_nu (5000 eV, 7.62e-8) — N_eff 3.399999, Yp 0.25153, DH5 2.5616, Δχ² 0.0089, Ω_s h² 19.11
+- predict_sterile_nu (5000 eV, 3.9e-8) — N_eff 3.226204, Yp 0.24925, DH5 2.5037
+- predict_sterile_nu (5000 eV, 3.95e-8) — N_eff 3.22854, Yp 0.24928, DH5 2.5045
+Loading MCP servers…
+[10/15/26 22:38:09] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+[tool] describe_sterile_nu_tools {}
+[10/15/26 22:38:18] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_sterile_nu_tools -> ok: {   "status": "ok",   "files": [],   "message": "Sterile Neutrino -> BBN / X-ray Bridge Server\n=============================================\n\nMaps sterile-ne
+[tool] plot_sterile_nu_bbn_impact {"neff_min": 2, "neff_max": 5, "n_points": 751, "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261015_223807"}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] plot_sterile_nu_bbn_impact -> ok: {   "status": "ok",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261015_223807/bbn_vs_neff.png"   ],   "message": "Plot sav
+[tool] predict_sterile_nu_grid {"masses_eV": [5000], "sin2_2thetas": [3e-08, 3.5e-08, 3.9e-08, 4.2e-08, 4.5e-08, 6e-08, 7e-08, 7.6e-08, 8e-08, 9e-08], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/2
+[10/15/26 22:38:30] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu_grid -> ok: {   "status": "ok",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261015_223807/sterile_nu_grid_DW_b5feb8.csv"   ],   "messa
+[tool] predict_sterile_nu {"m_s_eV": 5000, "sin2_2theta": 1e-15}
+[10/15/26 22:38:38] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 5e+03 eV, sin\u00b22\u03b8 = 1e-15\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+[tool] predict_sterile_nu {"m_s_eV": 5000, "sin2_2theta": 7.62e-08}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 5e+03 eV, sin\u00b22\u03b8 = 7.6e-08\nMechanism: DW\n\n\u2500\u2500 What the sterile \u
+[tool] predict_sterile_nu {"m_s_eV": 5000, "sin2_2theta": 3.9e-08}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 5e+03 eV, sin\u00b22\u03b8 = 3.9e-08\nMechanism: DW\n\n\u2500\u2500 What the sterile \u
+[tool] predict_sterile_nu {"m_s_eV": 5000, "sin2_2theta": 3.95e-08}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 5e+03 eV, sin\u00b22\u03b8 = 4e-08\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+Tokens: 49K in (31K cached) · 5.1K out · 4 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json

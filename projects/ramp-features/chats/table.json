@@ -1,0 +1,62 @@
+{
+  "id": "86851a099d00",
+  "name": "table",
+  "created_at": "2026-10-15T22:42:43",
+  "messages": [
+    {
+      "id": "7a1a37e5fec0",
+      "role": "user",
+      "content": "Use tools to compute, for m_s = 7 keV and sin^2(2theta)=1e-10: (a) the radiative lifetime, (b) the DW production fraction, (c) the X-ray line energy. Present all three in a table.",
+      "ts": "2026-10-15T22:42:43",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "59c889e400f8",
+      "role": "assistant",
+      "content": "For m_s = 7 keV and sin\u00b2(2\u03b8) = 10\u207b\u00b9\u2070, the radiative lifetime is 4.37 \u00d7 10\u00b2\u2077 s, Dodelson-Widrow (DW) production gives 38.3% of the dark matter, and the X-ray line sits at 3.5 keV.\n\n| Quantity | Value | Tool |\n|---|---|---|\n| (a) Radiative lifetime \u03c4_\u03b3 | 4.37 \u00d7 10\u00b2\u2077 s (1.39 \u00d7 10\u00b2\u2070 yr); decay rate \u0393_\u03b3 = 2.29 \u00d7 10\u207b\u00b2\u2078 s\u207b\u00b9 | `predict_sterile_nu`, `predict_sterile_nu_xray_line` (both give the same value) |\n| (b) DW production fraction | \u03a9_s h\u00b2 = 0.0460, which is 38.3% of \u03a9_DM h\u00b2 = 0.120 | `predict_sterile_nu` (mechanism = DW) |\n| (c) X-ray line energy | E_\u03b3 = m_s/2 = 3.5 keV | both tools |\n\nNotes:\n- **What (b) means:** I took \"production fraction\" to mean how much of the observed dark matter density DW production makes at this point. At this mixing the sterile neutrino would be only part of the dark matter, and it does not overclose the universe.\n- **X-ray limits:** The X-ray tool says this point is excluded by the NuSTAR M31 limit (Roach+ 2020) and the XMM-Newton blank-sky limit (Dessert+ 2020). Those checks assume the sterile neutrino is all of the dark matter. Since DW gives only 38% here, the actual flux would be about 0.38 times the tabulated value, and the tool did not check the exclusion at that reduced level.\n- **Other results:** This mass is in the keV warm dark matter range, where the tool's BBN treatment applies. The extra radiation is small (\u0394N_eff = 6.1 \u00d7 10\u207b\u2074) and BBN allows it (\u0394\u03c7\u00b2 = \u22120.01). The free-streaming length is about 154 kpc. The point is close to the debated 3.5 keV line, whose best fit is sin\u00b2(2\u03b8) \u2248 7 \u00d7 10\u207b\u00b9\u00b9 with a range of 2 \u00d7 10\u207b\u00b9\u00b9 to 2 \u00d7 10\u207b\u00b9\u2070.\n\n[Tool ledger]: `predict_sterile_nu`(7000 eV, 1e-10, DW) gave \u03c4 = 4.372e27 s, \u03a9_s h\u00b2 = 0.04596 (38.3%), E_\u03b3 = 3.5 keV, \u0394N_eff = 6.115e-4, BBN \u0394\u03c7\u00b2 = \u22120.0079. `predict_sterile_nu_xray_line`(7000, 1e-10, all) gave the same \u03c4 and E_\u03b3; excluded by NuSTAR M31 and XMM blank sky (f_DM = 1 assumed). No files were written.",
+      "ts": "2026-10-15T22:42:43",
+      "tool_calls": [
+        {
+          "id": "tooluse_AkS6qvMRFdpF6zevj9EImG",
+          "tool": "predict_sterile_nu",
+          "server": "serve-sbbn.sh",
+          "args": {
+            "m_s_eV": 7000,
+            "sin2_2theta": 1e-10
+          },
+          "result": "{\n  \"status\": \"ok\",\n  \"files\": [],\n  \"message\": \"Sterile neutrino: m_s = 7e+03 eV, sin\\u00b22\\u03b8 = 1e-10\\nMechanism: DW\\n\\n\\u2500\\u2500 What the sterile \\u03bd produces \\u2500\\u2500\\n\\u0394N_eff = 0.0006115  \\u2192  N_eff = 3.0446\\n\\u03a9_s h\\u00b2 = 0.04596  (obs DM: 0.120 \\u00b1 0.001)\\n\\n\\u2500\\u2500 BBN (PRyMordial-calibrated fit) \\u2500\\u2500\\nY_p = 0.24682  (obs: 0.2449 \\u00b1 0.004)\\nD/H \\u00d7 10\\u2075 = 2.4435  (obs: 2.547 \\u00b1 0.025)\\n\\u2077Li/H \\u00d7 10\\u00b9\\u2070 = 5.46  (obs: ~1.6 \\u2014 the lithium problem)\\n\\u0394\\u03c7\\u00b2(BBN, vs SM) = -0.01  (allowed at 95%; absolute \\u03c7\\u00b2 = 2.76)\\n\\n\\u2500\\u2500 X-ray Decay \\u2500\\u2500\\nE_\\u03b3 = 3.5 keV\\n\\u0393_\\u03b3 = 2.29e-28 s\\u207b\\u00b9\\n\\u03c4_\\u03b3 = 4.37e+27 s  (1.39e+20 yr)\\n\\n\\u2500\\u2500 Structure Formation \\u2500\\u2500\\n\\u03bb_fs = 154 kpc  (warm DM)\\nThis sterile \\u03bd is subdominant DM (38.3% of \\u03a9_DM)\",\n  \"metadata\": {\n    \"input\": {\n      \"m_s_eV\": 7000.0,\n      \"sin2_2theta\": 1e-10,\n      \"mechanism\": \"DW\"\n    },\n    \"regime\": {\n      \"name\": \"keV (warm dark matter)\",\n      \"bbn_treatment_valid\": true,\n      \"note\": \"relativistic at BBN; Delta N_eff follows from the DW relic density\"\n    },\n    \"production\": {\n      \"delta_neff\": 0.0006115,\n      \"neff_total\": 3.044611,\n      \"omega_s_h2\": 0.0459577,\n      \"overcloses\": false\n    },\n    \"bbn\": {\n      \"Yp\": 0.24682,\n      \"DH_x1e5\": 2.4435,\n      \"Li7H_x1e10\": 5.46,\n      \"chi2_total\": 2.7635,\n      \"delta_chi2_vs_sm\": -0.0079,\n      \"excluded_95\": false,\n      \"consistent_2sigma\": true,\n      \"method\": \"fit to PRyMordial (<0.3% within bbn_fit_validity)\"\n    },\n    \"xray\": {\n      \"E_gamma_keV\": 3.5,\n      \"decay_rate_per_s\": 2.287e-28,\n      \"lifetime_s\": 4.372e+27,\n      \"lifetime_yr\": 1.385e+20\n    },\n    \"structure\": {\n      \"free_streaming_kpc\": 153.5,\n      \"warm_or_cold\": \"warm\"\n    }\n  }\n}",
+          "raw": "{\n  \"status\": \"ok\",\n  \"files\": [],\n  \"message\": \"Sterile neutrino: m_s = 7e+03 eV, sin\\u00b22\\u03b8 = 1e-10\\nMechanism: DW\\n\\n\\u2500\\u2500 What the sterile \\u03bd produces \\u2500\\u2500\\n\\u0394N_eff = 0.0006115  \\u2192  N_eff = 3.0446\\n\\u03a9_s h\\u00b2 = 0.04596  (obs DM: 0.120 \\u00b1 0.001)\\n\\n\\u2500\\u2500 BBN (PRyMordial-calibrated fit) \\u2500\\u2500\\nY_p = 0.24682  (obs: 0.2449 \\u00b1 0.004)\\nD/H \\u00d7 10\\u2075 = 2.4435  (obs: 2.547 \\u00b1 0.025)\\n\\u2077Li/H \\u00d7 10\\u00b9\\u2070 = 5.46  (obs: ~1.6 \\u2014 the lithium problem)\\n\\u0394\\u03c7\\u00b2(BBN, vs SM) = -0.01  (allowed at 95%; absolute \\u03c7\\u00b2 = 2.76)\\n\\n\\u2500\\u2500 X-ray Decay \\u2500\\u2500\\nE_\\u03b3 = 3.5 keV\\n\\u0393_\\u03b3 = 2.29e-28 s\\u207b\\u00b9\\n\\u03c4_\\u03b3 = 4.37e+27 s  (1.39e+20 yr)\\n\\n\\u2500\\u2500 Structure Formation \\u2500\\u2500\\n\\u03bb_fs = 154 kpc  (warm DM)\\nThis sterile \\u03bd is subdominant DM (38.3% of \\u03a9_DM)\",\n  \"metadata\": {\n    \"input\": {\n      \"m_s_eV\": 7000.0,\n      \"sin2_2theta\": 1e-10,\n      \"mechanism\": \"DW\"\n    },\n    \"regime\": {\n      \"name\": \"keV (warm dark matter)\",\n      \"bbn_treatment_valid\": true,\n      \"note\": \"relativistic at BBN; Delta N_eff follows from the DW relic density\"\n    },\n    \"production\": {\n      \"delta_neff\": 0.0006115,\n      \"neff_total\": 3.044611,\n      \"omega_s_h2\": 0.0459577,\n      \"overcloses\": false\n    },\n    \"bbn\": {\n      \"Yp\": 0.24682,\n      \"DH_x1e5\": 2.4435,\n      \"Li7H_x1e10\": 5.46,\n      \"chi2_total\": 2.7635,\n      \"delta_chi2_vs_sm\": -0.0079,\n      \"excluded_95\": false,\n      \"consistent_2sigma\": true,\n      \"method\": \"fit to PRyMordial (<0.3% within bbn_fit_validity)\"\n    },\n    \"xray\": {\n      \"E_gamma_keV\": 3.5,\n      \"decay_rate_per_s\": 2.287e-28,\n      \"lifetime_s\": 4.372e+27,\n      \"lifetime_yr\": 1.385e+20\n    },\n    \"structure\": {\n      \"free_streaming_kpc\": 153.5,\n      \"warm_or_cold\": \"warm\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": []
+        },
+        {
+          "id": "tooluse_R1Y6oaFsI2j08XquzbP4uP",
+          "tool": "predict_sterile_nu_xray_line",
+          "server": "serve-sbbn.sh",
+          "args": {
+            "m_s_eV": 7000,
+            "sin2_2theta": 1e-10
+          },
+          "result": "{\n  \"status\": \"ok\",\n  \"files\": [],\n  \"message\": \"X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\\nm_s = 7 keV, sin\\u00b22\\u03b8 = 1e-10\\n\\nE_\\u03b3 = 3.5 keV\\nDecay rate = 2.29e-28 s\\u207b\\u00b9\\nLifetime = 4.37e+27 s (1.39e+20 yr)\\n\\nMilky_Way_center: M = 1e+12 M\\u2609, d = 0.0083 Mpc \\u2192 flux = 4.42 ph/s/cm\\u00b2\\nM31: M = 1.3e+12 M\\u2609, d = 0.78 Mpc \\u2192 flux = 0.000651 ph/s/cm\\u00b2\\nComa: M = 1.2e+15 M\\u2609, d = 99.0 Mpc \\u2192 flux = 3.73e-05 ph/s/cm\\u00b2\\nPerseus: M = 6.6e+14 M\\u2609, d = 77.7 Mpc \\u2192 flux = 3.36e-05 ph/s/cm\\u00b2\\nstacked_galaxies: M = 1e+13 M\\u2609, d = 50.0 Mpc \\u2192 flux = 1.22e-06 ph/s/cm\\u00b2\\n(whole-halo flux, sterile \\u03bd = all DM; no field-of-view cut)\\n\\n\\u26a0 EXCLUDED by: NuSTAR M31 (Roach+ 2020), XMM-Newton blank sky (Dessert+ 2020)\\n\\n\\u2500\\u2500 3.5 keV Line Context \\u2500\\u2500\\nStatus: debated\\nBest-fit sin\\u00b22\\u03b8: 7e-11\\nRange: (2e-11, 2e-10)\",\n  \"metadata\": {\n    \"E_gamma_keV\": 3.5,\n    \"lifetime_s\": 4.372e+27,\n    \"flux_ph_s_cm2_by_target\": {\n      \"Perseus\": 3.357e-05,\n      \"M31\": 0.0006513,\n      \"Milky_Way_center\": 4.424,\n      \"Coma\": 3.732e-05,\n      \"stacked_galaxies\": 1.219e-06\n    },\n    \"excluded_by\": [\n      \"NuSTAR M31 (Roach+ 2020)\",\n      \"XMM-Newton blank sky (Dessert+ 2020)\"\n    ],\n    \"available_targets\": [\n      \"Perseus\",\n      \"M31\",\n      \"Milky_Way_center\",\n      \"Coma\",\n      \"stacked_galaxies\"\n    ],\n    \"flux_model\": \"whole halo, f_DM = 1, no field-of-view cut\"\n  }\n}",
+          "raw": "{\n  \"status\": \"ok\",\n  \"files\": [],\n  \"message\": \"X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\\nm_s = 7 keV, sin\\u00b22\\u03b8 = 1e-10\\n\\nE_\\u03b3 = 3.5 keV\\nDecay rate = 2.29e-28 s\\u207b\\u00b9\\nLifetime = 4.37e+27 s (1.39e+20 yr)\\n\\nMilky_Way_center: M = 1e+12 M\\u2609, d = 0.0083 Mpc \\u2192 flux = 4.42 ph/s/cm\\u00b2\\nM31: M = 1.3e+12 M\\u2609, d = 0.78 Mpc \\u2192 flux = 0.000651 ph/s/cm\\u00b2\\nComa: M = 1.2e+15 M\\u2609, d = 99.0 Mpc \\u2192 flux = 3.73e-05 ph/s/cm\\u00b2\\nPerseus: M = 6.6e+14 M\\u2609, d = 77.7 Mpc \\u2192 flux = 3.36e-05 ph/s/cm\\u00b2\\nstacked_galaxies: M = 1e+13 M\\u2609, d = 50.0 Mpc \\u2192 flux = 1.22e-06 ph/s/cm\\u00b2\\n(whole-halo flux, sterile \\u03bd = all DM; no field-of-view cut)\\n\\n\\u26a0 EXCLUDED by: NuSTAR M31 (Roach+ 2020), XMM-Newton blank sky (Dessert+ 2020)\\n\\n\\u2500\\u2500 3.5 keV Line Context \\u2500\\u2500\\nStatus: debated\\nBest-fit sin\\u00b22\\u03b8: 7e-11\\nRange: (2e-11, 2e-10)\",\n  \"metadata\": {\n    \"E_gamma_keV\": 3.5,\n    \"lifetime_s\": 4.372e+27,\n    \"flux_ph_s_cm2_by_target\": {\n      \"Perseus\": 3.357e-05,\n      \"M31\": 0.0006513,\n      \"Milky_Way_center\": 4.424,\n      \"Coma\": 3.732e-05,\n      \"stacked_galaxies\": 1.219e-06\n    },\n    \"excluded_by\": [\n      \"NuSTAR M31 (Roach+ 2020)\",\n      \"XMM-Newton blank sky (Dessert+ 2020)\"\n    ],\n    \"available_targets\": [\n      \"Perseus\",\n      \"M31\",\n      \"Milky_Way_center\",\n      \"Coma\",\n      \"stacked_galaxies\"\n    ],\n    \"flux_model\": \"whole halo, f_DM = 1, no field-of-view cut\"\n  }\n}",
+          "is_error": false,
+          "artifact_ids": []
+        }
+      ],
+      "artifact_ids": [],
+      "usage": {
+        "quick": {
+          "input": 13552,
+          "cached": 5619,
+          "output": 1222,
+          "reasoning": 0,
+          "calls": 2
+        }
+      }
+    }
+  ],
+  "artifacts": [],
+  "digest": null,
+  "title": "Use tools to compute, for m_s = 7 keV and sin^2(2theta)=1\u2026"
+}

@@ -1,0 +1,57 @@
+# Dodelson-Widrow production at 5 keV and 10 keV, sin²2θ = 3×10⁻⁹
+
+The tool doesn't output a field called "production fraction." I used ΔN_eff for it, which is the number density relative to one fully thermalised neutrino species while the sterile neutrino is still relativistic at BBN. The tool's regime note confirms that ΔN_eff "follows from the DW relic density" in this keV regime. As a check, my own estimate assuming Ω h² ≈ f · m_s / 94 eV reproduces the tool's Ω_s h² from its ΔN_eff to within about 1% (0.745 vs 0.752 at 5 keV; 2.60 vs 2.62 at 10 keV).
+
+## Results (two `predict_sterile_nu` calls, mechanism DW)
+
+| Quantity | m_s = 5 keV | m_s = 10 keV | Ratio (10/5) |
+|---|---|---|---|
+| ΔN_eff (production fraction f) | 0.01402 | 0.02440 | 1.741 |
+| N_eff total | 3.0580 | 3.0684 | – |
+| Ω_s h² | 0.7524 | 2.620 | 3.482 |
+| Overcloses (Ω_DM h² = 0.120) | yes | yes | – |
+| BBN Δχ² vs SM | −0.18 (allowed) | −0.30 (allowed) | – |
+| X-ray line energy E_γ | 2.5 keV | 5.0 keV | 2 |
+| Radiative decay rate Γ_γ | 1.28×10⁻²⁷ s⁻¹ | 4.08×10⁻²⁶ s⁻¹ | 32 |
+| Free-streaming length λ_fs | 215 kpc | 107 kpc | 0.50 |
+
+## Mass scaling observed
+
+- **Production fraction:** doubling the mass gives a ratio of 1.741, which is exactly 2^0.8. So f ∝ m_s^0.8.
+- **Relic density:** the ratio is 3.482, which is exactly 2^1.8. So Ω_s h² ∝ m_s^1.8 at fixed mixing. This is the familiar Dodelson-Widrow exponent: one power of m_s comes from the rest mass per particle, and the other 0.8 from the abundance.
+
+## Why the abundance grows with mass
+
+1. **How production works.** Active neutrinos in the plasma oscillate into sterile states, and their collisions turn part of the oscillating state into sterile neutrinos. The rate per active neutrino is roughly Γ_s ≈ ½ sin²2θ_eff · Γ_ν, with Γ_ν ∝ G_F² T⁵.
+
+2. **Mixing is suppressed at high temperature.** The thermal potential of the plasma, V_T ∝ G_F T⁵/M_W², grows with temperature relative to the vacuum term Δm²/2E ∝ m_s²/T. The effective mixing therefore collapses at high T, roughly as sin²2θ_eff ≈ sin²2θ / [1 + (const · T⁶/m_s²)]². Production is shut off early on and switches on only once the potential drops below the vacuum term.
+
+3. **The peak moves to higher T for heavier masses.** Comparing the collision rate with the Hubble rate (H ∝ g*^½ T²/M_Pl), production peaks at T_peak ∝ m_s^(1/3), roughly 100–300 MeV for keV masses. A heavier sterile neutrino keeps its vacuum mixing up to a higher temperature, where collisions are much faster.
+
+4. **The yield is close to linear in mass.** Evaluating the rate-to-Hubble ratio at the peak gives f ∝ sin²2θ · T_peak³ ∝ sin²2θ · m_s. Hence the naive Dodelson-Widrow scalings f ∝ m_s and Ω ∝ sin²2θ · m_s².
+
+5. **Why the exponent is 0.8 and not 1.** T_peak sits near the QCD transition, where the number of relativistic degrees of freedom g* changes rapidly. Going from 5 to 10 keV moves T_peak up by 2^(1/3) ≈ 1.26, into a range with more degrees of freedom. That makes the Hubble rate faster and dilutes the population more after production. Both effects reduce the yield slightly relative to the naive linear scaling, which leaves the effective f ∝ m_s^0.8 and Ω ∝ m_s^1.8. This is the scaling of the standard fits by Abazajian (astro-ph/0511630) and Asaka, Laine & Shaposhnikov (hep-ph/0612182). The original mechanism is Dodelson & Widrow (hep-ph/9303287).
+
+The yield is also linear in sin²2θ, because production is far from thermal equilibrium (f ~ 0.01–0.02 ≪ 1).
+
+## Consistency checks and caveats
+
+- **X-ray line:** the decay rate ratio of 32 is exactly 2⁵, matching the expected Γ_γ ∝ sin²2θ · m_s⁵. That decay-rate scaling is what makes X-ray limits tighten so strongly with mass.
+- **Free streaming:** λ_fs halves as the mass doubles (215 → 107 kpc), consistent with λ_fs ∝ 1/m_s for this production mechanism.
+- **Both points overclose the universe** (Ω_s h² = 0.75 and 2.62, against 0.120). As my own linear extrapolation in mixing, not a tool output, the mixing that would give exactly the observed dark matter is about 4.8×10⁻¹⁰ at 5 keV and about 1.4×10⁻¹⁰ at 10 keV.
+- **BBN doesn't constrain these points.** ΔN_eff of a few percent is far below current sensitivity, and the tool's validity flag says the BBN treatment applies here (keV, relativistic at BBN).
+Loading MCP servers…
+[10/15/26 22:37:28] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+[tool] predict_sterile_nu {"m_s_eV": 5000, "sin2_2theta": 3e-09, "mechanism": "DW"}
+[10/15/26 22:37:34] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 5e+03 eV, sin\u00b22\u03b8 = 3e-09\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+[tool] predict_sterile_nu {"m_s_eV": 10000, "sin2_2theta": 3e-09, "mechanism": "DW"}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 1e+04 eV, sin\u00b22\u03b8 = 3e-09\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+Tokens: 14K in (5.6K cached) · 3.6K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json

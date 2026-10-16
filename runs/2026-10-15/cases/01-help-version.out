@@ -1,0 +1,157 @@
+
+$ "/Users/nramachandra/anaconda3/envs/hep-genesis/bin/hep-genesis-agent" --help
+usage: hep-genesis-agent [-h] [--project NAME] [--project-dir PATH]
+                         [--servers SPEC] [--output-dir PATH]
+                         [--resume RUN_ID] [--temperature TEMPERATURE]
+                         [--list-projects] [--coding] [--coding-auto]
+                         [--link-codebase PATH_OR_GIT_URL] [--list-codebases]
+                         [--quick] [--chat NAME] [--report]
+                         [--max-rounds MAX_ROUNDS] [--list-chats]
+                         [--no-extras] [--list-skills] [--max-waves N]
+                         [--workers N] [--max-tool-calls N] [--wall-clock MIN]
+                         [--approve] [--auto] [--allow-hpc]
+                         [--steer RUN_ID TEXT] [--pause RUN_ID]
+                         [--stop RUN_ID] [--continue DIRECTION_ID]
+                         [--list-runs] [--board] [--show-run RUN_ID]
+                         [--events {jsonl}] [--no-research-tools]
+                         [query]
+
+Headless agent runner: the CLI twin of the desktop app's chat.
+
+Two modes, like the desktop app:
+
+* research (default): deep, multi-direction research on a shared board —
+  survey -> plan -> critic -> (approval) -> waves of parallel direction
+  workers -> critic -> replan or stop -> report -> honesty pass
+  (``docs/research-engine.md``). The budget — ``--max-waves``, ``--workers``,
+  ``--max-tool-calls``, ``--wall-clock`` (defaults 4 / 5 / 200 / 120 min, or
+  ``HEP_RESEARCH_*`` in the environment) — bounds it; steer a running run
+  with ``--steer``, pause/resume it, continue an open direction of the
+  report with ``--continue``.
+* ``--quick``: one tool-calling assistant over a persistent chat
+  (``<project>/chats/<name>.json``); follow-up queries keep their context,
+  long chats auto-compact, and ``--report`` (or asking for a report in the
+  query) writes the LaTeX/PDF report of the whole chat.
+
+Both run inside a research project directory that collects outputs,
+dispatched-job artifacts, resume state, and provenance — the same on-disk
+layout the desktop app uses (see ``hep_genesis.projects``).
+
+LLM configuration comes from the environment: ``LLM_URL``, ``LLM_MODEL``,
+``LLM_API_KEY`` (+ optional per-stage ``LLM_{SURVEY,PLAN,WORKER,CRITIC,
+REPORT,QUICK}_*`` overrides — see ``agent/llm_factory.py``).
+
+positional arguments:
+  query                 the research question / task
+
+options:
+  -h, --help            show this help message and exit
+  --project NAME        project name or slug; created if missing
+  --project-dir PATH    explicit project directory (overrides --project)
+  --servers SPEC        MCP server: module:<python.module>, command:<exe
+                        args>, the URL of a running streamable-http server
+                        (…/mcp), a local path, or a git URL to install; prefix
+                        name= to name it (repeatable); default: the three
+                        bundled servers; 'none' for no servers
+  --output-dir PATH     override the run output dir
+  --resume RUN_ID       resume a paused or failed research run (a query of
+                        just 'continue'/'resume' resumes the --project's
+                        latest stopped run)
+  --temperature TEMPERATURE
+  --list-projects       list projects and exit
+  --coding              enable the last-resort run_coding_task tool (pi
+                        harness; all code is saved under the project)
+  --coding-auto         quick mode with --coding: skip the per-task approval
+                        prompt (research mode never prompts: enabling coding
+                        is the approval)
+  --link-codebase PATH_OR_GIT_URL
+                        link an existing codebase to --project so coding tasks
+                        can build on it (local folder in place, git URL
+                        shallow-cloned + SHA-pinned); repeatable, exits after
+                        linking when no query is given
+  --list-codebases      list the --project's linked codebases and exit
+  --quick               quick mode: one tool-calling assistant over a
+                        persistent chat (follow-ups keep context; see --chat)
+  --chat NAME           quick mode: chat name within the project (default:
+                        'default')
+  --report              write the LaTeX/PDF report of the --chat (after the
+                        query, if one is given)
+  --max-rounds MAX_ROUNDS
+                        quick mode: tool-call rounds per turn (default 30)
+  --list-chats          list the --project's chats and exit
+  --no-extras           quick mode: don't bind load_skill/remember or read the
+                        workspace (HEP_WORKSPACE_DIR, default ~/HEP-Genesis:
+                        skills/*.md + MEMORY.md)
+  --list-skills         list workspace skills and exit
+
+research mode:
+  --max-waves N         research budget: waves of directions (default 4)
+  --workers N           research budget: directions run in parallel (default
+                        5)
+  --max-tool-calls N    research budget: total tool calls, survey excluded
+                        (default 400)
+  --wall-clock MIN      research budget: wall clock in minutes (default 120)
+  --approve             show the planned directions and ask before executing
+                        (edit/approve/reject)
+  --auto                never ask: approve the plan as proposed (default when
+                        stdin is not a TTY)
+  --allow-hpc           allow HPC dispatch (facility allocation) without
+                        asking; never implied by --auto
+  --steer RUN_ID TEXT   append a steering note to a running research run and
+                        exit
+  --pause RUN_ID        ask a running research run to pause at its next check
+  --stop RUN_ID         ask a running research run to stop and write its
+                        report
+  --continue DIRECTION_ID
+                        start a new run on the same board continuing this open
+                        direction (see the report)
+  --list-runs           list the --project's research runs and exit
+  --board               print the --chat's research board (directions,
+                        findings with evidence, critiques, open directions)
+                        and exit
+  --show-run RUN_ID     print a run's record and its last events, and exit
+  --events {jsonl}      also print every run event as JSON lines on stdout
+  --no-research-tools   do not bind the built-in web/arXiv research tools to
+                        workers
+
+server SPECs (repeatable --servers; omitted = the three bundled servers
+hep-research-aid, alcf-tools and nersc-tools, the app's defaults; "none" = no servers):
+  module:hep_genesis.domain.mcp_server   pre-installed python module (-m)
+  command:uvx duckduckgo-mcp-server      pre-installed executable + args
+  emulators=http://127.0.0.1:8000/mcp   running streamable-http server, connected by URL (name= optional)
+  /path/to/repo | https://github.com/... pip-installed, then run by name
+
+environment:
+  LLM_URL, LLM_MODEL, LLM_API_KEY        chat endpoint (OpenAI-compatible)
+  LLM_API_KEY=chatgpt                    pay with your ChatGPT Plus/Pro plan instead of a key
+                                         (LLM_URL=https://api.openai.com/v1; sign in once with
+                                         hep-genesis-chatgpt-auth; --models lists the slugs)
+  LLM_SURVEY_*/LLM_PLAN_*/LLM_WORKER_*/LLM_CRITIC_*/LLM_REPORT_*   per-stage overrides
+  LLM_CODER_*                            coding-harness model (with --coding; chatgpt works too)
+  HEP_PROJECTS_DIR                       project root (default ~/hep-genesis/projects)
+  HEP_CODING=1                           same as --coding
+  HEP_WORKSPACE_DIR                      skills/*.md + MEMORY.md (default ~/HEP-Genesis)
+  HEP_PI_BIN                             explicit path to the pi binary
+  HEP_RESEARCH_MAX_WAVES / _WORKERS / _MAX_TOOL_CALLS / _WALL_CLOCK_MIN   research budget defaults
+
+examples:
+  hep-genesis-agent --list-projects
+  hep-genesis-agent "compute a test power spectrum" --project qcd-eos \
+      --servers module:hep_genesis.domain.mcp_server        # research mode, default budget
+  hep-genesis-agent "..." --project qcd-eos --max-waves 6 --wall-clock 240 --approve --servers ...
+  hep-genesis-agent --steer RUN_ID "also compare against the Planck value" --project qcd-eos
+  hep-genesis-agent --pause RUN_ID --project qcd-eos ;  hep-genesis-agent --resume RUN_ID --project qcd-eos
+  hep-genesis-agent --continue d-04 --project qcd-eos --servers ...   # a report's open direction
+  hep-genesis-agent --board --project qcd-eos                 # the chat's board: findings, evidence, critiques
+  hep-genesis-agent --show-run RUN_ID --project qcd-eos       # run record + last events
+  hep-genesis-agent --report --project qcd-eos                # PDF of the chat (quick + research turns)
+  hep-genesis-agent --quick "list the emulators you have" --project qcd-eos \
+      --servers module:hep_genesis.domain.mcp_server        # chat 'default'
+  hep-genesis-agent --quick "now plot P(k) for the first one" --project qcd-eos \
+      --servers module:hep_genesis.domain.mcp_server        # follow-up, same chat
+  hep-genesis-agent --report --project qcd-eos                # PDF of that chat
+  hep-genesis-agent --project qcd-eos --link-codebase ~/code/my-analysis
+  hep-genesis-agent "fit the slope of the downloaded HMF" --project qcd-eos \
+      --coding --servers module:hep_genesis.domain.mcp_server
+
+[exit 0]

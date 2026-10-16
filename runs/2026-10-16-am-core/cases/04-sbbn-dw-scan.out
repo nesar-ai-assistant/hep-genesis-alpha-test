@@ -1,0 +1,50 @@
+# Dodelson-Widrow production at 5 keV and 10 keV, sin²2θ = 3×10⁻⁹
+
+You asked this same question two turns ago, so I reused the values from those two `predict_sterile_nu` calls (mechanism DW, defaults Ω_b h² = 0.02237 and τ_n = 878.4 s) instead of running them again. The model is deterministic, so a rerun would give the same output; I can repeat it if you want a fresh check.
+
+**Short answer:** doubling the mass from 5 to 10 keV raises the production fraction by 1.74 (f ∝ m_s^0.8) and the relic density by 3.48 (Ω_s h² ∝ m_s^1.8).
+
+The tool doesn't output a quantity called "production fraction." I take it to be ΔN_eff: the sterile-neutrino number density relative to one fully thermalised neutrino species, while the sterile neutrino is still relativistic. As a check, f · m_s / 94 eV gives back the tool's Ω_s h² to within about 1% (0.745 vs 0.752 at 5 keV; 2.60 vs 2.62 at 10 keV).
+
+## Tool results
+
+| Quantity | m_s = 5 keV | m_s = 10 keV | Ratio (10/5) |
+|---|---|---|---|
+| ΔN_eff (production fraction f) | 0.01402 | 0.02440 | 1.740 |
+| N_eff total | 3.0580 | 3.0684 | – |
+| Ω_s h² | 0.7524 | 2.620 | 3.482 |
+| Overcloses (Ω_DM h² = 0.120) | yes | yes | – |
+| BBN Δχ² vs the Standard Model | −0.18 (allowed) | −0.30 (allowed) | – |
+| X-ray line energy | 2.5 keV | 5.0 keV | 2 |
+| Radiative decay rate Γ_γ | 1.28×10⁻²⁷ s⁻¹ | 4.08×10⁻²⁶ s⁻¹ | 32 |
+| Free-streaming length | 215 kpc | 107 kpc | 0.50 |
+
+## Mass scaling observed
+
+- **Production fraction:** the ratio is 1.740, which is 2^0.8 (1.741). So f ∝ m_s^0.8.
+- **Relic density:** the ratio is 3.482, which is 2^1.8. So Ω_s h² ∝ m_s^1.8. One power of m_s is the rest mass per particle; the other 0.8 comes from the abundance.
+
+## Why the abundance grows with mass
+
+1. **Production mechanism.** Active neutrinos oscillate into sterile states, and collisions in the plasma turn part of the oscillating state into sterile neutrinos. The rate is roughly Γ_s ≈ ½ sin²2θ_eff · Γ_ν, with Γ_ν ∝ G_F² T⁵.
+2. **Mixing is suppressed at high temperature.** The thermal potential of the plasma, V_T ∝ G_F T⁵/M_W², grows with temperature relative to the vacuum term m_s²/2E ∝ m_s²/T. So the effective mixing collapses at high T, roughly as sin²2θ_eff ≈ sin²2θ / [1 + c · T⁶/m_s²]². Production only switches on once the thermal potential falls below the vacuum term.
+3. **The peak moves to higher temperature for heavier masses.** Comparing Γ_s with the Hubble rate H ∝ g*^½ T²/M_Pl puts the production peak at T_peak ∝ m_s^(1/3), about 100–300 MeV for keV masses. A heavier sterile neutrino keeps its vacuum mixing up to a hotter epoch, where collisions are faster.
+4. **The naive yield is linear in mass.** Evaluating Γ_s/H at the peak gives f ∝ sin²2θ · m_s, and therefore Ω ∝ sin²2θ · m_s². The yield is also linear in sin²2θ because production stays far from equilibrium (f ~ 0.01–0.02 ≪ 1).
+5. **Why the exponent is 0.8 instead of 1.** T_peak sits near the QCD transition, where the number of relativistic degrees of freedom g* changes quickly. Raising T_peak by 2^(1/3) ≈ 1.26 moves production to a time with more degrees of freedom. That speeds up the expansion and dilutes the population more afterwards. Both effects pull the yield below linear, giving f ∝ m_s^0.8 and Ω ∝ m_s^1.8. This matches the standard fits:
+   - Abazajian, astro-ph/0511630
+   - Asaka, Laine & Shaposhnikov, hep-ph/0612182
+   - The original mechanism is Dodelson & Widrow, hep-ph/9303287.
+
+## Consistency checks and caveats
+
+- **X-ray line:** the decay-rate ratio of 32 is 2⁵, matching Γ_γ ∝ sin²2θ · m_s⁵.
+- **Free streaming:** the length halves as the mass doubles, consistent with λ_fs ∝ 1/m_s.
+- **Both points overclose the universe.** I estimated, by scaling linearly in sin²2θ (not a tool output), that the observed dark-matter density needs sin²2θ ≈ 4.8×10⁻¹⁰ at 5 keV and ≈ 1.4×10⁻¹⁰ at 10 keV.
+- **BBN doesn't constrain these points.** ΔN_eff of a few percent is well below the tool's BBN limit of ΔN_eff < 0.55 (95%). The tool's validity flag says the BBN treatment applies in this keV range.
+Loading MCP servers…
+[10/16/26 08:31:42] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+Tokens: 12K in · 2.9K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json

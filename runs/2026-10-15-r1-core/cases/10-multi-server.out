@@ -1,0 +1,51 @@
+The D/H prediction at N_eff = 3.044 is **2.443 × 10⁻⁵**, and the thermal relic density of a 1 TeV higgsino is **Ωh² = 0.0898**. Neither result lets me say which model Planck favors. The higgsino result is about 25σ below Planck (the tool's "consistent" label is wrong), and the D/H number tests nothing about dark matter.
+
+## 1. Sterile-nu server: D/H at N_eff = 3.044
+
+The server has no direct "N_eff in" option, so I used a sterile neutrino with tiny mixing (m_s = 1 keV, sin²2θ = 10⁻¹⁵, Dodelson–Widrow production). Its ΔN_eff is 1.3 × 10⁻⁹, so N_eff = 3.0440, which is the Standard Model value.
+
+| Quantity | Prediction | Observed |
+|---|---|---|
+| **D/H × 10⁵** | **2.4433** | 2.547 ± 0.025 |
+| Y_p | 0.24682 | 0.2449 ± 0.004 |
+| ⁷Li/H × 10¹⁰ | 5.46 | ~1.6 (the lithium problem) |
+
+- The method is a fit to PRyMordial, accurate to better than 0.3% within its calibrated range; the keV regime is flagged as valid for BBN. The inputs were Planck's baryon density (Ω_b h² = 0.02237) and a neutron lifetime of 878.4 s.
+- Δχ² compared with the Standard Model is 0.00, as expected, since this point is the Standard Model.
+- The predicted D/H is about 4σ below the observed value. That gap belongs to this fit at Standard Model inputs, not to any sterile-neutrino effect.
+
+## 2. Inelastic-dm server: relic density of a 1 TeV higgsino
+
+| Quantity | Value |
+|---|---|
+| **Ωh²** | **0.0898** |
+| Planck | 0.120 ± 0.0012 |
+| Tension | 25.1σ (too little dark matter) |
+| ⟨σv⟩ (set automatically) | 3.03 × 10⁻²⁶ cm³/s |
+| Freeze-out | x_f = 24.7, T_f = 40.5 GeV, g* = 86.25 |
+
+Warning: the tool labels this result `consistent_planck: True` while also reporting a 25σ tension. Those two statements contradict each other. 0.0898 against 0.120 ± 0.0012 is clearly not consistent, so ignore the "consistent" label.
+
+A 1 TeV higgsino makes about 75% of the observed dark matter. The full amount needs a mass of about 1.1 TeV, the tool's default "thermal higgsino" (hep-ph/0601041). Making too little is not a ruling-out: the higgsino could be part of the dark matter, with something else making up the rest.
+
+## 3. Which model does Planck favor?
+
+The two numbers answer different questions, so they don't support a ranking:
+
+- **D/H at N_eff = 3.044** is a Standard Model BBN prediction. Planck's measured N_eff is consistent with 3.044, so the data allow no extra radiation. They neither require nor rule out a sterile neutrino. A keV sterile neutrino can be dark matter, but whether it is depends on its relic density and X-ray limits, which this calculation did not test. At the mixing I used, its Ωh² is only 1.4 × 10⁻⁸.
+- **The higgsino at exactly 1 TeV** misses Planck's Ωh² by 25σ as the only dark matter. It is viable only as a partial component, or at about 1.1 TeV.
+
+A fair comparison would check both models against the same Planck quantity, Ωh² = 0.120. For the sterile neutrino, that means finding the masses and mixings that give the full abundance and checking them against X-ray and Lyman-α limits. For the higgsino, it means using m ≈ 1.1 TeV. I can run both if that's useful.
+Loading MCP servers…
+[10/15/26 22:41:26] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 18 tools
+[tool] predict_sterile_nu {"m_s_eV": 1000, "sin2_2theta": 1e-15}
+[10/15/26 22:41:34] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 1e+03 eV, sin\u00b22\u03b8 = 1e-15\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+[tool] compute_relic_density {"m_chi_GeV": 1000, "is_higgsino": true}
+[tool] compute_relic_density -> ok: {   "parameters": {     "m_chi_GeV": 1000.0,     "is_higgsino": true,     "sigma_v_cm3_s": 3.0250000000000006e-26   },   "relic_density": {     "omega_h2": 0.08
+Tokens: 16K in (7.4K cached) · 1.9K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/multi.json

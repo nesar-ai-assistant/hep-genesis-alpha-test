@@ -1,0 +1,1847 @@
+Title: Resonant production of sterile neutrino dark matter with a refined numerical scheme
+Authors: Kentaro Kasai, Masahiro Kawasaki, Kai Murai
+Year: 2025
+arXiv ID: 2510.01907
+
+============================================================
+
+--- Page 1 ---
+TU-1279
+Prepared for submission to JCAP
+Resonant production of sterile
+neutrino dark matter with a refined
+numerical scheme
+Kentaro Kasai,a Masahiro Kawasaki,a,b and Kai Murai c
+aICRR, University of Tokyo, Kashiwa 277-8582, Japan
+bKavli IPMU (WPI), UTIAS, University of Tokyo, Kashiwa 277-8583, Japan
+cDepartment of Physics, Tohoku University, Sendai 980-8578, Japan
+E-mail: kkasai@icrr.u-tokyo.ac.jp, kawasaki@icrr.u-tokyo.ac.jp,
+kai.murai.e2@tohoku.ac.jp
+Abstract.The existence of a large primordial neutrino asymmetry is an intriguing possi-
+bility, both observationally and theoretically. Such an asymmetry can lead to the resonant
+production ofkeV-scale sterile neutrinos, which are a fascinating candidate for dark matter.
+In this paper, we comprehensively revisit the resonant production processes with a refined
+numerical analysis, adopting a dynamical discretization of momentum modes to take care of
+the sharpness of the resonance. We find parameter regions consistent with X-ray and Lyman-
+αconstraints for lepton-to-entropy ratio≳O(10 −3)andm νs ≳20keV. We also explore the
+Affleck-Dine mechanism as a possible origin for such asymmetries. While previous studies
+considered resonant production after lepton number generation, we numerically investigate
+cases where a fraction of sterile neutrinos is produced during lepton number injection. In
+this regime, some parameter sets can shorten the free-streaming length and reduce the re-
+quired mixing angle to match the observed dark matter abundance, thereby mitigating the
+observational constraints.
+Keywords:physics of the early universe, dark matter theory, particle physics - cosmology
+connection
+arXiv:2510.01907v2  [hep-ph]  7 Oct 2025
+
+--- Page 2 ---
+Contents
+1 Introduction 1
+2 A basic formalism for resonant production of sterile neutrinos 3
+2.1 Basic equations 3
+2.2 Time Evolution of lepton asymmetry 5
+3 Numerical setup 6
+3.1 Parametrization of the momentum variable 6
+3.2 Stationary point approximation 8
+3.3 Results 9
+3.4 Free-streaming length of the sterile neutrinos 12
+3.5 Case with vanishing total lepton asymmetry 14
+4 Generation of a large lepton asymmetry 15
+4.1 Decay of Q-balls 15
+4.2 Resonant production during the decay of Q-balls 17
+5 Summary 20
+A Fitting formulae forye 23
+B Concrete fitting formulae for the susceptibilities 23
+C Relation betweenL a andV a 25
+D Concrete expressions of bin transformations 27
+E Analysis with full quantum kinetic equations (QKEs) 27
+1 Introduction
+Sterile neutrinos with masses of thekeVscale are intriguing candidates for dark matter (DM)
+(see Refs. [1–3] for reviews). They can be produced through neutrino oscillations between
+sterile neutrinos and the Standard Model (SM) neutrinos (“active” neutrinos) [4–7] via mixing.
+The simplest setup for this production is known as the Dodelson-Widrow (DW) mecha-
+nism [4, 8]. However, the vacuum mixing angle required to realize the correct DM abundance
+and the resultant free-streaming length of sterile neutrinos are severely constrained by current
+observational data. In particular, the X-ray observations of galaxies, which are sensitive to
+the radiative decay of sterile neutrinos [7, 9–13], and the structure formation constraints from
+Lyman-αforest data [14, 15] already exclude the DW scenario at more than 2σlevel.
+These stringent constraints can be significantly relaxed if there exists a large primordial
+neutrino-anti-neutrino asymmetry with the lepton-to-entropy ratio≳O(10−5)[6, 7, 16–22].
+In such a case, the non-zero lepton number modifies the self-energy of active neutrinos, lead-
+ing to a resonant enhancement of the production rate at a certain cosmic temperature in the
+early universe. Consequently, we can explain all DM with a smaller vacuum mixing angle
+– 1 –
+
+--- Page 3 ---
+than in the DW mechanism, satisfying the X-ray constraints. This possibility is also moti-
+vated by the recently reported primordial abundance of helium-4 inferred from observation
+of extremely metal-poor galaxies [23, 24], which suggests the existence of a large primordial
+electron neutrino-anti-neutrino asymmetry before big bang nucleosynthesis (BBN).
+This paper aims to provide a comprehensive scan of the model parameters that can
+explain all DM density by resonantly produced sterile neutrinos consistent with X-ray ob-
+servations. Although several previous works have studied the same subject, the early stud-
+ies [17, 18] assume that the lepton asymmetry in SM neutrinos is always equilibrated among
+the flavors in the early universe. However, various studies [25–30] have shown that flavor
+oscillations within SM neutrinos take place well after the production of the sterile neutrinos.
+Thus, the assumption of equilibration would be invalid. More recent studies [19, 20] have
+modified these assumptions and performed more realistic analyses, although they do not of-
+fer a comprehensive analysis of the parameter space. Moreover, some numerical difficulties
+remain due to the sharpness of the resonance unless the momentum discretization is treated
+with sufficient care, especially when the initial lepton asymmetry is large and/or the mass of
+the sterile neutrino is small [31, 32].
+In this paper, we reexamine the resonant production scenario with careful numerical
+calculations of the momentum distribution of sterile neutrinos near the resonance and discuss
+the observational constraints. We find that the lepton-to-entropy ratio is required to be
+≳O(10 −3)to evade both the X-ray and Lyman-αconstraints. We also investigate the
+sterile neutrino production when the lepton asymmetry of each flavor is large but the total
+asymmetry vanishes, which is suggested by the very recent papers [32, 33]. In this case,
+the flavor oscillations can reduce the asymmetries after the sterile neutrinos production and
+before the onset of BBN, which significantly relaxes the constraints on the lepton asymmetry
+from BBN.
+Furthermore, we discuss the generation of such a large lepton asymmetry within the
+framework of Affleck-Dine leptogenesis [31, 34–38]. We investigate the case in which non-
+topological solitons called Q-balls are formed by a leptonic scalar field. Lepton asymmetry
+stored in Q-balls is protected from the sphaleron process and is released as active neutrinos
+when the Q-balls decay well after the electroweak phase transition, which successfully explains
+the origin of a large neutrino asymmetry without generating too large baryon asymmetry. In
+the context of resonantly produced sterile neutrino DM, the main idea was discussed in our
+previous paper [31]. However, just for simplicity, we only considered the resonant production
+after the Q-balls completely decay. In contrast, in this paper, we show that the final spectrum
+is significantly altered if a substantial fraction of sterile neutrinos is produced during the decay
+of Q-balls. Notably, if sterile neutrinos are produced around the time when the decay process
+is completed, it can relax the observational constraints from X-ray and structure formation.
+The rest of this paper is organized as follows. In Sec. 2, we outline the basic formalism
+for the resonant production of sterile neutrinos. In Sec. 3, we describe the numerical methods
+used to solve these equations, and present the results for the required mixing angleθto
+match the DM abundance, along with the resulting spectrum, free-streaming length, and the
+observational constraints. In Sec. 4, we investigate a concrete leptogenesis scenario based on
+the Affleck-Dine mechanism. We also numerically investigate the cases where sterile neutrinos
+are produced during lepton number injection, and show the observational constraints. Finally,
+Sec. 5 provides the summary of our results.
+– 2 –
+
+--- Page 4 ---
+2 A basic formalism for resonant production of sterile neutrinos
+In this section, we briefly summarize the basic equations that describe the evolution of sterile
+neutrinos and lepton asymmetry.
+2.1 Basic equations
+In this paper, we consider the mixing between one flavor of the SM neutrinos and one sterile
+neutrino species as
+|νa⟩= cosθ|ν 1⟩+ sinθ|ν 2⟩,
+|νs⟩=−sinθ|ν 1⟩+ cosθ|ν 2⟩, (2.1)
+where|ν a⟩and|ν s⟩are flavor eigenstates of an active neutrino (a=e,µ, orτ) and a sterile
+neutrino, respectively,|ν 1⟩and|ν 2⟩are the mass eigenstates, andθis their mixing angle in
+vacuum. The mixing of the anti-particle states is also described in the same way. While
+we explain the formalism for generalahere, we will mainly discuss the case ofa=ein the
+subsequent sections. We also introduce a density matrix involving the two flavor eigenstates
+as
+ρ(t,p) =
+ρaa ρas
+ρ∗
+as ρss
+
+,
+¯ρ(t,p) =
+¯ρaa ¯ρas
+¯ρ∗
+as ¯ρss
+
+,
+(2.2)
+whereρ aa andρ ss represent the momentum distribution functions of the active and sterile
+neutrinos, respectively, andρas represents the coherence between the two states.¯ρrepresents
+the same stuff of the anti-particles.
+The effective description of the kinetic equation of neutrino states is given by [39, 40]
+i(∂t−Hp∂ p)ρ= [H,ρ]−i{Γ,ρ−ρ eq},(2.3)
+whereHis the Hubble parameter,pis the physical momentum,His the Hamiltonian, and
+[·,·]and{·,·}denote commutator and anti-commutator, respectively. Here,ρ eq is the ther-
+mal distribution given by
+ρeq =
+feq(
+p
+m2νa +p 2,µνa) 0
+0f eq(
+p
+m2νs +p 2,µνs)
+
+,(2.4)
+wherem νa andm νs are the active and sterile neutrino masses, respectively,f eq(E,µ)≡
+1/(exp[(E−µ)/T] + 1)is the Fermi-Dirac distribution function, andµ νa andµ νs are the
+chemical potentials of the active and sterile neutrinos, respectively. Here, we use the mass
+eigenvalues of|ν1⟩and|ν 2⟩form νa andm νs, respectively, which can be justified in the limit
+of a small mixing angle. In the following, we approximate that
+p
+m2νa +p 2≃
+p
+m2νs +p 2≃p
+since both the active and sterile neutrinos are relativistic at the epoch of interest.Γis a
+Hermitian matrix associated with the scattering rate of neutrinos in the thermal plasma.
+Since sterile neutrinos do not interact with the thermal plasma,Γhas a form of
+Γ = 1
+2
+Γνa 0
+0 0
+
+,(2.5)
+whereΓ νa is the total thermal width of the active neutrino given by
+Γνa(p,T) =y a(p,T)G 2
+FpT 4 .(2.6)
+– 3 –
+
+--- Page 5 ---
+Here,G F is the Fermi coupling constant, andya(p,T)is a factor depending on the degrees
+of freedom in the thermal plasma. See Appendix A for the fitting formula ofye used in our
+numerical calculations. In the flavor basis, the HamiltonianHis written as
+H=
+
+Va− m2
+νs
+4p cos 2θ m2
+νs
+4p sin 2θ
+m2
+νs
+4p sin 2θ m2
+νs
+4p cos 2θ
+
+ ,(2.7)
+whereV a denotes the effective potential due to the finite temperature and density effects
+on the self-energy of the active neutrino. The first term in the right-hand side of Eq. (2.3)
+describes the neutrino oscillation effect, and the second term describes the collision process
+of active neutrinos. Consequently, Eq. (2.3) can be rewritten as
+i(∂t−Hp∂ p)ρaa = m2
+νs
+4p sin 2θ(ρ∗
+as−ρas)−iΓ νa(ρaa−f eq(p,µνa)),(2.8)
+i(∂t−Hp∂ p)ρss = m2
+νs
+4p sin 2θ(ρas−ρ∗
+as),(2.9)
+i(∂t−Hp∂ p)ρas = m2
+νs
+4p sin 2θ(ρss−ρaa) +
+
+Va− m2
+νs
+2p cos 2θ−i Γνa
+2
+
+ρas .(2.10)
+SinceΓ νa is much larger thanHandm 2
+νs/pfor the temperatures of interest, Eq. (2.8) leads
+toρ aa≃f eq(p,µνa).
+The thermal self-energies of the active and anti-active neutrinos,Va andV ¯a, are respec-
+tively given by [41]
+Va =
+√
+2GF
+
+2(nνa−n ¯νa) +
+X
+b̸=a
+(nνb−n ¯νb) +
+1
+2 + 2 sin2θw
+
+(nea−n ¯ea)
+−
+1
+2−2 sin 2θw
+X
+b̸=a
+(neb−n ¯eb)
+
+−BapT 4
+≡
+√
+2GFstotLa−BapT 4,
+V¯a=−
+√
+2GFstotLa−BapT 4,
+(2.11)
+wheren νa andn ¯νa are the number densities ofνa and¯νa, respectively,nea andn ¯ea are the
+number densities of the charged leptons and antileptons, respectively,θw is the Weinberg
+angle satisfyingsin 2θw≃0.23, ands tot is the total entropy density. Here, the subscripts
+a,b(=e,µ,τ)denote the flavors of the active neutrinos, andB a is a constant taking a value
+ofB e = 10.88×10 −9 GeV−4 fora=e[42]. Furthermore, we have defined a potential lepton
+numberL a as
+La≡ 1
+stot
+
+2(nνa−n ¯νa) +
+X
+b̸=a
+(nνb−n ¯νb) +
+1
+2 + 2 sin2θw
+
+(nea−n ¯ea)
+−
+1
+2−2 sin 2θw
+X
+b̸=a
+(neb−n ¯eb)
+
+.(2.12)
+– 4 –
+
+--- Page 6 ---
+In Eq. (2.11), we neglected the contributions of the baryon sector because they are much
+smaller than those of the active neutrino sector as discussed in Refs. [17, 19].
+If there is no lepton asymmetry, i.e.,La = 0,V a andV ¯aare equal and negative (Va =
+V¯a<0), and henceν s and¯νs are produced with the same amount via the DW mechanism.
+On the other hand, ifLa is positive and large enough,V a becomes positive, and the two
+diagonal components of the Hamiltonian in Eq. (2.7) become equal at some temperature,
+which indicates a maximal mixing of the active and sterile neutrinos. Consequently,νs is
+resonantly produced while the production of¯νs is not so different from the DW mechanism.
+The condition for the resonance is given by
+Va− m2
+νs
+4p cos 2θ= m2
+νs
+4p cos 2θ
+⇔1− 2p
+m2νs
+Va≃0,(2.13)
+where we usedcos 2θ≃1. IfL a<0,¯νs can be resonantly produced in a similar way.
+2.2 Time Evolution of lepton asymmetry
+Here, we describe the time evolution of lepton asymmetry and the asymmetry redistribution
+among the active neutrinos and charged leptons, basically following Refs. [19, 20]. First of
+all, we define a lepton asymmetryLa of an active flavora=e,µ,τby
+La≡ nνa−n ¯νa +nea−n ¯ea
+stot
+.(2.14)
+Now, since the sterile neutrino production occurs atT=O(0.1)GeV as we will see later,
+the flavor oscillations do not take place around or before the production of the sterile neutri-
+nos [25–30]. Thus, we consider thatLa of flavors that do not mix withνs is conserved. On
+the other hand, regarding the flavor mixed withνs, we impose the condition
+La + nνs−n ¯νs
+stot
+= const.(2.15)
+Then, we obtain
+d
+dtLa =−
+Z p2dp
+2π2
+(∂t−Hp∂ p)(ρss−¯ρss)
+stot
+=− m2
+νs sin 2θ
+stot
+Z pdp
+4π2 Im(ρas−¯ρas),(2.16)
+where we used Eq. (2.9) and its counterpart for the anti-particle in the second equality.
+Now, we discuss the redistribution of lepton asymmetry among neutrinos and charged
+leptons. At the epoch ofν s production, the process ofν a +e b ↔ν b +e a is in chemical
+equilibrium. Furthermore, when the cosmic temperature is higher than that of QCD phase
+transition,T QCD, the reactionνa + ¯ea↔α+ ¯β, whereαandβare quarks of up-type and
+down-type, respectively, is also in chemical equilibrium. On the other hand, atT≲TQCD,
+the reactionsπ +↔ν a + ¯ea fora=e,µare in chemical equilibrium. They redistribute a
+fraction of lepton asymmetry into charged leptons at the epoch ofνs production. This effect
+slightly modifies the final result because the effects of neutrino asymmetry and charged lepton
+asymmetry onVa are different, as shown in Eq. (2.11). We can determine the charged-lepton
+asymmetry by requiring charge neutrality and neglecting baryon asymmetry, which is much
+smaller than the lepton asymmetry of interest. To do this, we define chemical potentials
+– 5 –
+
+--- Page 7 ---
+with respect to the electromagnetic charge density, baryon number density, and lepton flavor
+density asµq,µ B, andµa, respectively. Then, the electromagnetic charge densitynq, baryon
+number densitynB, andLa are given at linear order in chemical potentials by
+nq =χ q(T)µq +χBq(T)µB−2
+X
+a
+χ(mea,T)(µ a−µq) = 0,
+nB =χ B(T)µB +χBq(T)µq≃0,(2.17)
+La = χ(0,T)µ a + 2χ(mea,T)(µ a−µq)
+stot
+,
+whereχ(m,T),χ B,χ q, andχBq are susceptibilities defined by
+χ(m,T)≡
+Z p2dp
+2π2
+∂
+∂Efeq(E,T)
+
+E=
+√
+p2+m2
+,
+χq≡ ∂2P
+∂µ2q
+, χ B≡ ∂2P
+∂µ2
+B
+, χ Bq≡ ∂2P
+∂µB∂µq
+,
+(2.18)
+wherePis the pressure of the SM plasma up to second order with respect to chemical
+potentials.χis the susceptibility for leptons and can be well approximated by integration
+of Fermi-Dirac distributions. On the other hand,χB,χ q, andχ Bq are related to the QCD
+thermodynamics and cannot be approximated by integration of the Fermi-Dirac distributions
+of free fermions. Thus, we fit the numerical results obtained by Ref. [20], whose fitting
+formulae are presented in Appendix B. By solving Eqs. (2.14), (2.17), and (2.18) in terms of
+µB,µ q andµ a, we can expressVa given by Eq. (2.11) usingLa. The full expression ofVa is
+presented in Appendix C.
+3 Numerical setup
+In this section, we explain our scheme for the numerical calculation and then discuss the scan
+of the model parameters that can explain all DM by resonantly produced sterile neutrinos.
+3.1 Parametrization of the momentum variable
+Before going on to the analysis, we define a dimensionless momentum mode by
+ϵ≡
+g∗,s(Ti)
+g∗,s(T)
+1/3 p
+T,(3.1)
+whereT i is the initial temperature in numerical simulations, andg∗,s is the total relativistic
+degrees of freedom for entropy density.1 Due to the total entropy conservation during the
+radiation-dominated era,ϵcan be treated as the time-independent momentum variable. On
+the other hand, the physical dimensionless mode, defined byϵphys≡p/T, depends on the
+temperature.
+First, we consider the resonance condition. Using the above definition ofϵ phys and
+Eq. (2.11), the resonance condition (2.13) is rewritten as
+1− 4
+√
+2π2g∗(T)G F
+45
+ϵphys(T)LaT 4
+m2νs
++ 2Ba
+ϵ2
+phys(T)T 6
+m2νs
+= 0.(3.2)
+1Here, we neglected the dependence of the entropy density on the finite chemical potential of the active
+neutrinos.
+– 6 –
+
+--- Page 8 ---
+Withm νs∼O(10–100)keV andL a ≳O(10 −5), which we will study below, there are two
+modes that satisfy the above equation for fixedT, which we denote asϵ=ϵ low andϵ high
+with0<ϵ low <ϵ high. But the contribution from the production atϵ=ϵhigh is subdominant
+because the coherence between two states is highly suppressed due to the thermal damp-
+ing effect. The lower resonant mode,ϵ low, which plays the dominant role for the resonant
+production, is given by
+ϵlow(T,La(T)) =
+g∗,s(Ti)
+g∗,s(T)
+1/3
+×
+2π2GFg∗,s(T)LaT 4−
+q
+4π4G2
+Fg∗,s(T) 2L2aT 8−2025Bam2νsT 6
+45
+√
+2BaT 6 .(3.3)
+The resonantνs production leads to the time evolution ofLa, which in turn backreacts on
+the production rate ofνs. The time evolution ofLa is dominantly driven by the modes with
+extremely narrow momentum widths around the resonanceϵ≃ϵ low. Therefore, accurately
+evaluating this evolution requires fine momentum discretization aroundϵ=ϵ low. When we
+focus on a fixedϵ, the resonance occurs first atT=T high satisfyingϵ=ϵ high, and then at
+T=T low satisfyingϵ=ϵ low. The parameter dependence ofTlow, which plays a dominant role
+for resonant production, is approximately given by
+Tlow∝ m1/2
+νs
+L1/4
+a ϵ1/4
+.(3.4)
+In our previous work [31], we employed a linear discretization withO(104)bins over the range
+ϵmin<ϵ<ϵ max, whereϵmin≃0andϵ max = 20. However, this resolution remains insufficient,
+especially when the initial value ofLa,L init
+a , is as large asLinit
+a ≳10−3. However, a larger
+number of momentum bins would significantly increase the computational cost.
+Therefore, in this paper, we take a more sophisticated scheme for the binning of the
+momentum space. Sinceϵlow depends on time, we adopt a dynamical discretization scheme in
+which the momentum bins are always most finely spaced around the instantaneous resonant
+mode [43, 44]. First, we define a variableuby
+u(ϵ)≡ ϵ−ϵ min
+ϵmax−ϵ min
+,(3.5)
+such thatϵ min < ϵ < ϵmax corresponds to0< u <1. Furthermore, to finely discretize the
+modes around the resonance, we introduce a new variablev(T)defined by
+u(v,T) =u res(T) +α(v−v res(T)) +β(T) (v−v res(T)) 3,(3.6)
+where we have defined
+ures(T)≡ ϵlow(T)−ϵ min
+ϵmax−ϵ min
+.(3.7)
+Here, we have introduced a small parameterα >0that controls the momentum resolution
+near the resonance pointϵ=ϵlow. In particular, the momentum aroundϵlow is discretized with
+intervals smaller by a factor of∼αcompared to linear binning with the same number of bins.
+– 7 –
+
+--- Page 9 ---
+In the following, we takeα= 10−3, which is sufficient to achieve good numerical precision.
+We chooseβ(T) (>0)andv res(T)such that the range0< u <1exactly corresponds to
+0< v <1. Under this condition, bothv res(T)andβ(T)are determined analytically. Their
+concrete expressions are presented in Appendix D.
+From now on, we adopt(v,T)as the basic variables of the density matrix equation
+instead of(ϵ,T). The bin variablevis then linearly discretized over the range0<v <1as
+v= i−1
+Nbin−1 (1≤i≤N bin),(3.8)
+whereN bin is the number of bins used for numerical computations.
+3.2 Stationary point approximation
+In the numerical computation, we replaceρas by the stationary solution of Eq. (2.10) given
+by
+ρas≃ρ as,stat≡− sin 2θ
+2 cos 2θ− 2p
+m2νs
+(2Va−iΓνa)
+ρaa.(3.9)
+We call this approximation the stationary point approximation. Here, we used|ρaa|≫|ρ ss|
+for the parameter range of our interest. By substituting Eq. (3.9) into Eqs. (2.9), and (2.16),
+we obtain
+d
+dtLa(T) =− 45
+4π4g∗,s(Ti)
+Z
+dϵϵ 2Γνa(p,T)
+
+θ2
+M(ϵ,T)f νa(ϵ,T)− ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+,
+(3.10)
+d
+dtfνs(ϵ,T) = Γ νa(p,T)
+ 
+θ2
+M(ϵ,T)f νa(ϵ,T) + ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+.(3.11)
+Here, we have definedfνa≡ρ aa,f ¯νa≡¯ρaa,f νs≡ρ ss + ¯ρss, andθ M and ¯θM are effective
+mixing angles in the thermal plasma given by
+θ2
+M(ϵ,T)≡θ 2
+"
+1− 2p
+m2s
+Va(ϵ,T)
+2
++ p2Γ2
+νa(ϵ,T)
+m4νs
+#−1
+,
+¯θ2
+M(ϵ,T)≡θ 2
+"
+1− 2p
+m2s
+V¯a(ϵ,T)
+2
++ p2Γ2
+νa(ϵ,T)
+m4νs
+#−1
+.
+(3.12)
+Here, we used the approximations ofcos 2θ≃1andsin 2θ≃2θ, and usedf νa,f ¯νa≫f νs,
+which hold for the parameter region of our interest. Here, we comment on the comparisons
+with some existing literature. This formula agrees with Ref. [19], our previous work [31] and
+the very recent paper [32]. On the other hand, there is a slight difference from Refs. [6, 16, 20],
+where they start from the picture of neutrino oscillations and obtain an additional term∝
+sin2 2θin the denominator in Eq. (3.12). This difference becomes relevant in the case with
+Linit
+a ≳O(10 −3), where the value of the damping factorp2Γ2
+νa(ϵ,T)/m 4
+νs at the resonance
+becomes comparable tosin2 2θ, as discussed in detail in Ref. [32].
+Here, letusdiscussthevalidityofthestationarypointapproximation. Theexactsolution
+of Eq. (2.10) is given by the damped oscillations aroundρas,stat with damping timescale of
+Γ−1
+νa . Away from the resonance, this provides a very good approximation, since the damping
+– 8 –
+
+--- Page 10 ---
+timescaleΓ−1
+νa is much shorter than the timescale for the evolution ofρas,stat, which isO(H−1).
+On the other hand, during the resonance,ρas,stat undergoes a rapid time evolution. The above
+approximation is valid if the resonance widthδtres for a given mode, which can be estimated
+by [31]
+δtres≃ dt
+dT
+
+Tres
+× Γνa(Tres)Tres
+3Va(ϵphys,T res) ,(3.13)
+satisfiesδt res≫Γ−1
+νa . Here, we define a parameterDstat by
+Dstat≡ dt
+dT
+
+Tlow
+× Γ2
+νa(Tlow)Tlow
+3Va(ϵphys,T low) .(3.14)
+Then,D stat ≫1is the sufficient condition for the stationary point approximation to be
+accurate.
+In our previous paper [31], we have expected that the above approximation would be
+violated with smallermνs and largerLinit
+a , with whichDstat becomes smaller than unity. How-
+ever, we have numerically checked that this approximation hardly changes the final abundance
+of the sterile neutrino in the parameter region whereDstat<1by directly solving the kinetic
+equation, which is described in Appendix E.2 Thus, we adopt Eqs. (3.11) and (3.12) in the
+parameter space of our interest.
+Now, we dynamically discretizeϵas explained in Sec. 3.1. By usingv, we can rewrite
+the basic equation (3.10) as
+d
+dtLa(T) =− 45
+4π4g∗,s(Ti)
+Z
+dv ∂ϵ
+∂v
+
+T
+ϵ2Γνa(ϵ,T)
+
+θ2
+M(ϵ,T)f νa(ϵ,T)− ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+,
+(3.15)
+whereϵis now a function ofvandTexplicitly given by
+ϵ(v,T)≡(ϵ max−ϵ min)u(v,T) +ϵ min.(3.16)
+Notice that, since we have approximatedfνa≫f νs, the time derivative ofLa (Eq. (3.15)) is
+determined by the cosmic temperature andLa, independently offs(ϵ,T). Thus, Eq. (3.15)
+is a closed equation. Therefore, we first numerically solve Eq. (3.15) to determine the time
+evolution ofLa, and then substitute it to Eq. (3.11) to numerically solve the evolution of each
+momentum mode ofνs. We have checked the consistency between the time evolution ofLa
+obtained in the first step and that calculated fromfνs(ϵ,T)obtained in the second step.
+3.3 Results
+In this subsection, we focus on the case withLinit
+e =L init
+µ =−L init
+τ , which can be realized
+within Affleck-Dine leptogenesis, as discussed in Ref. [31]. Other cases can be discussed in the
+same way, and we summarize the results in another intriguing example in Sec. 3.5. We also
+set the mixing between electron neutrino and sterile neutrino, i.e.,a=e. The results would
+not be changed significantly even when we choose another flavor, as long as the resonance
+plays a dominant role, as discussed in Ref. [31].
+2Ref. [32] also numerically examines in detail the parameter region withDstat <1while neglecting the time
+evolution ofLa and find that the stationary point approximation still works even forDstat <1. Moreover,
+Ref. [32] shows that the Boltzmann equation (3.11) is more accurate than that withsin2 2θterm.
+– 9 –
+
+--- Page 11 ---
+Figure 1. Dependence of the final abundance of sterile neutrinos onNbin. The orange dots show the
+results of the method explained in Sec. 3.1. Here, we chooseθso that the sterile neutrinos account
+for all DM withN bin = 500. For comparison, we show the results of the previous method by the
+blue dots, which imply that evenNbin∼10 4 is insufficient for the accurate numerical computation in
+the previous method. On the other hand, the orange dots imply thatNbin ≳100is sufficient in the
+current method.
+First, as the validation of our numerical scheme, we show the dependence of the final
+νs abundance onN bin for(m νs,L init
+e ) = (50 keV,10−4)and(10 keV,10 −3)in Fig. 1. In the
+figure, the orange dots show the results with the method presented in Sec. 3.1, and the blue
+dots represent the results using linear binning over0< ϵ <20, as implemented in Ref. [31].
+This figure implies that the method in Sec. 3.1 achieves numerical convergence atNbin ≳100,
+whereas the previous method is insufficient even withNbin = 104.
+The linear binning approach deteriorates for smallermνs and largerL init
+a . For smaller
+– 10 –
+
+--- Page 12 ---
+Figure 2. Upper panel: Momentum distributions of produced sterile neutrinos withϵphys evaluated
+atT=T ∗ ≡1MeV forL init
+e =L init
+µ =−L init
+τ . The blue, orange, and red lines correspond to
+Linit
+e = 10 −4,10 −3.5,10 −2.5, respectively. For a larger value ofLinit
+e , the peak of the spectrum lies
+in a higher momentum mode. Lower panel: Time evolution of lepton asymmetry with the same
+parameters as in the upper panel.
+mνs, this is because a larger number ofνs must be produced to reach the DM abundance, lead-
+ing to a larger change inLa. Consequently, the evolution ofLa becomes more significant with
+smallerm νs. For larger values ofLinit
+a , the resonance becomes narrower, and consequently,
+only a smaller range of momentum modes contributes to the evolution of lepton asymmetry.
+Indeed, too large∆ϵunderestimates the final sterile neutrino abundance.
+In Fig. 2, we show the result of the final momentum spectra of the sterile neutrinos for
+mνs = 20keV and several values ofLinit
+e , whereϵ phys is evaluated atT=T ∗≡1 MeV. Here,
+we useN bin = 500and chooseθso that the sterile neutrinos account for all DM. It is seen
+that the peak momentum of the final spectrum increases asLinit
+e , which is almost the same
+– 11 –
+
+--- Page 13 ---
+Figure 3. Contours ofm νs andsin 2 2θto explain all DM forL init
+e = 10 −4 (blue),10 −3.5 (orange),
+10−3 (green), and10 −2.5 (red) forL init
+e =L init
+µ =−L init
+τ . The light-red shaded region shows the
+X-ray constraint, where we use the2σconstraint fromNuSTARproject formνs <40keV [45] and2σ
+constraint from INTEGRAL project formνs >40keV [46].
+as the results presented in Ref. [31].
+Furthermore, in Fig. 3, we show the relation betweenmνs andθto realize all DM for
+several values ofLinit
+e adoptingN bin = 500. Here, for a givenmνs, we perform a numerical
+search scanning overθand find the value ofθwith which the final abundance satisfies|(Ωνs−
+ΩDM)/ΩDM|<0.01(Ω νs (DM): the density parameter ofν s (DM)). There are some minor
+differences between the contours in Fig. 3 and those presented in Ref. [31], in which a linear
+discretization scheme withNbin = 104 was adopted and the redistribution of asymmetry to
+the charged leptons is neglected, although the overall behavior is the same.
+3.4 Free-streaming length of the sterile neutrinos
+Here, we discuss the free streaming of the produced sterile neutrinos. Since the produced
+sterile neutrinos can have non-negligible momenta, the fluctuations of the matter density are
+suppressed on small scales. From the observations of the Lyman-αforests in the quasar spec-
+tra, the amplitude of the matter power spectrum on small scales can be constrained. There
+also exists another constraint from the structure formation by observations of strong lensing
+and galaxy distributions [47]. In this paper, for simplicity, we assume that the suppression
+of small-scale density perturbations is represented by the free-streaming length of the ster-
+ile neutrinos. Thus, we calculate the free-streaming lengths from the final spectrum of the
+sterile neutrinos and compare them with the observational constraints. The constraint on
+the free-streaming length of DM, denoted asλFS, can be inferred by using the constraint on
+the mass of early-decoupled thermal relic [14, 15, 48] and is given byλupper
+FS ≲0.129Mpc for
+– 12 –
+
+--- Page 14 ---
+Figure 4. Dependence of the free-streaming length of sterile neutrinosλFS onm νs forL init
+e =L init
+µ =
+−Linit
+τ . Different colors correspond to different initial values of the lepton asymmetryL init
+e . The
+vacuum mixing angleθis fixed to match the DM abundance in eachLinit
+e andm νs. The red region
+is disfavored by the Lymanαconstraintm th ≳3.3keV [47]. The violet region is disfavored by more
+stringent constraint from the combinations of strong lensing and galaxy counting obtained by Ref. [47],
+which arguesm th ≳9.8keV.
+the Lymanαandλ upper
+FS ≲0.034Mpc for the galaxy counting+strong lensing, based on the
+method discussed in Ref. [31].
+The typical free-streaming length of particles decoupled from the thermal plasma is given
+by [15]
+λFS≃a(t)
+Z a(t)
+a∗
+da v(⟨ϵ⟩,t)
+a2(t)H(t) ,(3.17)
+where⟨ϵ⟩isϵaveraged over the momentum distribution atT=T ∗ = 1MeV, which is lower
+than both of the decoupling temperature and the particle production temperature, anda∗ is
+the scale factor atT=T ∗. The velocityv(t)is given by
+v= pp
+p2 +m 2νs
+= ϵphys(T∗)q
+ϵphys(T∗)2 + (mνs
+T∗ )2( a
+a∗ )2
+,(3.18)
+where we usedp=ϵ phys(T∗)T∗a∗/a. Here, we neglected the free-streaming length before
+T=T ∗.
+In Fig. 4, we show the free-streaming length of the sterile neutrinos as a function of
+mνs for a givenL init
+e , using the momentum distribution obtained in Sec. 3.3. By requiring
+λFS(mνs)<λ upper
+FS , we obtain the constraint onmνs for a givenLinit
+a . In Fig. 5, we show the
+contour plot to explain all DM forLinit
+e =L init
+µ =−L init
+τ together with constraints from the
+structure formation and X-ray observations.
+– 13 –
+
+--- Page 15 ---
+Figure 5.m νs andsin 2 2θto explain all DM with the observational constraints forLinit
+e =L init
+µ =
+−Linit
+τ . The light shaded region is excluded by X-ray observations. The gray shaded region is disfa-
+vored by the Lyman-αobservations [47], and the gray dashed line is the 2σboundary of the combi-
+nation of constraints from galaxy counting and strong lensing [47].
+We conclude that the lepton-to-entropy ratio must be≳10−3 to evade the X-ray con-
+straints. Furthermore, the Lyman-αconstraints on thermal relic DM [47] suggest that the
+mass of sterile neutrinos must bem νs ≳20keV. If we use the most stringent constraint
+from structure formation by a combination of strong lensing and galaxy counting [47], the
+constraint becomes further stringent. However, since we just compared the averaged free-
+streaming lengths, this constraint would be altered if we studied in detail the effect on the
+matter power spectrum using our sterile neutrino spectra as done in Refs. [33, 48]. We also
+note that these constraints will be relaxed if a fraction of sterile neutrinos is produced during
+the injection process of lepton number density, as we will discuss in Sec. 4.
+3.5 Case with vanishing total lepton asymmetry
+As another interesting possibility, we investigate the sterile neutrino production when the lep-
+ton asymmetry of each flavor is large but the total asymmetry vanishes, which is suggested
+by the recent papers [32, 33]. In this case, the flavor oscillations can reduce the asymme-
+try in each flavor after the sterile neutrino production and before the onset of BBN, which
+significantly relaxes the constraints on the lepton asymmetry from BBN. Such a lepton fla-
+vor asymmetry can be realized within Affleck-Dine leptogenesis [38], when we consider the
+dynamics of the flat directions in the minimal supersymmetric standard model, such asQuLe.
+In this paper, as an example, we focus on the case whereLinit
+e =−L init
+µ andL init
+τ = 0.
+The computational method is the same as in the previous case, and we show themνs–θ
+contour plot to explain all DM in Fig. 6. For comparison, we also show the results in the
+previous case with the lighter colors. We see that the required mixing angle to realize the
+observed DM abundance in this case is larger than in the previous setup. This is because the
+– 14 –
+
+--- Page 16 ---
+Figure 6. Same as Fig. 5 except forLinit
+e =−L init
+µ andL init
+τ = 0. For comparison, we also show the
+contours in Fig. 5 by the lighter colors.
+value ofLe is smaller in this case for the same value ofLinit
+e . Since the evolution ofLe depends
+on the redistribution of asymmetry, the difference in the required mixing angle nontrivially
+depends onmνs andsin 2 2θ.
+4 Generation of a large lepton asymmetry
+Inthissection, wediscussthegenerationofleptonasymmetrywithintheframeworkofAffleck-
+Dine (AD) leptogenesis.
+4.1 Decay of Q-balls
+As a Q-ball formation model, we consider the gauge-mediated SUSY breaking scenario. In AD
+leptogenesis, lepton asymmetry is generated from the coherent phase rotation of a complex
+fieldϕ, called an AD field, carrying lepton number. The resulting lepton number density is
+written as
+nL(tosc)≃δ effmϕφ2
+osc ,(4.1)
+wherem ϕ is the mass of sleptons, andδeff is the efficiency parameter for asymmetry produc-
+tion.
+After the AD field starts to oscillate att=tosc, the potential for the AD field is given
+by
+V=V gauge +V gravity .(4.2)
+Here,V gauge is the contribution from gauge-mediation given by [49, 50]
+Vgauge =M 4
+F
+
+ln|ϕ|2
+M 2
+S
+2
+,(4.3)
+– 15 –
+
+--- Page 17 ---
+whereM F is the SUSY breaking scale, andMS is the scale of the messenger sector. Here, we
+assumedφ≡|ϕ|≫M S.V gravity is the contribution from gravity-mediation given by [49, 50]
+Vgravity =m 2
+3/2
+
+1 +Kln
+|ϕ|2
+M 2
+Pl
+
+|ϕ|2 ,(4.4)
+wherem 3/2 is the mass of gravitino,MPl is the reduced Planck mass,Kis a dimensionless con-
+stant, which we assume to be positive in this paper. We also assume thatVgravity is dominant
+in the potential when the AD field starts to oscillate, i.e.,φosc≡φ(t osc)>φ eq≡M 2
+F/m3/2.
+When the potential is dominated byVgravity withK >0, the coherent oscillation of the AD
+field is stable against spatial fluctuations. However, right afterφbecomes comparable toφeq,
+Vgauge controls the dynamics of the AD field. In this period, the AD field experiences spatial
+instabilities and forms spherically symmetric non-topological solitons called Q-balls [51–53].
+We call this type of Q-ball formation scenario “delayed-type” Q-ball scenario [54].
+Delayed-type Q-balls have the same properties as the gauge-mediated type Q-balls.
+Then, the initial charge, mass, radius, and energy per charge of a delayed-type Q-ball are
+given by [53]
+|Qinit
+G |≃β G
+φ4
+eq
+M 4
+F
+≃β G
+ MF
+m3/2
+4
+,(4.5)
+MQ≃ 4
+√
+2π
+3 ζMF|QG|
+3
+4 ,(4.6)
+RQ≃ 1√
+2ζM−1
+F |QG|
+1
+4 ,(4.7)
+ωQ≃
+√
+2πζM F|QG|− 1
+4 ,(4.8)
+whereβ G≃6×10 −5 [55] in the case with|δeff|≲10 −1, which we consider in this paper,
+andζis a numerical factor≃2 1/4(c0/π)1/2 wherec 0≡4.8 ln(mϕ/
+√
+2ωQ) + 7.4[56]. In the
+following, we adoptζ= 3.4, which is obtained by substitutingm3/2 = 1GeV,M F = 106GeV
+andm ϕ = 104GeV. The Q-balls decay into neutrinos with the decay rateΓQ given by [57, 58]
+ΓQ≡− 1
+QG
+dQG
+dt ≃ Nl
+|QG|
+ω3
+Q
+12π2 4πR2
+Q ,(4.9)
+whereN l = 3is the number of active neutrino species.
+To realize the generation of a large lepton asymmetry from Q-ball decay, we assume
+that Q-balls dominate the energy density of the universe at Q-ball decay. Then, the resulting
+lepton-to-entropy ratio from Q-ball decay is evaluated as [31]
+Ldec
+a ≃ nL(tosc)
+m2
+3/2φ2osc
+ρQ(tdec)
+s(tdec)
+≃δ eff
+3Tdec
+4m3/2
+,(4.10)
+Here,L dec
+a is the total lepton asymmetry injected from the Q-ball decay, including the amount
+that is eventually consumed by the resonantνs production. If the asymmetry conversion into
+sterile neutrinos is negligible, it is the same asLinit
+a , as defined in Sec. 2.ρQ is the energy
+– 16 –
+
+--- Page 18 ---
+density of the Q-balls and their decay products, andTdec (tdec)is the cosmic temperature
+(time) just after Q-ball decay. Here, we have approximated that Q-balls instantaneously
+decay after domination when the decay rateΓQ becomes equal to the Hubble parameter.
+ThenT dec is evaluated as
+Tdec =
+ 90
+π2g∗(Tdec)
+1/4p
+MPlΓQ
+≃2.7 GeV×
+g∗
+80
+−1/4 m3/2
+1 GeV
+5/2 MF
+106 GeV
+−2
+,(4.11)
+where we evaluatedΓQ using the initial chargeQinit
+G .
+4.2 Resonant production during the decay of Q-balls
+In the previous paper [31], we assumed that the resonant production should occur after the
+decay of Q-balls was completed. This assumption is translated into the constraint on theMF,
+which is given by
+Tlow
+
+mνs,L init
+a =δ eff
+3Tdec
+4m3/2
+
+<T dec .(4.12)
+Using Eqs. (4.11) and (4.12), we obtain the condition form3/2,M F, andms as
+MF ≲3.1×10 6 GeV
+g∗(Tdecay)
+80
+−1/8g∗(Tlow)
+60
+1/10|δeff|
+10−3
+1/10
+×
+ m3/2
+1 GeV
+23/20 mνs
+50 keV
+−1/5
+.(4.13)
+However, ifMF is slightly larger than this value, resonant production could occur during the
+decay process of Q-balls. Here, we consider the observational constraint on such a case.
+Before and during the Q-ball decay, the thermal history of the universe differs from that
+in the radiation-dominated era, which was assumed in the previous section. In the following,
+we describe the relations used in numerical calculations forT >Tdec. The time dependences
+of the mass and the charge of the Q-balls are given by
+MQ(t) =M init
+Q
+
+1− t
+tdec
+3/5
+,
+Q(t) =Q init
+G
+
+1− t
+tdec
+4/5
+,(4.14)
+wheret dec is the physical time at which the decay process is completed, andQinit
+G ,M init
+Q are
+the charge and mass of the Q-balls at formation, which are given by Eqs. (4.5) and (4.6). The
+relation between the conformal timeηand the background densitiesρr andρ m are given by
+ρm =ρ eq,1
+aeq,1
+a
+3 MQ
+M init
+Q
+,
+dρr
+dη =−4Hρ r− d lnMQ
+dη ρm.
+(4.15)
+Here, the subscript “eq,1” denotes the early matter-radiation equality. We have approximated
+Q=Q init atη=η eq,1, which is valid in the parameter sets of our interest. Furthermore,
+– 17 –
+
+--- Page 19 ---
+until the Q-ball decay, the relations among the scale factora, conformal Hubble parameter
+H≡(da/dη)/a, andηare given by
+a(η)
+a(ηeq,1) =
+η
+η∗
+2
++ 2
+η
+η∗
+
+,
+H(η) = 2η+ 2η∗
+η2 + 2ηη∗
+,
+(4.16)
+whereη∗≡η eq,1/(
+√
+2−1). Assuming that the radiation from the Q-balls is always instanta-
+neously thermalized, the relation between the physical temperature and the radiation energy
+density is given by
+ρr = π2
+30g∗(T)T 4,(4.17)
+whereg∗ is the relativistic degrees of freedom for the energy density. By combining Eqs. (4.15)
+and (4.17), we obtain the relation betweenηandTas
+dT
+dη =−
+ 4
+T + d lng∗
+dT
+−1 
+4H+ d lnMQ
+dη
+g∗(Teq,1)
+g∗(T)
+Teq,1
+T
+4aeq,1
+a
+3 MQ
+MQ,init
+!
+.(4.18)
+We solve this equation to obtainT(η).
+In this case, the comoving entropy density is not conserved due to the Q-ball decay.
+Thus, we modify the definition of the dimensionless momentum modeϵas
+ϵ≡ a
+adec
+p
+Tdec
+.(4.19)
+Furthermore, we modify the definition ofLa as
+La≡ na−n ¯a+nνa−n ¯νa
+stot(Tdec)
+ adec
+a
+3 .(4.20)
+Then, we obtain the following equations as
+d
+dtLa(T) =−L dec
+a
+˙Q
+Qinit
+− 45
+4π4g∗,s(Tdec)
+Z
+dϵϵ 2Γνa(p,T)
+
+θ2
+M(ϵ,T)f νa(ϵ,T)− ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+,
+d
+dtfνs(ϵ,T) =Γ νa(p,T)
+ 
+θ2
+M(ϵ,T)f νa(ϵ,T) + ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+.(4.21)
+By introducingx≡η/η dec, we obtain
+d
+dxLa(T) = 12
+5
+x(x+ 2x∗)
+1 + 3x∗
+
+1− x2(x+ 3x∗)
+1 + 3x∗
+−1/5
+Ldec
+a
+− 45
+4π4g∗,s(Tdec)
+dt
+dx
+Z
+dϵϵ 2Γνa(p,T)
+
+θ2
+M(ϵ,T)f νa(ϵ,T)− ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+,
+d
+dxfνs(ϵ,T) = dt
+dxΓνa(p,T)
+ 
+θ2
+M(ϵ,T)f νa(ϵ,T) + ¯θ2
+M(ϵ,T)f ¯νa(ϵ,T)
+
+.(4.22)
+– 18 –
+
+--- Page 20 ---
+Here,dt/dxis given by
+dt
+dx =aη dec =a(η eq,1)ηdec
+x2
+x2∗
++ 2x
+x∗
+
+,(4.23)
+withx∗≡η∗/ηdec. We numerically solve the above equations by settingLa = 0andf νs = 0
+atη≪η eq,1, and evaluate the abundance of the sterile neutrinos produced during the lepton
+number injection.
+After the Q-balls have completely decayed, we calculateνs production process in the
+same way as in Sec. 3.2, setting the value ofLa and physical temperatureTat the completion
+of Q-ball decay as the initial conditions.
+In Fig. 7, we show the time evolution of the lepton asymmetry parameterLe during
+the Q-ball decay and the cosmic temperatureTas functions ofx=η/η dec. In Fig. 8, we
+show the final spectra of the sterile neutrinos atT=T ∗ for variousT eq,1. Here, we take
+Ldec
+e =L dec
+µ =−L dec
+τ = 10−2.5,m νs = 40keV, andη dec/ηeq,1 = 10. IfT eq,1 is smaller
+than1GeV (T dec ≲0.12GeV), the resonant production takes place beforeT=T dec. After
+the production, the momenta of sterile neutrinos are redshifted as∝a−1, while the entropy
+production by Q-balls slows down the decrease ofT. For a smallerTeq,1 means that entropy
+production continues for a longer time afterν s production, which shifts the peak of the
+momentum distribution to lower values atT=T∗.
+In contrast, forT eq,1 larger than1GeV (T dec ≳0.12GeV), high momentum modes
+are produced after the Q-balls have completely decayed, while low momentum modes are
+produced during the decay process. During the decay, resonant production is enhanced due
+to the slower temperature decrease due to the entropy production, allowing the resonance
+condition (Eq. (3.4)) to be satisfied for a longer time. However, right after the decay ends,
+Tbegins to drop rapidly, and the resonance conditions are satisfied for a shorter time, which
+is the same situation as in the numerical simulations performed in Sec. 2. As a result, a
+sharp peak emerges in the final spectrum at the mode that is resonantly produced right
+at the end of the Q-ball decay. The reason why the spectrum seems discontinuous around
+the sharp peak is thatdt/dTis discontinuous att=t dec. For1 GeV≲T eq,1 ≲1.3GeV
+(0.12 GeV< Tdec <0.14GeV), the peak appears at a relatively high momentum mode and
+thus increases the free-streaming length compared with the case where resonant production
+occurs after the decay of Q-balls. Conversely,Teq,1 ≳1.3GeV (T dec >0.14GeV) leads to a
+peak at low momentum mode, reducing the free-streaming length compared with the case
+where resonant production occurs after the decay of Q-balls. This trend is also seen in Fig. 9,
+where we illustrate how the free-streaming length depends onTdec. The dependence ofλ FS
+onT eq,1 can be qualitatively understood based on the discussion above.
+In Fig. 10, we show the dependence ofθto explain all DM onTdec. WithT eq,1 ≲1.1GeV
+(Tdec ≲0.13GeV), the requiredθis larger than the case withν s production after the Q-ball
+decay because the value ofL a is still significantly smaller at theν s production and the
+producedν s is diluted by the Q-ball decay. On the other hand, if1.1GeV≲Teq,1 ≲1.8GeV
+(0.13GeV≲T dec ≲0.17GeV), the requiredθcan be smaller. This is because a large fraction
+of sterile neutrinos are produced during the process of entropy production by the decay of
+Q-balls, which prolongs the resonance duration as discussed above. For largerTeq,1, this effect
+becomes less significant, and then, the requiredθbecomes independent ofTeq,1 because the
+Q-balls completely decay before the resonant production of sterile neutrinos.
+In summary, it is found that if a fraction of sterile neutrinos is produced right before the
+Q-ball decay is completed, the observational constraints are relaxed since the required mixing
+– 19 –
+
+--- Page 21 ---
+Figure 7. Dependence ofLe (upper panel) andT(lower panel) on thex=η/η dec withm νs = 40keV,
+Ldec
+e = 10−2.5 andη dec/ηeq,1 = 10. Different colors correspond to different values ofTeq,1.
+angle becomes smaller, and the final spectrum is peaked at a lower momentum mode.
+5 Summary
+Sterile neutrinos can be produced via mixing with the SM neutrinos and are a fascinating
+candidate for DM. Given the constraints from the X-ray observations, however, all DM cannot
+be accounted for in the minimal scenario, i.e., via the DW mechanism. This constraint
+is significantly relaxed by resonant production with a large lepton asymmetry. However,
+the numerical simulation of the resonant production requires a significantly fine binning of
+the momentum because the resonance takes place in a narrow and time-dependent range of
+– 20 –
+
+--- Page 22 ---
+Figure 8. The final spectra of the sterile neutrinos formνs = 40keV,L dec
+e = 10−2.5 andη dec/ηeq,1 =
+10. Different colors correspond to different values ofTeq,1.
+Figure 9. The dependence of the free-streaming lengthλFS onT dec. Here, we fixθto match the DM
+abundance. We also show the free streaming length when resonant production takes place after the
+lepton asymmetry generation in a dashed horizontal line.
+momenta. This trend is more significant for a larger lepton asymmetry and a smaller sterile
+neutrino mass.
+In this paper, we refined the numerical scheme to correctly capture the resonant produc-
+tion process of sterile neutrinos as dark matter. By adopting a dynamical binning method
+that always finely resolves the resonant modes, we observed a convergence of the numerical
+results with a bin number ofNbin ≳100. This contrasts with the results of a static linear
+binning, which does not converge even forNbin = 104.
+– 21 –
+
+--- Page 23 ---
+Figure 10. The dependence ofθto explain all DM onT dec. We also show the requiredθwhen
+resonant production takes place after the lepton asymmetry generation in a dashed horizontal line.
+With this refined numerical method, we evaluated the momentum distributions of sterile
+neutrinos for various parameter sets. By scanning the parameter region of sterile neutrinos,
+we obtained the constraints from X-ray and Lymanαobservations,La ≳O(10−3)andm νs ≳
+20keV. Moreover, we investigated the scenario where the large lepton asymmetry is produced
+via the Q-ball decay with lepton charge in the framework of Affleck-Dine leptogenesis. In
+particular, we studied the case where a fraction of sterile neutrinos is produced during the
+decay process of Q-balls. The entropy production by the decay of Q-balls slows down the
+redshift of cosmic temperature, and then the resonance duration is prolonged, enhancing the
+final spectrum, especially if the sterile neutrinos are produced right before the decay process is
+terminated. Furthermore, in such a case, the final spectrum is peaked at a lower momentum
+than in the case where sterile neutrinos are produced after the injection of lepton asymmetry.
+This result implies the possibility that the resonant production of sterile neutrinos during the
+Q-ball decay relaxes the constraints from the structure formation.
+However, in discussing the constraint from the structure formation, we have just com-
+pared the averaged free-streaming length of sterile neutrinos with that of thermal relic DM.
+To obtain more robust constraints, we need to perform a more detailed numerical study of
+the effect on structure formation, by using the finalνs spectra obtained in this paper. Fur-
+thermore, in the numerical computation of sterile neutrino production during the injection of
+lepton number, we approximated that Q-balls have monochromatic charge and mass distribu-
+tions. The non-monochromatic mass distribution can slightly change the time-temperature
+relation during the lepton number injection, modifying the final spectrum of sterile neutrinos.
+This issue will require a detailed lattice simulation of Q-ball formation, which we leave for
+future work.
+Acknowledgments
+This work was supported by JSPS KAKENHI Grant Nos. 25K07297(M.K.), 23KJ0088
+(K.M.), 24K17039 (K.M.), and 25KJ1164 (K.K.). K.K. was supported by the Spring GX
+– 22 –
+
+--- Page 24 ---
+Figure 11. Comparison of fitting formulae and the numerical results obtained in Ref. [19] regarding
+ye. The blue, orange, green, red, purple lines correspond toϵphys = 0.5,1,1.5,2,2.5, respectively. The
+dots represent the numerical results while the lines correspond to our fitting formulae.
+program.
+A Fitting formulae fory e
+Here, we present the fitting formulae forye(ϵ,T)defined in Eq. (2.6). Regardingy e(ϵ,T), we
+usethedataobtainedbyRef.[19], approximatingthatboththeactiveandsterileneutrinosare
+relativistic at the production and neglecting the chemical potential of active neutrinos. Since
+Ref. [19] presents numerical results for discrete values ofϵphys = 0.25iwithi= 1,2,···,40
+for fixedT, we define a fitting formula for the discreteϵphys, given by
+ye(ϵphys,T) =
+4X
+i=1
+exp
+
+ai +bi
+
+1 + tanh
+log(T) +c i
+di
+
+,(A.1)
+wherea i,bi,ci,di are coefficients defined at each discrete values ofϵphys. We fit the parameters
+ai,bi,ci,di withϵ phys<2.5by using the NonlinearModelFit method in Mathematica. On the
+other hand, we checked that we can neglectϵdependence withϵ phys >2.5, which enables
+us to use the numerical result ofϵphys = 2.5for such modes. We present the comparison
+of numerical results and our fitting formulae in Fig. 11. Based on this, for a givenT, we
+computey e by linear interpolation with respect toϵphys.
+B Concrete fitting formulae for the susceptibilities
+Here, we summarize the fitting formulae for thermodynamic variablesχ. Regardingχ, the
+integration of the Fermi-Dirac distributions gives [19]
+χ(m,T) = m2
+π2
+∞X
+n=1
+(−1)n+1K2
+nm
+T
+
+,(B.1)
+– 23 –
+
+--- Page 25 ---
+i ai
+B bi
+B ci
+B di
+B
+1 −23.4 −26.8 −15.97 −130.0
+2 −9.40 3.15 1.23 0.457
+3 −9.82 2.68 1.99 0.0829
+4 −8.98 3.66 0.996 1.17
+5 −8.57 3.63 2.19 0.347
+6 −9.77 2.70 1.79 0.0368
+T able 1. Fitting parameters forχB.
+i ai
+q bi
+q ci
+q di
+q
+1 0.727 −0.478 4.08 −0.396
+T able 2. Fitting parameters forχq.
+whereK 2 is the modified Bessel function. Here, in the numerical computation, we approxi-
+mate the above by
+χ(m,T) =
+
+
+
+m2
+π2K2
+ nm
+T
+
+(m>4T)
+m2
+π2
+P10
+n=1(−1)n+1K2
+ nm
+T
+
+(T/10<m<4T)
+1
+6T 2 (m<T/10)
+,(B.2)
+Regardingχ q andχ B, we use the following fitting formulae :
+χB/q
+T 2 =
+X
+i
+exp
+ 
+ai
+B/q +bi
+B/q
+ 
+1 + tanh
+ log(T/1GeV) +c i
+B/q
+di
+B/q
+!!!
+,(B.3)
+where the values ofaB/q,b B/q,c B/q andd B/q are given in Tables 1 and 2. On the other
+hand, as forχ Bq, we cannot use the above form in0.15 GeV< T <0.27 GeV. Thus, we
+adopt the following formula :
+χBq
+T 2 = 1
+2
+
+1 + tanh
+
+50 log
+0.15 GeV
+T
+
+χBq,low
++ 1
+4
+
+1 + tanh
+
+50 log
+ T
+0.15 GeV
+
+1 + tanh
+
+50 log
+0.27 GeV
+T
+
+χBq,mid
++ 1
+2
+
+1 + tanh
+
+50 log
+ T
+0.27 GeV
+
+χBq,high.(B.4)
+Here,χ Bq,low andχ Bq,high are given by
+χBq,high/low =
+X
+i
+exp
+ 
+ai
+Bq,high/low +bi
+Bq,high/low
+ 
+1 + tanh
+ log(T/1GeV) +c i
+Bq,high/low
+di
+Bq,high/low
+!!!
+.
+(B.5)
+– 24 –
+
+--- Page 26 ---
+i ai
+Bq,high bi
+Bq,high ci
+Bq,high di
+Bq,high
+1 −12.6 29.4 −837 114
+2 −6.73 −23.7 235 −227
+3 5.28 −57.7 104 −78.9
+4 −7.37 −22.5 238 −222
+T able 3. Fitting parameters forχBq,high.
+i ai
+Bq,low bi
+Bq,low ci
+Bq,low di
+Bq,low
+1 −18.0 −27.5 −51.1 −84.9
+2 −37.5 17.4 −0.0216 0.336
+3 −37.5 17.4 0.368 0.331
+4 −8.80 11.7 0.9998 1.35
+5 −37.5 17.4 0.196 0.333
+T able 4. Fitting parameters forχBq,low.
+aBq,mid bBq,mid cBq,mid dBq,low
+0.664 1.397 0.965 0.215
+T able 5. Fitting parameters forχBq,mid,num.
+Regardingχ Bq,mid, the above fitting form cannot be a good approximation. Alternatively, we
+use the following Fermi-Dirac approximation with the numerical correction as
+χBq,mid = 1
+3 (4(χ(mu,T) +χ(m c,T))−2(χ(m d,T) +χ(m s,T) +χ(m b,T)))×χ Bq,mid,num,
+(B.6)
+wherem u,m d,m s,m c,m t, andm b are the masses of up, down, strange, charm, top, and
+bottom quarks.χ Bq,mid,num is the numerical correction given by
+χBq,mid,num =a Bq log
+ T
+1 GeV
+
++bBq
+
+log T
+1 GeV
+2
++cBq
+
+log T
+1 GeV
+3
++dBq
+
+log T
+1 GeV
+4
+.
+(B.7)
+The values of coefficients in Eqs. (B.5) and (B.7) are given in Tables 3, 4, and 5. We show
+the numerical results obtained in Ref. [20] and our fitting formulae in Fig. 12.
+C Relation betweenL a andV a
+Here, we present the relation betweenLa andL a, which appears inVa. By solving Eqs. (2.18),
+we obtain
+La =
+χ0(2µa +P
+b̸=aµb) + 2(2 sin2 2θw + 1
+2)χa(µa−µq) + 2(2 sin2 2θw− 1
+2)P
+b̸=aχb(µb−µq)
+stot
+,
+(C.1)
+– 25 –
+
+--- Page 27 ---
+Figure 12. The comparison of fitting formulae (blue solid lines) and numerical results (orange dashed
+lines) discussed in Ref. [20] forχB (upper left),χq (upper right), andχBq (bottom).
+whereχ a≡χ(m ea,T),χ tot≡χ e +χµ +χτ,χ 0≡χ(0,T), and
+µq =−2s totχB
+"
+4χeχµχτ(Le +Lµ +Lτ) +χ 2
+0
+X
+a
+χaLa + 2χ0
+X
+a
+χeχµχτ
+χa
+(Le +Lµ +Lτ−La)
+#
+×
+
+χ3
+0
+ 
+χ2
+BQ−χB(2χtot +χQ)
+
++ 2χ2
+0
+ 
+χ2
+BQχtot−χB (χQχtot + 4(χeχµ +χµχτ +χτχe))
+
++ 4χ0
+ 
+(χ2
+BQ−χBχQ)(χeχµ +χµχτ +χτχe)−6χ Bχeχµχτ
+
++ 8χeχµχτ(χ2
+BQ−χBχQ)
+i−1
+,
+µa = Lastot + 2χaµq
+χ0 + 2χa
+,
+µea =µ a−µq.(C.2)
+On the other hand, in Sec. 4.2, we replace asstot→s tot(T=T dec)(adec/a)3 in Eqs. (C.1)
+and (C.2).
+– 26 –
+
+--- Page 28 ---
+D Concrete expressions of bin transformations
+Here, we present the expression of the functions used for the dynamical binning. Concrete
+forms ofβandv res, which are defined in Eq. (3.6), are given by
+β(T) =
+h
+22/3·3 1/3(−5α2−8α 3 + 4α4)−3u 2
+res(3 + 8α+ 4α2)−
+√
+3F1(α,u res)
++u res
+
+9 + 2
+√
+3F1(α,u res) + 4α2(3−2 2/3·3 1/3F2(α,u res)) + 4α(6−2−1/3·3 1/3F2(α,u res))
+
++24/3·3 2/3α(1 + 2α)F2(α,u res) + 24/3·3 1/6F1(α,u res)F2(α,u res) + (2−8α 2)F2(α,u res)2
+i
+/(2(1 + 2α)F2(α,u res)2),
+vres(T) =− −18(ures +α) + 2 4/3·3 5/3F2(α,u res)−1(−3ures + 3u2
+res + (α−1)α) + 2 2/3·3 4/3F2(α,u res)
+18(1 + 2α) ,
+(D.1)
+where
+F1(α,u res)≡(1 + 2α)
+p
+−(54u3res−27u 4res + 18α2ures +α 3(α−4)−9u 2res(3 + 2α2)),
+F2(α,u res)≡
+
+27u2
+res−18u 3
+res + 9α2−9u res(1 + 2α2) +
+√
+3F1(α,u res)
+1/3
+.(D.2)
+Here, we have imposed the condition thatu= 0,1exactly correspond tov= 0,1.
+E Analysis with full quantum kinetic equations (QKEs)
+Now let us directly check the validity of the stationary point approximation. To this end,
+we simultaneously solve Eqs. (2.9), (2.10), and (2.16), without using the stationary point
+approximation. In this appendix, we neglect the lepton number redistribution to the charged
+lepton sector just for simplicity, but the conclusion will not be changed if we take it into
+account. We choosemνs = 10keV andL init
+a = 10−3,5×10 −3 as benchmark parameters, for
+which the values ofDstat are relatively small∼O(0.1–1), and hence the stationary point
+approximation becomes non-trivial.
+Since we take(v,T)instead of(ϵ,T)as the basic variables, the time evolution of density
+matrices is given by
+∂
+∂Tρ(T,ϵ(v,T))
+
+v
+= ∂
+∂Tρ(T,ϵ)
+
+ϵ
++
+ ∂ϵ
+∂T
+
+v
+∂ϵ
+∂v
+
+T
+!
+∂
+∂vρ(T,ϵ).(E.1)
+Here, regarding the first term in the right hand side, we use Eqs. (2.9) and (2.10). As for the
+coefficient in the second term, by using Eqs. (3.5), (3.6) and (3.7), we obtain the numerator
+and the denominator as
+∂ϵ
+∂T
+
+v
+= dϵlow(T)
+dT
++ (ϵmax−ϵ min)
+
+−
+ 
+α+ 3β(T)(v−v res(T)) 2 dvres(T)
+dT + (v−v res(T)) 3 dβ(T)
+dT
+
+,
+(E.2)
+∂ϵ
+∂v
+
+T
+= (ϵmax−ϵ min)
+ 
+α+ 3β(v−v res(T)) 2
+,(E.3)
+– 27 –
+
+--- Page 29 ---
+wheredϵ low/dT,dv res/dTanddβ/dTare calculated from Eqs. (3.3) and (D.1), respectively.
+We also solve simultaneously
+d
+dtLa =− 45
+4π4g∗,s(Ti)m2
+νs sin 2θ
+Z
+dv ∂ϵ
+∂v
+
+T
+ϵ2 Im(ρas−¯ρas).(E.4)
+In numerical computation, to correctly treat the first term, we take the timestep∆Tsuch
+that|∆T|≪Γ −1
+νa ·dT/dtfor all modes under resonance, to avoid the artificial overdamping
+of the numerical solution to the stationary solution. Here, the criteria for the resonance is
+chosen such that
+Va− m2
+νs
+2p cos 2θ
+<K res
+
+Γνa
+2
+,(E.5)
+where we chooseKres = 10. Furthermore, we treat the second term using the upwind method
+such that
+∂
+∂vρ(T,ϵ)≃ ρ(T,ϵ(v i+1,T))−ρ(T,ϵ(v i,T))
+∆v for ∂ϵ
+∂T
+
+v
+· ∂ϵ
+∂v
+
+T
+>0
+≃ ρ(T,ϵ(v i,T))−ρ(T,ϵ(v i−1,T))
+∆v for ∂ϵ
+∂T
+
+v
+· ∂ϵ
+∂v
+
+T
+<0(E.6)
+and take the timestep to satisfy the CFL condition
+∆T <
+ ∂ϵ
+∂v
+
+T
+∂ϵ
+∂T
+
+v
+!
+∆v.(E.7)
+By considering the above, we choose the timestep by
+|∆T|= min
+"
+CCFL·min
+v
+
+∂ϵ
+∂v
+
+T
+∂ϵ
+∂T
+
+v
+ ∆v, Cres·
+
+dT
+dt
+ min
+v:under res
+Γνa
+ 
+ϵ(v,T), T
+−1
+#
+,(E.8)
+where we takeCCFL = 0.5andC res = 0.1.
+In Fig. 13, we show the final sterile neutrino spectra without (orange) and with (blue)
+the stationary point approximation for the two parameter sets. It is seen that the differences
+is only withinO(1)%in both cases althoughD stat ≲O(1).
+References
+[1] K. N. Abazajian,Sterile neutrinos in cosmology,Phys. Rept.711-712(2017) 1–28,
+[1705.01837].
+[2] A. Boyarsky, M. Drewes, T. Lasserre, S. Mertens and O. Ruchayskiy,Sterile neutrino Dark
+Matter,Prog. Part. Nucl. Phys.104(2019) 1–45, [1807.07938].
+[3] B. Shakya,Sterile Neutrino Dark Matter from Freeze-In,Mod. Phys. Lett. A31(2016)
+1630005, [1512.02751].
+[4] S. Dodelson and L. M. Widrow,Sterile-neutrinos as dark matter,Phys. Rev. Lett.72(1994)
+17–20, [hep-ph/9303287].
+[5] X.-D. Shi and G. M. Fuller,A New dark matter candidate: Nonthermal sterile neutrinos,Phys.
+Rev. Lett.82(1999) 2832–2835, [astro-ph/9810076].
+– 28 –
+
+--- Page 30 ---
+Figure 13. Comparison of final spectra between the computation within stationary point approxima-
+tion and without stationary point approximation formνs = 10keV andL init
+e =L init
+µ =−L init
+τ = 10−3
+(upper) and5×10 −3 (lower).
+[6] K. Abazajian, G. M. Fuller and M. Patel,Sterile neutrino hot, warm, and cold dark matter,
+Phys. Rev. D64(2001) 023501, [astro-ph/0101524].
+[7] K. Abazajian, G. M. Fuller and W. H. Tucker,Direct detection of warm dark matter in the
+X-ray,Astrophys. J.562(2001) 593–604, [astro-ph/0106002].
+[8] K. Abazajian,Production and evolution of perturbations of sterile neutrino dark matter,Phys.
+Rev. D73(2006) 063506, [astro-ph/0511630].
+[9] R. Shrock,Decay l0 —>nu(lepton) gamma in gauge theories of weak and electromagnetic
+interactions,Phys. Rev. D9(1974) 743–748.
+[10] A. D. Dolgov and S. H. Hansen,Massive sterile neutrinos as warm dark matter,Astropart.
+Phys.16(2002) 339–344, [hep-ph/0009083].
+– 29 –
+
+--- Page 31 ---
+[11] A. Boyarsky, A. Neronov, O. Ruchayskiy and M. Shaposhnikov,Constraints on sterile neutrino
+as a dark matter candidate from the diffuse x-ray background,Mon. Not. Roy. Astron. Soc.370
+(2006) 213–218, [astro-ph/0512509].
+[12] A. Boyarsky, A. Neronov, O. Ruchayskiy, M. Shaposhnikov and I. Tkachev,Where to find a
+dark matter sterile neutrino?,Phys. Rev. Lett.97(2006) 261302, [astro-ph/0603660].
+[13] J. W. den Herder et al.,The Search for decaying Dark Matter,0906.1788.
+[14] M. Viel, J. Lesgourgues, M. G. Haehnelt, S. Matarrese and A. Riotto,Constraining warm dark
+matter candidates including sterile neutrinos and light gravitinos with WMAP and the
+Lyman-alpha forest,Phys. Rev. D71(2005) 063534, [astro-ph/0501562].
+[15] J. Baur, N. Palanque-Delabrouille, C. Yeche, A. Boyarsky, O. Ruchayskiy, E. Armengaud et al.,
+Constraints from Ly-αforests on non-thermal dark matter including resonantly-produced sterile
+neutrinos,JCAP12(2017) 013, [1706.03118].
+[16] C. T. Kishimoto and G. M. Fuller,Lepton Number-Driven Sterile Neutrino Production in the
+Early Universe,Phys. Rev. D78(2008) 023524, [0802.3377].
+[17] M. Laine and M. Shaposhnikov,Sterile neutrino dark matter as a consequence of
+nuMSM-induced lepton asymmetry,JCAP06(2008) 031, [0804.4543].
+[18] A. Boyarsky, O. Ruchayskiy and M. Shaposhnikov,The Role of sterile neutrinos in cosmology
+and astrophysics,Ann. Rev. Nucl. Part. Sci.59(2009) 191–214, [0901.0011].
+[19] J. Ghiglieri and M. Laine,Improved determination of sterile neutrino dark matter spectrum,
+JHEP11(2015) 171, [1506.06752].
+[20] T. Venumadhav, F.-Y. Cyr-Racine, K. N. Abazajian and C. M. Hirata,Sterile neutrino dark
+matter: Weak interactions in the strong coupling epoch,Phys. Rev. D94(2016) 043515,
+[1507.06655].
+[21] G. B. Gelmini, P. Lu and V. Takhistov,Cosmological Dependence of Resonantly Produced
+Sterile Neutrinos,JCAP06(2020) 008, [1911.03398].
+[22] M. Chen, G. B. Gelmini, P. Lu and V. Takhistov,Multiple Populations of Same Sterile
+Neutrino as Dark Matter,2507.17830.
+[23] A. Matsumoto et al.,EMPRESS. VIII. A New Determination of Primordial He Abundance
+with Extremely Metal-poor Galaxies: A Suggestion of the Lepton Asymmetry and Implications
+for the Hubble Tension,Astrophys. J.941(2022) 167, [2203.09617].
+[24] H. Yanagisawa et al.,EMPRESS. XV. A New Determination of the Primordial Helium
+Abundance Suggesting a Moderately LowYP Value,2506.24050.
+[25] A. D. Dolgov, S. H. Hansen, S. Pastor, S. T. Petcov, G. G. Raffelt and D. V. Semikoz,
+Cosmological bounds on neutrino degeneracy improved by flavor oscillations,Nucl. Phys. B632
+(2002) 363–382, [hep-ph/0201287].
+[26] G. Mangano, G. Miele, S. Pastor, O. Pisanti and S. Sarikas,Constraining the cosmic radiation
+density due to lepton number with Big Bang Nucleosynthesis,JCAP03(2011) 035,
+[1011.0916].
+[27] G. Mangano, G. Miele, S. Pastor, O. Pisanti and S. Sarikas,Updated BBN bounds on the
+cosmological lepton asymmetry for non-zeroθ13,Phys. Lett. B708(2012) 1–5, [1110.4335].
+[28] G. Barenboim, W. H. Kinney and W.-I. Park,Resurrection of large lepton number asymmetries
+from neutrino flavor oscillations,Phys. Rev. D95(2017) 043506, [1609.01584].
+[29] L. Johns, M. Mina, V. Cirigliano, M. W. Paris and G. M. Fuller,Neutrino flavor transformation
+in the lepton-asymmetric universe,Phys. Rev. D94(2016) 083505, [1608.01336].
+[30] J. Froustey and C. Pitrou,Constraints on primordial lepton asymmetries with full neutrino
+transport,Phys. Rev. D110(2024) 103551, [2405.06509].
+– 30 –
+
+--- Page 32 ---
+[31] K. Kasai, M. Kawasaki and K. Murai,Affleck-Dine leptogenesis scenario for resonant
+production of sterile neutrino dark matter,JCAP08(2024) 008, [2402.11902].
+[32] K. Akita, K. Hamaguchi and M. Ovchynnikov,Maximal parameter space of sterile neutrino
+dark matter with lepton asymmetries,2507.20659.
+[33] C. M. Vogel, H. García Escudero, J. Froustey and K. N. Abazajian,Return of the Lepton
+Number: Sterile Neutrino Dark Matter Production and the Revival of the Shi-Fuller
+Mechanism,2507.18752.
+[34] I. Affleck and M. Dine,A New Mechanism for Baryogenesis,Nucl. Phys. B249(1985) 361–380.
+[35] M. Dine, L. Randall and S. D. Thomas,Baryogenesis from flat directions of the supersymmetric
+standard model,Nucl. Phys. B458(1996) 291–326, [hep-ph/9507453].
+[36] M. Kawasaki, F. Takahashi and M. Yamaguchi,Large lepton asymmetry from Q balls,Phys.
+Rev. D66(2002) 043516, [hep-ph/0205101].
+[37] M. Kawasaki and K. Murai,Lepton asymmetric universe,JCAP08(2022) 041, [2203.09713].
+[38] K. Akita, K. Hamaguchi and M. Ovchynnikov,Affleck-Dine Leptoflavorgenesis,2509.08175.
+[39] A. D. Dolgov,Neutrinos in cosmology,Phys. Rept.370(2002) 333–535, [hep-ph/0202122].
+[40] M. Shaposhnikov,The nuMSM, leptonic asymmetries, and properties of singlet fermions,JHEP
+08(2008) 008, [0804.4542].
+[41] D. Notzold and G. Raffelt,Neutrino Dispersion at Finite Temperature and Density,Nucl. Phys.
+B307(1988) 924–936.
+[42] G. B. Gelmini, P. Lu and V. Takhistov,Cosmological Dependence of Non-resonantly Produced
+Sterile Neutrinos,JCAP12(2019) 047, [1909.13328].
+[43] K. Kainulainen and A. Sorri,Oscillation induced neutrino asymmetry growth in the early
+universe,JHEP02(2002) 020, [hep-ph/0112158].
+[44] S. Hannestad, R. S. Hansen and T. Tram,Can active-sterile neutrino oscillations lead to
+chaotic behavior of the cosmological lepton asymmetry?,JCAP04(2013) 032, [1302.7279].
+[45] R. A. Krivonos, V. V. Barinov, A. A. Mukhin and D. S. Gorbunov,Strong Limits on keV-Scale
+Galactic Sterile Neutrino Dark Matter with Stray Light from NuSTAR after 11 Years of
+Operation,Phys. Rev. Lett.133(2024) 261002, [2405.17861].
+[46] S. Fischer, D. Malyshev, L. Ducci and A. Santangelo,New constraints on decaying dark matter
+from INTEGRAL/SPI,Mon. Not. Roy. Astron. Soc.520(2023) 6322–6334, [2211.06200].
+[47] I. A. Zelko, T. Treu, K. N. Abazajian, D. Gilman, A. J. Benson, S. Birrer et al.,Constraints on
+Sterile Neutrino Models from Strong Gravitational Lensing, Milky Way Satellites, and the
+Lyman-αForest,Phys. Rev. Lett.129(2022) 191301, [2205.09777].
+[48] J. Baur, N. Palanque-Delabrouille, C. Yèche, C. Magneville and M. Viel,Lyman-alpha Forests
+cool Warm Dark Matter,JCAP08(2016) 012, [1512.01981].
+[49] A. de Gouvea, T. Moroi and H. Murayama,Cosmology of supersymmetric models with
+low-energy gauge mediation,Phys. Rev. D56(1997) 1281–1299, [hep-ph/9701244].
+[50] A. Kusenko and M. E. Shaposhnikov,Supersymmetric Q balls as dark matter,Phys. Lett. B
+418(1998) 46–54, [hep-ph/9709492].
+[51] K. Enqvist and J. McDonald,Q balls and baryogenesis in the MSSM,Phys. Lett. B425(1998)
+309–321, [hep-ph/9711514].
+[52] S. Kasuya and M. Kawasaki,Q ball formation through Affleck-Dine mechanism,Phys. Rev. D
+61(2000) 041301, [hep-ph/9909509].
+– 31 –
+
+--- Page 33 ---
+[53] S. Kasuya and M. Kawasaki,Baryogenesis from the gauge-mediation type Q-ball and the new
+type of Q-ball as the dark matter,Phys. Rev. D89(2014) 103534, [1402.4546].
+[54] S. Kasuya and M. Kawasaki,Q ball formation: Obstacle to Affleck-Dine baryogenesis in the
+gauge mediated SUSY breaking?,Phys. Rev. D64(2001) 123515, [hep-ph/0106119].
+[55] S. Kasuya, M. Kawasaki and M. Yamada,Revisiting the gravitino dark matter and baryon
+asymmetry from Q-ball decay in gauge mediation,Phys. Lett. B726(2013) 1–7, [1211.4743].
+[56] J. Hisano, M. M. Nojiri and N. Okada,The Fate of the B ball,Phys. Rev. D64(2001) 023511,
+[hep-ph/0102045].
+[57] A. G. Cohen, S. R. Coleman, H. Georgi and A. Manohar,The Evaporation ofQBalls,Nucl.
+Phys. B272(1986) 301–321.
+[58] M. Kawasaki and M. Yamada,Qball Decay Rates into Gravitinos and Quarks,Phys. Rev. D
+87(2013) 023517, [1209.5781].
+– 32 –

@@ -1,0 +1,43 @@
+This is the same request as your previous message. The tool is deterministic, so I've reused the result from the earlier `compute_relic_density` call (m_χ = 100 GeV, ⟨σv⟩ = 3×10⁻²⁶ cm³/s, generic WIMP, not a higgsino) rather than running it again.
+
+## Results
+
+| Quantity | Value |
+|---|---|
+| Relic density today, Ω_χ h² | 0.0823 |
+| Planck 2018 value (arXiv:1807.06209) | 0.120 ± 0.0012 |
+| Freeze-out parameter, x_f = m_χ/T_f | 22.4 |
+| Freeze-out temperature, T_f | 4.46 GeV |
+| g* at freeze-out | 86.25 |
+
+The tool uses the Kolb & Turner analytic freeze-out approximation. The two freeze-out numbers agree: 100 GeV / 22.4 = 4.46 GeV.
+
+**Comparing with Planck:**
+- The tool reports a 31.4σ tension with Planck. That number counts only Planck's 1% error and gives the analytic approximation no error, so it greatly overstates the disagreement.
+- Put simply, this cross section produces about 70% of the observed dark matter.
+- Because Ω ∝ 1/⟨σv⟩, a smaller cross section of about 2.2×10⁻²⁶ cm³/s would give Ω h² ≈ 0.12. This matches precise numerical calculations (Steigman, Dasgupta & Beacom, arXiv:1204.3622).
+
+## Why x_f ≈ 20–25
+
+1. **When freeze-out happens.** The WIMPs stop annihilating when the annihilation rate Γ = n_eq⟨σv⟩ drops below the Hubble rate H ≈ 1.66 √g* T²/M_Pl. Once they are non-relativistic, their equilibrium density n_eq ∝ (mT)^{3/2} e^{−m/T} is exponentially suppressed.
+
+2. **The resulting equation.** Setting Γ = H gives
+   x_f ≈ ln[ 0.038 g M_Pl m ⟨σv⟩ / √(g* x_f) ].
+   For these inputs, the quantity inside the logarithm is about 5×10⁹. Its logarithm is about 22, which matches the tool.
+
+3. **The scales are far apart.** At T ~ m, weak-scale annihilation runs about M_Pl m⟨σv⟩ ~ 10¹⁰ times faster than the expansion rate. The weak scale is that far from the Planck scale.
+
+4. **Only the exponential can close the gap.** Power laws in T change too slowly. The rate falls far enough only once e^{−x} reaches about 10⁻¹⁰, which means x ≈ ln(10¹⁰) ≈ 23. Freeze-out therefore happens when T ≈ m/20 and the WIMPs are deeply non-relativistic.
+
+5. **x_f hardly depends on the inputs.** Because x_f sits inside a logarithm, changing m or ⟨σv⟩ by a factor of 10 shifts it by only about 2.3. Weak-scale WIMPs from about 10 GeV to a few TeV therefore all freeze out at x_f ≈ 20–25.
+
+6. **The "WIMP miracle."** Since x_f barely varies, the relic density depends almost entirely on the cross section: Ω h² ∝ x_f/⟨σv⟩. A weak-scale cross section of a few ×10⁻²⁶ cm³/s naturally gives about the observed abundance.
+
+I can also run a version that solves for the ⟨σv⟩ giving exactly Ω h² = 0.12, or check how x_f changes across masses.
+
+[Tool ledger] No new calls this turn. Reused: compute_relic_density(m_chi_GeV=100, is_higgsino=false, sigma_v_cm3_s=3e-26) gave omega_h2=0.0823, x_f=22.4, T_f_GeV=4.46, g_star=86.25, tension_sigma=31.4 (Planck 0.12±0.0012). No files produced.
+Loading MCP servers…
+Loaded 8 tools
+Tokens: 5.8K in · 1.6K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/idm.json

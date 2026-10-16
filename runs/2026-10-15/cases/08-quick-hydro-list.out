@@ -1,0 +1,63 @@
+
+$ "/Users/nramachandra/anaconda3/envs/hep-genesis/bin/hep-genesis-agent" --quick "List the observables available in the hydrodynamics emulator and describe what physics parameters it uses." --servers command:/Users/nramachandra/hep-genesis-testing/scripts/serve-hydro.sh --project quick-smoke --chat hydro
+The hydrodynamics emulator provides **14 observables**, organized as follows.
+
+### Galaxy, halo, and matter summaries
+
+| Key | Observable | Independent variable | Redshift range |
+|---|---|---|---|
+| **GSMF** | Galaxy stellar mass function | Stellar mass \(M_\star\) \([M_\odot]\) | \(0 \leq z \leq 2.0036\) |
+| **HMF** | Halo mass function | Halo mass \(M_{\rm SO}\) \([h^{-1}M_\odot]\) | \(0 \leq z \leq 2.0036\) |
+| **fGas** | Cluster gas fraction | Halo mass \(M_{500c}\) \([h^{-1}M_\odot]\) | \(0 \leq z \leq 0.9996\) |
+| **Pk-ratio** | Matter power-spectrum suppression due to baryonic physics | Wavenumber \(k\) \([h\,{\rm Mpc}^{-1}]\) | \(0 \leq z \leq 2\) |
+| **CSFR** | Cosmic star-formation rate | Scale factor \(a\) | \(z=0\) |
+
+### Cluster profiles
+
+All cluster profiles are functions of normalized radius \(r/R_{500c}\), and are trained over \(0 \leq z \leq 0.4987\):
+
+- **CGD** — cluster gas-density profile
+- **CGED** — cluster gas electron-density profile
+- **CPP** — cluster gas-pressure profile
+- **CTP** — cluster gas-temperature profile
+- **CEP** — cluster gas-entropy profile
+- **CEEP** — cluster electron-entropy profile
+- **CMP** — cluster gas-metallicity profile
+- **CYP** — cluster Compton-\(y\) profile
+
+There is also one gravity-only observable:
+
+- **Pk_GO** — gravity-only matter power spectrum, as a function of \(k\), over \(0 \leq z \leq 2\).
+
+## Physics parameters
+
+The hydrodynamic observables use **seven parameters**: five subgrid feedback/black-hole parameters and two cosmological parameters.
+
+| Parameter | Description | Design range |
+|---|---|---:|
+| \(\kappa_{\rm w}\) | AGN wind coupling or wind-efficiency parameter | \(2.0\)–\(4.0\) |
+| \(e_{\rm w}\) | AGN energy efficiency or wind-energy fraction | \(0.2\)–\(1.0\) |
+| \(M_{\rm seed}\) | Black-hole seed mass, in units of \(10^6\,M_\odot\) | \(0.6\)–\(2.0\) |
+| \(v_{\rm kin}\) | Kinetic-feedback velocity, in units of \(10^4\,{\rm km\,s^{-1}}\) | \(0.1\)–\(1.2\) |
+| \(\epsilon_{\rm kin}\) | Kinetic-feedback efficiency, in units of \(10^1\) | \(0.02\)–\(1.2\) |
+| \(\omega_{\rm m}\) | Physical matter density, \(\Omega_{\rm m}h^2\) | \(0.12\)–\(0.155\) |
+| \(\sigma_8\) | Amplitude of matter fluctuations | \(0.7\)–\(0.9\) |
+
+The **Pk_GO** gravity-only emulator uses only the two cosmological parameters, \(\omega_{\rm m}\) and \(\sigma_8\). The parameter space is based on a 110-simulation Latin-hypercube design using \(400\,{\rm Mpc}/h\) boxes.
+Loading MCP servers…
+[10/15/26 20:49:42] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 5 tools
+[tool] list_observables {}
+[10/15/26 20:49:45] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] list_observables -> ok: {   "status": "success",   "message": "14 observables available: GSMF, HMF, fGas, Pk-ratio, CSFR, CGD, CGED, CPP, CTP, CEP, CEEP, CMP, CYP, Pk_GO.",   "files": 
+[tool] describe_parameters {}
+[10/15/26 20:51:19] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_parameters -> ok: {   "status": "success",   "message": "7-parameter design space for all statistics: kappa_w, e_w, M_seed, v_kin, epsilon_kin, omega_m, sigma_8.",   "files": [],
+Tokens: 13K in (7.7K cached) · 892 out (39 reasoning) · 3 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/quick-smoke/chats/hydro.json
+
+[exit 0]

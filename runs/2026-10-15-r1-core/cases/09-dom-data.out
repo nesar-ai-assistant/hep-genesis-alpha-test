@@ -1,0 +1,39 @@
+I couldn't do this as you asked. The tool can't set the mean or sigma, so it drew from a standard Gaussian (mean 0, sigma 1) instead of mean 5, sigma 2. I also couldn't compute the statistics or the histogram, because the samples weren't saved anywhere I could load.
+
+**What ran:** `run_test_job` with `distribution="normal"`, `n=1000`, `seed=42`, on this machine (`computed_on: "local"`, host macB.local, 0.002 s). The tool only takes `distribution`, `n` and `seed`, and it reported `params: {mu: 0.0, sigma: 1.0}`.
+
+**Summary the tool returned (standard normal):**
+
+| Quantity | Value | Expected (N(0,1)) |
+|---|---|---|
+| count | 1000 | 1000 |
+| mean | -0.0183 | 0 ± 0.032 (σ/√N) |
+| stdev | 1.0191 | 1 ± 0.022 (σ/√(2N)) |
+| p05 / p50 / p95 | -1.681 / -0.018 / 1.743 | -1.645 / 0 / 1.645 |
+| min / max | -3.15 / 3.75 | — |
+
+These match a standard normal. The mean is about 0.6 standard errors from 0 and the stdev about 0.9 standard errors from 1, so neither is unusual for 1000 draws.
+
+**If you rescale (x → 5 + 2x):** a draw from N(0,1) becomes a draw from N(5, 2). Applying that to the summary gives a mean of about **4.963** (expected 5 ± 0.063) and a std of about **2.038** (expected 2 ± 0.045). Both are consistent with N(5, 2). These two numbers are my own arithmetic on the tool's output, not a sample that was actually generated with mean 5 and sigma 2.
+
+**Why there are no statistics or histogram:** the job returned `artifact: null`. Afterwards there were no datasets loaded, no output files, and no input files to load. `compute_statistics` and `compute_histogram` only work on loaded datasets, so there was nothing for them to run on.
+
+**Ways forward:**
+1. If you give me a CSV or text file of N(5, 2) samples, I can load it and compute the statistics and histogram properly.
+2. You can accept the rescaled summary above as a check that the numbers are consistent, with no histogram.
+3. I can test the remote path on Polaris or Perlmutter, which may return a file I can analyse. Each run takes 1–3 minutes, and it would still draw from a standard normal.
+Loading MCP servers…
+Loaded 21 tools
+[tool] get_dispatch {}
+[tool] get_dispatch -> ok: Dispatch: local execution.
+[tool] run_test_job {"distribution": "normal", "n": 1000, "seed": 42}
+[tool] run_test_job -> ok: {   "status": "success",   "distribution": "normal",   "params": {     "mu": 0.0,     "sigma": 1.0   },   "seed": 42,   "summary": {     "count": 1000,     "mea
+[tool] list_datasets {}
+[tool] list_datasets -> ok: {'count': 0, 'datasets': []}
+[tool] list_agent_files {}
+[tool] list_agent_files -> ok: []
+[tool] list_input_files {}
+[tool] list_input_files -> ok: {   "status": "success",   "files": [],   "usage": "Pass any of these filenames to load_table_data()." }
+Tokens: 20K in (15K cached) · 1.4K out · 4 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/dom.json

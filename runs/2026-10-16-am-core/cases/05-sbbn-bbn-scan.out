@@ -1,0 +1,56 @@
+I'll reuse the earlier tool results for N_eff = 3.044, 3.4 and the 1% threshold. N_eff = 3.0 was only an estimate last time, so I'll try once to get a direct tool value for it.
+# BBN predictions at N_eff = 3.0, 3.044 and 3.4, and the 1% Y_p threshold
+
+**Short answer:** Y_p rises more than 1% above its standard value once **N_eff ≳ 3.229** (ΔN_eff ≈ 0.185).
+
+You asked this two turns ago. I reused those `predict_sterile_nu` results, which are deterministic. This turn I made one new call, `plot_sterile_nu_bbn_impact` over N_eff = 3.0–3.4 (Figure 3), to try to get a direct tool value at N_eff = 3.0. It returns slopes and values only at 3.044 and 4.044, not at 3.0. So the 3.0 row is still an estimate from the tool's slopes, not a direct tool output.
+
+## Method
+
+- **No tool takes N_eff as an input.** I set N_eff by adjusting the mixing of a 5 keV Dodelson-Widrow sterile neutrino.
+- **Lower bound.** A sterile neutrino only adds radiation (ΔN_eff ≥ 0), so it can't produce N_eff = 3.0.
+- **BBN settings.** The BBN numbers use a PRyMordial-calibrated fit, valid from N_eff = 2.044 to 6.044 to better than 0.3%. Inputs are Ω_b h² = 0.02237 and τ_n = 878.4 s.
+
+## Results
+
+| N_eff | Y_p | D/H × 10⁵ | ΔY_p / Y_p,SM | Δ(D/H) / (D/H)_SM | Source |
+|---|---|---|---|---|---|
+| 3.0 | 0.24623 | 2.4287 | −0.24% | −0.60% | Estimate from slopes dY_p/dN_eff = 0.01351 and d(D/H×10⁵)/dN_eff = 0.3308 |
+| 3.044 (Standard Model) | 0.24682 | 2.4433 | 0 | 0 | `predict_sterile_nu` (sin²2θ = 10⁻¹⁵); this turn's plot call gives the same values |
+| 3.4 | 0.25153 | 2.5616 | +1.91% | +4.84% | `predict_sterile_nu` (sin²2θ = 7.62×10⁻⁸) |
+
+The observed values are Y_p = 0.2449 ± 0.004 and D/H × 10⁵ = 2.547 ± 0.025. The N_eff = 3.4 point is still allowed by BBN (Δχ² = +0.01 vs the Standard Model).
+
+## The 1% threshold
+
+One percent of the standard value is 0.0024682, so Y_p must exceed **0.24929**.
+
+- **From the slope:** ΔN_eff = 0.0024682 / 0.01351 = 0.183, which gives N_eff ≈ 3.227.
+- **From direct tool points, both just below 1%:**
+  - N_eff = 3.2262 gives Y_p = 0.24925 (+0.985%).
+  - N_eff = 3.2285 gives Y_p = 0.24928 (+0.997%).
+- **Crossing:** extrapolating these two points puts it at about **N_eff ≈ 3.229**. Y_p is only reported to five digits, so that is uncertain by roughly ±0.0005.
+
+## Interpretation
+
+- **Why Y_p rises:** extra radiation speeds up expansion. Neutron-proton freeze-out then happens earlier, more neutrons survive, and Y_p rises by about 0.0135 per unit of N_eff.
+- **Why 1% isn't detectable yet:** a 1% shift (about 0.0025) is only about 0.6σ of the current Y_p error.
+- **What sets the limit:** the BBN 95% limit, ΔN_eff < 0.548, comes mainly from D/H.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261016_083211/`:
+- `bbn_vs_neff_9d0cdd.png` (Figure 3)
+
+[Tool ledger — exact record of this turn]
+- plot_sterile_nu_bbn_impact (serve-sbbn.sh) ok — args {"neff_min": 3, "neff_max": 3.4, "n_points": 41, "output_dir": ".../runs/261016_083211"}; figures: Figure 3 (bbn_vs_neff_9d0cdd.png); SM Yp 0.24682, DH5 2.4433 at 3.044; Yp 0.25956, DH5 2.7769 at 4.044; slopes dYp/dNeff 0.01351, dDH5/dNeff 0.3308; ΔN_eff < 0.548 (95%)
+- Reused from the earlier turn: predict_sterile_nu at 5000 eV with sin²2θ 1e-15 (N_eff 3.0440), 7.62e-8 (N_eff 3.4000), 3.9e-8 (N_eff 3.2262) and 3.95e-8 (N_eff 3.2285)
+Loading MCP servers…
+[10/16/26 08:32:12] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+[tool] plot_sterile_nu_bbn_impact {"neff_min": 3.0, "neff_max": 3.4, "n_points": 41, "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261016_083211"}
+[10/16/26 08:32:23] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] plot_sterile_nu_bbn_impact -> ok: {   "status": "ok",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261016_083211/bbn_vs_neff_9d0cdd.png"   ],   "message": "P
+Tokens: 29K in (14K cached) · 2.4K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json

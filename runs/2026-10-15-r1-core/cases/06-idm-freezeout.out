@@ -1,0 +1,47 @@
+## Results
+
+I ran `compute_relic_density` for a generic (non-higgsino) WIMP with m_χ = 100 GeV and ⟨σv⟩ = 3×10⁻²⁶ cm³/s:
+
+| Quantity | Value |
+|---|---|
+| Relic density, Ω_χ h² | 0.0823 |
+| Planck 2018 value (arXiv:1807.06209) | 0.120 ± 0.0012 |
+| Freeze-out parameter, x_f = m_χ/T_f | 22.4 |
+| Freeze-out temperature, T_f | 4.46 GeV |
+| g* at freeze-out | 86.25 |
+
+The tool uses the Kolb & Turner analytic freeze-out (Eqs. 5.26–5.29). The two freeze-out numbers agree with each other: 100 GeV / 22.4 = 4.46 GeV.
+
+**What the comparison with Planck means:**
+- The tool reports the result as inconsistent with Planck at 31.4σ. That figure uses only Planck's 1% error and assigns no error to the analytic approximation, so it greatly overstates the tension.
+- The real point is simpler: this cross section gives about 70% of the observed density. Because Ω ∝ 1/⟨σv⟩, a somewhat smaller cross section would give the full abundance.
+- More precise numerical treatments (e.g. Steigman, Dasgupta & Beacom, arXiv:1204.3622) find that about 2.2×10⁻²⁶ cm³/s gives Ω h² ≈ 0.12 at this mass. That is consistent with what we found here.
+
+## Why freeze-out happens at x_f ≈ 20–25
+
+While the WIMP is in equilibrium and non-relativistic, its number density is Boltzmann-suppressed:
+
+n_eq = g (m T / 2π)^{3/2} e^{−x}, with x = m/T.
+
+Freeze-out happens when the annihilation rate Γ = n_eq⟨σv⟩ drops to the Hubble rate H ≈ 1.66 √g* T²/M_Pl. Setting the two equal gives an implicit equation:
+
+x_f ≈ ln[ 0.038 g M_Pl m ⟨σv⟩ / √(g* x_f) ]
+
+Plugging in g = 2, M_Pl = 1.22×10¹⁹ GeV, m = 100 GeV, ⟨σv⟩ = 3×10⁻²⁶ cm³/s ≈ 2.6×10⁻⁹ GeV⁻², g* = 86.25 and x_f ≈ 22:
+- The argument of the logarithm is about 5×10⁹.
+- Its logarithm is about 22.4, which matches the tool.
+
+**Physical meaning:**
+1. **The weak and Planck scales are far apart.** At T ~ m, a weak-scale annihilation rate (T³⟨σv⟩, with ⟨σv⟩ ~ α²/m²) is larger than gravity's expansion rate H ~ T²/M_Pl by roughly M_Pl m⟨σv⟩ ~ 10¹⁰. So right after the particles become non-relativistic, they still annihilate many times per Hubble time.
+2. **Only the exponential can close that gap.** The power-law dependence on T changes too slowly. The rate falls far enough only when e^{−x} reaches about 10⁻¹⁰, which means x ≈ ln(10¹⁰) ≈ 23. Freeze-out therefore waits until the WIMPs are deeply non-relativistic, at T ≈ m/20.
+3. **The logarithm makes x_f insensitive to the inputs.** Changing ⟨σv⟩ or m by a factor of 10 moves x_f by only ln 10 ≈ 2.3. That is why essentially every weak-scale WIMP from about 10 GeV to a few TeV freezes out at x_f ≈ 20–25.
+4. **Consequence for the relic density.** Since Ω h² ≈ 1.07×10⁹ GeV⁻¹ · x_f / (√g* M_Pl ⟨σv⟩), and x_f barely varies, the relic density depends almost only on ⟨σv⟩. This is the basis of the "WIMP miracle": a weak-scale cross section of about 2–3×10⁻²⁶ cm³/s gives roughly the observed abundance.
+
+[Tool ledger] compute_relic_density(m_chi_GeV=100, is_higgsino=false, sigma_v_cm3_s=3e-26) returned omega_h2=0.0823, x_f=22.4, T_f_GeV=4.46, g_star=86.25, tension_sigma=31.4 (Planck 0.12±0.0012). No files produced.
+Loading MCP servers…
+Loaded 8 tools
+[tool] compute_relic_density {"m_chi_GeV": 100, "is_higgsino": false, "sigma_v_cm3_s": 3e-26}
+[tool] compute_relic_density -> ok: {   "parameters": {     "m_chi_GeV": 100.0,     "is_higgsino": false,     "sigma_v_cm3_s": 3e-26   },   "relic_density": {     "omega_h2": 0.0823,     "planck_v
+Tokens: 8.0K in (3.8K cached) · 2.4K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/idm.json
