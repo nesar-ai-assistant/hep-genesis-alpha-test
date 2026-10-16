@@ -390,6 +390,24 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
             '--quick "Load the skill named statistical-analysis if available, then summarize what it instructs." '
             f'--servers {DOM} --project ramp-features --chat skill',
             "Skill loading in quick mode", 600)
+        # F8 needs a real skill file in $HEP_WORKSPACE_DIR/skills/ — the CLI
+        # only lists files with `name:` frontmatter (ISSUES.md #18). Create it
+        # if missing so the load path is always exercised.
+        _ws = os.environ.get("HEP_WORKSPACE_DIR", str(Path.home() / "HEP-Genesis"))
+        _sd = Path(_ws) / "skills"
+        _sd.mkdir(parents=True, exist_ok=True)
+        _skill = _sd / "statistical-analysis.md"
+        if not _skill.exists():
+            _skill.write_text(  # pragma: no cover - test fixture
+                "---\nname: statistical-analysis\n"
+                "description: Guidance for statistical analysis of data tables.\n---\n\n"
+                "# Statistical Analysis\n\n"
+                "- Report the sample size N alongside every statistic.\n"
+                "- Uncertainties to one significant figure; values matched to that decimal place.\n"
+                "- State whether errors are statistical or systematic.\n"
+                "- Prefer robust estimators (median, MAD) for N < 30.\n"
+                "- For fits, report chi-squared per dof and covariance diagnostics.\n"
+            )
         add("F9-research-noservers", "research",
             '"Give a rough estimate, with reasoning, of how many arXiv papers on galaxy cluster physics were '
             'published in 2025." --project ramp-features --servers none '

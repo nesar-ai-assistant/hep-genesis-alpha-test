@@ -121,6 +121,41 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
 - Evidence: runs/2026-10-16-pm-combo/cases/C1-multi-server-research.out
   line 858; runs/2026-10-16-midday-research/cases/R1-higgsino-dd.out line 802.
 
+### 16. Quick `--report` + query asking for a report → report generated twice **[GH#6]** — open
+- v0.3.16 (found 2026-10-15, confirmed 2026-10-16). When the `--quick` query
+  asks for a report in natural language AND `--report` is passed, the report is
+  built twice: once by the in-turn `write_report` tool call, once by the
+  post-turn `--report` pass. Two full report folders (~580 KB each) 39 s
+  apart, same title/conversation_id, double report-model cost + pdflatex.
+- Reproduced 2/2 (runs/2026-10-15-r1-features and 2026-10-16-eve-features,
+  case F6). Folders 261016_170256 (tool) and 261016_170335 (flag pass).
+- Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/6
+
+### 17. Invalid `--servers` spec → raw pip traceback, no usage hint **[GH#7]** — open
+- v0.3.16 (found 2026-10-16, ad-hoc verification). `--servers sbbn` (bare
+  name) makes the CLI run `pip install git+sbbn`, which fails with
+  `ERROR: Invalid requirement: 'git+sbbn'` and an uncaught RuntimeError
+  traceback, exit 1. No indication of the accepted spec formats
+  (`command:`, `module:`, path, git URL, https …/mcp|/sse).
+- Root cause: ServerPool._install (mcp.py) prepends `git+` to any non-module,
+  non-command, non-URL token and lets pip validate it.
+- Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/7
+
+### 18. Workspace skills require `name:` frontmatter — silently skipped otherwise **[local, docs]** — open
+- v0.3.16 (found 2026-10-16, F8 follow-up). `workspace_skills()` only lists
+  `.md` files whose YAML frontmatter has a `name:` key; files without it are
+  silently dropped from `--list-skills` and `load_skill` ("Available:
+  (none)") with no warning. Not a crash, but easy to hit: a plain markdown
+  recipe in `$HEP_WORKSPACE_DIR/skills/` looks ignored.
+- The CLI `--help` and the releases-page docs don't mention the frontmatter
+  requirement either — worth a doc line upstream (not filed; low priority).
+- Verified the positive path after adding frontmatter: `--list-skills` lists
+  the skill and `load_skill` returns its full text. `remember`/MEMORY.md
+  persistence across invocations also verified working (single entry, no
+  duplicates; F7 agent correctly refused to re-save an existing lesson).
+- Test-env fix: `workspace/skills/statistical-analysis.md` now exists with
+  proper frontmatter so F8 exercises the real load path in future batteries.
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -151,6 +186,11 @@ Clean run — no flags.
 
 
 ## 2026-10-16-pm-combo — 3 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-16-eve-features — 9 pass / 0 flagged
 
 Clean run — no flags.
 
