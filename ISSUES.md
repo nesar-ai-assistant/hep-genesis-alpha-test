@@ -173,6 +173,25 @@ Suggested upstream: persist the exact matched text snippet (chars offset +
 length, or the first ~300 chars) in each evidence entry at finding-creation
 time.
 
+### 20. `load_table_data` cannot parse CSVs with a column-name header row **[GH#8]** — open
+
+- v0.3.16 (found 2026-10-17-pm-combo, baryonic-pk, 4-server combo). The
+  bundled DOM tool `load_table_data` fails on its sibling HYD server's own
+  prediction CSVs: `Error: could not convert string 'x' to float64 at row 0,
+  column 1.` The CSV is 5 `#` comment lines + `x,y_mean,y_std` header + 799
+  numeric rows — the exact format the emulator's `predict_observable` writes.
+- Root cause: `load_table_data()` = `np.loadtxt(path)` with fallback
+  `np.loadtxt(path, delimiter=",")` — no header-row skipping; docstring
+  claims `#`-comment support but not header support. Verified: both calls
+  fail; `skiprows=6` works (799×3, k_max=12.56 vs 3.7 reachable via
+  read_text_file fallback).
+- Consequence in run: agent fell back to `read_text_file`, which truncated
+  near k≈3.7 h/Mpc, so the suppression minimum was never resolved; agent
+  posted question q-06 about it on the board; final report says suppression
+  "is still deepening at k≈3.7 h/Mpc, the largest wavenumber that could be
+  read from the output".
+- Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/8
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -218,6 +237,11 @@ Clean run — no flags.
 
 
 ## 2026-10-17-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-17-pm-combo — 3 pass / 0 flagged
 
 Clean run — no flags.
 

@@ -1,0 +1,2195 @@
+Title: The suppression of the matter power spectrum: strong feedback from X-ray gas mass fractions, kSZ effect profiles, and galaxy-galaxy lensing
+Authors: Jared Siegel, Leah Bigwood, Alexandra Amon, Jamie McCullough, Masaya Yamamoto, Ian G. McCarthy, Matthieu Schaller, Aurel Schneider, Joop Schaye
+Year: 2025
+arXiv ID: 2512.02954
+
+============================================================
+
+--- Page 1 ---
+MNRAS000, 1–17 (2025) Preprint 3 December 2025 Compiled using MNRAS L ATEX style file v3.3
+The suppression of the matter power spectrum: strong feedback from
+X-ray gas mass fractions, kSZ effect profiles, and galaxy-galaxy lensing
+Jared Siegel,1★ Leah Bigwood,2,3 Alexandra Amon,1 Jamie McCullough,1 Masaya Yamamoto,1
+Ian G. McCarthy,4 Matthieu Schaller,5,6 Aurel Schneider,7 Joop Schaye6
+1Department of Astrophysical Sciences, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA
+2 Institute of Astronomy and Kavli Institute for Cosmology, University of Cambridge, Madingley Road, Cambridge, CB3 0HA, UK
+3Kavli Institute for Cosmology (KICC), University of Cambridge, Madingley Road, Cambridge CB3 0HA, UK
+4Astrophysics Research Institute, Liverpool John Moores University, Liverpool, L3 5RF, UK
+5Lorentz Institute for Theoretical Physics, Leiden University, PO box 9506, 2300 RA Leiden, the Netherlands
+6Leiden Observatory, Leiden University, PO Box 9513, 2300 RA Leiden, the Netherlands
+7Department of Astrophysics, University of Zurich, Winterthurerstrasse 190, 8057 Zurich, Switzerland
+Accepted XXX. Received YYY; in original form ZZZ
+ABSTRACT
+Baryon feedback redistributes gas relative to the underlying dark matter distribution and suppresses the matter power spectrum
+onsmallscales,buttheamplitudeandscaledependenceofthiseffectareuncertain.Weconstraintheimpactofbaryonfeedback
+on the matter power spectrum by jointly analysing X-ray gas mass fractions from the eROSITA and HSC–XXL samples and
+SDSS/DESI+ACT kinetic Sunyaev–Zel’dovich (kSZ) effect profiles; the samples are characterised with galaxy-galaxy lensing
+andtogetherspangroupandclustermasses(13<log 10
+𝑀500
+M⊙ ℎ−1 <14)at0<𝑧<1.Usingthebaryonificationframework,ourjoint
+eROSITAandkSZmodelgivespreciseconstraintsonthesuppressionofthematterpowerspectrum:10±2%at𝑘=1ℎMpc −1.
+The inferred gas profiles are more extended and the power suppression is stronger than predicted by the fiducial models of
+recent hydrodynamical simulation suites, including FLAMINGO and BAHAMAS. The HSC–XXL gas mass fractions, which
+thefiducialsimulationswerecalibratedtoreproduce,prefermoremoderatepowersuppressionthanthekSZandeROSITAdata:
+5±4%at𝑘=1ℎMpc −1.WithasimulatedLSSTYear1weaklensinganalysis,wedemonstrateaframeworkfornext-generation
+surveys:calibratingfeedbackmodelswithmulti-wavelengthgasobservablestorecoverthesmall-scalestatisticalpowerofcosmic
+shear.
+Key words:large-scale structure of Universe – cosmology:theory – methods:numerical – galaxies: formation
+1 INTRODUCTION
+Baryon feedback processes, particularly energy injection by active
+galacticnuclei(AGN),redistributegasrelativetotheunderlyingdark
+matter distribution. This redistribution suppresses the matter power
+spectrum on small, non-linear scales by tens of percent relative to
+dark matter-only predictions (e.g., van Daalen et al. 2011; Chisari
+et al. 2019; Debackere et al. 2020). Testing the cosmological model
+on small scales requires accurate modelling of the non-linear matter
+power spectrum (e.g., Semboloni et al. 2011). However, the precise
+amplitude and scale dependence of matter power suppression due to
+baryonfeedbackremainsunclear.Thisuncertaintydirectlytranslates
+to a loss of cosmological precision. Modelling of baryonic feedback
+and the intrinsic alignment of galaxies (correlations between galaxy
+shapes not introduced by weak lensing, e.g., Chisari 2025) limit
+cosmologicalprecisionbymorethanafactoroftwoforcosmicshear
+(Amon et al. 2022)—the weak gravitational lensing of background
+galaxiesbylarge-scalestructure.Withrecentanalysespartiallylifting
+theuncertaintyfromintrinsicalignmentsbylimitingshearstudiesto
+★ E-mail: siegeljc@princeton.edu
+bluegalaxypopulationsthatarefoundtoweaklyalign(McCullough
+et al. 2024), baryonic feedback is now the limiting systematic for
+cosmic shear.
+There is no consensus from modern hydrodynamical simulations
+on the impact of baryon feedback on the matter power spectrum.
+Simulations include a variety of baryonic feedback processes (e.g.,
+AGN, supernovae, and stellar winds) and are increasingly in agree-
+ment with the observed stellar-to-halo mass relation, cosmic star
+formationdensity,andclusterscalingrelations(e.g.,McCarthyetal.
+2017;Davéetal.2019;Schayeetal.2023;Pakmoretal.2023;Dolag
+etal.2025;Schayeetal.2025;Bigwoodetal.2025a).However,they
+lack the resolution to treat feedback processes from first principles
+and instead adopt “sub-grid” prescriptions for the behaviour of stars
+and AGN. Different sub-grid physics recipes result in markedly dif-
+ferent predictions for the suppression of the matter power spectrum
+(e.g., van Daalen et al. 2011, 2020; Bigwood et al. 2025a).
+Without a precise prediction from simulations for the impact of
+feedback on the matter power spectrum, weak lensing analyses of-
+ten adopt conservative scale cuts: excluding the small-scale modes
+most sensitive to baryonic physics. Although it can reduce bias, this
+approachdiscardsalargefractionoftheavailablesignal.Analterna-
+©2025 The Authors
+arXiv:2512.02954v1  [astro-ph.CO]  2 Dec 2025
+
+--- Page 2 ---
+2J. Siegel et al.
+tivemethodistoretainthesmallscalesandaccountformatterpower
+suppression by baryon feedback using flexible models: e.g., the halo
+model(Sembolonietal.2011,2013;Meadetal.2021),thebaryoni-
+ficationofdarkmatter-onlysimulations(Schneider&Teyssier2015;
+Angulo et al. 2021; Aricò et al. 2021; Schneider et al. 2025), Princi-
+pal Component analysis (PCA, Huang et al. 2021), the resummation
+model (van Loon & van Daalen 2024; van Daalen et al. 2025),
+simulation-based analytic models (Salcido et al. 2023; Schaller &
+Schaye 2025), or simulator based emulators (e.g., Schaller et al.
+2025). Without calibration from external probes of baryon feedback
+(e.g.,thehotgasmassfractionsofgroupsandclusters),theflexibility
+of these models effectively downweights the small scales, degrading
+the cosmological precision similarly to scale cuts (Aricò et al. 2023;
+Bigwood et al. 2024; Anbajagane et al. 2025).
+Inthiswork,weusemulti-wavelengthgasobservationsandgalaxy-
+galaxy lensing to directly constrain the distribution of baryons rela-
+tive to the underlying dark matter. We then relate these constraints
+to the suppression of the matter power spectrum, producing data-
+driven priors that can be incorporated into weak lensing analyses.
+This approach transforms feedback modelling from a source of sys-
+tematic uncertainty to an observationally calibrated component of
+cosmological inference.
+By tracing how much gas is expelled from halos and how far it
+extends,observationsoftheintraclustermedium(ICM)arevaluable
+probes of baryon feedback. Recent studies have inferred the impact
+of baryon feedback on the matter power spectrum using a variety
+ofobservations,includingX-raygasmassfractions(Schneideretal.
+2022;Bigwoodetal.2024;Grandisetal.2024;Kovačetal.2025;van
+Daalen et al. 2025), diffuse X-ray emission (Ferreira et al. 2024; La
+Postaetal.2025),thethermalandkineticSunyaev–Zel’dovicheffects
+(tSZ and kSZ, Schneider et al. 2022; Tröster et al. 2022; Bigwood
+etal.2024;Pandeyetal.2025a;Dalaletal.2025;Kovačetal.2025;
+Roperetal.2025),andfastradiobursts(Reischke&Hagstotz2025).
+Thematterpowerspectrumisindirectlybenchmarkedbycomparing
+hydrodynamical simulations to gas observables (McCarthy et al.
+2018; Schaye et al. 2023; McCarthy et al. 2025; Hadzhiyska et al.
+2025; Ried Guachalla et al. 2025; Siegel et al. 2025; Bigwood et al.
+2025b). The suppression of the non-linear matter power spectrum
+hasalsobeenconstraineddirectlyfromthecosmicsheardata,either
+with or without assuming theΛCDM cosmology preferred by the
+CMB (e.g. Huang et al. 2021; Chen et al. 2022; Amon & Efstathiou
+2022; Preston et al. 2023; Aricò et al. 2023; García-García et al.
+2024; Terasawa et al. 2025; Preston et al. 2024; Sarmiento et al.
+2025; Broxterman et al. 2025; Xu et al. 2025). Overall, there is
+a growing consensus that feedback indeed suppresses the matter
+powerspectrumonsmallscales,andmorerecentlythereisevidence
+that suppression may be stronger than realised in many state-of-
+the-art hydrodynamical simulations. In addition to the effects of
+feedback,deviationsofthenon-linearmatterpowerfromtheΛCDM
+expectation could be signs of new physics (e.g. Hooper et al. 2022;
+Poulinetal.2023;Rogersetal.2023;Prestonetal.2025).Motivated
+by these previous studies, we address key uncertainties in the study
+of baryon feedback and deliver precise priors for next-generation
+cosmic shear analyses.
+Cosmic shear is sensitive to baryon feedback over a wide range
+of halo mass and redshift (e.g., Lucie-Smith et al. 2025). At
+0.1< 𝑘 ℎMpc −1 <10and0< 𝑧 <1, suppression of the mat-
+ter power spectrum is strongly correlated with the baryon properties
+of groups and clusters (Salcido et al. 2023). However, no single
+observation probes the full regime: X-ray gas mass fractions probe
+the inner regions (< 𝑅500) of low redshift clusters, while existing
+kSZ measurements constrain the outskirts (beyond several𝑅500) of
+higher redshift group mass halos. Building a complete picture of
+baryon feedback thus requires a multi-probe approach. In this work,
+we jointly analyse stacked measurements of the kSZ effect from
+SDSS/DESI+ACT (Schaan et al. 2021; Ried Guachalla et al. 2025)
+and X-ray gas mass fractions from the first eROSITA All-Sky Sur-
+vey catalogue (RASS1, Bulbul et al. 2024; Kluge et al. 2024) and
+the HSC–XXL sample (Pierre et al. 2016; Eckert et al. 2016; Akino
+etal.2022).ForthekSZandeROSITAsamples,weadoptthegalaxy-
+galaxylensingmeanhalomassmeasurementsofSiegeletal.(2025);
+theHSC–XXLsampleincludestheweaklensinghalomassmeasure-
+ments of Umetsu et al. (2020). Weak lensing halo mass constraints
+resolve a key source of uncertainty, because the implied magnitude
+of gas expulsion by a kSZ or X-ray observation is degenerate with
+the halo mass (e.g., McCarthy et al. 2025).
+InSection2,wedescribethemulti-wavelengthdatasets.Wereview
+thebaryonificationmodelinSection3andvalidatetheframeworkin
+Section 4. We present the model fits in Section 5. In Section 6, we
+compareourresultswithstate-of-the-arthydrodynamicalsimulations
+and demonstrate how the model constraints can be implemented as
+data-drivenpriorsforcosmicshear,usingaforecastofLSSTYear1.
+We conclude in Section 7.
+2 DATA
+In this work, we infer the impact of baryons on the matter power
+spectrum by jointly analysing kSZ effect profiles and X-ray hot gas
+mass fractions, with mean halo mass constraints from GGL. We
+describe the kSZ and X-ray measurements in Sections 2.1 and 2.2,
+respectively.
+2.1 SDSS/DESI+ACT kSZ effect profiles
+The kinetic Sunyaev-Zel’dovich (kSZ) effect is a CMB secondary
+anisotropy, arising from the inverse Compton scattering of CMB
+photons off the ionised gas around galaxies and clusters. Due to the
+bulkmotionofthegas,thesescatteringsimpartaDopplershifttothe
+CMBphotons(Sunyaev&Zeldovich1980).Theapparentchangein
+temperatureinducedbythekSZeffectΔ𝑇 kSZisthereforeproportional
+to the electron number density and the peculiar velocity of the gas:
+Δ𝑇kSZ
+𝑇CMB
+= 𝜎T
+𝑐
+∫
+los
+𝑒−𝜏𝑛e𝑣p𝑑𝑙,(1)
+where𝜎 T is the Thomson scattering cross-section,𝑐is the speed
+of light,𝑛 e is the free-electron number density,𝑣p is the peculiar
+velocity along the line of sight, and𝜏=𝜎 T
+∫
+𝑛e𝑑𝑙is the optical
+depthtoThompsonscattering.Becausethegasofinterestisoptically
+thin, we assume𝑒−𝜏 ≈1(see Schaan et al. 2021; Ried Guachalla
+et al. 2025). For one galaxy, the kSZ effect is approximately
+Δ𝑇kSZ
+𝑇CMB
+≈−𝜏 gal
+𝑣p,gal
+𝑐 .(2)
+To achieve a high signal-to-noise ratiomeasurement, the kSZ sig-
+nal must be stacked across many galaxies. We consider the kSZ ef-
+fectprofilemeasurementsofSchaanetal.(2021)andRiedGuachalla
+etal.(2025),whichemploycompensatedaperturephotometry(CAP)
+filters. For a galaxy located atﬁ𝜃on the sky, the CAP filter sums the
+temperaturefluctuationwithin𝜃 𝑑 ofthegalaxyandbackgroundsub-
+tracts the temperature fluctuations between𝜃𝑑 and
+√
+2𝜃𝑑 (Equations
+8 and 9 of Schaan et al. 2021).
+Because the kSZ effect is proportional to the velocity of the gas,
+thestackedkSZsignalismeasuredbyacombinationofvelocityand
+MNRAS000, 1–17 (2025)
+
+--- Page 3 ---
+Constraining baryon feedback3
+inverse-varianceweighting(Schaanetal.2021;RiedGuachallaetal.
+2025):
+ˆ𝑇kSZ(𝜃𝑑)=− 1
+𝑟𝑣,bias
+𝑣rms
+rec
+𝑐
+˝
+𝑖T𝑖(𝜃𝑑)( 𝑣𝑖,rec
+𝑐 )𝜎−2
+𝑖
+˝
+𝑖(𝑣𝑖,rec
+𝑐 )2𝜎−2
+𝑖
+,(3)
+whereT𝑖(𝜃𝑑)is the CAP filtered signal for the𝑖th galaxy,𝜎 2
+𝑖 is
+the variance inT𝑖(𝜃𝑑),𝑣 𝑖,rec is the reconstructed line of sight pecu-
+liar velocity, and𝑣rms
+rec is the standard deviation of the reconstructed
+peculiar velocities. For existing measurements, the galaxies’ three-
+dimensional peculiar velocities were reconstructed from the galaxy
+numberoverdensityfieldbythelinearizedcontinuityequation(Pad-
+manabhan et al. 2012; Vargas-Magaña et al. 2017). To account for
+biases in the peculiar velocity reconstruction, Schaan et al. (2021)
+and Ried Guachalla et al. (2025) scale the profile amplitudes by the
+correlation between the true and reconstructed velocities in mock
+catalogues:
+𝑟𝑣,bias =⟨𝑣true𝑣rec⟩
+𝑣rms
+true𝑣rmsrec
+.(4)
+UsingtheAbacusSummitdarkmatter-onlyN-bodysimulationsuite,
+Hadzhiyska et al. (2024) report the reconstruction quality for DESI-
+likespectroscopicsamples:𝑟 𝑣,bias∼0.7with<5%uncertainties.In
+Appendix D, we compare the corrected line-of-sight RMS of the re-
+constructedvelocitieswithmatchingsamplesfromtheFLAMINGO
+simulations, finding agreement within10%. For our modelling, we
+assume a conservative uncertainty of10%for𝑟𝑣,bias.
+Inthiswork,weconsiderthestackedkSZeffectprofilesofSchaan
+et al. (2021) and Ried Guachalla et al. (2025), which used spec-
+troscopic redshift tracers from SDSS and DESI, respectively. The
+ACT+Planck CMB temperature maps and galaxy samples underly-
+ing these measurements are described in Sections 2.1.1 and 2.1.2,
+respectively. Because the kSZ stacks are constructed with common
+CMB temperature maps (ACT DR5 for SDSS and DR6 for DESI),
+thedifferentmeasurements(e.g.SDSSLOWZandCMASS)arefor-
+mally covariant. The SDSS and DESI spectroscopic samples also
+share common objects (Adame et al. 2025a). For our analysis, we
+assume the kSZ measurements are independent; the galaxy selec-
+tions occupy distinct comoving volumes and mass/redshift regimes,
+so map-level covariance contributes negligibly to the parameter un-
+certainties relative to kSZ measurement noise. Investigation of mea-
+surement covariances with forward modelling is warranted.
+2.1.1 SDSS BOSS: LOWZ and CMASS
+Schaan et al. (2021) measured the stacked kSZ effect profiles for the
+LOWZ and CMASS samples from the Baryon Oscillation Spectro-
+scopic Survey (BOSS) DR10 release (Ahn et al. 2014). The LOWZ
+(“low redshift”) sample consists of red galaxies at0.15< 𝑧 <0.4,
+and the CMASS (“constant mass”) sample includes massive galax-
+ies at0.4< 𝑧 <0.8(Ahn et al. 2012). The CMB temperature map
+is derived from ACT DR5 (Fowler et al. 2007; Swetz et al. 2011;
+Thornton et al. 2016; Henderson et al. 2016) and Planck (Planck
+Collaboration et al. 2020). Schaan et al. (2021) measured the kSZ
+effect in both the 90 and 150 GHz frequency ACT maps; we con-
+siderbothmeasurements.FromthemockBOSScatalogues(Manera
+etal.2013,2015),Schaanetal.(2021)reportapeculiarvelocitybias
+factor of𝑟v=0.7and quote uncertainties of a few percent.
+FromSiegeletal.(2025),weadoptGGLderivedmeanhalomasses
+oflog 10𝑀500/M⊙ =13.51±0.01and13.29±0.02for LOWZ and
+CMASS, respectively.
+2.1.2 DESI: BGS and LRG
+RiedGuachallaetal.(2025)measuredthestackedkSZeffectprofiles
+for two DESI DR1 samples: the Bright Galaxy Survey (BGS, Hahn
+etal.2023)andtheLuminousRedGalaxysample(LRG,Zhouetal.
+2023).TheBGSsampleismagnitudelimitedandspans0<𝑧<0.6.
+Following DESI Collaboration et al. (2024), Ried Guachalla et al.
+(2025)restrictedthesampleto0.1<𝑧<0.4andappliedaluminosity
+selectionasafunctionofredshifttocreateasamplewithanapprox-
+imatelyconstantnumberdensity.TheLRGsampleincludesmassive
+quenchedgalaxiesat0.4<𝑧<1.1.FollowingSiegeletal.(2025),we
+considertwoofthestellarmassbinsdefinedbyRiedGuachallaetal.
+(2025):log 10𝑀∗/M⊙=(10.5,11.2),(11.2,11.4); the mass selection
+isperformedusingthestellarmassesfromZhouetal.(2023),which
+are derived from DESI Legacy Imaging photometry via a random
+forest algorithm. Ried Guachalla et al. (2025) adopt the harmonic-
+space Internal Linear Combination (hILC) CMB temperature map,
+whichcombinesmultipleACTDR6channels(90,150,and220GHz)
+with Planck (Coulton et al. 2024); each channel is convolved with a
+Gaussian beam (1.6′ FWHM) before the combination. To mitigate
+tSZ contamination, Ried Guachalla et al. (2025) masked tempera-
+ture outliers in the ACT map. Peculiar velocities were adopted from
+Adame et al. (2025b), with reconstruction biases of𝑟v =0.64and
+0.65for the BGS and LRG samples, respectively (Hadzhiyska et al.
+2024); the reported𝑟v uncertainties are approximately3%.
+FromSiegeletal.(2025),weadoptGGLderivedmeanhalomasses
+oflog 10𝑀500/M⊙ =13.31±0.01,12.91±0.02, and13.15±0.01
+for BGS, LRG M1, and M2, respectively.
+2.2 X-ray gas mass fractions
+X-ray observations of the ICM in groups and clusters are a well
+established tracer of baryon feedback. Stronger feedback processes
+are expected to expel gas beyond𝑅500, thereby lowering the typical
+gasfractionatagivenhalomass.Indeed,thebaryonfractionisfound
+to increase as a function of radius and halo mass, approaching the
+universalbaryonfractionatlargeradiiofmassiveclusters(Sunetal.
+2009;Bulbuletal.2012;Sandersonetal.2013;Lovisarietal.2015;
+Eckert et al. 2016, 2019).
+We consider X-ray gas mass fraction measurements from the
+XMM-Newton XXL sample (Section 2.2.1) and the eROSITA All-
+Sky Survey (Section 2.2.2). Weak lensing halo masses are available
+forbothsamples:Umetsuetal.(2020)andSiegeletal.(2025)forthe
+XXL and eROSITA samples, respectively. The GGL derived halo
+masses resolve a long standing uncertainty in the study of X-ray gas
+mass fractions. Previous studies often assumed hydrostatic equilib-
+riumtoestimatetotalmasses,however,non-thermalpressuresupport
+can bias hydrostatic masses low by approximately30%(Hoekstra
+et al. 2015; Eckert et al. 2016; Kugel et al. 2023; Muñoz-Echeverría
+et al. 2024); further complicating matters, this bias is dependent on
+cluster mass (Braspenning et al. 2025).
+2.2.1 HSC–XXL
+TheXXLsurveytargetedtwo25degree 2patchesoftheskywithover
+6MsofXMM-Newtonobservations(Pierreetal.2016).Thesecond
+XXL data release includes over300spectroscopically confirmed X-
+ray detected clusters at0< 𝑧 <1(Adami et al. 2018). For the
+approximately100clusters that overlap the HSC footprint, Umetsu
+et al. (2020) measured weak lensing masses with the first year HSC
+shear catalogue (Mandelbaum et al. 2018). Using the weak lensing
+masses, Akino et al. (2022) measured the gas mass within𝑅500
+MNRAS000, 1–17 (2025)
+
+--- Page 4 ---
+4J. Siegel et al.
+for each XXL cluster in the HSC footprint and conducted a joint
+Bayesian analysis of the halo mass, gas mass, stellar mass, and X-
+ray luminosity scaling relations. The X-ray selection effects were
+modelledasaminimumluminosityselectionfunction(AppendixA1
+of Akino et al. 2022).
+Withweaklensinghalomassesandmodellingofselectioneffects,
+the HSC–XXL scaling relations are particularly well characterised.
+The gas fraction scaling relation is broadly consistent with other
+pre-eROSITA X-ray gas fraction measurements (Kugel et al. 2023).
+FollowingKugeletal.(2023),weapproximatetheHSC–XXLscaling
+relationastwohalomassbins:𝑓 gas(1013.5 M⊙)=0.054±0.010and
+𝑓gas(1014.5 M⊙)=0.106±0.02.
+2.2.2 eROSITA All-Sky Survey
+TheeROSITAsatellite(extendedROentgenSurveywithanImaging
+Telescope Array, Predehl et al. 2021) is a soft X-ray telescope on
+board the Spectrum-Roentgen-Gamma observatory (SRG, Sunyaev
+etal.2021).ThefirsteROSITAAll-SkySurveycatalogue(eRASS1,
+Bulbul et al. 2024) includes more than12,000optically confirmed
+X-ray groups and clusters in the Western Galactic Hemisphere be-
+tween the local Universe and𝑧 <1.5(Bulbul et al. 2024; Kluge
+et al. 2024). The publicly available gas masses are measured by a
+parametric model fit to the X-ray images with a forward modelling
+calibration (Sanders et al. 2018; Liu et al. 2022; Bulbul et al. 2024).
+The eRASS1 reported halo masses𝑀500 are estimated from a weak
+lensingcalibratedscalingrelationbetweenredshift,X-raycountrate,
+and shear. The shear measurements include corrections for miscen-
+teringandclustermembercontamination,aswellascalibrationfrom
+forward modelling of simulated shear profiles (Grandis et al. 2024;
+Kleinebreil et al. 2025; Okabe et al. 2025).
+Although eROSITA is more complete than previous X-ray se-
+lected samples (e.g., ROSAT, Truemper 1982; Voges et al. 1999),
+the sample is still shaped by selection effects. The completeness of
+the eRASS1 catalogue significantly falls at𝑀500 ≲10 14 M⊙ (Seppi
+et al. 2022; Popesso et al. 2024b; Marini et al. 2024). We therefore
+limit our study to lower redshift (𝑧 <0.2) massive halos. Follow-
+ing Siegel et al. (2025), we define four bins of eROSITA clusters:
+log10𝑀500/M⊙ =(13.3,14.0)and(14.0,14.5)at0.05< 𝑧 <0.1,
+andlog 10𝑀500/M⊙ =(13.5,14.0)and(14.0,14.5)at0.1<𝑧<0.2.
+Thefourbinsincludeatotalof2,500clusters.Siegeletal.(2025)in-
+dependentlymeasuredthemeanhalomassesforeachbinwithGGL,
+validating the publicly reported eRASS1 masses. The GGL cali-
+brated bins are consistent with the stacked X-ray gas mass fractions
+of optically selected halos (Popesso et al. 2024a).
+The eROSITA reported gas mass fractions suggest that groups
+and clusters are, on average, more gas-depleted than previously
+found (Popesso et al. 2024a; Dev et al. 2024; Kovač et al. 2025).
+At𝑀 500=10 14 M⊙,themeangasmassfromtheeRASS1catalogue
+is approximately40%lower than the HSC–XXL scaling relation.
+We discuss potential explanations, including selection effects and
+modelling systematics, and avenues for further study in Section 6.1.
+Because the apparent discrepancy in the mean gas fractions is not
+fully understood, we consider both the eROSITA and pre-eROSITA
+measurements in this work.
+3 BARYONIFICATION MODEL
+The “baryonification" model is a framework for relating the radial
+density profiles of gas, stars, and dark matter to the suppression of
+the matter power spectrum relative to a dark matter-only simulation.
+The method relies on perturbatively displacing particles in N-body
+simulationsaccordingtoobservationallymotivated,sphericallysym-
+metric analytic density profiles, to mimic the impact of feedback on
+the matter distribution (Schneider & Teyssier 2015; Giri & Schnei-
+der 2021; Schneider et al. 2025). By calculating the power spectrum
+of the baryonified matter distribution, the suppression of the matter
+power spectrum can be related to the radial density profiles of gas,
+stars, and dark matter. Observational constraints on the gas distribu-
+tionfromX-rayandkSZmeasurementscanthusbetransformedinto
+constraintsonthematterpowerspectrum(Schneideretal.2022;Giri
+& Schneider 2021; Aricò et al. 2023; Bigwood et al. 2024; Kovač
+etal.2025).Powersuppressioncanalsobeinferredwithahalomodel
+(Debackere et al. 2020; La Posta et al. 2025; Pandey et al. 2025b;
+Dalal et al. 2025), see Section 6.2.
+We outline the baryonification framework below and refer the
+reader to Schneider & Teyssier (2015) and Giri & Schneider (2021)
+foradetaileddescription.Thebaryonificationparticledisplacements
+convert Navarro–Frenk–White (NFW)-like profiles into baryonified
+halos composed of hot gas𝜌gas(𝑟), a central galaxy𝜌 cga(𝑟), and
+collisionless matter𝜌clm(𝑟):
+𝜌nfw(𝑟) →𝜌 bfc(𝑟)=𝜌 gas(𝑟)+𝜌 cga(𝑟)+𝜌 clm(𝑟).(5)
+Thegascomponentisparametrisedasacoreddouble-powerlaw:
+𝜌gas(𝑟)∝ Ωb/Ωm−𝑓 star(𝑀 200)
+h
+1+
+
+𝑟
+𝑟core
+i𝛽(𝑀 200) h
+1+
+
+𝑟
+𝑟ej
+𝛾i 𝛿−𝛽(𝑀 200)
+𝛾
+,(6)
+whereΩ b/Ωm is the cosmic baryon fraction. Inside the core radius
+𝑟core=0.1𝑅 200, the slope of the density profile is determined by the
+power law index
+𝛽(𝑀 200)= 3(𝑀 200/𝑀c)𝜇
+1+(𝑀 200/𝑀c)𝜇.(7)
+Atgroupmasses(𝑀 200≪𝑀 c),thegasisefficientlyexpelled(𝛽≈0),
+while for clusters (𝑀200 ≫𝑀 c), the gas is retained (𝛽≈3); the
+transition between the low and high mass limits is set by𝜇. Beyond
+the ejection radius (𝑟ej =𝜃 ej𝑅200), the slope of the density profile
+is dictated by the parameters𝛾and𝛿. The stellar fraction𝑓 sga is
+parametrisedasapowerlaw𝑓 sga(𝑀 200)=0.55(𝑀 200/𝑀𝑠)−𝜂,where
+𝑀𝑠 =2.5×10 11 M⊙ ℎ−1 (Moster et al. 2013).
+Thecentralgalaxycomponentisparametrisedasanexponentially
+truncated power law
+𝜌cga(𝑟)= 𝑓cga(𝑀 200)
+4𝜋3/2𝑅h𝑟 2 exp
+"
+−
+ 𝑟
+2𝑅h
+ 2#
+,(8)
+where𝑅 h is the stellar half-light radius (fixed to0.015the virial
+radius) and𝑓 cga(𝑀 200)is the fraction of stars in the central galaxy:
+𝑓cga(𝑀 200)=0.55(𝑀 200/𝑀𝑠)−(𝜂+𝜂 𝛿)
+The collisionless matter component, including dark matter, satel-
+lites, and halo stars, is parametrised as
+𝜌clm(𝑟)=
+Ωdm
+Ωm
++𝑓 sga(𝑀 200)
+
+𝜌nfw(𝑟),(9)
+whereΩ dm/Ωm is the cosmic dark matter fraction and𝑓sga=𝑓 star−
+𝑓cga is the stellar fraction in satellite galaxies and halo stars.
+The seven free parameters𝚯={𝑀 c,𝜇,𝜃 ej,𝛿,𝛾,𝜂,𝜂 𝛿}are sum-
+marizedinTable1.Weshowhoweachparameteraffectsthesuppres-
+sion of the matter power spectrum, the kSZ signal, and the hot gas
+mass fractions of groups and clusters in Figure 1. In this parametri-
+sation of the baryonification model, the feedback parameters are
+redshift independent. For a given set of model parameters𝚯, the
+comoving density profile of each component only depends on halo
+MNRAS000, 1–17 (2025)
+
+--- Page 5 ---
+Constraining baryon feedback5
+1013 1014
+Halo Mass
+M500 [M /h]
+0.0
+0.1Hot Gas Fraction 1013 1014
+Halo Mass
+M500 [M /h]
+1013 1014
+Halo Mass
+M500 [M /h]
+1013 1014
+Halo Mass
+M500 [M /h]
+1013 1014
+Halo Mass
+M500 [M /h]
+1013 1014
+Halo Mass
+M500 [M /h]
+1013 1014
+Halo Mass
+M500 [M /h]
+2.5 5.0
+R [arcmin]
+10 9
+10 8
+10 7
+10 6
+T [ K sr.]
+2.5 5.0
+R [arcmin]
+2.5 5.0
+R [arcmin]
+2.5 5.0
+R [arcmin]
+2.5 5.0
+R [arcmin]
+2.5 5.0
+R [arcmin]
+2.5 5.0
+R [arcmin]
+10 1
+ 100
+k [h/Mpc]
+0.6
+0.8
+1.0
+P(k)/PDM Only(k)
+log10 Mc = 11
+log10 Mc = 13.22
+log10 Mc = 15
+10 1
+ 100
+k [h/Mpc]
+= 0
+= 1.0
+= 2
+10 1
+ 100
+k [h/Mpc]
+ej = 2
+ej = 3.5
+ej = 8
+10 1
+ 100
+k [h/Mpc]
+= 1
+= 2.5
+= 4
+10 1
+ 100
+k [h/Mpc]
+= 5
+= 7.0
+= 11
+10 1
+ 100
+k [h/Mpc]
+= 0.05
+= 0.2
+= 0.4
+10 1
+ 100
+k [h/Mpc]
+= 0.05
+= 0.2
+= 0.4
+Figure 1.The impact of the baryonification model parameters on the suppression of the matter power spectrum relative to a dark matter universe,
+𝑃(𝑘)/𝑃 DM only(𝑘)(top), the stacked kSZ effect profile as a function of angular radius for alog10[𝑀 500/M⊙ ℎ−1]=13.1halo at𝑧=0.3(middle), and
+the hot gas mass fraction within𝑅500 as a function of halo mass (bottom). Each panel varies one baryonification parameter, within the prior bounds (Table 1).
+For the leftmost column,𝑀c is reported in units ofM⊙ℎ−1.
+mass and radius. However, predictions of the baryonification model
+(e.g., gas mass fractions, kSZ effect profiles, or suppression of the
+matter power spectrum) still depend on redshift, because the clus-
+tering and scale factor of the underlying N-body simulation evolves
+with redshift.
+In this work, we constrain the free parameters using GGL charac-
+terized X-ray and kSZ observations. Stellar fraction measurements
+arenotreadilyavailableforourbinsofeROSITAclusters.Measure-
+ments are available for other cluster samples (e.g., Vikhlinin et al.
+2006; Gonzalez et al. 2013; Sanderson et al. 2013; Lovisari et al.
+2015; Kravtsov et al. 2018; Akino et al. 2022), however, it is non-
+trivial to account for differences in sample selection and halo mass
+estimation between these studies and our eROSITA bins. To ensure
+internalconsistency,werefrainfrommodellingthestellarfractionfor
+either the eROSITA or HSC–XXL X-ray samples. Following Kovač
+et al. (2025), we fix the stellar parameters to𝜂=0.1and𝜂𝛿 =0.2
+for our fiducial analysis (see Moster et al. 2013). In Appendix A,
+we show that the parameter constraints are weakly sensitive to the
+adoptedstellarparameters.Werepeatthefittingprocessforfourdif-
+ferent stellar parameter treatments, including conservative Gaussian
+priors instead of fixed values, and demonstrate that at the current
+statistical uncertainty, the effect of varying stellar priors is negligi-
+ble. We adopt wide top hat priors for the other five baryonification
+parameters. For our fiducial analysis, we fix the baryon fraction to
+the maximum likelihood cosmological parameters of the DES Y3
+‘3×2pt + All Ext.’ flatΛCDM cosmology (Abbott et al. 2022); we
+show our results are insensitive to this choice in Appendix A.
+While the baryonification of a dark matter-only simulation is sig-
+nificantly faster than evolving a full hydrodynamical simulation,
+displacing particles in N-body simulations is still computation-
+ally expensive. We therefore rely on theBCemuemulator (Giri &
+Schneider 2021), trained on2,700baryonified simulations, for our
+Bayesian inference. The underlying N-body simulation consisted of
+5123 particles in a256(Mpcℎ −1)3 box with aΛCDM cosmology:
+Ωm=0.315,Ω 𝑏 =0.049,ℎ 0=0.674,𝑛 𝑠 =0.96,𝜎 8=0.811.Along
+with the seven radial profile parameters, the baryon fractionΩb/Ωm
+wasvariedbetween0.10−0.25.BCemuhasbeendemonstratedtobe
+percent level accurate at10−1 < 𝑘[ℎMpc −1]<10 1 and0< 𝑧 <2
+(Giri&Schneider2021).Abaryonificationemulatorisalsopublicly
+available from the BACCO simulation project (Angulo et al. 2021;
+Aricòetal.2021).Schneideretal.(2025)recentlyintroducedanup-
+dated version of the baryonification framework, including modified
+formulationsofthedensityprofilesandtreatmentofthedarkmatter,
+gas, and stellar components as independent fields; an emulator was
+notpubliclyavailableatthetimeofwriting.Inthiswork,weconsider
+the original baryonification framework and reserve investigation of
+alternate formulations for future work (Shavelle et al. in prep).
+MNRAS000, 1–17 (2025)
+
+--- Page 6 ---
+6J. Siegel et al.
+Parameter Description Prior Posterior
+𝑓gas 𝑓gas kSZ Joint kSZ &
+HSC–XXL eROSITA eROSITA𝑓 gas
+log10
+𝑀c
+M⊙ ℎ−1 The characteristic mass scale at which the slope of the U[11.0, 15.0]12.8 +0.6
+−0.8 13.3+0.8
+−0.8 13.8+0.6
+−0.5 13.6+0.2
+−0.2
+gas profile becomes shallower (Equation 7).
+𝜃ej Specifies the characteristic radius of gas ejection: U[2.0, 8.0]5.0 +2.0
+−2.0 5.0+2.0
+−2.0 6.0+1.0
+−1.0 6.0+1.0
+−1.0
+𝑟ej=𝜃 ej𝑅200 (Equation 6).
+𝜇Defines how fast the slope of the gas profile becomes U[0.0, 2.0]0.5 +0.6
+−0.3 0.5+0.3
+−0.2 0.4+0.6
+−0.3 0.9+0.2
+−0.1
+shallower towards small halo masses (Equation 7).
+𝛾Exponent in gas profile parametrisation (Equation 6) U[1.0, 4.0]3.0 +1.0
+−1.0 2.6+0.9
+−1.0 2.0+1.0
+−1.0 2.0+1.0
+−1.0
+𝛿Exponent in the gas profile parametrisation (Equation 6) U[5.0, 11.0]8.0 +2.0
+−2.0 8.0+2.0
+−2.0 7.0+2.0
+−2.0 8.0+2.0
+−2.0
+𝜂Specifies the total stellar fraction within a halo (Equation 8) Fixed: 0.1
+𝜂𝛿 Specifies the stellar fraction of the central galaxy: Fixed: 0.2
+𝜂𝛿 =𝜂 cga−𝜂(Equation 8)
+Table 1.Qualitative descriptions of the model parameters, assumed priors, and posteriors from fitting the kSZ and X-ray data. We exclude the posteriors from
+the joint kSZ and HSC–XXL fit because of the poor goodness of fit; the posteriors are presented in Appendix B.
+3.1 Modelling X-ray and kSZ measurements
+We constrain the free parameters of the baryonification model by
+jointly modelling the X-ray gas mass measurements (eROSITA or
+HSC–XXL) and the SDSS/DESI+ACT kSZ effect profiles.
+At a given halo mass, we predict the X-ray gas mass by integrat-
+ing the gas component𝜌 gas(𝑟,𝑀)to𝑅 500. Previous studies often
+assumed hydrostatic equilibrium to derive cluster halo masses and
+therefore included a hydrostatic equilibrium bias parameter (e.g.,
+Schneideretal.2022;Kovačetal.2025);webypassthisuncertainty
+by considering GGL halo masses: Umetsu et al. (2020) and Siegel
+etal.(2025)fortheHSC–XXLandeROSITAsamples,respectively.
+TopredictkSZprofilesfromthemodel,weconvertthegasdensity
+profile𝜌 gas(𝑟)to an electron density profile𝑛e(𝑟)assuming a fully
+ionised medium with primordial abundances
+𝑛e(𝑟)= (𝑋 H+1)
+2
+𝜌gas(𝑟)
+𝑚amu
+,(10)
+where𝑚 amu is the atomic mass unit and𝑋H =0.76is the hydrogen
+massfraction.Theelectrondensity𝑛 e(𝑟)isthenintegratedalongthe
+line-of-sight to yield the optical depth
+𝜏gal(𝜃)=2𝜎 T
+∫
+𝑛e(
+√︁
+𝑙2+𝑑 A(𝑧) 2𝜃2)𝑑𝑙,(11)
+where𝑑 A is the angular diameter distance. To mirror the observa-
+tions, we convolve𝜏gal(𝜃)with a Gaussian beam and employ CAP
+filtering. For the DESI samples, the CMB temperature map is con-
+volved with a Gaussian beam of1.6′ FWHM prior to stacking (Ried
+Guachalla et al. 2025). For the SDSS samples, the 90 and 150 GHz
+beams are approximately Gaussian with FWHM of2.1′ and1.3 ′,
+respectively (Schaan et al. 2021). The amplitude of the kSZ effect
+profileisdeterminedbythestandarddeviationofthelineofsightgas
+velocities (Equation 3). We therefore scale the model kSZ profiles
+by the reported standard deviation of the galaxy peculiar velocities
+𝑣rms
+p /𝑟𝑣 (Schaan et al. 2021; Ried Guachalla et al. 2025); in Ap-
+pendix D we find that𝑣rms
+p /𝑟𝑣 is in agreement with the selection
+of FLAMINGO galaxies that best fits the measured GGL for each
+kSZsample.BymultiplyingthekSZprofilesby𝑣 rms
+p /𝑟𝑣,weassume
+that the standard deviation of the line of sight gas velocities is in-
+dependent of angular separation from the galaxies𝜃𝑑. However, in
+Appendix D we demonstrate that this approximation is only valid
+for small angular separations. Our kSZ fits are therefore limited to
+𝜃𝑑 <3′.
+4 MODEL VALIDATION: INJECTION–RECOVERY
+In this work, we infer the suppression of the matter power spectrum
+relativetoadarkmatter-onlysimulationbyjointlyfittingkSZandX-
+ray observations with the baryonification model. Previously, Giri &
+Schneider (2021) demonstrated that the baryonification model suc-
+cessfullypredictsthesuppressionofthematterpowerspectrumfrom
+the mean𝑓 gas−𝑀 500 and𝑓 star−𝑀 500 relations for the BAHAMAS,
+OWLS, Illustris, and Horizon simulations. The model was also able
+to predict the gas and stellar mass fractions from the matter power
+spectrum. To further validate the model, we use the FLAMINGO
+simulations to perform a series of injection–recovery tests designed
+to mirror our kSZ and X-ray samples.
+TheFLAMINGOsuiteconsistsof16hydrodynamicalsimulations
+of varied resolution, box size, subgrid modelling, and cosmology
+(Schaye et al. 2023; Kugel et al. 2023). We consider the1Gpc3 in-
+termediate resolution simulations (𝑚gas =1.09×10 9 M⊙) with the
+maximumlikelihoodcosmologicalparametersoftheDESY3‘3×2pt
++ All Ext.’ flatΛCDM cosmology (Abbott et al. 2022). The subgrid
+physics (stellar and AGN feedback) is calibrated to reproduce the
+observed𝑧=0galaxy stellar mass function and the gas mass frac-
+tionsofgroupsandclustersfrompre-eROSITAX-raysurveys(Kugel
+et al. 2023); the calibrated simulations successfully predict the stel-
+lartohalomassrelation,thecentralblackhole–stellarmassrelation,
+the cosmic star formation rate history, and cluster scaling relations
+(Schaye et al. 2023; Braspenning et al. 2024). The suite includes
+variantswithstronger(weaker)baryonfeedbackthatwerecalibrated
+to gas fraction measurements shifted down (up) by𝑁𝜎, where𝜎is
+the observational uncertainty on the mean gas fraction relation and
+𝑁∈[+2,−2,−4,−8]. For our tests, we consider the fiducial feed-
+back (L1_m9) and strongest feedback (𝑓gas−8𝜎) simulations. Both
+simulations use thermal AGN feedback following Booth & Schaye
+(2009);the𝑓 gas−8𝜎simulationrealizesstrongerfeedbackbymore
+powerful but less frequent AGN outbursts.
+MNRAS000, 1–17 (2025)
+
+--- Page 7 ---
+Constraining baryon feedback7
+10 1
+ 100
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1P(k)/PDM only(k)
+Recovery of FLAMINGO L1_m9
+Fit to P(k)
+Fit to kSZ+fgas
+FLAMINGO L1_m9
+FLAMINGO fgas 8
+10 1
+ 100
+Comoving Radius [Mpc h 1]
+10 2
+10 1
+100
+101
+/ (R500)
+log10 [ M500
+M h 1 ] = 13.1
+R500
+0 5
+R [arcmin]
+10 8
+10 7
+10 6
+T [ K sr.]
+z = 0.3
+0 5
+R [arcmin]
+z = 0.75
+1013 1014
+Halo Mass M500 [M h 1]
+0.00
+0.05
+0.10
+0.15fgas
+10 1
+ 100
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1P(k)/PDM only(k)
+Recovery of FLAMINGO fgas 8
+10 1
+ 100
+Comoving Radius [Mpc h 1]
+10 2
+10 1
+100
+101
+/ (R500)
+log10 [ M500
+M h 1 ] = 13.1
+R500
+0 5
+R [arcmin]
+10 8
+10 7
+10 6
+T [ K sr.]
+z = 0.3
+0 5
+R [arcmin]
+z = 0.75
+1013 1014
+Halo Mass M500 [M h 1]
+0.00
+0.05
+0.10
+0.15fgas
+Figure2.Injectionrecoverytest:thebaryonificationmodelsuccessfullypredictsthesuppressionofthematterpowerspectrum,𝑃(𝑘)/𝑃 DM Only(𝑘),frommock
+kSZ and gas fraction observations, and vice versa. The fits to mock kSZ and gas fraction observations are shown in blue, and the fits to𝑃(𝑘)/𝑃DM Only(𝑘)
+are shown in pink; the shaded bands represent the16and84th percentiles. The results for the fiducial (L1_m9) FLAMINGO simulation (solid black line)
+are shown in thetoprow, and for the strongest feedback (𝑓gas −8𝜎) FLAMINGO simulation (dashed black line) in thebottomrow. For each fit, we show
+𝑃(𝑘)/𝑃 DM Only(𝑘)(left), the normalized hot gas radial density profile for a group mass halo (centre), the kSZ signal for the same representative halo mass at
+𝑧=0.3and0.75(upper right), and the hot gas mass fraction as a function of halo mass at𝑧=0(lower right). The mock kSZ and gas fraction observations are
+shown as black circles, with uncertainties of15%and5%respectively; the uncertainties are smaller than the markers.
+4.1 Predicting the gas observables from the power suppression
+We first assess whether the baryonification framework can predict
+the properties of halos from the suppression of the matter power
+spectrum,𝑃(𝑘)/𝑃 DM Only(𝑘).Forthefiducialandstrongestfeedback
+FLAMINGO simulations, we fit𝑃(𝑘)/𝑃 DM Only(𝑘)at𝑧=0and
+0.1< 𝑘 <5ℎMpc −1. We adopt uniform priors for all seven free
+parameters and assume5%uncertainty in𝑃(𝑘)/𝑃 DM Only(𝑘). The
+parameter posteriors are shown in Appendix C.
+The model successfully fits the shape of the power suppres-
+sion for both simulations (left column of Figure 2). From only
+𝑃(𝑘)/𝑃 DM Only(𝑘), the fits accurately predict the baryon content of
+groups and clusters. In Figure 2, we compare the gas mass fractions
+of groups and clusters with the model predictions, finding strong
+agreement; the model also reproduces the stellar fractions, shown
+in Appendix C for brevity. In addition to integrated properties (e.g.,
+𝑓gas), the model also accurately predicts the radial extent of the gas.
+For a representative group mass halo (log10𝑀500/M⊙ ℎ−1 =13.1),
+we compare the gas density profile and the kSZ effect from the
+simulations with the model predictions (Figure 2); the model and
+simulation are consistent within1𝜎.
+4.2 Predicting the power suppression from the gas observables
+We infer the power suppression of the FLAMINGO simulations by
+fitting mock kSZ effect profiles and hot gas fractions with the bary-
+onification framework. The simulated kSZ effect profiles are calcu-
+lated from the FLAMINGO lightcones following McCarthy et al.
+(2025).ToreflecttheSDSS/DESI+ACTkSZmeasurements(Schaan
+et al. 2021; Ried Guachalla et al. 2025), we stack the kSZ effect
+profile for group mass halos13.1<log 10𝑀500/M⊙ ℎ−1 <13.2
+at𝑧=0.3and0.75, using a Gaussian beam of FWHM=1.6 ′ and
+CAP filtering. For the gas mass fraction observables, we calculate
+𝑓gas =𝑀 gas/𝑀500 from the stacked density profile of𝑧=0.3clus-
+ters:13.95<log 10𝑀500/M⊙ ℎ−1 <14.05.Weassumeuncertainties
+of15and5%on the simulated kSZ and gas mass measurements,
+respectively; these uncertainties are approximately twice the signal-
+to-noise ratio of the real data.
+For each simulation, we fit the mock measurements with the
+baryonification model. Mirroring our analysis of the real data, we
+do not include stellar fractions in our fiducial simulation test. We
+demonstratesuccessfulrecoveryofthepowersuppressionfromjoint
+𝑓gas+𝑓 star+kSZfitsinAppendixC.ThejointkSZandgasfractionfits
+are presented in Figure 2. For both simulations, the fit successfully
+describes the mock observables and accurately predicts the power
+MNRAS000, 1–17 (2025)
+
+--- Page 8 ---
+8J. Siegel et al.
+Fit to HSC-XXL fgas Fit to eROSITA fgas Fit to kSZ Fit to kSZ+eROSITA fgas
+1013 1014
+Halo Mass M500 [M h 1]
+0.00
+0.05
+0.10
+0.15fgas( < R500) HSC-XXL eROSITA: z = 0.05 0.10
+eROSITA: z = 0.10 0.15
+0 2 4 6
+10 8
+10 7
+10 6
+10 5
+T [ K sr.]
+log10 [ M500
+M h 1 ] = 13.2
+BGS z = 0.3
+0 2 4 6
+log10 [ M500
+M h 1 ] = 13.4
+LOWZ z = 0.3
+0 2 4 6
+log10 [ M500
+M h 1 ] = 13.1
+CMASS z = 0.55
+0 2 4 6
+R [arcmin]
+10 8
+10 7
+10 6
+10 5
+T [ K sr.]
+log10 [ M500
+M h 1 ] = 12.8
+LRG M0 z = 0.75
+0 2 4 6
+R [arcmin]
+log10 [ M500
+M h 1 ] = 13.0
+LRG M1 z = 0.75
+13.0 14.0 15.0
+Halo Mass log10 [ M500
+M h 1 ]
+0.0
+0.2
+0.4
+0.6
+0.8Redshift [z] LRG
+BGS
+eROSITA
+CMASS
+LOWZ XXL
+Figure 3.The joint fit to the kSZ and eROSITA X-ray measurements (blue), alongside fits to the kSZ (yellow), eROSITA (green), and HSC–XXL (purple) data
+separately. The top row compares the X-ray gas mass fraction measurements with the X-ray-only fits, and the lower two rows compare the kSZ effect profiles
+withthekSZ-onlyfit;thejointfitispresentedinallpanels.Theshadedbandsrepresentthe16and84thpercentilesofthemodelfits.ForthekSZmeasurements,
+werestrictourfitstotheinnermostdatapoints(<3 ′),asindicatedbytheverticalshadedbars;atthesescalesthedataismostconstrainingandleastimpactedby
+uncertain modelling (Appendix D). For each kSZ observation, we demarcate𝑅500 as a vertical dotted line. The lower right panel presents the mean halo mass
+and redshift of each observable. The dotted lines show the mean growth histories of halos, binned by their redshift zero mass.
+suppression (within1𝜎). The posteriors of the fits are included in
+Appendix C.
+5 RESULTS: JOINT KSZ AND X-RAY FITS
+We constrain the matter power spectrum from kSZ and X-ray
+observations of the gas distribution (Section 2): five stacked
+SDSS/DESI+ACT kSZ effect profiles of group mass halos at0.2<
+𝑧 <0.8(Schaan et al. 2021; Ried Guachalla et al. 2025) and X-ray
+gas mass measurements of clusters from eROSITA (𝑧≈0.1, Bulbul
+et al. 2024) and HSC–XXL (𝑧≈0.3, Akino et al. 2022). The mean
+halo mass of each sample is characterized with weak lensing: Siegel
+et al. (2025) for the kSZ and eROSITA samples, and Umetsu et al.
+(2020) for HSC–XXL.
+The data is fit with the baryonification model, using wide top
+hat priors for the five gas parameters (𝑀c,𝜇,𝜃 ej,𝛿,𝛾). The posterior
+probability distribution is sampled withemcee(Foreman-Mackey
+et al. 2013). We account for several sources of uncertainty in our
+analysis:
+(i) Meanhalomass:forthekSZandeROSITAsamples,weadopt
+Gaussian priors on the halo mass, with the centres and standard
+deviations set by the GGL measurements; for the HSC–XXL data,
+halo mass uncertainties were propagated into the gas mass fractions
+through the Bayesian modelling of Akino et al. (2022).
+MNRAS000, 1–17 (2025)
+
+--- Page 9 ---
+Constraining baryon feedback9
+10 2
+10 1
+100
+101
+ / (R500)
+R500
+BGS
+LOWZ
+CMASS
+LRG M0
+LRG M1
+eROSITA
+HSC-XXL
+log10 [ M500
+M h 1 ] = 13.1
+0.0
+0.05
+0.1
+Gas Fraction
+0.7
+0.8
+0.9
+1.0P(k)/PDM only(k)
+Fit to kSZ
+Fit to HSC-XXL fgas
+Fit to eROSITA fgas
+Fit to kSZ+eROSITA fgas
+10 1
+ 100
+Comoving Radius [Mpc h 1]
+10 2
+10 1
+100
+101
+ / (R500)
+1013 1014
+Halo Mass M500 [M h 1]
+0.0
+0.05
+0.1
+Gas Fraction
+10 1
+ 100
+k [h Mpc 1]
+0.7
+0.8
+0.9
+1.0P(k)/PDM only(k)
+SIMBA
+FABLE
+XFABLE
+BAHAMAS 7.8
+BAHAMAS 8.0
+FLAMINGO L1_m9
+FLAMINGO fgas 4
+FLAMINGO fgas 8
+Figure 4.Constraints from SDSS/DESI+ACT kSZ effect profiles and X-ray gas fractions on the radial density profile of a group mass halo (left), the hot gas
+mass fraction as a function of halo mass (centre), and the suppression of the total matter power spectrum (right).Top: the results of the joint kSZ and eROSITA
+X-ray fit (blue), alongside fits to the kSZ (gold), eROSITA (green), and HSC–XXL (purple) data separately. We note that the kSZ-only fit is prior dominated
+at cluster masses, while the X-ray fits are prior dominated at group masses. The shaded bands correspond to the16and84th percentiles. In the leftmost panel,
+the range of comoving radii probed by each observation is indicated by the horizontal shaded bars. In the centre panel, the observations’ mean halo masses are
+shown as vertical lines (dashed for kSZ, dot-dashed for eROSITA, and dotted for HSC–XXL).Bottom: the joint kSZ and eROSITA fit alongside a selection
+of recent hydrodynamical simulations: BAHAMAS (McCarthy et al. 2017), SIMBA (Davé et al. 2019), FLAMINGO (Schaye et al. 2023), FABLE/XFABLE
+(Henden et al. 2018; Bigwood et al. 2025a).
+(ii) X-ray gas mass: the statistical uncertainty on the mean gas
+massofeacheROSITAbinis<1%,however,weadoptaconservative
+10%uncertainty to reflect potential systematics (e.g., the15%flux
+offset between eROSITA andChandraon common SPT sources,
+which approximately corresponds to7%in gas mass, Bulbul et al.
+2024).
+(iii) kSZeffectprofiles:forthekSZeffectprofiles,weconsiderthe
+measurements’ full covariance matrices. The amplitude of the kSZ
+effectisproportionaltotheRMSoftheline-of-sightpeculiarveloci-
+ties,forwhichHadzhiyskaetal.(2024)report<5%uncertainty;we
+assume a conservative uncertainty of10%.
+5.1 Consistency of the kSZ and X-ray data
+First, we consider the three datasets independently, to assess their
+consistency and the feasibility of a joint fit: i) SDSS/DESI+ACT
+kSZ effect profiles, ii) eROSITA gas mass fractions, and iii) HSC–
+XXL gas mass fractions. The fits are presented alongside the data in
+Figure3.TheposteriorsofeachfitarereportedinTable1andshown
+in Figure B1.
+ThekSZeffectprofilesandtheeROSITAgasmassfractionsfavour
+similar feedback strengths, consistent with previous findings (Ko-
+vač et al. 2025; Siegel et al. 2025). The posteriors of the kSZ and
+eROSITAfitsareconsistentatthe1𝜎levelforallparameters,allow-
+ingtheirjointanalysis.BecausethekSZ-onlyandeROSITA-onlyfits
+probeuniqueandrelativelynarrowrangesofhalomass,theirpredic-
+tionsforthegasmassfractionrelationshouldbeinterpretedwithcau-
+tion(Figure4);thekSZ-onlyfitispriordominatedatclustermasses,
+whiletheeROSITA-onlyfitispriordominatedatgroupmasses.The
+jointfittothekSZandeROSITAdataispresentedinFigure3andTa-
+ble1.Acrossgroupandclustermasses(13<log 10
+𝑀500
+M⊙ ℎ−1 <14)and
+at0<𝑧<1, the model describes the data well: reduced𝜒2=1.2. 1
+The HSC–XXL X-ray measurements imply relatively weaker gas
+expulsion than the kSZ and eROSITA measurements; in particular,
+the kSZ and HSC–XXL fits differ at the2𝜎level for𝑀c—the halo
+mass below which the gas density profile becomes shallower (Equa-
+tion7).Thebaryonificationmodelgivesapoorjointfittothesedata:
+reduced𝜒 2 =2.5. 2 The joint model is presented against the data in
+FigureB2.MotivatedbythetensionbetweentheCMASSkSZmea-
+surementandthepre-eROSITAX-raysamples(Bigwoodetal.2024),
+previousstudiesproposedthattheapparentdiscrepancycouldresult
+from the different radial scales, mean halo masses, and redshifts of
+1 Wealsocalculatethereduced𝜒 2 usingtheeffectivenumberofparameters:
+𝑝𝐷 =−2⟨log𝑝(data|𝜃)⟩+2 log𝑝(data| ⟨𝜃⟩), where𝑝(data|𝜃)is
+the posterior probability of the parameters𝜃and the averages are over the
+MCMC posterior samples (Spiegelhalter et al. 2002). For the joint kSZ and
+eROSITA fit, we find𝑝𝐷 =10and𝜒 2/𝑝𝐷 =0.9.
+2 For the joint kSZ and HSC–XXL fit,𝑝D=10and𝜒 2/𝑝 D=2.1.
+MNRAS000, 1–17 (2025)
+
+--- Page 10 ---
+10J. Siegel et al.
+thesamples(Bigwoodetal.2024;Lucie-Smithetal.2025).However,
+the SDSS LOWZ and DESI BGS kSZ measurements favour more
+gas expulsion than the lower mass bin of HSC–XXL, despite the
+samples having similar mean halo masses and redshifts (Figure 3);
+at this mass (log10𝑀500/M⊙ ℎ−1 ≈13.3) and redshift (𝑧≈0.3),
+the kSZ measurements probe the same radii as the X-ray measure-
+ments (< 𝑅500). The disagreement between the kSZ measurements
+and the HSC–XXL scaling relation could stem from unaccounted
+for systematics in the X-ray or kSZ data (see Section 6.1). Simula-
+tion studies of the X-ray and kSZ measurements are warranted to
+investigate observational and modelling systematics.
+Encouraged by the consistency of the data in analytic modelling
+andsimulationcomparisons,weprimarilyconsiderthejointkSZand
+eROSITA model. However, we also investigate the HSC–XXL-only
+fit to reflect the uncertain state of the X-ray measurements.
+5.2 Gas properties of groups and clusters
+The kSZ and X-ray measurements probe a wide range of redshifts,
+halo masses, and radii: the kSZ measurements probe the gas distri-
+bution out to several𝑅500 of group mass halos at0.3< 𝑧 <1.0,
+and the X-ray measurements are most informative for the inner re-
+gions (< 𝑅500) of low redshift clusters (𝑧 <0.3). The range of radii
+probed by each measurement is highlighted in Figure 4. Together,
+the measurements probe all radii between0and1comoving Mpc.
+InFigure4,wepresentthemodelconstraintsonthegasproperties
+of groups and clusters: the radial density profile of a representative
+group mass halo at𝑧=0and the hot gas mass fraction scaling
+relation. We show the results from fitting the kSZ, eROSITA, and
+HSC–XXLdataseparately,aswellasthejointkSZandeROSITAX-
+rayfit.AsdiscussedinSection5.1,thefeedbackconstraintsfromthe
+kSZandeROSITAdataarebroadlyconsistent,buttheHSC–XXLX-
+ray data favours weaker gas expulsion. It is difficult to quantitatively
+compare the gas property constraints from the separate kSZ and
+X-ray fits, because the kSZ-only fit is prior dominated at cluster
+masses, while the X-ray fits are prior dominated at group masses.
+Theconsistencyoftheindependentfitsisbestascertainedfromtheir
+posteriors and the quality of a joint fit.
+The joint kSZ and eROSITA fit is highly constraining and yields
+precise predictions for the gas properties of groups and clusters,
+highlighting the benefit of constraining the gas distribution across a
+widerangeofhalomassandredshift.InSection6.3,wecomparethe
+model fits with recent hydrodynamical simulations.
+5.3 Suppression of the matter power spectrum
+With theBCemuemulator (Giri & Schneider 2021), we map be-
+tween the density profile parameters (𝑀 c,𝜇,𝜃 ej,𝛿,𝛾,𝜂,𝜂 𝛿) and
+the suppression of the matter power spectrum. The posteriors on
+𝑃(𝑘)/𝑃 DM Only(𝑘)fromtheindependentkSZ,eROSITA,andHSC–
+XXL fits are presented in Figure 4, as well as our joint kSZ and
+eROSITA model.
+Eachgasobservablefavourssuppressionofthematterpowerspec-
+trumrelativetoadarkmatter-onlysimulationat𝑘 >1ℎMpc −1.The
+𝑃(𝑘)/𝑃 DM Only(𝑘)constraints from fitting the kSZ and eROSITA
+X-ray data separately are statistically consistent with each other, and
+both are consistent with the joint fit at the1𝜎level (Figure 4). The
+posterior on𝑃(𝑘)/𝑃 DM Only(𝑘)is significantly narrowed by jointly
+fitting the kSZ and X-ray measurements. The model favours strong
+suppression of the matter power spectrum relative to a dark matter-
+onlysimulation:10±2%at𝑘=1ℎMpc −1.ComparedtothekSZand
+eROSITA data, the HSC–XXL scaling relation implies weaker sup-
+pression. We compare our𝑃(𝑘)/𝑃DM Only(𝑘)constraint with previ-
+ousmeasurementsandsimulationpredictionsinSections6.2and6.3,
+respectively.
+6 DISCUSSION
+6.1 Uncertainties in the X-ray data
+By probing the amount of gas depletion within𝑅500 of groups and
+clusters,X-raygasmassmeasurementsarepowerfulprobesofbaryon
+feedback. In this work, we consider X-ray gas mass measurements
+fromtheeROSITAall-skysurvey(Bulbuletal.2024)andtheHSC–
+XXL sample (Pierre et al. 2016; Eckert et al. 2016; Umetsu et al.
+2020; Akino et al. 2022). The eROSITA observations suggest that
+groups and clusters are on average more gas depleted than indicated
+by the HSC–XXL scaling relation (Akino et al. 2022). The average
+eROSITAgasmassfractionsarealsolowerthanthosefoundbyKugel
+et al. (2023) from a collection of pre-eROSITA samples (without
+selection effect corrections): Vikhlinin et al. (2006); Maughan et al.
+(2008); Rasmussen & Ponman (2009); Sun et al. (2009); Pratt et al.
+(2010); Lin et al. (2012); Laganá et al. (2013); Sanderson et al.
+(2013);Gonzalezetal.(2013);Lovisarietal.(2015);Hoekstraetal.
+(2015); Pearson et al. (2017); Mulroy et al. (2019); Lovisari et al.
+(2020). This shift to lower mean gas mass fractions in the eROSITA
+datarelativetopre-eROSITAsampleswasnotedbyseveralprevious
+studies (Popesso et al. 2024a; Dev et al. 2024; Kovač et al. 2025;
+Siegel et al. 2025).
+Selection effects are a potential explanation for the apparent dis-
+crepancy between the eROSITA measurements and the earlier sam-
+ples (e.g., Seppi et al. 2022; Popesso et al. 2024b; Dev et al. 2024;
+Marini et al. 2024; Clerc et al. 2024; Seppi et al. 2025). X-ray lumi-
+nosity is proportional to density and gas mass (along with a temper-
+ature and metallicity dependence), causing X-ray selected samples
+to be biased to concentrated gas rich halos (Andreon et al. 2017;
+Seppi et al. 2022; Marini et al. 2024; Clerc et al. 2024; Seppi et al.
+2025).ThelowermeangasmassfractionsfoundbyeROSITAcould
+therefore reflect its greater completeness compared to previous X-
+ray selected samples (e.g., ROSAT, Truemper 1982; Voges et al.
+1999). However, the HSC–XXL scaling relation analysis accounts
+for selection effects but still favours higher average gas mass frac-
+tions than reported by eROSITA. Akino et al. (2022) model the
+X-ray selection effect by truncating the parent distribution with a
+minimum X-ray luminosity threshold. The disagreement between
+the HSC–XXL scaling relation and the recent eROSITA measure-
+ments suggests that selection effects are not the only factor behind
+thediscrepancyand/ortheminimumluminositythresholdcorrection
+is insufficient (e.g., Andreon et al. 2017).
+The eROSITA sample is also shaped by selection effects, with a
+significant drop in completeness for group mass halos and below
+(e.g., Marini et al. 2024). To bypass X-ray selection, Popesso et al.
+(2024a) used eROSITA images to measure the gas mass fractions
+for stacks of optically selected groups and clusters (Robotham et al.
+2011; Driver et al. 2022). These measurements mitigate the impact
+of X-ray selection but are subject to optical group finder contamina-
+tion(>30%,Seppietal.2025)andhalomassuncertainties.Pearson
+etal.(2017)similarlystudiedasampleof10groupsfromtheGAMA
+friends-of-friendscataloguewithChandra.Themeangasmassfrac-
+tions of our eROSITA cluster bins, which are limited to𝑧 <0.2to
+increase completeness, are consistent with these optically selected
+samples.Strongerfeedbackthanpreviouslyassumedisalsofavoured
+MNRAS000, 1–17 (2025)
+
+--- Page 11 ---
+Constraining baryon feedback11
+10 1
+ 100
+k [h Mpc 1]
+0.7
+0.8
+0.9
+1.0
+P(k)/PDM only(k)
+This work: kSZ+eROSITA+GGL
+WL+kSZ+X-ray | Schneider 22
+WL+kSZ | Bigwood 24
+kSZ+eROSITA | Kovac 25
+10 1
+ 100
+k [h Mpc 1]
+WL×tSZ×X-ray | La Posta 25
+X-ray | Grandis 24
+tSZ | Dalal 25
+WL×tSZ | Pandey 25
+Figure 5.The constraints on the suppression of the matter power spectrum𝑃(𝑘)/𝑃DM Only(𝑘)from our joint fit to kSZ effect profiles and eROSITA X-ray
+gas mass fractions (blue), compared to constraints from the literature.Left: constraints derived (in part) from kSZ effect measurements (Schneider et al. 2022;
+Bigwood et al. 2024; Kovač et al. 2025).Right: constraints from pre-eROSITA X-ray and/or tSZ measurements (Grandis et al. 2024; La Posta et al. 2025; Dalal
+et al. 2025; Pandey et al. 2025a).
+fromacomparisonoftheentropyofeROSITAdetectedgroupswith
+cosmological hydrodynamic simulations (MillenniumTNG, Mag-
+neticum, OWLS), including the effects of the eROSITA selection
+function (Bahar et al. 2024). Studying the impact of the eROSITA
+selection function on the sample of gas mass fraction measurements
+iscriticaltounderstandingtheextentofbaryonfeedback(Dingetal.
+in prep).
+The apparent discrepancy in mean gas mass fractions could stem
+from biased halo mass estimation. Previous studies often assumed
+hydrostatic equilibrium to estimate total masses, and such estimates
+can be biased by approximately30%due to non-thermal pressure
+support and/or deviations from hydrostatic equilibrium (Hoekstra
+et al. 2015; Eckert et al. 2016; Kugel et al. 2023; Muñoz-Echeverría
+et al. 2024; Braspenning et al. 2025). However, both the HSC–XXL
+scaling relation and the bins of eROSITA clusters that we consider
+includeweaklensinghalomassconstraints,fromUmetsuetal.(2020)
+and Siegel et al. (2025), respectively.
+SystematicsinX-raymodellingalsowarrantfurtherinvestigation.
+For a sample of SPT clusters, eROSITA derived luminosities are
+approximately15%lower than previously inferred withChandra
+(Bulbuletal.2024).BecauseX-rayluminosityisproportionaltothe
+gas density squared (at fixed temperature and metallicity), this flux
+offset corresponds to a7%skew in the gas mass. We include this
+source of uncertainty in our modelling (Section 5).
+6.2 Landscape of feedback constraints
+We present a selection of𝑃(𝑘)/𝑃DM Only(𝑘)measurements, along-
+side our joint kSZ and eROSITA result in Figure 5 (Schneider et al.
+2022; Bigwood et al. 2024; Grandis et al. 2024; La Posta et al.
+2025; Pandey et al. 2025a; Kovač et al. 2025; Dalal et al. 2025).
+For brevity, we limit our comparison to studies that considered gas
+observables (e.g., X-ray and kSZ); hydrodynamical simulation pre-
+dictions are shown in Figure 4 and discussed in Section 6.3. The
+joint kSZ and eROSITA X-ray𝑃(𝑘)/𝑃DM Only(𝑘)constraint is con-
+sistent with the collection of previous studies at approximately the
+1𝜎level (with the exception of La Posta et al. 2025, discussed be-
+low).The𝑃(𝑘)/𝑃 DM Only(𝑘)constraintsderivedsolelyfromthepre-
+eROSITA gas mass fractions (our HSC–XXL fit and Grandis et al.
+2024)favourslightlyweakerpowersuppressionthantheotherlitera-
+tureconstraintsandourjointkSZandeROSITAmodel;however,the
+pre-eROSITA constraints are still broadly consistent with the other
+𝑃(𝑘)/𝑃 DM Only(𝑘)posteriors.
+The consistency of the recovered𝑃(𝑘)/𝑃 DM Only(𝑘)between
+these studies is particularly encouraging because each observa-
+tional probe is sensitive to different redshifts and halo masses. Sev-
+eral studies (Schneider et al. 2022; Bigwood et al. 2024; Kovač
+et al. 2025) analysed the CMASS kSZ effect profile (𝑧≈0.55
+andlog 10𝑀500/M⊙ ≈13, Schaan et al. 2021), along with a se-
+lection of pre-eROSITA X-ray gas fraction measurements between
+13<log 10𝑀500/M⊙ <15at𝑧≲0.3, including Vikhlinin et al.
+(2009); Gonzalez et al. (2013); Sanderson et al. (2013); Lovisari
+et al. (2015); Kravtsov et al. (2018); Akino et al. (2022); Popesso
+et al. (2024a); the pre-eROSITA cluster hot gas mass mass fractions
+and radial density profiles analysed by Grandis et al. (2024) cover
+a similar mass and redshift range. The cross correlation of the tSZ
+effect with cosmic shear is also sensitive to𝑀500≈10 14M⊙ halos
+but over a wider redshift range (𝑧 <1, Hojjati et al. 2015; Pandey
+etal.2022,2025a).ThesampleoftSZselectedclustersinDalaletal.
+(2025) have a mean redshift of𝑧=0.55and a mean halo mass of
+𝑀500 =3×10 14 M⊙. In this work, we jointly analyse a selection of
+GGL calibrated kSZ and X-ray samples between group and cluster
+masses at0< 𝑧 <1; the stacked measurements of the kSZ effect
+fromDESI+ACTarevitalforprobing𝑧>0.5(RiedGuachallaetal.
+MNRAS000, 1–17 (2025)
+
+--- Page 12 ---
+12J. Siegel et al.
+2025). By spanning a wide range of halo mass and redshift, joint
+modelling of kSZ and X-ray measurements significantly improves
+theconstrainingpowerofthemodelfit(Figures4andB1).Although
+our model considers the widest range of halo mass and redshift thus
+far, the inclusion of additional observables, particularly the unique
+mass and redshift space probed by the tSZ samples, is critical to
+building a complete picture of baryon feedback.
+A quantitative assessment of the consistency of our results with
+thoseinFigure5islimited,becausedifferentmodelshavebeenused
+to constrain the suppression of the matter power spectrum. In this
+work,weadopttheBCemuemulator(Giri&Schneider2021);several
+previous studies also consideredBCemu(Schneider et al. 2022; Big-
+wood et al. 2024; Grandis et al. 2024) or similarBACCOemulators
+(Aricò et al. 2023; Grandis et al. 2024). Kovač et al. (2025) uti-
+lized the next generation baryonification model recently introduced
+by Schneider et al. (2025); the improved baryonification model in-
+cludes updated formulations of the density profiles and treatment of
+the dark matter, gas, and stellar components as independent fields
+(anemulatorisnotyetpubliclyavailable).Otherresultsusethehalo
+modelapproach(Debackereetal.2020;LaPostaetal.2025;Pandey
+et al. 2025a; Dalal et al. 2025). The power suppression constraints
+fromthebaryonificationandhalomodelframeworksarelargelycon-
+sistent. The𝑃(𝑘)/𝑃 DM Only(𝑘)posterior from La Posta et al. (2025)
+marginally deviates from the other constraints, potentially reflecting
+therelativelylowerflexibilityoftheirassumeddensityprofiles(e.g.,
+fixed ejection radius of unbound gas). As observational probes of
+baryonfeedbackbecomemoreprecise,modellingsystematicsarein-
+creasinglysignificant.Futureworkcomparingmethodsofconstrain-
+ing the suppression of the matter power spectrum and addressing
+modelling challenges (e.g., the effect of satellites and miscentering
+on the kSZ effect profile, Appendix D) is warranted.
+6.3 Implications for feedback models
+Cosmological hydrodynamical simulations reproduce a variety of
+galaxy and cluster observables, including the stellar-to-halo mass
+relation and cluster scaling relations (e.g., McCarthy et al. 2017;
+Davéetal.2019;Schayeetal.2023;Pakmoretal.2023;Schayeetal.
+2025; Dolag et al. 2025), however, their predictions for the extent of
+gas expulsion from groups and clusters and the suppression of the
+matter power spectrum differ substantially. In Figure 4, we present
+the gas mass fractions of groups and clusters and the suppression of
+the matter power spectrum from a selection of recent simulations:
+BAHAMAS (McCarthy et al. 2017), SIMBA (Davé et al. 2019),
+FLAMINGO(Schayeetal.2023),FABLE(Hendenetal.2018),and
+XFABLE(Bigwoodetal.2025a).At𝑘=1ℎMpc −1,thepredictions
+for the suppression of the matter power spectrum differ by>10%.
+In modern hydrodynamical simulations, the suppression of the
+matter power spectrum is primarily regulated by the AGN subgrid
+model. SIMBA treats black hole accretion with a two-phase model:
+torque-limitedaccretionforcoldgasandBondiaccretionforhotgas
+neartheblackhole(Hopkins&Quataert2011;Anglés-Alcázaretal.
+2017);AGNfeedbackisimplementedwithbothkineticandradiative
+modes. FABLE also employs two-mode AGN feedback (following
+Illustris, Sijacki et al. 2015): the quasar-mode (high accretion rates),
+where the feedback energy is thermally coupled to the surrounding
+gas, and the radio mode (low accretion rates), where the feedback
+energy is injected through hot bubbles. XFABLE achieves stronger
+matter power suppression than FABLE, while remaining in agree-
+ment with observed galaxy and cluster properties, by modifying the
+AGN radio mode sub-grid model (Bigwood et al. 2025a): the hot
+bubbles are injected at100kpc/ℎ(compared to∼30kpc/ℎin FA-
+BLE), the accretion threshold for the radio mode is raised by10×,
+onlyAGNinmassivehalos(𝑀 500 ≳10 13 M⊙)entertheradiomode,
+andtheenergycontentoftheradiobubbleislimitedto20×thetotal
+energy in the ICM. The feedback models of FABLE and XFABLE
+were calibrated to match pre-eROSITA gas mass fractions; SIMBA
+wasnotcalibratedtogroupandclusterscaleproperties.Thefiducial
+FLAMINGOandBAHAMASsimulationsimplementAGNfeedback
+throughtheradiativeheatingmechanismofBooth&Schaye(2009).
+To avoid numerical overcooling (DallaVecchia & Schaye 2012), the
+feedback energy is stored internally until it can heat at least one gas
+particle byΔ𝑇 AGN; increasingΔ𝑇 AGN results in more powerful but
+lessfrequentAGNoutbursts.TheBAHAMASsuiteincludesastrong
+feedback variant withlog10Δ𝑇AGN =8.0, compared to the fiducial
+BAHAMAS choice oflog10Δ𝑇AGN =7.8. The FLAMINGO suite
+also includes variants with stronger (weaker) baryon feedback by
+calibratingtopre-eROSITAgasfractionmeasurementsshifteddown
+(up) by𝑁𝜎, where𝜎is the observational uncertainty on the mean
+gas fraction relation and𝑁∈[+2,−2,−4,−8](Kugel et al. 2023).
+For brevity, we only consider the fiducial intermediate resolution
+FLAMINGO simulation (L1_m9) and the strongest feedback vari-
+ant (𝑓gas −8𝜎). The FLAMINGO suite also includes variants with
+jet mode AGN feedback (Huško et al. 2022), however, these vari-
+ants were only produced for a limited range of feedback strengths
+(𝑁∈[0,−4]).
+Joint modelling of kSZ and eROSITA X-ray data requires sig-
+nificantly more gas depletion within𝑅500 than any of the fiducial
+feedback strength simulations predict. Only the simulation variants
+withparticularlystrongfeedback,BAHAMAS8.0andFLAMINGO
+𝑓gas−8𝜎,areconsistentwithourmodel.Thecomparisonofhydro-
+dynamic simulations to recent kSZ and eROSITA observations also
+favoursstrongfeedbacksimulationvariants(Hadzhiyskaetal.2025;
+RiedGuachallaetal.2025;McCarthyetal.2025;Siegeletal.2025;
+Bigwood et al. 2025b).
+The state of the ICM (e.g., temperature and pressure) is also sen-
+sitive to the AGN feedback. Braspenning et al. (2024) found that the
+fiducial FLAMINGO simulation and the more moderate feedback
+variants (e.g.,𝑓 gas −4𝜎) are consistent with the observed cluster
+scaling relations and the radial profiles of massive clusters from a
+collectionofthepre-eROSITAdata.However,thestrongestfeedback
+variant(𝑓 gas−8𝜎)deviatesfromtheclusterscalingrelations,despite
+providingthebestmatchtothekSZmeasurementsofallFLAMINGO
+variants.Exploringfeedbackmodelsthatcansuccessfullyreproduce
+all these observations simultaneously, including alternate formula-
+tions of AGN feedback (Bigwood et al. 2025a) or other mechanisms
+of gas expulsion (e.g., cosmic ray transport, Quataert & Hopkins
+2025), is warranted.
+6.4 Data-driven priors for weak lensing cosmology
+Modelling the impact of baryon feedback on the matter power spec-
+trumisalimitingsystematicforweaklensingsurveys.Hereweassess
+how our feedback constraints on the baryonification model parame-
+ters improve weak lensing cosmological precision and accuracy. We
+consider an LSST Year 1-like analysis (The LSST Dark Energy Sci-
+ence Collaboration et al. 2018), comparing results with and without
+our calibrated model priors from current kSZ and eROSITA data.
+Togeneratemockcosmicsheardata,wefollowtheLSSTDarkEn-
+ergy Science Collaboration Science Requirements Document (The
+LSST Dark Energy Science Collaboration et al. 2018). We adopt
+their specifications for source density, redshift binning, redshift dis-
+tributions, and photometric redshift uncertainties. The data vector is
+constructed using the COSMOSIS framework (Zuntz et al. 2015) as
+MNRAS000, 1–17 (2025)
+
+--- Page 13 ---
+Constraining baryon feedback13
+0.30 0.35 0.40
+m
+0.775
+0.8
+0.825
+0.85
+S8
+Calibrated BCemu
+Uniformed BCemu
+No Baryon Model
+Figure 6.Simulated constraints on the matter density,Ω m, and the lens-
+ing amplitude,𝑆 8, for an LSST Year 1 cosmic shear analysis (The LSST
+Dark Energy Science Collaboration et al. 2018), demonstrating the improve-
+ment in precision and accuracy afforded by our calibrated model. Without a
+baryonfeedbackmodel,theinferredcosmologyissignificantlybiased(black,
+dashed);thisconstraintisunphysicalbutindicativeoftheavailableconstrain-
+ing power if feedback was precisely known. Due to its added flexibility, the
+uniformedbaryonificationmodel(black,dot-dashed)degradestheconstrain-
+ing power by2×, relative to the inference without a baryon model. Our kSZ
+and eROSITA calibrated baryonification prior (blue) recovers half the preci-
+sion otherwise lost to the flexible baryon model.
+described in Preston et al. (2024). The nonlinear matter power spec-
+trum is treated with HMCode (Mead et al. 2021). We assume the
+best-fitbaryonificationparametersfromthejointkSZandeROSITA
+fit as the input level of feedback.
+InFigure6,wereporttheconstraintsonΩ mand𝑆 8forthreediffer-
+ent treatments of baryon feedback: i) no baryon model, ii) baryoni-
+fication with uniform wide priors, and iii) baryonification with kSZ
+andeROSITAcalibratedpriors.Asexpected,theinferredcosmology
+is significantly biased without a baryon model. Although unphysi-
+cal,theseconstraintsillustratetheexpectedcosmologicalprecisionif
+baryon feedback was perfectly known. The uninformed baryonifica-
+tion model recovers the input cosmology, however, the added model
+flexibilitydegradesthecosmologicalconstrainingpowerby2×rela-
+tivetotheinferencewithoutabaryonmodel.ThekSZandeROSITA
+calibrated baryonification model accurately constrainsΩm and𝑆 8
+and recovers half the precision otherwise lost to the flexible baryon
+model.Withdata-drivenconstraintsonbaryonfeedback,earlyLSST
+analyses can robustly exploit small-scale information.
+7 CONCLUSIONS
+We have presented the most comprehensive multi-wavelength con-
+straints to date on how baryonic feedback suppresses the non-linear
+matter power spectrum, a key uncertainty for cosmic shear cos-
+mology. By jointly analysing SDSS/DESI+ACT kSZ effect profiles
+(Schaan et al. 2021; Ried Guachalla et al. 2025) and X-ray gas mass
+fractionsfromeROSITA(Bulbuletal.2024)andHSC–XXL(Pierre
+etal.2016;Akinoetal.2022),withweaklensinghalomasses(Siegel
+et al. 2025), we directly probe the distribution of gas in groups and
+clusters (13<log 10
+𝑀500
+M⊙ ℎ−1 <14) at0< 𝑧 <1. Using the baryoni-
+fication framework (Schneider & Teyssier 2015; Giri & Schneider
+2021), our joint constraints reveal that baryons significantly reshape
+the matter power spectrum on small scales.
+Our main findings are:
+•The kSZ effect profiles and eROSITA hot gas mass fractions
+independently and consistently favour strong feedback, implying a
+10±2%suppressionofthematterpowerspectrumat𝑘=1ℎMpc −1.
+Thissuppressionexceedsthepredictionsofthefiducialmodelsfrom
+recenthydrodynamicalsimulationsuites,e.g.FLAMINGOandBA-
+HAMAS, which were calibrated to reproduce pre-eROSITA X-ray
+measurements, including the HSC–XXL sample. We demonstrate
+the robustness of our results to observational systematics and per-
+formsuccessfulinjectionrecoverytestsofthemodel’sabilitytomap
+between gas observables and matter power suppression.
+•The HSC–XXL X-ray scaling relation favours more moderate
+feedback than the kSZ and eROSITA data, corresponding to only
+5±4%suppressionat𝑘=1ℎMpc −1.Potentialexplanationsinclude
+residual X-ray calibration differences, X-ray selection-function ef-
+fects,X-raymodellinguncertainties,and/orunaccounted-forsystem-
+aticsinthekSZvelocityreconstruction.Cross-instrumentcalibration
+and forward modelling efforts will be critical to understanding this
+discrepancy.Nevertheless,alldatasetsconsistentlysupportnon-zero
+suppression of the matter power spectrum, reinforcing the conclu-
+sion that constraining baryonic feedback is essential to modelling
+small-scale structure.
+•For upcoming surveys, such as LSST, Euclid, and Roman, ob-
+servationally calibrated feedback models offer a path to unlocking
+small-scalecosmicshear.WithasimulatedLSSTYear1analysis,we
+show that this framework can allow weak lensing analyses to safely
+extend to smaller angular scales, reducing the cosmological degra-
+dation associated with conservative scale cuts or flexible feedback
+models.
+Understanding baryon feedback is not only an astrophysical prob-
+lem but also a direct limitation on weak lensing cosmological con-
+straining power. External constraints on the gas distribution are
+therefore an indispensable ingredient for next-generation analyses.
+X-ray and kSZ measurements will improve dramatically with up-
+coming data from eROSITA, Simons Observatory, and DESI (e.g.
+Ried Guachalla et al. 2025; Wayland et al. 2025; Laguë et al. 2025),
+requiringgreaterunderstandingofsystematicuncertainties.Forward
+modelling studies of X-ray gas mass fractions and kSZ effect pro-
+files will be crucial to understanding observational and modelling
+systematics. In the near future, additional measurements of the gas
+distributionwilladdcomplementaryinformationtoconstrainbaryon
+feedback (e.g. Dalal et al. 2025; Pandey et al. 2025a; Sharma et al.
+2025). Feedback models that are calibrated with these upcoming
+multi-wavelength observables can realize the small-scale statistical
+power of cosmic shear.
+ACKNOWLEDGEMENTS
+WethankGeorgeEfstathioufordetailedfeedbackonthismanuscript.
+JS acknowledges support by the National Science Foundation Grad-
+uate Research Fellowship Program under Grant DGE-2039656. LB
+acknowledges support from the Science and Technology Facilities
+Council (STFC). Any opinions, findings, and conclusions or recom-
+mendations expressed in this material are those of the author(s) and
+do not necessarily reflect the views of the National Science Foun-
+dation. This work was supported by the Science and Technology
+Facilities Council (grant number ST/Y002733/1).
+MNRAS000, 1–17 (2025)
+
+--- Page 14 ---
+14J. Siegel et al.
+DATA AVAILABILITY
+Thedataunderlyingthisarticlemaybesharedonreasonablerequest
+to the corresponding authors.
+REFERENCES
+Abbott T. M. C., et al., 2022, Phys. Rev. D, 105, 023520
+Adame A. G., et al., 2025a, J. Cosmology Astropart. Phys., 2025, 021
+Adame A. G., et al., 2025b, J. Cosmology Astropart. Phys., 2025, 012
+Adami C., et al., 2018, A&A, 620, A5
+Ahn C. P., et al., 2012, ApJS, 203, 21
+Ahn C. P., et al., 2014, ApJS, 211, 17
+Akino D., et al., 2022, PASJ, 74, 175
+Amon A., Efstathiou G., 2022, MNRAS, 516, 5355
+Amon A., et al., 2022, Phys. Rev. D, 105, 023514
+Anbajagane D., et al., 2025, The Dark Energy Camera All Data Ev-
+erywhere cosmic shear project V: Constraints on cosmology and as-
+trophysics from 270 million galaxies across 13,000 deg2 of the sky
+(arXiv:2509.03582),https://arxiv.org/abs/2509.03582
+AndreonS.,WangJ.,TrinchieriG.,MorettiA.,SerraA.L.,2017,A&A,606,
+A24
+Anglés-Alcázar D., Davé R., Faucher-Giguère C.-A., Özel F., Hopkins P. F.,
+2017, MNRAS, 464, 2840
+Angulo R. E., Zennaro M., Contreras S., Aricò G., Pellejero-Ibañez M.,
+Stücker J., 2021, MNRAS, 507, 5869
+Aricò G., Angulo R. E., Contreras S., Ondaro-Mallea L., Pellejero-Ibañez
+M., Zennaro M., 2021, MNRAS, 506, 4070
+Aricò G., Angulo R. E., Zennaro M., Contreras S., Chen A., Hernández-
+Monteagudo C., 2023, A&A, 678, A109
+Bahar Y. E., et al., 2024, A&A, 691, A188
+Bigwood L., et al., 2024, MNRAS, 534, 655
+Bigwood L., Bourne M. A., Irsic V., Amon A., Sijacki D., 2025a, arXiv
+e-prints, p. arXiv:2501.16983
+Bigwood L., et al., 2025b, arXiv e-prints, p. arXiv:2510.15822
+Booth C. M., Schaye J., 2009, MNRAS, 398, 53
+Braspenning J., et al., 2024, MNRAS, 533, 2656
+Braspenning J., Schaye J., Schaller M., Kugel R., Kay S. T., 2025, MNRAS,
+536, 3784
+Broxterman J. C., et al., 2025, Matter power spectrum reconstruction with
+KiDS-Legacy: Improved internalΛCDM consistency and preference
+for strong baryonic feedback (arXiv:2509.08365),https://arxiv.
+org/abs/2509.08365
+BulbulG.E.,SmithR.K.,FosterA.,CottamJ.,LoewensteinM.,Mushotzky
+R., Shafer R., 2012, ApJ, 747, 32
+Bulbul E., et al., 2024, A&A, 685, A106
+Chen A., et al., 2022, Monthly Notices of the Royal Astronomical Society,
+518, 5340–5355
+Chisari N. E., 2025, A&ARv, 33, 5
+Chisari N. E., et al., 2019, The Open Journal of Astrophysics, 2, 4
+Clerc N., et al., 2024, A&A, 687, A238
+Coulton W., et al., 2024, Phys. Rev. D, 109, 063530
+DESI Collaboration et al., 2024, arXiv e-prints, p. arXiv:2411.12020
+Dalal N., To C.-H., Hirata C., Hyeon-Shin T., Hilton M., Pandey S., Bond
+J. R., 2025, arXiv e-prints, p. arXiv:2507.04476
+Dalla Vecchia C., Schaye J., 2012, MNRAS, 426, 140
+Davé R., Anglés-Alcázar D., Narayanan D., Li Q., Rafieferantsoa M. H.,
+Appleby S., 2019, MNRAS, 486, 2827
+Debackere S. N. B., Schaye J., Hoekstra H., 2020, MNRAS, 492, 2285
+Dev A., Driver S. P., Meyer M., Robotham A., Obreschkow D., Popesso P.,
+Comparat J., 2024, MNRAS, 535, 2357
+Dolag K., et al., 2025, arXiv e-prints, p. arXiv:2504.01061
+Driver S. P., et al., 2022, MNRAS, 513, 439
+Eckert D., et al., 2016, A&A, 592, A12
+Eckert D., et al., 2019, A&A, 621, A40
+FerreiraT.,AlonsoD.,Garcia-GarciaC.,ChisariN.E.,2024,Phys.Rev.Lett.,
+133, 051001
+Foreman-Mackey D., Hogg D. W., Lang D., Goodman J., 2013, PASP, 125,
+306
+Fowler J. W., et al., 2007, Appl. Opt., 46, 3444
+García-García C., Zennaro M., Aricò G., Alonso D., Angulo R. E., 2024,
+J. Cosmology Astropart. Phys., 2024, 024
+Giri S. K., Schneider A., 2021, J. Cosmology Astropart. Phys., 2021, 046
+GonzalezA.H.,SivanandamS.,ZabludoffA.I.,ZaritskyD.,2013,ApJ,778,
+14
+Grandis S., Aricò G., Schneider A., Linke L., 2024, MNRAS, 528, 4379
+HadzhiyskaB.,FerraroS.,RiedGuachallaB.,SchaanE.,2024,Phys.Rev.D,
+109, 103534
+Hadzhiyska B., et al., 2025, Phys. Rev. D, 112, 083509
+Hahn C., et al., 2023, AJ, 165, 253
+Henden N. A., Puchwein E., Shen S., Sijacki D., 2018, MNRAS, 479, 5385
+HendersonS.W.,etal.,2016,JournalofLowTemperaturePhysics,184,772
+Hoekstra H., Herbonnet R., Muzzin A., Babul A., Mahdavi A., Viola M.,
+Cacciato M., 2015, MNRAS, 449, 685
+Hojjati A., McCarthy I. G., Harnois-Deraps J., Ma Y.-Z., Van Waerbeke L.,
+Hinshaw G., Le Brun A. M. C., 2015, J. Cosmology Astropart. Phys.,
+2015, 047
+Hooper D. C., Schöneberg N., Murgia R., Archidiacono M., Lesgourgues J.,
+Viel M., 2022, J. Cosmology Astropart. Phys., 2022, 032
+Hopkins P. F., Quataert E., 2011, MNRAS, 415, 1027
+HuangH.-J.,etal.,2021,MonthlyNoticesoftheRoyalAstronomicalSociety,
+502, 6010–6031
+HuškoF.,LaceyC.G.,SchayeJ.,SchallerM.,NobelsF.S.J.,2022,MNRAS,
+516, 3750
+Kleinebreil F., et al., 2025, A&A, 695, A216
+Kluge M., et al., 2024, A&A, 688, A210
+Kovač M., et al., 2025, arXiv e-prints, p. arXiv:2507.07991
+Kravtsov A. V., Vikhlinin A. A., Meshcheryakov A. V., 2018, Astronomy
+Letters, 44, 8
+Kugel R., et al., 2023, MNRAS, 526, 6103
+La Posta A., Alonso D., Chisari N. E., Ferreira T., García-García C., 2025,
+Phys. Rev. D, 112, 043525
+Laganá T. F., Martinet N., Durret F., Lima Neto G. B., Maughan B., Zhang
+Y. Y., 2013, A&A, 555, A66
+Laguë A., Madhavacheril M. S., Borrow J., Smith K. M., Chen X., Schaller
+M., Schaye J., 2025, Inferring the Impacts of Baryonic Feedback from
+Kinetic Sunyaev-Zeldovich Cross-Correlations (arXiv:2511.20595),
+https://arxiv.org/abs/2511.20595
+Lin Y.-T., Stanford S. A., Eisenhardt P. R. M., Vikhlinin A., Maughan B. J.,
+Kravtsov A., 2012, ApJ, 745, L3
+Liu A., et al., 2022, A&A, 661, A2
+Lovisari L., Reiprich T. H., Schellenberger G., 2015, A&A, 573, A118
+Lovisari L., et al., 2020, ApJ, 892, 102
+Lucie-Smith L., et al., 2025, Physical Review D, 112
+Mandelbaum R., et al., 2018, PASJ, 70, S25
+Manera M., et al., 2013, MNRAS, 428, 1036
+Manera M., et al., 2015, MNRAS, 447, 437
+Marini I., et al., 2024, A&A, 689, A7
+Maughan B. J., Jones C., Forman W., Van Speybroeck L., 2008, ApJS, 174,
+117
+McCarthy I. G., Schaye J., Bird S., Le Brun A. M. C., 2017, MNRAS, 465,
+2936
+McCarthy I. G., Bird S., Schaye J., Harnois-Deraps J., Font A. S., van Waer-
+beke L., 2018, MNRAS, 476, 2999
+McCarthy I. G., et al., 2025, MNRAS, 540, 143
+McCullough J., et al., 2024, arXiv e-prints, p. arXiv:2410.22272
+Mead A. J., Brieden S., Tröster T., Heymans C., 2021, MNRAS, 502, 1401
+Moster B. P., Naab T., White S. D. M., 2013, MNRAS, 428, 3121
+Muñoz-Echeverría M., et al., 2024, A&A, 682, A147
+Mulroy S. L., et al., 2019, MNRAS, 484, 60
+Okabe N., et al., 2025, A&A, 700, A46
+Padmanabhan N., Xu X., Eisenstein D. J., Scalzo R., Cuesta A. J., Mehta
+K. T., Kazin E., 2012, MNRAS, 427, 2132
+Pakmor R., et al., 2023, MNRAS, 524, 2539
+Pandey S., et al., 2022, Phys. Rev. D, 105, 123526
+MNRAS000, 1–17 (2025)
+
+--- Page 15 ---
+Constraining baryon feedback15
+Pandey S., et al., 2025a, arXiv e-prints, p. arXiv:2506.07432
+Pandey S., Salcido J., To C.-H., Hill J. C., Anbajagane D., Baxter E. J.,
+McCarthy I. G., 2025b, Phys. Rev. D, 111, 043529
+Pearson R. J., et al., 2017, MNRAS, 469, 3489
+Pierre M., et al., 2016, A&A, 592, A1
+Planck Collaboration et al., 2020, A&A, 641, A1
+Popesso P., et al., 2024a, arXiv e-prints, p. arXiv:2411.16555
+Popesso P., et al., 2024b, MNRAS, 527, 895
+Poulin V., Bernal J. L., Kovetz E. D., Kamionkowski M., 2023, Physical
+Review D, 107
+Pratt G. W., et al., 2010, A&A, 511, A85
+Predehl P., et al., 2021, A&A, 647, A1
+Preston C., Amon A., Efstathiou G., 2023, MNRAS, 525, 5554
+Preston C., Amon A., Efstathiou G., 2024, MNRAS, 533, 621
+PrestonC.,RogersK.K.,AmonA.,EfstathiouG.,2025,MNRAS,542,2698
+Quataert E., Hopkins P. F., 2025, The Open Journal of Astrophysics, 8, 66
+Rasmussen J., Ponman T. J., 2009, MNRAS, 399, 239
+Reischke R., Hagstotz S., 2025, A first measurement of baryonic feedback
+with Fast Radio Bursts (arXiv:2507.17742),https://arxiv.org/
+abs/2507.17742
+Ried Guachalla B., et al., 2025, Phys. Rev. D, 112, 103512
+Robotham A. S. G., et al., 2011, MNRAS, 416, 2640
+RogersK.K.,HložekR.,LaguëA.,IvanovM.M.,PhilcoxO.H.,CabassG.,
+Akitsu K., Marsh D. J., 2023, Journal of Cosmology and Astroparticle
+Physics, 2023, 023
+Roper F. A., Cai Y.-C., Peacock J. A., 2025, arXiv e-prints, p.
+arXiv:2510.12553
+Salcido J., McCarthy I. G., Kwan J., Upadhye A., Font A. S., 2023, Monthly
+Notices of the Royal Astronomical Society, 523, 2247–2262
+SandersJ.S.,FabianA.C.,RussellH.R.,WalkerS.A.,2018,MNRAS,474,
+1065
+SandersonA.J.R.,O’SullivanE.,PonmanT.J.,GonzalezA.H.,Sivanandam
+S., Zabludoff A. I., Zaritsky D., 2013, MNRAS, 429, 3288
+Sarmiento K. P., Laguë A., Madhavacheril M., Jain B., Sherwin B., 2025,
+Reconstructing the shape of the non-linear matter power spectrum us-
+ing CMB lensing and cosmic shear (arXiv:2502.06687),https:
+//arxiv.org/abs/2502.06687
+Schaan E., et al., 2021, Phys. Rev. D, 103, 063513
+Schaller M., Schaye J., 2025, MNRAS, 540, 2322
+Schaller M., Schaye J., Kugel R., Broxterman J. C., van Daalen M. P., 2025,
+MNRAS, 539, 1337
+Schaye J., et al., 2023, MNRAS, 526, 4978
+Schaye J., et al., 2025, arXiv e-prints, p. arXiv:2508.21126
+Schneider A., Teyssier R., 2015, J. Cosmology Astropart. Phys., 2015, 049
+SchneiderA.,GiriS.K.,AmodeoS.,RefregierA.,2022,MNRAS,514,3802
+Schneider A., et al., 2025, arXiv e-prints, p. arXiv:2507.07892
+Semboloni E., Hoekstra H., Schaye J., van Daalen M. P., McCarthy I. G.,
+2011, MNRAS, 417, 2020
+Semboloni E., Hoekstra H., Schaye J., 2013, MNRAS, 434, 148
+Seppi R., et al., 2022, A&A, 665, A78
+Seppi R., et al., 2025, A&A, 699, A206
+Sharma K., Krause E., Ravi V., Reischke R., R. S. P., Connor L., 2025, ApJ,
+989, 81
+Siegel J., et al., 2025, arXiv e-prints, p. arXiv:2509.10455
+Sijacki D., Vogelsberger M., Genel S., Springel V., Torrey P., Snyder G. F.,
+Nelson D., Hernquist L., 2015, MNRAS, 452, 575
+SpiegelhalterD.J.,BestN.G.,CarlinB.P.,VanDerLindeA.,2002,Journal
+oftheroyalstatisticalsociety:Seriesb(statisticalmethodology),64,583
+Sun M., Voit G. M., Donahue M., Jones C., Forman W., Vikhlinin A., 2009,
+ApJ, 693, 1142
+Sunyaev R. A., Zeldovich Y. B., 1980, MNRAS, 190, 413
+Sunyaev R., et al., 2021, A&A, 656, A132
+Swetz D. S., et al., 2011, ApJS, 194, 41
+Terasawa R., et al., 2025, Phys. Rev. D, 111, 063509
+TheLSSTDarkEnergyScienceCollaborationetal.,2018,arXive-prints,p.
+arXiv:1809.01669
+Thornton R. J., et al., 2016, ApJS, 227, 21
+Tröster T., et al., 2022, A&A, 660, A27
+Truemper J., 1982, Advances in Space Research, 2, 241
+Umetsu K., et al., 2020, ApJ, 890, 148
+Vargas-MagañaM.,HoS.,FromenteauS.,CuestaA.J.,2017,MNRAS,467,
+2331
+Vikhlinin A., Kravtsov A., Forman W., Jones C., Markevitch M., Murray
+S. S., Van Speybroeck L., 2006, ApJ, 640, 691
+Vikhlinin A., et al., 2009, ApJ, 692, 1033
+Voges W., et al., 1999, A&A, 349, 389
+Wayland A., Alonso D., Zennaro M., 2025, MNRAS, 543, 1518
+Xu J., Eifler T., Krause E., Miranda V., Salcido J., McCarthy I., 2025, Con-
+straining baryonic feedback and cosmology from DES Y3 and Planck
+PR4 6×2pt data. I.ΛCDM models (arXiv:2510.25596),https:
+//arxiv.org/abs/2510.25596
+Zhou R., et al., 2023, AJ, 165, 58
+Zuntz J., et al., 2015, Astronomy and Computing, 12, 45
+van Daalen M. P., Schaye J., Booth C. M., Dalla Vecchia C., 2011, MNRAS,
+415, 3649
+van Daalen M. P., McCarthy I. G., Schaye J., 2020, MNRAS, 491, 2424
+van Daalen M. P., Koutalios I., Broxterman J. C., Wolfs B. J. H., Helly J. C.,
+Schaller M., Schaye J., 2025, arXiv e-prints, p. arXiv:2509.04552
+van Loon M. L., van Daalen M. P., 2024, MNRAS, 528, 4623
+APPENDIX A: SENSITIVITY TO MODELLING CHOICES
+In this work, we constrain the suppression of the matter power spec-
+trum,𝑃(𝑘)/𝑃 DM Only(𝑘),bymodellingkSZeffectprofilesandX-ray
+gas mass fractions with the baryonification framework (Schneider
+& Teyssier 2015). Because stellar fraction measurements are cur-
+rentlyunavailableforoureROSITAclustersample,wesetthestellar
+parameters to𝜂=0.1and𝜂 𝛿 =0.2for our fiducial analysis follow-
+ing Kovač et al. (2025). We also fix the universal baryon fraction,
+Ωb/Ωm, to the maximum likelihood cosmological parameters of the
+DES Y3 ‘3×2pt + All Ext.’ flatΛCDM cosmology (Abbott et al.
+2022). In this appendix, we investigate the sensitivity of our results
+to these choices.
+We repeat the joint kSZ and eROSITA gas mass fraction fit using
+four different stellar parameter priors: i)𝜂=0.1and𝜂 𝛿 =0.2
+(fiducial), ii)𝑝(𝜂)=N(0.1,0.05)and𝑝(𝜂 𝛿)=N(0.2,0.05), iii)
+𝜂=0.25and𝜂 𝛿 =0.25(motivated by Grandis et al. 2024), and iv)
+𝑝(𝜂)=N(0.25,0.05)and𝑝(𝜂 𝛿)=N(0.25,0.05). We also repeat
+the joint kSZ and X-ray fit for two alternate baryon fractions:10%
+lower and higher than the DES Y3 ‘3×2pt + All Ext.’ flatΛCDM
+maximumlikelihood;assumingourfiducialstellarparameterchoice
+(𝜂=0.1and𝜂 𝛿 =0.2). The posteriors of each fit are presented
+in Figure A1. The different stellar parameter and baryon fraction
+assumptionsimpacttheposteriorconstraintsbelowthe1𝜎level;this
+is consistent with prior baryonification modelling results (e.g., Giri
+& Schneider 2021; Grandis et al. 2024).
+APPENDIX B: CONSISTENCY OF THE KSZ AND X-RAY
+DATA
+To constrain the baryonification model, we consider
+SDSS/DESI+ACT kSZ effect profiles (Schaan et al. 2021;
+Ried Guachalla et al. 2025) and X-ray gas mass fraction measure-
+ments from the eROSITA (Bulbul et al. 2024) and HSC–XXL
+samples (Pierre et al. 2016; Akino et al. 2022). In Section 5.1, we
+compare the posterior constraints from fitting the kSZ, eROSITA,
+and HSC–XXL data separately. The posteriors of each fit are
+presented in Figure B1. Consistent with previous studies, we find a
+slight tension between the strength of feedback implied by the kSZ
+MNRAS000, 1–17 (2025)
+
+--- Page 16 ---
+16J. Siegel et al.
+12 14
+log10 Mc
+0.1
+0.2
+0.3
+0.1
+0.2
+0.3
+6
+8
+10
+2
+3
+4
+6ej
+0.4
+1.0
+1.6
+0.5 1.5
+ 4 6
+ej
+2 3
+ 6 8 10
+ 0.14 0.31
+ 0.14 0.31
+= 0.1, = 0.2
+p( ) = (0.1, 0.05), p( ) = (0.2, 0.05)
+= 0.25, = 0.25
+p( ) = (0.25, 0.05), p( ) = (0.25, 0.05)
+12 14
+log10 Mc
+6
+8
+10
+2
+3
+4
+6ej
+0.4
+1.0
+1.6
+0.5 1.5
+ 4 6
+ej
+2 3
+ 6 8 10
+b/ m = 0.175
+b/ m = 0.159
+b/ m = 0.143
+Figure A1.The posterior constraints on the baryonification parameters are weakly sensitive to the assumed stellar parameters (𝜂,𝜂𝛿) and universal baryon
+fraction (Ωb/Ωm).Left:the joint eROSITA X-ray and kSZ parameter constraints for four choices of stellar parameter priors. Our fiducial fit assumes𝜂=0.1
+and𝜂 𝛿 =0.2(solid blue). The dashed blue contours assume conservative Gaussian priors:𝑝(𝜂)=N(0.1,0.05)and𝑝(𝜂 𝛿)=N(0.2,0.05). To test the
+sensitivityoftheposteriorstotheadoptedprior,wealsoconsider𝜂=0.25and𝜂 𝛿 =0.25(solidred);thedashedcontoursagaincorrespondtoGaussianpriors:
+𝑝(𝜂)=N(0.25,0.05)and𝑝(𝜂 𝛿)=N(0.25,0.05).Right:the posterior constraints for three choices ofΩ b/Ωm. We present our fiducial choice in the solid
+contour (the maximum likelihood of the DES Y3 ‘3×2pt + All Ext.’ flatΛCDM cosmology, Abbott et al. 2022) and show the results for10%lower and higher
+Ωb/Ωm in dashed and dot-dashed contours, respectively.
+effectprofilesandpre-eROSITAX-raygasmassfractions(Bigwood
+et al. 2024; McCarthy et al. 2025; Kovač et al. 2025).
+Although the baryonification model provides an excellent joint fit
+to the kSZ and eROSITA measurements (Figure 3), it struggles to
+simultaneously describe the kSZ and HSC–XXL data. Figure B2
+compares the joint kSZ and HSC–XXL fit with the data. The poor
+goodnessoffitisprimarilydrivenbythelowerHSC–XXLmassbin
+and the BGS and LOWZ kSZ profiles; these measurements probe
+similar radii, redshift, and halo mass, but appear to require different
+levels of gas depletion. We discuss possible explanations for this
+discrepancy in Section 6.1.
+APPENDIX C: INJECTION RECOVERY
+The baryonification framework relates gas observables (e.g., X-ray
+gas mass fractions) to the suppression of the matter power spectrum
+(Schneider&Teyssier2015;Giri&Schneider2021;Schneideretal.
+2025).UsingtheBAHAMAS,OWLS,Illustris,andHorizonsimula-
+tions, Giri & Schneider (2021) validated theBCemubaryonification
+emulatorbyaccuratelypredictingthesuppressionofthematterpower
+spectrumfromthegasandstellarmassfractionsofsimulatedgroups
+and clusters and vice versa. In this work, we further validate the
+framework using the FLAMINGO simulations (see Section 4); for
+brevity, we consider the fiducial (L1_m9) and strongest (𝑓gas −8𝜎)
+feedback variants of the FLAMINGO suite.
+Themodelaccuratelypredictsthegasandstellarcontentofgroups
+and clusters from𝑃(𝑘)/𝑃 DM Only(𝑘), for the fiducial and strongest
+feedbackFLAMINGOsimulations.Theframeworkalsosuccessfully
+predicts𝑃(𝑘)/𝑃 DM Only(𝑘)from group and cluster observables. To
+reflect our data fits, in Section 4 we considered the stacked kSZ
+profiles of group mass halos at𝑧=0.3and0.75and the gas mass
+fractions of clusters. For completeness, here we consider a joint
+kSZ, gas mass fraction𝑓 gas, and stellar mass fraction𝑓star fit with
+uniformpriorsforall7baryonificationparameters(FigureC1).Both
+the kSZ+𝑓gas fit and the kSZ+𝑓gas+𝑓 star fit accurately predict the
+matter power suppression. The posteriors of the𝑃(𝑘)/𝑃DM Only(𝑘),
+kSZ+𝑓 gas, and kSZ+𝑓gas+𝑓 star fits are presented in Figure C2. The
+recovered parameters are consistent between all three fits.
+APPENDIX D: CHALLENGES OF KSZ MODELLING
+ThetemperaturechangeinducedbythekSZeffectisproportionalto
+thedensityandvelocityofthegasalongthelineofsight(Equation1).
+For an idealized halo—spherically symmetric gas distribution mov-
+ing at the same velocity as the central—the conversion between the
+gas density profile and the kSZ effect profile is well-defined. The
+presence of satellite galaxies and two-halo interactions complicates
+this picture.
+Satellites potentially impact the measurement of the kSZ effect in
+several ways (McCarthy et al. 2025). Satellites will be miscentered
+fromthecentrals,therebyloweringthekSZsignalrelativetoagalaxy
+atthecentreofthegasdistribution.Satellitesalsooccupymoremas-
+sive halos than expected from stellar mass alone; because halo mass
+and gas mass are approximately proportional, satellites potentially
+MNRAS000, 1–17 (2025)
+
+--- Page 17 ---
+Constraining baryon feedback17
+12 13 14
+log10 Mc
+6
+8
+10
+2
+3
+4
+6ej
+0.5
+1.0
+1.5
+0.5 1.5
+ 4 6
+ej
+2 3
+ 6 8 10
+Fit to kSZ
+Fit to eROSITA fgas
+Fit to kSZ+eROSITA fgas
+12 13 14
+log10 Mc
+6
+8
+10
+2
+3
+4
+6ej
+0.5
+1.0
+1.5
+0.5 1.5
+ 4 6
+ej
+2 3
+ 6 8 10
+Fit to HSC XXL fgas
+Fit to kSZ+HSC XXL fgas
+Fit to kSZ+eROSITA fgas
+FigureB1.PosteriorsonthebaryonificationparametersfromfittingthekSZandX-raydata.Left:posteriorsforthejointkSZandeROSITAfit(solid),alongside
+the fits to the kSZ and eROSITA data separately (dashed and dot-dashed, respectively).Right:posteriors from the HSC–XXL gas mass fractions alone (dashed)
+and jointly with kSZ (dot-dashed). For comparison, the joint kSZ and eROSITA posteriors are again shown in solid-blue.
+boost the kSZ signal relative to a sample of all centrals. For a fixed
+stellarmassselection(i.e.,allgalaxiesaboveaminimumstellarmass
+cut), McCarthy et al. (2025) found that the kSZ effect signal from a
+sample of centrals is lower than with satellites. The effect is approx-
+imately30%foralowmassselection(log 10𝑀★/M⊙ >11)andonly
+5%forlog 10𝑀★/M⊙ >11.6. This effect is partially a result of the
+different mean halo masses between the samples with and without
+satellites.ForeachSDSS/DESI+ACTkSZstack,Siegeletal.(2025)
+identified the selection of simulated galaxies that best fits the mea-
+sured GGL signal. To isolate the impact of satellites, we compare
+the mock kSZ effect signals for the best-fit selection of centrals and
+thebest-fitselectionofcentralsandsatellitesinFigureD1.Forsmall
+angularscales(<3 ′),thetwoselectionsagreewell.Onlargerscales,
+the kSZ effect signal from the centrals only selection is lower than
+the sample with satellites, potentially reflecting differences in the
+underlying gas distribution.
+To predict the kSZ effect from a given gas density profile, we as-
+sumethatthe gasdistributionhasthepeculiar velocityofthecentral
+galaxy. This assumption is reasonable on small scales, but on larger
+scalesthegasvelocityisnotnecessarilydominatedbyasinglecentral
+potential.Totestthisapproximation,wecalculatethekSZeffectpro-
+file from FLAMINGO using either the true per-particle velocities or
+assigningthegasparticlesthepeculiarvelocityofthecentralhost.We
+compare the true and approximate kSZ effect profiles in Figure D1;
+the kSZ profiles are calculated for the selection of central halos that
+best fit the measured GGL signal for each SDSS/DESI+ACT kSZ
+stack. As expected, the true and approximate kSZ effect profiles are
+identical on small scales, where it is reasonable to assume that the
+gas velocity is the same as the central galaxy velocity, but the ap-
+proximation breaks down on larger scales. The difference is most
+pronounced at high redshift (𝑧=0.75), because the kSZ profile is
+probing beyond several𝑅500.
+For a given sample of galaxies, the kSZ effect is typically mea-
+sured by a weighted stack of the CMB temperature map (Schaan
+et al. 2021; Hadzhiyska et al. 2025; Ried Guachalla et al. 2025),
+wheretheweightsarethegalaxies’reconstructedpeculiarvelocities.
+Thefidelityofthevelocityreconstructionisapotentialsourceofun-
+certainty.Toaccountfornon-linearitiesandshotnoiseuncertainties,
+currentstudiescalculateacorrectionfactorbasedonmockcatalogue
+velocityreconstructions(Schaanetal.2021;Hadzhiyskaetal.2025);
+for the DESI samples, the correlation between the true and recon-
+structed velocities is approximately0.7with quoted uncertainties of
+less than5%(Hadzhiyska et al. 2024). For each SDSS/DESI+ACT
+kSZ stack, the selection of simulated galaxies that best fits the GGL
+signal has a peculiar velocity RMS within10%of the bias corrected
+lineartheoryreconstruction(Siegeletal.2025).Systematicscouldbe
+furtherinvestigatedbyreconstructingthesimulatedgalaxyvelocities
+using the same method as the observations.
+To mitigate uncertainties, particularly the effect of satellites and
+two-halo interactions, we restrict our kSZ analysis to small scales
+<3 ′. Because the kSZ effect measurement is highly correlated at
+larger angular separations (Ried Guachalla et al. 2025), these scale
+cuts do not significantly reduce the signal-to-noise ratio of the data.
+Future work addressing these uncertainties is critical to unlocking
+the full potential of the SDSS/DESI+ACT measurements.
+This paper has been typeset from a TEX/LATEX file prepared by the author.
+MNRAS000, 1–17 (2025)
+
+--- Page 18 ---
+18J. Siegel et al.
+Fit to kSZ+HSC-XXL fgas
+1013 1014
+Halo Mass M500 [M h 1]
+0.00
+0.05
+0.10
+0.15fgas( < R500) HSC-XXL eROSITA: z = 0.05 0.10
+eROSITA: z = 0.10 0.15
+0 2 4 6
+10 8
+10 7
+10 6
+10 5
+T [ K sr.]
+log10 [ M500
+M h 1 ] = 13.2
+BGS z = 0.3
+0 2 4 6
+log10 [ M500
+M h 1 ] = 13.4
+LOWZ z = 0.3
+0 2 4 6
+log10 [ M500
+M h 1 ] = 13.1
+CMASS z = 0.55
+0 2 4 6
+R [arcmin]
+10 8
+10 7
+10 6
+10 5
+T [ K sr.]
+log10 [ M500
+M h 1 ] = 12.8
+LRG M0 z = 0.75
+0 2 4 6
+R [arcmin]
+log10 [ M500
+M h 1 ] = 13.0
+LRG M1 z = 0.75
+13.0 14.0 15.0
+Halo Mass log10 [ M500
+M h 1 ]
+0.0
+0.2
+0.4
+0.6
+0.8Redshift [z] LRG
+BGS
+eROSITA
+CMASS
+LOWZ XXL
+Figure B2.The baryonification model jointly fit to the kSZ and HSC–XXL X-ray measurements (purple), alongside the observations. Refer to Figure 3 for a
+detailed description.
+MNRAS000, 1–17 (2025)
+
+--- Page 19 ---
+Constraining baryon feedback19
+10 1
+ 100
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1P(k)/PDM only(k)
+Recovery of FLAMINGO L1_m9
+Fit to P(k)
+Fit to fgas + fstar + kSZ
+FLAMINGO L1_m9
+FLAMINGO fgas 8
+0 2 4 6
+R [arcmin]
+10 8
+10 7
+10 6
+T [ K sr.]
+z = 0.3
+0 2 4 6
+R [arcmin]
+z = 0.75
+0.0
+0.1fgas
+1013 1014
+Halo Mass M500 [M h 1]
+0.000
+0.025
+0.050fstar
+10 1
+ 100
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1P(k)/PDM only(k)
+Recovery of FLAMINGO fgas 8
+0 2 4 6
+R [arcmin]
+10 8
+10 7
+10 6
+T [ K sr.]
+z = 0.3
+0 2 4 6
+R [arcmin]
+z = 0.75
+0.0
+0.1fgas
+1013 1014
+Halo Mass M500 [M h 1]
+0.000
+0.025
+0.050fstar
+Figure C1.The baryonification model successfully predicts the suppression of the matter power spectrum𝑃(𝑘)/𝑃DM Only(𝑘)from mock kSZ, gas mass
+fraction, and stellar mass fraction observations, and vice versa. Refer to Figure 2 for a detailed description.
+MNRAS000, 1–17 (2025)
+
+--- Page 20 ---
+20J. Siegel et al.
+12 13 14
+log10 Mc
+0.1
+0.2
+0.3
+0.1
+0.2
+0.3
+6
+8
+10
+2
+3
+4
+6ej
+0.5
+1.0
+1.5
+0.5 1.0 1.5
+ 4 6
+ej
+2 3
+ 6 8 10
+ 0.1 0.2 0.3
+ 0.1 0.2 0.3
+Fit to P(k)
+Fit to fgas + kSZ
+Fit to fgas + fstar + kSZ
+FigureC2.PosteriorsonthebaryonificationparametersfromtheFLAMINGOsimulationinjection–recoverytests.Theconstraintsfromfittingthematterpower
+suppression,𝑃(𝑘)/𝑃 DM Only(𝑘),areshowninpink(dashed).ThejointkSZandX-raygasmassfractionfitisshowninblue(solid);followingouranalysisofthe
+data, we fix the stellar parameters to𝜂=0.1and𝜂𝛿 =0.2. The joint kSZ, gas mass fraction, and stellar mass fraction fit is shown in purple (dot-dashed). For
+brevity,wepresenttheresultsfromthestrongestfeedbackFLAMINGOvariant(𝑓 gas−8𝜎),becauseitmatchestheSDSS/DESI+ACTkSZdatabest(McCarthy
+et al. 2025; Siegel et al. 2025).
+MNRAS000, 1–17 (2025)
+
+--- Page 21 ---
+Constraining baryon feedback21
+10 8
+10 7
+10 6
+TkSZ [ K arcmin2]
+Centrals+Satellites | true velocities
+Centrals | true velocities
+Centrals | 1-halo velocities
+BGS
+2 4 6
+R [arcmin]
+0
+2Ratio
+LOWZ
+2 4 6
+R [arcmin]
+CMASS
+2 4 6
+R [arcmin]
+LRG M1
+2 4 6
+R [arcmin]
+LRG M2
+2 4 6
+R [arcmin]
+Figure D1.Demonstration of how satellites and two-halo interactions alter the kSZ effect profile in FLAMINGO; for brevity, we present the results from the
+strongest feedback FLAMINGO variant (𝑓gas −8𝜎), because it matches the SDSS/DESI+ACT kSZ data best. We present the simulated kSZ effect profile for
+samples with (solid) and without (dashed) satellites. The simulated galaxies are selected by matching the measured GGL profiles of each SDSS/DESI+ACT
+sample (Siegel et al. 2025). We also test the approximation that the peculiar velocity of the gas distribution is the same as the velocity of the central galaxy.
+For the centrals only samples, the dotted lines present the kSZ profile where the gas particle velocities are fixed to the central halo velocity. Each column
+corresponds to a different SDSS/DESI+ACT measurement, and the bottom row presents the ratio of the different kSZ signals with the fiducial calculation. The
+measurement uncertainties are shown alongside the residuals for context. The shaded region (>3′) demarcates the scales omitted from our analysis due to
+modelling uncertainties.
+MNRAS000, 1–17 (2025)
