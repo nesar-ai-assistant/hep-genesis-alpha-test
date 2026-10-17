@@ -156,6 +156,23 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
 - Test-env fix: `workspace/skills/statistical-analysis.md` now exists with
   proper frontmatter so F8 exercises the real load path in future batteries.
 
+### 19. Board findings store evidence as bare tool-call IDs — no excerpt text **[local, app quality]** — open
+
+Observed 2026-10-17-midday-research (baryonic-pk, v0.3.16): all 21/21 board
+findings have `evidence: [{tool_call_id: ...}]` with **empty** `note` fields,
+and no claim text/quotation is stored in the finding record itself. The run's
+own wave-2 critic flagged exactly this ("Future findings should store the
+exact matching snippet as the excerpt") and had to accept claims on the
+plausibility of chunk ranges rather than verbatim quotes. Consequence: the
+final report says "issues" trace only to tool-call IDs, and report-time
+re-verification can't see what the worker actually read. Spot-checking
+claims against downloaded full texts still verified them (OWLS AGN
+1%/10%/30% at k≈0.3/1/10 h/Mpc and Amon & Efstathiou A_mod=0.69±0.06 both
+verbatim in sources), but the board itself carries no reproducible quote.
+Suggested upstream: persist the exact matched text snippet (chars offset +
+length, or the first ~300 chars) in each evidence entry at finding-creation
+time.
+
 ---
 
 ## Run log (auto-appended by harness)
