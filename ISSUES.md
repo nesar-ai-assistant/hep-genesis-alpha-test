@@ -127,8 +127,9 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
   built twice: once by the in-turn `write_report` tool call, once by the
   post-turn `--report` pass. Two full report folders (~580 KB each) 39 s
   apart, same title/conversation_id, double report-model cost + pdflatex.
-- Reproduced 2/2 (runs/2026-10-15-r1-features and 2026-10-16-eve-features,
-  case F6). Folders 261016_170256 (tool) and 261016_170335 (flag pass).
+- Reproduced 3/3 (runs/2026-10-15-r1-features, 2026-10-16-eve-features and
+  2026-10-17-eve-features, case F6). Latest: folders 261017_170213 (tool) and
+  261017_170253 (flag pass), 40 s apart.
 - Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/6
 
 ### 17. Invalid `--servers` spec → raw pip traceback, no usage hint **[GH#7]** — open
@@ -192,6 +193,26 @@ time.
   read from the output".
 - Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/8
 
+### 21. Direction closed with `result: null` — board loses that direction's summary **[local, app quality]** — open
+
+- v0.3.16 (found 2026-10-17-eve-features, F2 `--board` on
+  ramp-combo-baryonic-pk, run 261017_143153-5151). Direction d-03
+  (per-parameter sensitivity + redshift evolution of the Pk-ratio
+  suppression, wave 0) has `status: "closed"` but `result: null` in
+  board.json — the only one of 23 closed directions across all six boards
+  with no result text. All other closed directions carry multi-paragraph
+  results.
+- Consequence: `--board` renders `d-03 [closed] <goal>` with no
+  `-- result:` clause, and the report/`--board` consumer cannot say what
+  d-03 actually established. The underlying work was evidently done
+  (critique c-03 and dead-end x-01 reference the kappa_w=2/4, M_seed=2
+  runs, and f-014 carries the sensitivity numbers) — likely the planner
+  closed d-03 as superseded by d-05 without writing a result.
+- Suggested upstream: when closing a direction, require a non-empty result
+  (or persist an explicit `closed_as_superseded_by: d-05` marker) so no
+  closed direction is silent. One occurrence so far — monitoring; will file
+  upstream if it recurs.
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -242,6 +263,11 @@ Clean run — no flags.
 
 
 ## 2026-10-17-pm-combo — 3 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-17-eve-features — 9 pass / 0 flagged
 
 Clean run — no flags.
 

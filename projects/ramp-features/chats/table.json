@@ -108,6 +108,46 @@
           "calls": 2
         }
       }
+    },
+    {
+      "id": "e9b62f9aae55",
+      "role": "user",
+      "content": "Use tools to compute, for m_s = 7 keV and sin^2(2theta)=1e-10: (a) the radiative lifetime, (b) the DW production fraction, (c) the X-ray line energy. Present all three in a table.",
+      "ts": "2026-10-17T17:01:47",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "ef741c13048c",
+      "role": "assistant",
+      "content": "This is the third time you've asked for this, so I'll make one tool call to check the numbers again.\n\nI ran `predict_sterile_nu` again (DW mechanism) and got the same numbers as the previous two runs. At m_s = 7 keV and sin\u00b2(2\u03b8) = 10\u207b\u00b9\u2070, the radiative lifetime is 4.37 \u00d7 10\u00b2\u2077 s, Dodelson\u2013Widrow (DW) production gives 38.3% of the dark matter, and the X-ray line is at 3.5 keV.\n\n| Quantity | Value |\n|---|---|\n| (a) Radiative lifetime \u03c4_\u03b3 | 4.37 \u00d7 10\u00b2\u2077 s (1.39 \u00d7 10\u00b2\u2070 yr); decay rate \u0393_\u03b3 = 2.29 \u00d7 10\u207b\u00b2\u2078 s\u207b\u00b9 |\n| (b) DW production fraction | \u03a9_s h\u00b2 = 0.0460, which is 38.3% of the observed \u03a9_DM h\u00b2 = 0.120 \u00b1 0.001 |\n| (c) X-ray line energy | E_\u03b3 = m_s/2 = 3.5 keV |\n\nNotes:\n- **What (b) means:** I took \"production fraction\" to mean how much of the observed dark matter density DW production makes at this point. At this mixing the sterile neutrino would be only part of the dark matter, and it does not overclose the universe.\n- **Other results:** This mass is in the keV warm dark matter range, where the tool's BBN treatment applies. The extra radiation is small (\u0394N_eff = 6.1 \u00d7 10\u207b\u2074) and BBN allows it (\u0394\u03c7\u00b2 = \u22120.01). The free-streaming length is about 154 kpc.\n- **X-ray limits:** The earlier X-ray tool run said this point is excluded by NuSTAR M31 and XMM blank-sky limits. That check assumes the sterile neutrino is all of the dark matter, but DW gives only 38% here.\n\nThe tool works out the same result every time, so running it again won't change these numbers. If you were after something else, such as a mass or mixing sweep, Shi\u2013Fuller production, or the X-ray exclusion with the 38% fraction applied, tell me and I'll run that.\n\n[Tool ledger]: `predict_sterile_nu`(m_s_eV=7000, sin2_2theta=1e-10, mechanism=DW) gave \u03c4 = 4.372e27 s (1.385e20 yr), \u0393 = 2.287e-28 s\u207b\u00b9, \u03a9_s h\u00b2 = 0.04596 (38.3% of DM), E_\u03b3 = 3.5 keV, \u0394N_eff = 6.115e-4, BBN \u0394\u03c7\u00b2 = \u22120.0079 (allowed), \u03bb_fs = 153.5 kpc. No files were written.",
+      "ts": "2026-10-17T17:01:47",
+      "tool_calls": [
+        {
+          "id": "tooluse_dZEn8xhGl4w4bs9FJ0yhdX",
+          "tool": "predict_sterile_nu",
+          "server": "serve-sbbn.sh",
+          "args": {
+            "m_s_eV": 7000,
+            "sin2_2theta": 1e-10,
+            "mechanism": "DW"
+          },
+          "result": "{\n  \"status\": \"ok\",\n  \"files\": [],\n  \"message\": \"Sterile neutrino: m_s = 7e+03 eV, sin\\u00b22\\u03b8 = 1e-10\\nMechanism: DW\\n\\n\\u2500\\u2500 What the sterile \\u03bd produces \\u2500\\u2500\\n\\u0394N_eff = 0.0006115  \\u2192  N_eff = 3.0446\\n\\u03a9_s h\\u00b2 = 0.04596  (obs DM: 0.120 \\u00b1 0.001)\\n\\n\\u2500\\u2500 BBN (PRyMordial-calibrated fit) \\u2500\\u2500\\nY_p = 0.24682  (obs: 0.2449 \\u00b1 0.004)\\nD/H \\u00d7 10\\u2075 = 2.4435  (obs: 2.547 \\u00b1 0.025)\\n\\u2077Li/H \\u00d7 10\\u00b9\\u2070 = 5.46  (obs: ~1.6 \\u2014 the lithium problem)\\n\\u0394\\u03c7\\u00b2(BBN, vs SM) = -0.01  (allowed at 95%; absolute \\u03c7\\u00b2 = 2.76)\\n\\n\\u2500\\u2500 X-ray Decay \\u2500\\u2500\\nE_\\u03b3 = 3.5 keV\\n\\u0393_\\u03b3 = 2.29e-28 s\\u207b\\u00b9\\n\\u03c4_\\u03b3 = 4.37e+27 s  (1.39e+20 yr)\\n\\n\\u2500\\u2500 Structure Formation \\u2500\\u2500\\n\\u03bb_fs = 154 kpc  (warm DM)\\nThis sterile \\u03bd is subdominant DM (38.3% of \\u03a9_DM)\",\n  \"metadata\": {\n    \"input\": {\n      \"m_s_eV\": 7000.0,\n      \"sin2_2theta\": 1e-10,\n      \"mechanism\": \"DW\"\n    },\n    \"regime\": {\n      \"name\": \"keV (warm dark matter)\",\n      \"bbn_treatment_valid\": true,\n      \"note\": \"relativistic at BBN; Delta N_eff follows from the DW relic density\"\n    },\n    \"production\": {\n      \"delta_neff\": 0.0006115,\n      \"neff_total\": 3.044611,\n      \"omega_s_h2\": 0.0459577,\n      \"overcloses\": false\n    },\n    \"bbn\": {\n      \"Yp\": 0.24682,\n      \"DH_x1e5\": 2.4435,\n      \"Li7H_x1e10\": 5.46,\n      \"chi2_total\": 2.7635,\n      \"delta_chi2_vs_sm\": -0.0079,\n      \"excluded_95\": false,\n      \"consistent_2sigma\": true,\n      \"method\": \"fit to PRyMordial (<0.3% within bbn_fit_validity)\"\n    },\n    \"xray\": {\n      \"E_gamma_keV\": 3.5,\n      \"decay_rate_per_s\": 2.287e-28,\n      \"lifetime_s\": 4.372e+27,\n      \"lifetime_yr\": 1.385e+20\n    },\n    \"structure\": {\n      \"free_streaming_kpc\": 153.5,\n      \"warm_or_cold\": \"warm\"\n    }\n  }\n}",
+          "raw": "{\n  \"status\": \"ok\",\n  \"files\": [],\n  \"message\": \"Sterile neutrino: m_s = 7e+03 eV, sin\\u00b22\\u03b8 = 1e-10\\nMechanism: DW\\n\\n\\u2500\\u2500 What the sterile \\u03bd produces \\u2500\\u2500\\n\\u0394N_eff = 0.0006115  \\u2192  N_eff = 3.0446\\n\\u03a9_s h\\u00b2 = 0.04596  (obs DM: 0.120 \\u00b1 0.001)\\n\\n\\u2500\\u2500 BBN (PRyMordial-calibrated fit) \\u2500\\u2500\\nY_p = 0.24682  (obs: 0.2449 \\u00b1 0.004)\\nD/H \\u00d7 10\\u2075 = 2.4435  (obs: 2.547 \\u00b1 0.025)\\n\\u2077Li/H \\u00d7 10\\u00b9\\u2070 = 5.46  (obs: ~1.6 \\u2014 the lithium problem)\\n\\u0394\\u03c7\\u00b2(BBN, vs SM) = -0.01  (allowed at 95%; absolute \\u03c7\\u00b2 = 2.76)\\n\\n\\u2500\\u2500 X-ray Decay \\u2500\\u2500\\nE_\\u03b3 = 3.5 keV\\n\\u0393_\\u03b3 = 2.29e-28 s\\u207b\\u00b9\\n\\u03c4_\\u03b3 = 4.37e+27 s  (1.39e+20 yr)\\n\\n\\u2500\\u2500 Structure Formation \\u2500\\u2500\\n\\u03bb_fs = 154 kpc  (warm DM)\\nThis sterile \\u03bd is subdominant DM (38.3% of \\u03a9_DM)\",\n  \"metadata\": {\n    \"input\": {\n      \"m_s_eV\": 7000.0,\n      \"sin2_2theta\": 1e-10,\n      \"mechanism\": \"DW\"\n    },\n    \"regime\": {\n      \"name\": \"keV (warm dark matter)\",\n      \"bbn_treatment_valid\": true,\n      \"note\": \"relativistic at BBN; Delta N_eff follows from the DW relic density\"\n    },\n    \"production\": {\n      \"delta_neff\": 0.0006115,\n      \"neff_total\": 3.044611,\n      \"omega_s_h2\": 0.0459577,\n      \"overcloses\": false\n    },\n    \"bbn\": {\n      \"Yp\": 0.24682,\n      \"DH_x1e5\": 2.4435,\n      \"Li7H_x1e10\": 5.46,\n      \"chi2_total\": 2.7635,\n      \"delta_chi2_vs_sm\": -0.0079,\n      \"excluded_95\": false,\n      \"consistent_2sigma\": true,\n      \"method\": \"fit to PRyMordial (<0.3% within bbn_fit_validity)\"\n    },\n    \"xray\": {\n      \"E_gamma_keV\": 3.5,\n      \"decay_rate_per_s\": 2.287e-28,\n      \"lifetime_s\": 4.372e+27,\n      \"lifetime_yr\": 1.385e+20\n    },\n    \"structure\": {\n      \"free_streaming_kpc\": 153.5,\n      \"warm_or_cold\": \"warm\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": []
+        }
+      ],
+      "artifact_ids": [],
+      "usage": {
+        "quick": {
+          "input": 18843,
+          "cached": 8792,
+          "output": 1301,
+          "reasoning": 0,
+          "calls": 2
+        }
+      }
     }
   ],
   "artifacts": [],
