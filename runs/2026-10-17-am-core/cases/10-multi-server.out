@@ -1,0 +1,37 @@
+This is the third identical request, and both tools give the same output for the same inputs, so I've reused the earlier results rather than rerunning them.
+
+## The two numbers
+
+| Server | Quantity | Result | Comparison |
+|---|---|---|---|
+| sterile-nu | D/H at N_eff = 3.044 | **2.443 × 10⁻⁵** | Observed (2.547 ± 0.025) × 10⁻⁵, so the prediction is about 4σ low |
+| inelastic-dm | Ωh², 1 TeV higgsino | **0.0898** | Planck 0.120 ± 0.0012, so it is 25.1σ low |
+
+**Assumptions behind each number:**
+- **D/H:** The server has no direct N_eff input, so I used m_s = 1 keV with sin²2θ = 10⁻¹⁵, Dodelson–Widrow production. That gives ΔN_eff = 1.3 × 10⁻⁹, so N_eff = 3.0440. The calculation uses a fit to the PRyMordial BBN code, with Ω_b h² = 0.02237 and a neutron lifetime of 878.4 s.
+- **Higgsino:** ⟨σv⟩ was set automatically to 3.03 × 10⁻²⁶ cm³/s.
+
+**Warning:** the higgsino tool reports `consistent_planck: True` alongside a 25σ tension. That label is wrong.
+
+## Which model does Planck favor?
+
+Neither of these two configurations is favored as the full dark matter:
+
+- **1 TeV higgsino:** Planck rules it out as all of the dark matter, because it makes only about 75% of the observed amount. It is still allowed as part of the dark matter, or as all of it at about 1.1 TeV.
+- **Sterile neutrino:** the D/H value only checks Standard Model BBN, and Planck's N_eff fits it. At the mixing used it makes almost no dark matter (Ωh² ≈ 1.4 × 10⁻⁸), so it isn't a dark-matter candidate here. Higher mixing would be needed, which these runs didn't test.
+
+So from these results, the higgsino at about 1.1 TeV is closer to a working model, since it gets near Planck's value. Neither model has been fully tested against Planck yet.
+
+To make that comparison, I could run the higgsino at 1.1 TeV and scan sterile-neutrino masses and mixings for points that give Ωh² = 0.120, then check those against the X-ray limits. Tell me if you want those, or if you meant something different by repeating the question (for example, a different N_eff value or mass).
+
+[Tool ledger — exact record of this turn]
+- No new tool calls; values reused from the first turn's ledger:
+  - predict_sterile_nu (serve-sbbn.sh), args {"m_s_eV": 1000, "sin2_2theta": 1e-15}: ΔN_eff = 1.289e-09, N_eff = 3.0440, D/H = 2.4433e-5, Yp = 0.24682, Li7/H = 5.46e-10, Δχ² = 0.00, Ω_s h² ≈ 1.4e-8.
+  - compute_relic_density (serve-idm.sh), args {"m_chi_GeV": 1000, "is_higgsino": true}: omega_h2 = 0.0898, planck 0.12 ± 0.0012, tension_sigma = 25.1, consistent_planck = "True" (contradictory), sigma_v = 3.025e-26 cm³/s.
+Loading MCP servers…
+[10/17/26 08:35:23] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 18 tools
+Tokens: 11K in · 1.5K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/multi.json

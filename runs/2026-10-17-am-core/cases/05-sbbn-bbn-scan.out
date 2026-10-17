@@ -1,0 +1,57 @@
+# BBN predictions at N_eff = 3.0, 3.044 and 3.4, and the 1% Y_p threshold
+
+**Short answer:** Y_p rises more than 1% above its standard value once **N_eff ≳ 3.229** (ΔN_eff ≈ 0.185).
+
+This is the third time you've asked this. I made no new tool calls this turn and reused results from the earlier turns instead. The BBN model is deterministic, so rerunning would give the same numbers. The values come from:
+- `predict_sterile_nu` calls with a 5 keV Dodelson-Widrow sterile neutrino, varying only the mixing to set N_eff.
+- `plot_sterile_nu_bbn_impact`, run twice, which gave the same Standard Model values and slopes both times.
+
+I can rerun everything if you want fresh output.
+
+## Method
+
+- **No tool takes N_eff directly.** I set N_eff by adjusting the mixing of a 5 keV Dodelson-Widrow sterile neutrino.
+- **N_eff = 3.0 is an estimate.** A sterile neutrino can only add radiation, so it can't produce N_eff = 3.0, and neither BBN call reported a value there. I estimated that row from the tool's slopes near the Standard Model: dY_p/dN_eff = 0.01351 and d(D/H×10⁵)/dN_eff = 0.3308.
+- **BBN fit:** PRyMordial-calibrated, accurate to better than 0.3% for N_eff from 2.044 to 6.044. Inputs are Ω_b h² = 0.02237 and τ_n = 878.4 s.
+
+## Results
+
+| N_eff | Y_p | D/H × 10⁵ | ΔY_p / Y_p,SM | Δ(D/H) / (D/H)_SM | Source |
+|---|---|---|---|---|---|
+| 3.0 | 0.24623 | 2.4287 | −0.24% | −0.60% | Estimate from the tool's slopes |
+| 3.044 (Standard Model) | 0.24682 | 2.4433 | 0 | 0 | `predict_sterile_nu` with sin²2θ = 10⁻¹⁵ (N_eff = 3.0440); `plot_sterile_nu_bbn_impact` gave the same values |
+| 3.4 | 0.25153 | 2.5616 | +1.91% | +4.84% | `predict_sterile_nu` with sin²2θ = 7.62×10⁻⁸ (N_eff = 3.4000) |
+
+The observed values are Y_p = 0.2449 ± 0.004 and D/H × 10⁵ = 2.547 ± 0.025. The N_eff = 3.4 point is still allowed by BBN (Δχ² = +0.01 relative to the Standard Model).
+
+## When does ΔY_p exceed 1%?
+
+One percent of the standard value is 0.0024682, so Y_p must exceed **0.24929**.
+
+**Two direct tool points, both just under 1%:**
+
+| sin²2θ | N_eff | Y_p | ΔY_p / Y_p,SM |
+|---|---|---|---|
+| 3.9×10⁻⁸ | 3.2262 | 0.24925 | +0.985% |
+| 3.95×10⁻⁸ | 3.2285 | 0.24928 | +0.997% |
+
+- **Crossing:** extending these two points puts the threshold at **N_eff ≈ 3.229**. Y_p is reported to only five digits, so this is uncertain by about ±0.0005.
+- **Slope-only estimate:** the Standard Model slope alone gives ΔN_eff = 0.0024682 / 0.01351 = 0.183, or N_eff ≈ 3.227. That is slightly low, because the tool's Y_p at N_eff = 3.2262 is still below 1%. I quote the value from the direct points.
+
+## Interpretation
+
+- **Why Y_p rises:** extra radiation speeds up expansion, so neutron-proton freeze-out happens earlier and more neutrons survive. Y_p goes up by about 0.0135 per unit of N_eff.
+- **Why a 1% shift isn't detectable yet:** a 1% shift (about 0.0025) is only about 0.6σ of the current Y_p measurement error.
+- **What sets the BBN limit:** the tool's BBN-only 95% limit is ΔN_eff < 0.548, and it comes mostly from D/H, which is measured more precisely.
+
+Files (from earlier turns):
+- `.../runs/261015_223807/bbn_vs_neff.png` (Figure 1)
+- `.../runs/261016_083211/bbn_vs_neff_9d0cdd.png` (Figure 3)
+- `.../runs/261015_223807/sterile_nu_grid_DW_b5feb8.csv` (the mixing sweep)
+Loading MCP servers…
+[10/17/26 08:32:51] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+Tokens: 20K in · 2.5K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json
