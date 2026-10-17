@@ -1,0 +1,1256 @@
+Title: Emulation of baryonic effects on the matter power spectrum and constraints from galaxy cluster data
+Authors: Sambit K. Giri, Aurel Schneider
+Year: 2021
+arXiv ID: 2108.08863
+
+============================================================
+
+--- Page 1 ---
+Prepared for submission to JCAP
+Emulation of baryonic eﬀects on
+the matter power spectrum and
+constraints from galaxy cluster data
+Sambit K. Giri and Aurel Schneider
+Institute for Computational Science, University of Zurich,
+Winterthurerstrasse 190, 8057 Zurich, Switzerland
+E-mail: sambitkumar.giri@uzh.ch, aurel.schneider@uzh.ch
+Abstract. Baryonic feedback eﬀects consist of a major systematic for upcoming weak-lensing
+and galaxy-clustering surveys. In this paper, we present an emulator for the baryonic sup-
+pression of the matter power spectrum. The emulator is based on the baryoniﬁcation model,
+containing seven free parameters that are connected to the gas proﬁles and stellar abundances
+in haloes. We show that with the baryonic emulator, we can not only recover the power spec-
+tra of hydro-dynamical simulations at sub-percent precision, but also establish a connection
+between the baryonic suppression of the power spectrum and the gas and stellar fractions in
+haloes. This connection allows us to predict the expected deviation from a dark-matter-only
+power spectrum using measured X-ray gas fractions of galaxy groups and clusters. With
+these measurements, we constrain the suppression to exceed the percent-level atk = 0.1−0.4
+h/Mpc and to reach a maximum of 20-28 percent at aroundk∼ 7 h/Mpc (68 percent conﬁ-
+dence level). As a further step, we also perform a detailed parameter study and we present a
+minimum set of four baryonic parameters that are required to recover the scale and redshift
+dependence observed in hydro-dynamical simulations. The baryonic emulator can be found
+at https://github.com/sambit-giri/BCemu.
+Keywords: cosmological simulations, power spectrum, weak gravitational lensing, galaxy
+clusters
+arXiv:2108.08863v2  [astro-ph.CO]  13 Dec 2021
+
+--- Page 2 ---
+Contents
+1 Introduction 1
+2 Baryoniﬁcation model and emulator 3
+2.1 Model ingredients 3
+2.2 Baryonic emulator 4
+2.2.1 Dataset 4
+2.2.2 Method 5
+2.2.3 Testing emulation accuracy 6
+3 Studying baryonic eﬀects in hydro-dynamical simulations 7
+3.1 Reproducing the power suppression signal from simulations 8
+3.2 Predicting the power spectrum from halo properties 8
+3.3 Predicting halo properties from the power spectrum 10
+3.4 Predicting the cluster baryon fraction from the power spectrum 12
+4 Constraints on baryonic eﬀects with X-ray observations 13
+4.1 Constraints on baryonic parameters 13
+4.2 Constraints on the power spectrum 16
+5 Reducing the number of baryonic parameters 17
+6 Redshift dependence of baryonic eﬀects 19
+7 Conclusions 20
+A Construction of the training set 22
+B Method used for reducing the number of baryonic parameters 23
+C Single parameter baryoniﬁcation model 25
+1 Introduction
+The next generation of cosmological surveys will not only lead to a massive increase of data
+but also allow us to push towards smaller cosmological scales. While these scales may carry
+new information regarding the underlying cosmology, they are at the same time strongly
+nonlinear and aﬀected by astrophysical phenomena, making them very challenging to model.
+One of the main concerns in that respect is active galactic nuclei (AGN) expelling large
+amounts of gas into the intergalactic medium (IGM). Such AGN feedback processes cannot
+be modelled from ﬁrst principles, and they have been shown to alter the clustering signal at
+scales relevant to cosmology [1–4].
+Based on various cosmological simulations, it has been shown that baryonic (AGN)
+feedback leads to a suppression of the matter power spectrum of order 10 percent at non-
+linear scales, i.e. wave-modes beyondk∼ 0.3 h/Mpc [5]. While most simulations predict a
+similar general trend, they do not agree with each other at the quantitative level. This should,
+– 1 –
+
+--- Page 3 ---
+however, not come as a surprise, since AGN feedback processes are included via diﬀerent sub-
+grid models in the simulations. On top of that, the model parameters are usually tuned to
+reproduce key galaxy properties without a speciﬁc focus on eﬀects relevant to cosmology.
+The speciﬁc connection between AGN feedback parameters and cosmology was ﬁrst
+investigated using the suites of hydro-dynamical simulationsOWLS [6] and cosmo-OWLS [7, 8].
+These simulations revealed that the strength of the feedback ejection has a direct inﬂuence
+on the matter power spectrum and on the amount of gas within haloes. The latter can be
+directly measured using X-ray observations of individual galaxy groups and clusters. As a
+consequence, the AGN sub-grid model parameters in simulations can be directly tuned to
+X-ray observations, a strategy pursued for the cosmological simulation suiteBAHAMAS [9, 10].
+Recently it has been shown that, instead of running expensive hydro-dynamical simula-
+tions, it is possible to include baryonic eﬀects in gravity-onlyN-body simulation outputs by
+perturbatively modifying the positions of simulation particles around haloes [11]. This bary-
+oniﬁcation method is based on parametrised gas and stellar proﬁles with shapes motivated by
+observations. It comes with a handful of well-deﬁned, physically meaningful baryonic param-
+eters, which can be systematically varied in a cosmological context. Note furthermore, that
+the baryoniﬁcation method has shown to provide predictions that are accurate enough for
+the next-generation cosmological surveys, at least at the level of the matter power spectrum
+[12, 13].
+Although the baryoniﬁcation method is many orders of magnitude faster than running
+fullhydro-dynamicalsimulations, itstillrequiresthemodiﬁcationoflarge N-bodyoutputﬁles,
+making it unsuitable to be used directly in Bayesian parameter inference pipelines. The main
+goal of the present paper is therefore to construct an emulator for the baryonic suppression
+eﬀect on the matter power spectrum. This emulator is based on the same set of parameters
+that the underlying baryoniﬁcation model and it allows for more eﬃcient exploration of the
+vast parameter space. Since there is no hope of determining the eﬀects of baryonic feedback
+from ﬁrst principles, this is the only way of constraining baryonic nuisance parameters in a
+cosmological context.
+After building the emulator based on a training set from a slightly modiﬁed version of
+the baryoniﬁcation model of Ref. [12], we compare it to results from a variety of hydro-
+dynamical simulations available in the literature. The goal is to not only show that the
+simulated power spectra can be recovered at percent accuracy, but also to highlight that the
+baryoniﬁcation method is able to predict the simulated power spectra based on information
+about the gas and stellar abundance in haloes. If both these aspects are conﬁrmed, we can
+use the baryoniﬁcation model for cross-correlation analyses [14].
+Other questions we want to address in the present paper are: what is the minimum
+amount of baryonic nuisance parameters that can recover hydro-dynamical simulation results
+at acceptable accuracy? Can we reproduce the redshift dependence visible in hydro-dynamical
+simulations? What can we learn from X-ray observations regarding the expected baryonic
+suppression of the power spectrum?
+The paper is structured as follows: in Sec. 2 we provide a summary of the baryoniﬁcation
+model and describe the set-up of the emulator and quantify its accuracy. Sec. 3 is dedicated
+to a comparison with hydro-dynamical simulations. In Sec. 4 we introduce a case study where
+we use the measured gas fractions of X-ray measurements of galaxy clusters to predict the
+power suppression due to baryonic feedback. In Sec. 5 we present a way to reduce the number
+of free model parameters, while maintaining an acceptable agreement with simulations. We
+next study the redshift dependence of the model parameters in Sec. 6. Finally we present our
+– 2 –
+
+--- Page 4 ---
+conclusions in Sec. 7.
+2 Baryoniﬁcation model and emulator
+The method of baryonifyingN-body simulations is based on the principle of modifying halo
+proﬁles in simulation outputs by slightly displacing particles around halo centres. Although
+this displacement is performed in a spherically symmetric way, the resultingN-body outputs
+still contain the full complexity of the nonlinear cosmological density ﬁeld with non-spherical
+haloes arranged along the cosmic web. The result of the baryoniﬁcation process is primarily
+visible in statistical measures such as the matter power spectrum.
+In this section we ﬁrst summarise the important ingredients of the baryoniﬁcation model
+with speciﬁc emphasis on the free model parameters. We then present the emulator of the
+baryonic power suppression. A speciﬁc emphasis is placed on the production of the data set,
+the emulation method, and the testing phase.
+2.1 Model ingredients
+The guiding principle of the baryoniﬁcation method is the transformation of gravity-only
+proﬁles into modiﬁed, dark-matter-baryon (dmb) proﬁles that include the eﬀects of dark
+matter, gas, and stars [11]. This process can be described as
+ρnfw(r) → ρdmb(r) =ρclm(r) +ρgas(r) +ρcga(r), (2.1)
+whereρnfw denotes the truncated NFW proﬁle [15, 16], whileρdmb is composed of a collision-
+less matter (ρclm), gas (ρgas), and central galaxy proﬁle (ρcga). The collision-less proﬁle mainly
+consists of dark matter but also includes all stars in satellite galaxies and the stellar halo.
+The stellar proﬁle of the central galaxy is described by an exponentially truncated power
+law
+ρcga(r) = fcga(M)
+4π3/2Rhr2 exp
+[
+−
+( r
+2Rh
+)2]
+, (2.2)
+wherefcga(M) describes the fraction of stars in the central galaxy (deﬁned in Eq. 2.7 below)
+andRh is the stellar half-light radius which is set to 0.015 times the virial radiusrvir [a value
+in agreement with observations, see e.g. Ref. 17]. Note that for the matter power spectrum
+at cosmological scales, the details of the stellar proﬁles are not important and the simplistic
+proﬁle of Eq. (2.2) is therefore suﬃcient.
+The distribution of gas in the halo is parametrised by a cored double-power law of the
+form
+ρgas(r)∝ [Ωb/Ωm−fstar(M)]
+[
+1 + 10
+(
+r
+rvir
+)]β(M )[
+1 +
+(
+r
+θejrvir
+)γ]δ−β(M )
+γ
+, (2.3)
+where fstar(M) is the total fraction of stars in haloes (see Eq. 2.7 below). Theβ-parameter
+has an additional halo-mass dependence which is given by
+β(Mc,µ ) = 3(M/Mc)µ
+1 + (M/Mc)µ , (2.4)
+allowing thegas proﬁle tobecomeshallowerthan theNFW proﬁle towardssmallerhalo masses
+(M ≲ Mc). Note, furthermore that the mass-dependence ofβ(M) diﬀers slightly from the
+– 3 –
+
+--- Page 5 ---
+deﬁnition in Ref. [12, 14], in the sense that it is now strictly limited to positive values [see
+e.g. Ref. 18].
+The gas proﬁle of Eqs. (2.3, 2.4) contains the ﬁve free model parametersMc, µ, θej, γ,
+and δ. These parameters are crucial for the modelling of baryonic feedback eﬀects, as they
+determine how the gas is distributed in and around haloes.
+The collision-less matter proﬁle is dominated by the dark matter component, but also
+contains satellite galaxies and intra-cluster stars. At ﬁrst, it is given by
+ρclm(r) =
+[Ωdm
+Ωm
++fsga(M)
+]
+ρnfw(r) (2.5)
+where ρnfw is the truncated NFW proﬁle andfsga(M) is the stellar fraction attributed to
+satellite galaxies and the intra-cluster light. Note, that the collision-less proﬁle may react to
+the other components via the adiabatic relaxation prescription of Ref. [19]. As a consequence,
+it does not retain its original NFW shape. A more detailed description of this procedure can
+be found in Ref. [12].
+After having discussed the three components making up the dark-matter-baryon proﬁle
+in Eq. (2.1), we will now introduce the stellar-to-halo fractions that appear as part of these
+components. The stellar fraction of satellites (and halo stars) is obtained by subtracting the
+central galactic fraction from the total fraction of stars in haloes, i.e.,
+fsga(M) =fstar(M)−fcga(M), (2.6)
+whereM refers throughout the paper to the halo mass at 200 times the critical density. The
+total stellar fraction and the fraction of stars in the central galaxy are each given by a power
+law
+fi(M) = 0.055
+(M
+Ms
+)−ηi
+(2.7)
+with i ={star, cga} and Ms = 2.5× 1011h−1M⊙. Note that this simple description is inﬂu-
+enced by the well-known [20] relation, but only contains the large-scale decrease (since haloes
+below∼ 1012 M⊙ do not have to be modelled for our purposes). We furthermore redeﬁne
+ηstar≡η andηcga =η +ηδ, ending up with 2 additional parameters{η,ηδ}. All seven model
+parameters{Mc,µ,θ ej,γ,δ,η,η δ} describing the gas distribution and stellar abundances, are
+summarized in Table 1.
+2.2 Baryonic emulator
+After summarising the baryoniﬁcation model, we now introduce the baryonic emulator for
+the matter power spectrum. We start by presenting the training set, before discussing the
+emulation and testing method.
+2.2.1 Dataset
+To simulate the distribution of dark matter in our Universe, we run anN-body simulation
+with 5123 particles in a cubic volume of(256 h−1Mpc)3 using the codePkdgrav3 [21]. This
+setup has been shown in Ref. [11] to be suﬃcient to study the baryonic suppression eﬀects
+of the power spectrum at sub-percent accuracy. We assume a standard 5-parameterΛCDM
+cosmology where Ωm = 0.315, Ωb = 0.049, h0 = 0.674, ns = 0.96 and σ8 = 0.811. This
+cosmology is within the constraints given byPlanck [22]. Previous studies have shown that
+the baryonic eﬀects are insensitive to (reasonable) changes in cosmological parameter values
+– 4 –
+
+--- Page 6 ---
+Parameter name Range
+log10Mc [11, 15]
+µ [0, 2]
+θej [2, 8]
+γ [1, 4]
+δ [3, 11]
+η [0.05, 0.4]
+ηδ [0.05, 0.4]
+fb [0.10, 0.25]
+Table 1: List of parameter abbreviations and ranges used for the baryonic emulator. The
+top ﬁve parameters (log10Mc,µ,θej,γ,δ) are related to the gas proﬁles, parameters 6 and 7
+determine the stellar fractions (η,ηδ), while the bottom parameter (fb) describes the relevant
+changes in cosmology.
+except for the mean baryon fractionfb = Ωb/Ωm [14, 23]. Therefore, our baryonic emulator
+will only depend on cosmology viafb which greatly simpliﬁes the analysis.
+We create the training set by varying seven baryoniﬁcation parameters along withfb.
+In Table 1, we list the ranges of these parametersθθθbar on which our emulator will depend
+as well as their respective ranges. This eight-parameter space is randomly sampled with
+2700 points. We discuss our procedure for constructing the training set in Appendix A. We
+then apply our baryoniﬁcation algorithm at each point before measuring the power spectra of
+the 2700 modiﬁedN-body outputs. The power spectra are calculated between wave-modes
+0.03 h/Mpc ≲k ≲ 12.52 h/Mpc in 232 bins. We ﬁnally divide each absolute power spectrum
+by the dark-matter-only power spectrum of the original simulation output in order to obtain
+the relative baryonic power suppression (SSS). This training set is used to create the emulator
+(described in later sections).
+Next to the training set, we independently create another data set with 300 randomly
+selected points in our eight-dimensional parameter space. This corresponds to the testing set
+that will be used to estimate the accuracy of our emulator.
+2.2.2 Method
+We build our emulator by ﬁtting a regression model to our data-set{˜θθθbar, ˜SSS}, where˜θθθbar and
+˜SSS are baryoniﬁcation parameter and power spectrum suppression vector, respectively. We
+use kriging, which is an interpolation based on the Gaussian process (GP), to determine the
+regression model. In the most generic form, the kriging model can be written as [e.g. 24],
+SSS =
+p∑
+i=1
+fi(θθθbar) +Z(θθθbar) , (2.8)
+where the ﬁrst term is a linear combination of a known functionfi and the second term is a
+realisation of a stochastic process or GP,Z(θθθbar)∼N (0,K). We assume a linear polynomial
+for fi. K is the kernel that quantiﬁes the similarity between the points in the data set. In
+this work, we use the squared-exponential kernel deﬁned as,
+K(θθθbar,θθθ′
+bar) =σ2
+d∏
+l=1
+exp
+(
+−Al(θbar,l−θ′
+bar,l)2)
+, (2.9)
+– 5 –
+
+--- Page 7 ---
+whered is the dimension of each data point inθθθbar. Al’s andσ are the hyper-parameters that
+are determined during training. Once the hyper-parameters are known, Eq. 2.9 can be solved
+at any new point of the parameter space. However, this calculation can be computationally
+expensive especially for large data sets. We therefore use a modiﬁed version of kriging, which
+is known askernel partial least squares (KPLS) [25]. Emulators built with KPLS are much
+faster and require less memory without loss in accuracy compared to the standard kriging
+method1. This makes them more suitable for Bayesian inference pipelines. We use the KPLS
+implementation in theSMT2 [30].
+In this work, we build independent emulators at each redshift (z = 0, 0.5, 1, 1.5, 2). Note
+that Ref. [23] took a diﬀerent approach by addingz as an additional emulation parameter.
+We follow the strategy of multiple emulators at diﬀerent redshifts for two main reasons: First,
+this approach allows us to implement diﬀerent models for the redshift evolution of individual
+parameters after the emulators are constructed. Indeed, any redshift evolution of individual
+parameters can be trivially extracted from the emulators at diﬀerent redshifts as long as the
+parameter values (that are now evolved with redshift) remain in the range of the emulator.
+Second, not emulating redshift allows us to reduce the dimension of the regression model. Due
+to thecurse of dimensionality, the required size of the training set increases substantially due
+to increase in the dimension [31, 32].
+In Sec. 5, we will speciﬁcally study the redshift evolution of emulation parameters. More
+particularly, weinvestigatewhatparametersneedtochangewithredshiftinordertoreproduce
+the observed evolution of the baryonic power suppression in hydro-dynamical simulation.
+Our baryonic emulator is available online and can be used by installingBCemu3. Note
+that this emulator not only predicts the power spectrum suppression for a given set of baryonic
+parameters but also provides the uncertainty due to interpolation.
+2.2.3 Testing emulation accuracy
+In this section, we investigate the performance of the emulator using the testing set. We
+quantify the accuracy of our emulator with the coeﬃcient of determination (also known as
+R2 score) given as,
+R2 =
+nbins∑
+j=1
+[
+1−
+∑ntest
+i=1 (yi(kj)− ˆyi(kj))2
+∑ntest
+i=1 (yi(kj)− ¯y(kj))2
+]
+, (2.10)
+where ¯y(kj) = 1
+ntest
+∑ntest
+i=1 yi(kj). ntest andnbins are the size of the testing set and the number
+ofk bins, respectively. TheR2 score measures how well the model or emulator replicates the
+outcomesy. In order to determine the accuracy of our emulator in predicting the testing set,
+yi is replaced withSi(k) in the above equation. We ﬁnd that theR2 score for the testing
+set is more than 0.99 atz ≲ 1.5, which corresponds to a very high accuracy level. The
+corresponding score atz = 2 is 0.975.
+1This speed-up is obtained due to the inclusion of the partial least square (PLS) method [26]. The PLS
+methodisatoolforhighdimensionalproblemsthatsearchesthedirectionthatmaximisesthevariancebetween
+input and output variables. The PLS information is integrated into the kriging correlation matrix to scale
+down computational complexity. Note that in previous works, principal component analysis (PCA) has been
+used to reduce the data before training an emulator using the kriging method [e.g. 23, 27, 28]. The advantage
+of using PLS while ﬁtting a regression model is that it maintains the correlation between the dependent and
+independent variables [29]. However, a direct comparison between emulators built on data reduced with PLS
+and PCA methods is beyond the scope of this paper.
+2This package is available athttps://smt.readthedocs.io.
+3This package is available athttps://github.com/sambit-giri/BCemu.
+– 6 –
+
+--- Page 8 ---
+Figure 1: The percentage error of predicting theS(k) in the testing set with our emulators
+at various redshifts are shown using the coloured lines.. The dark and light shaded regions
+represent the 1-σ and 2-σ regions respectively.
+In Figure 1, we show the relative percentage error between the power spectra suppression
+in the testing setStest and the corresponding predicted power spectra suppressionSpred. The
+dark-black and light-black regions correspond to the 1σ and 2σ regions, respectively. The
+1σ regions stay within 1 percent when compared to the true answer at all wave-modes and
+redshifts. The 2σ regions stay within 2 percent forz <2 and within 3 percent forz = 2 at all
+wave-modes. In general, we note that the performance of the emulator becomes slightly worse
+towards higher redshifts. We speculate that this is a consequence of the fact that the prior
+ranges of the baryonic parameters are selected based on X-ray observations from low redshifts.
+It is possible that the same prior ranges lead to more variability of the power spectrum at
+higher redshifts, making the emulation of the suppression signal somewhat more challenging.
+3 Studying baryonic eﬀects in hydro-dynamical simulations
+In this section we test the validity of the baryoniﬁcation method by comparing it to hydro-
+dynamical simulations. This comparison is important not only to assure that the matter
+power spectrum can be reproduced at percent level but also to investigate the connection
+between halo properties and the power spectrum. The latter is a prerequisite for combining
+cosmological data with individual observations of gas around haloes, which consists of a
+potentially powerful way to constrain baryonic feedback properties [33].
+In this paper we consider the hydro-dynamical simulationsOWLS [6], cosmo-OWLS [7],
+BAHAMAS [9, 10], Illustris-TNG [34–37], andHorizon-AGN [38]. The reason for selecting
+these simulations is that we could ﬁnd published gas and stellar fractions next to the matter
+– 7 –
+
+--- Page 9 ---
+power spectrum. This is a requirement for the type of comparison analysis carried out below.
+A list of the simulations used for the comparison is provided in Table 2.
+Simulation
+name
+cosmology code AGN feedback box size
+(h−1Mpc)
+BAHAMAS [9, 10] WMAP9 [39] Gadget3 [40] thermal 400
+cosmo-OWLS [7] WMAP7 [41] Gadget3 [40] thermal 400
+OWLS [2, 6] WMAP3 [40] Gadget3 [40] thermal 100
+Illustris-TNG [34–37] Planck [42] AREPO [43] thermal and kinetic 75
+Horizon-AGN [38] WMAP7 [41] RAMSES [44] thermal and kinetic 100
+Table 2: List of hydro-dynamical simulations considered in this work along with the cosmol-
+ogy, the simulation code, and the implemented AGN feedback mode.
+3.1 Reproducing the power suppression signal from simulations
+The ﬁrst and most important requirement of our baryoniﬁcation model is its ability to re-
+produce the baryonic power suppression predicted by simulations. We use the 7-parameter
+baryoniﬁcation model to ﬁt the emulated relative power spectraS to the results from the
+hydro-dynamical simulations. The best ﬁts are obtained using the maximum likelihood es-
+timation (MLE) technique4 [46, 47]. For the likelihood, we assume a Gaussian error of 1
+percent at each wave-mode of theS(k) we want to ﬁt.
+The best-ﬁtting curves together with the results from the diﬀerent hydro-dynamical
+simulations are shown in Fig. 2. The agreement between hydro-dynamical simulations and
+the baryoniﬁcation model is better than one percent at all the wave-modes considered at low
+redshifts (z < 2). Only for the z = 2 results, the agreement becomes slightly worse but
+remains at the 1 percent level untilk∼ 8 h/Mpc.
+The level of agreement presented in Fig. 2 is comparable to the results from Ref. [13]
+that are based on an alternative implementation of the baryoniﬁcation method [48]. Note
+however, that both these results are based on a 7-parameter model implementation. For
+practical purposes, it will be important to further reduce the number of free parameters. We
+will show results for reduced sets of parameters in Sec. 5.
+3.2 Predicting the power spectrum from halo properties
+Another important feature of the baryoniﬁcation model is its ability to provide a direct link
+between individual halo proﬁles and the total matter power spectrum. In this section we will
+investigate this connection by comparing the baryoniﬁaction model to the simulations.
+The question we want to examine is to what extent the baryoniﬁcation model is able
+to reproduce the baryonic power suppression from simulations that are based solely on the
+simulated mean gas fractions (fgas,500) and stellar fractions (fstar,500) within haloes (more
+precisely within the radiusr500). We calculate the stellar and gas fractions using the baryoni-
+ﬁcation proﬁles (see Eq, 2.3) and ﬁt them to the simulated fractions fromOWLS, cosmo-OWLS,
+BAHAMAS, IllustrisTNG, and HorizonAGN. For the ﬁtting procedure, we consider 20 bins be-
+tween 1013h−1M⊙ and 2× 1014h−1M⊙ and assume a standard deviation of 1 percent on both
+fgas,500 and fstar,500. We ignore the bins where the data from simulations are not available.
+We then run an MCMC to ﬁt all seven parameters simultaneously. From the resulting chain,
+4We use the optimization methods implemented inscipy [45] python package to maximize the likelihood.
+– 8 –
+
+--- Page 10 ---
+Figure 2: The relative matter power spectrumS =P/P N−body from all the hydro-dynamical
+simulations along with the best ﬁtting curves from the baryoniﬁcation model (black-dashed
+lines) at three redshifts. The agreement between model and simulations remains better than
+one percent over allk-modes considered (see bottom panel) at low redshifts (z <2). Atz = 2,
+the agreement degrades at small scales (k & 8 h/Mpc).
+we take parameter values within the 68 percent credible regions of the posterior distributions
+to determine the correspondingS(k) using our emulator.
+The gas and stellar fractions ﬁtted to each simulation (left-hand panels) as well as the
+corresponding prediction for the power spectrum suppression (right-hand panel) are shown
+in Fig 3. While the black lines represent the results from simulations, the coloured bands
+indicate the 68-percent contours of the baryoniﬁcation model. Fig. 3 shows that the baryoniﬁ-
+cation model is able to reproduce the shapes and amplitudes of the simulated baryonic power
+suppression to good accuracy when ﬁtted to the gas and stellar fractions from simulations.
+This is an important result validating the methodology of the baryoniﬁcation method. Note
+that the results also agree with the analysis of Ref. [12], where a similar exercise has been
+carried out, albeit using a much less general and robust ﬁtting procedure.
+A closer look at Fig. 3 reveals that the agreement is best for theOWLS and cosmo-OWLS
+simulations. The BAHAMAS simulations can also be recovered well, albeit only when correcting
+for resolution eﬀects at small scales. Indeed, it is shown in Ref. [49] that theBAHAMAS power
+spectrum is biased due to resolution eﬀects abovek∼ 5 h/Mpc. We correct for this bias in
+Fig. 4c by multiplying the original curve with the resolution-corrected diﬀerence provided in
+appendix A of Ref. [49].
+For the Illustris-TNG simulation shown in Fig. 3e, the constraints on the power sup-
+pression remain rather poor. This is a direct result of the fact that we only have information
+about gas fractions from relatively small halo masses (ofM500 ≲ 2× 1013 h−1M⊙). Note that
+the power spectrum [34] and the stellar fractions [37] are obtained from theIllustris-TNG
+simulation with box-length ofL = 75 h−1 Mpc. The gas fractions, on the other hand, are
+obtained from Ref. [36], which is based on a simulation with the same sub-grid modelling but
+a smaller box-size ofL = 25 h−1 Mpc.
+For the Horizon-AGN simulation illustrated in Fig. 3f, we use thefgas,500 and fstar,500
+values of individual haloes instead of binned quantities (see coloured points in the left-hand
+panel). The resulting constraints on the power suppression are rather poor as the likelihood
+is worse by about 100 times compared to the other simulations. We speculate that this could
+be a consequence of the large scatter in the individual gas and stellar fractions from the
+– 9 –
+
+--- Page 11 ---
+(a) cosmo-OWLS 8.0
+ (b) cosmo-OWLS 8.5
+(c) BAHAMAS
+ (d) OWLS
+(e) Illustris-TNG
+ (f) Horizon-AGN
+Figure 3: Comparison between the baryoniﬁcation model (blue bands) and the hydro-
+dynamical simulationscosmo-OWLS, BAHAMAS, OWLS, Illustris-TNG, andHorizon-AGN (black
+lines). For each sub-ﬁgure, we show both the gas (fgas,500; solid line) and stellar (fstar,500;
+dash-dotted line) fractions as a function ofM500 (left-hand panel) as well as the baryonic
+power suppression (S) as a function ofk (right-hand panel). Here the baryoniﬁcation model
+is only ﬁtted to the gas and stellar fractions from simulations. The power suppression is then
+predicted by the baryoniﬁcation model (based on the ﬁtted parameter values) and compared
+to the simulation results. This procedure validates the ability of the baryoniﬁcation model to
+recoverS(k) based solely on information of the fractionsfgas,500 and fstar,500.
+simulation.
+3.3 Predicting halo properties from the power spectrum
+In the previous section we have shown that the baryoniﬁcation model is able to reproduce
+the baryonic power suppression based on the stellar and gas properties of haloes. We now
+– 10 –
+
+--- Page 12 ---
+(a) cosmo-OWLS 8.0
+ (b) cosmo-OWLS 8.5
+(c) BAHAMAS
+ (d) OWLS
+(e) Illustris-TNG
+ (f) Horizon-AGN
+Figure 4: Comparison between the baryoniﬁcation model (green bands) and the hydro-
+dynamical simulationscosmo-OWLS, BAHAMAS, OWLS, Illustris-TNG, andHorizon-AGN (black
+lines). In contrast to Fig. 3, we now ﬁt the baryoniﬁcation model to the power suppression
+S of each simulation (left-hand panel of each sub-ﬁgure) with the goal to recover the gas
+(fgas,500; solid line) and stellar (fstar,500; dash-dotted line) fractions as a function ofM500
+(right-hand panel of each sub-ﬁgure). The ﬁgure conﬁrms that the baryoniﬁcation method is
+able to recover simulated halo properties based on information from the power spectrum.
+want to investigate the inverse procedure, i.e. to test if the model can reproduce the gas
+and stellar fractions from simulations when ﬁtted to the baryonic power suppression. For the
+ﬁtting procedure, we use a setup similar to the one above, allowing for a 1 percent error on
+the wave-modes between 0.1 and 12.5 h/Mpc.
+The ﬁts of the power suppression (S) and the resulting predictions for the gas (fgas,500)
+and stellar fractions (fstar,500) are shown in Fig. 4 as green bands. The width of the bands
+are obtained by drawing baryoniﬁcation parameters from 68 percent credible regions. The
+– 11 –
+
+--- Page 13 ---
+corresponding measures from hydro-dynamical simulations are provided as black lines. As
+before, each simulation is accounted for in a separate sub-ﬁgure (a-e).
+The best results are again obtained forcosmo-OWLS (Fig. 4a, 4b), BAHAMAS (Fig. 4c),
+and OWLS (Fig. 4d), where the baryoniﬁcation model is able to recover the simulated gas and
+stellar fractions over the full mass range. Note that for theBAHAMAS simulation, we ﬁt to the
+resolution-corrected suppression signal of the power spectrum (see Sec. 3.2 and Appendix A
+of Ref. [49] for more details). Ignoring this correction would lead to a visible bias between
+the gas and stellar fractions from the simulation and the baryoniﬁcation model.
+For the Illustris-TNG and the Horizon-AGN simulations shown in Fig. 4e and 4f, we
+ﬁnd good agreement for the gas fraction predicted by the baryoniﬁcatin model. The stellar
+fraction, on the other hand, is predicted to be somewhat smaller than the simulation results.
+At least forIllustris-TNG, this could be due to the fact that the stellar fraction comes from
+a lower-resolution simulation (see discussion in Sec. 3.2).
+3.4 Predicting the cluster baryon fraction from the power spectrum
+The comparison tests carried out in the two previous sections are limited to the six simulations
+with published data for fgas,500 and fstar,500 as function of M500 (presented in Table 2).
+However, if we restrict ourselves to the mean baryon fraction of clusters, then there are more
+simulations to investigate. Indeed, Ref. [49] published the baryonic fractions atM500 = 1014
+M⊙, fb(∼ 1014M⊙), for the six simulations introduced above plus the additional simulations
+BAHAMAS low-AGN , BAHAMAS high-AGN , andIllustris5. We will now use this extended data-
+set to check how well the baryoniﬁcation model is able to predict the value offb(∼ 1014M⊙)
+when ﬁtted to the baryonic power suppression (S).
+In Fig. 5, we show the mean baryonic fractionsfb(∼ 1014M⊙) provided by Ref. [49]
+(coloured stars) and we compare them to the results from the baryoniﬁcation model (black
+data points). The latter results are obtained by ﬁtting the baryoniﬁcation model to the power
+suppression (S) of the corresponding simulations, before predictingfb(∼ 1014M⊙) based on
+the obtained best-ﬁtting parameters. The shown error-bars correspond to the 68 percent
+conﬁdence level based on the ﬁts toS assuming 1 percent errors on eachk-mode in the range
+k∼ 0.1− 12.5 h/Mpc (same as in Sec. 3.3).
+Fig. 5 highlights the very good agreement between the cluster baryon fractions predicted
+by the simulations and obtained with the baryoniﬁcation model. Nearly all of the simulation
+results comfortably lie within the 68 percent uncertainty regime. Only Illustris has a
+cluster baryon fraction that is about2σ higher than the prediction by the baryoniﬁcation
+model. Note, however, that the diﬀerence is reduced to a little more than 1σ when compared
+to the result from Ref. [53] (pink pentagon) instead of Ref. [49] (pink star). In Ref. [53] it
+is furthermore shown that, due to the small simulation box (75 h−1 Mpc) of theIllustris
+simulation, the recovered functionfb(M500) becomes very noisy around the relevant scale
+of 1014 M⊙. This points towards the underlying reason for the diﬀerence between [49] and
+[53], letting us conclude that the cluster baryon fraction fromIllustris remains somewhat
+uncertain.
+Note that for the Illustris and the three BAHAMAS simulations, we have added the
+published results from Ref. [13] (empty squares) that are based on a diﬀerent implementation
+of the baryoniﬁcation method. While we obtain very similar predictions forBAHAMAS and
+BAHAMAS low-AGN , there are notable diﬀerences for theBAHAMAS high-AGN and Illustris
+5The BAHAMAS low-AGN and BAHAMAS high-AGN simulations assume 0.2 dex lower and higher AGN heating
+temperaturescomparedtotheoriginal BAHAMAS.Fordetailsaboutthe Illustrissimulations, seeRefs.[50–52])
+– 12 –
+
+--- Page 14 ---
+Figure 5: Mean cluster baryon fractions for haloes withM500∼ 1014M⊙ in various hydro-
+dynamical simulations (coloured symbols). While the stars represent the values published in
+Ref. [49], the pink pentagon is obtained from Ref. [53]. The black data points with error bars
+show predictions from our baryoniﬁcation model obtained by ﬁtting the model to the bary-
+onic power suppression from each simulation. The size of the error-bars corresponds to the
+uncertainty-range of the ﬁtting procedure (see text for more details). Note that all simulation
+results are well recovered by the baryoniﬁcation model, with only theIllustris results lying
+outside the 1σ uncertainty range. The empty squares give the values estimated in Ref. [13]
+based on a diﬀerent implementation of the baryoniﬁcation method.
+simulations, with the results from Ref. [13] signiﬁcantly deviating from the simulations and
+from our results.
+4 Constraints on baryonic eﬀects with X-ray observations
+In the previous section we have validated the baryonifcation method as a tool to recover the
+baryonic power suppression (S) based on information about the properties of haloes around
+galaxy groups and clusters. We will now use this connection to predictS based on observed
+gas and stellar fractions from X-ray and optical observations. In Sec. 4.1 we ﬁrst quantify the
+constraints on the baryonic parameters, before predicting the shape of the power spectrum in
+Sec. 4.2. Throughout this analysis, we will ﬁx all cosmological parameters to the values from
+Planck [42].
+4.1 Constraints on baryonic parameters
+The parameters of the baryoniﬁcation model will be constrained using gas and stellar fractions
+of individual galaxy groups and clusters. We thereby follow a similar strategy to that in
+– 13 –
+
+--- Page 15 ---
+Figure 6: Gas and stellar fractions determined from X-ray and optical observations of galaxy
+groups and clusters [17, 54–57]. We have binned the gas and stellar fractions into four and
+two bins, respectively. The error bars on the binned data includes both the observational
+errors on the points as well as their scatter.
+Ref. [12], but we will perform a more systematic multi-parameter analysis using Bayesian
+inference.
+Fig. 6 shows all the observational data in terms of gas (blue points) and stellar fractions
+(orange points) that are used in this work. The data is taken from Refs. [17, 54–57] and
+contains estimates for the observational errors. We furthermore expect the scatter of the
+data points to depend on the stochastic nature of structure formation, where haloes of the
+same mass may contain diﬀerent amounts of gas and stars.
+For our analysis, it is convenient to bin the gas and stellar fractions of individual clusters
+into four and two halo mass bins, respectively. These bins are shown as black data points in
+Fig. 6. The error on the binned data accounts for both the observational error and scatter of
+the points inside each bin. In our analysis, we assume the errors on the binned data to be
+uncorrelated.
+In order to obtain gas and stellar fraction with X-ray observations, the total halo mass
+has to be estimated assuming the gas to be in hydrostatic equilibrium. This assumption is,
+however, known to be sub-optimal because of non-thermal pressure contributions from in-
+falling gas. Various studies have shown that mass estimates based on hydrostatic equilibrium
+are likely to underestimate the true cluster mass by 5-30 percent [e.g. 58–60]. Following the
+usual practice, we quantify this uncertainty using a hydrostatic mass bias (bhse) that connects
+the estimated to the true mass via the relation
+M500,hse = (1−bhse)M500 . (4.1)
+Here M500,hse is the total mass estimated assuming hydrostatic equilibrium andM500 is the
+true total mass inside ofr500.
+– 14 –
+
+--- Page 16 ---
+Figure 7: Posterior contours of the seven parameters from the baryoniﬁcation model ﬁtted
+to X-ray and optical data of gas and stellar fraction within the halo radiusr500. Here we
+have ﬁxed all cosmological parameters to the best-ﬁtting values fromPlanck and we have
+marginalised over the hydrostatic mass bias parameter (bhse).
+We infer constraints in the baryonic feedback processes by running MCMC using our
+seven-parameter baryoniﬁcation model. For all baryonic parameters, we consider ﬂat priors
+within the range given in Table 1. For the hydrostatic mass bias (bhse) we use a Gaussian
+prior with mean and standard deviation of 0.26 and 0.07, respectively. These values are taken
+from the analysis of Ref. [61] that is based on CMB lensing and Sunyaev-Zeldovich data.
+Note that these values are in good agreement with other direct estimates based on X-ray and
+lensing data [e.g. 62].
+In Fig. 7, we plot the resulting posterior distribution from our MCMC run (marginalising
+– 15 –
+
+--- Page 17 ---
+Figure 8: Constraints onfgas,fstar, andS(k) based on the X-ray observations. The left-hand
+panel gives the binned X-ray data for the gas (red points) and stellar (green points) fractions
+at diﬀerent cluster masses. The dark and light shaded regions show the 68 and 99 percent
+credible regions determined from our MCMC run. The dashed and dotted lines represent the
+gas and stellar fractions from diﬀerent hydro-dynamical simulations. Note that the simulated
+values of M500 are corrected according to Eq. (4.1), assumingbhse = 0.26 to make them
+directly comparable to the observations. The right-hand panel shows the 68 and 99 percent
+credible regions of our MCMC constraints onS(k) as dark and light shaded regions.
+overbhse). The parameter log10Mc is constrained to a value around 12.6, which is similar to
+the standard value used in previous studies [12, 14]. For the second parameterµ, the data
+prefer low values, which is a consequence of the fact that the X-ray gas fraction is only weakly
+dependent on halo mass. The parametersθej andγ are not well constrained by the data. The
+parameter δ, on the other hand, is pushed to rather low values, corresponding to a slowly
+falling gas proﬁle beyond the virial radius (see Eq. 2.3). This means that large amounts of
+gas are pushed outside of the halo, providing evidence for strong feedback processes.
+Fig. 7 shows that the stellar parameters are well constrained by the galaxy cluster
+observations. Note that the parameter ηcga = η +ηδ is a derived quantity. We constrain
+stellar parametersη and ηcga to be 0.23± 0.03 and 0.42± 0.07, respectively.
+4.2 Constraints on the power spectrum
+Using the constraints on the baryoniﬁcation parameters (shown in Fig. 7), we can now in-
+vestigate the expected shape of the baryonic power suppression (S). The result can then be
+compared to the predictions from hydro-dynamical simulations, providing an indirect test for
+their validity regarding cosmology.
+In the left-hand panel of Figure 8, we show thefgas,500 and fstar,500 as blue and orange
+bands. They include the 68 percent (dark band) and 99 percent (light band) credible regions
+obtained via the posterior distribution of the baryoniﬁcation parameters (see Fig. 7). The plot
+conﬁrms that the binned X-ray and optical data used for the ﬁtting procedure (shown as red
+and green symbols) is within the credible region obtained by the MCMC run. For comparison,
+we have also plotted the gas (dashed-lines) and stellar (dotted-lines) fractions from the hydro-
+dynamical simulations. These fractions do not correspond to the direct simulation outputs
+but are instead constructed assuming Eq. (4.1), whereM500 is taken from the simulations
+and where we assumebhse = 0.26 for the hydrostatic mass bias. This allows us to directly
+compare the simulation outputs to both the observations and the results from the emulator.
+– 16 –
+
+--- Page 18 ---
+We note that the simulated fractions tend to lie above the binned X-ray observations,
+especially for masses above M500 ∼ 2× 1013 M⊙/h. The mismatch is not only visible
+for Illustris-TNG, Horizon-AGN, and OWLS, but also for the simulationscosmo-OWLS 8.0 ,
+cosmo-OWLS 8.5 , and BAHAMAS, which have been originally calibrated to X-ray observations.
+This is a direct consequence of the hydrostatic mass bias from Ref. [61], that is considerably
+larger than the one predicted by most hydrodynamical simulations [see e.g. 63].
+In the right-hand panel of Figure 8, we show the predicted baryonic power suppression
+(S) obtained by applying the baryoniﬁcation model to the X-ray and optical data from in-
+dividual galaxy groups and clusters. The dark and light bands again correspond to the 68
+and 99 percent credible regions. At the 68 percent conﬁdence level, the baryonic power sup-
+pressionS is predicted to exceed the percent level betweenk∼ 0.1 and 0.4 h/Mpc growing
+to a maximum 21-28 percent at aroundk∼ 7 h/Mpc. At the 99 percent level, suppression
+exceeds one percent somewhere betweenk∼ 0.1 h/Mpc and1.3 h/Mpc reaching a maximum
+of 14-38 percent beyondk∼ 7 h/Mpc.
+The right-hand panel of Fig. 8 also shows the predicted baryonic power suppression
+signal from various hydro-dynamical simulations. We ﬁnd that onlycosmo-OWLS 8.5 is fully
+consistentwithourdata, while cosmo-OWLS 8.0 , BAHAMAS,and OWLSshowamilddisagreement
+and lie between the 68 percent and 99 percent credible region. The Illustris-TNG and
+Horizon-AGN simulations, on the other hand, are inconsistent with the X-ray observation
+informed predictions from the baryoniﬁcation model. They show a suppression signal that
+is shifted to higherk-values, which is outside the 99 percent conﬁdence range suggested by
+X-ray observations.
+5 Reducing the number of baryonic parameters
+Until now we allowed all the seven parameters in our baryoniﬁcation model to vary. An
+eﬃcient analysis of cosmological survey data requires, however, a minimum amount of bary-
+onic nuisance parameters. The objective of this section is therefore to ﬁnd a model with the
+smallest number of free parameters that still provides a decent ﬁt to the power spectrum
+suppression from hydro-dynamical simulations.
+In the ﬁrst step, we reduce the number of parameters by two, ending up with a ﬁve-
+parameter model. We determine which parameters to ﬁx, by applying a model selection
+procedure based on the Akaike information criterion (AIC) [64, 65] and the Bayesian in-
+formation criterion (BIC) [65, 66]. A detailed description of the procedure is provided in
+Appendix B.
+Our analysis guides us to ﬁxδ andη to 7 and 0.2, respectively. With this ﬁve-parameter
+model, we ﬁt the baryonic power suppression (S) to the predicted signal from the hydro-
+dynamical simulations introduced in Sec. 3. The resulting ﬁts (black dashed lines) and simu-
+lation results (coloured lines) are shown in Figure 9a. We ﬁnd that the ﬁve-parameter model
+provides ﬁts that are nearly as accurate as the original seven-parameter model (see Fig 2).
+The agreement is about one percent or better over all scales, except for thez = 2 case, where
+we get larger than percent deviations atk & 3 h/Mpc.
+As a further step, we reduce the number of parameters from ﬁve to three. We do this by
+ﬁxingγ and µ to 2.5 and 1.0, respectively. The resulting ﬁts for the three-parameter model
+are shown in Figure 9b. For redshift 0 and 1, the ﬁts agree to better than 1.5 percent up to
+k∼ 10 h/Mpc. For thez = 2 case, the agreement is better than 3 percent fork ≲ 7 h/Mpc.
+– 17 –
+
+--- Page 19 ---
+(a) Five parameters
+(b) Three parameters
+(c) Single parameter
+Figure 9: Fits to the simulated baryonic power suppression signal (S) for a reduced number
+of ﬁve (a), three (b), and one (c) parameter. From left to right we show results from redshift
+0, 1 ,and 2, which are ﬁtted independently. Coloured lines correspond to simulation results,
+dashed black lines to the emulator. For the one parameter model, we only ﬁt up tok = 3
+h/Mpc, beyond this range the emulator results are shown as dotted lines. For the same plot
+with the original 7 free parameters, see Fig. 2, for details about the parameter reduction
+procedure, see text and Appendix B.
+– 18 –
+
+--- Page 20 ---
+Figure 10: Redshift dependence of the free model parameters (assuming the 3-parameter
+model), when ﬁtted to each redshift bin individually. Diﬀerent colours correspond to diﬀerent
+ﬁts to the simulationscosmo-OWLS 8.0 (blue upward-triangles), cosmo-OWLS 8.5 (orange
+downward-triangles), BAMAHAS (green stars), andOWLS (brown diamonds).
+Finally, we further reduce the number of free parameters to 1 by ﬁxingθej andηδ to 3.5
+and 0.2, respectively. The resulting ﬁts from this 1-parameter model are shown in Figure 9c.
+They are signiﬁcantly less accurate than the ones from the 3-, 5-, and 7-parameter models,
+showing discrepancies of order 5 percent belowk∼ 8 h/Mpc (degrading further at higher
+k-modes). We therefore conclude that a model with a single free parameter is insuﬃcient to
+accurately describe the simulation results for scales up tok∼ 10 h/Mpc. Note, however,
+that a single parameter model remains a valid option for large scales belowk = 2 h/Mpc.
+In Appendix C, we show that for a limited ﬁtting range, 3-percent agreement up tok∼ 2
+h/Mpc can be obtained with a one-parameter model.
+We should note that we have reduced the number of parameters based on power spectra
+from a limited sample of hydro-dynamical simulations. Adding other simulations could alter
+the conclusions discussed above. The same is true when focusing on quantities unrelated to
+the power spectrum. Reproducing gas proﬁles around galaxy clusters, for example, might
+warrant the use of all seven model parameters [see e.g. 12, 67].
+6 Redshift dependence of baryonic eﬀects
+So far we have ignored the potential redshift dependence of our model parameters. Instead,
+all models have been ﬁtted to the simulation results at each redshift independently. However,
+a cohesive framework, where observations at multiple redshifts can be studied simultaneously,
+may require the baryoniﬁcation parameters to become functions of redshift [see e.g. Ref. 18].
+In order to study potential redshift dependencies, we will consider the three-parameter
+model introduced above, as it yields almost same level of accuracy compared to the original
+seven-parameter model in reproducing the baryonic power suppression signal. In terms of
+simulations, we focus onBAMAHAS, cosmo-OWLS, and OWLS, which all provide published power
+spectra at redshifts 0.0, 0.5, 1.0, 1.5, and 2.0.
+In Fig. 10, we show the parameter values (for the three model parameterslog10Mc,θej,
+ηδ) producing the best independent ﬁts at diﬀerent redshifts. For the parameterlog10Mc
+(left-hand panel) a clear trend is visible, the values decreasing with increasing redshifts. The
+decrease is most pronounced for cosmo-OWLS 8.0 , cosmo-OWLS 8.5 and BAHAMAS, while it
+is only week forOWLS. For the parameterθej (middle panel), no clear and coherent trend is
+– 19 –
+
+--- Page 21 ---
+discernible. The values seem to oscillate and then increase, except forOWLSwhere they slightly
+decrease towards higher redshifts. Regarding the third parameterηδ (right-hand panel), a
+decreasing trend can be observed again. The slope of this decrease is similar between the
+simulations except for the cases where the parameter is pushed towards the edge of the
+allowed prior range (which is atηδ = 0.05).
+Motivated by the trends illustrated in Fig. 10, we allow the parameters to vary with
+redshift, following the simple relation
+X(z) =X0(1 +z)−νX. (6.1)
+Here X stands for either log10Mc, θej, orηδ. With this extended parametrisation, we have
+formally doubled the number of parameters, each former parameter now being described by
+its value atz = 0 (given byX0) and its power-law index (given byνX) describing the redshift
+evolution. However, based on the trends visible in Fig. 10 and in order to avoid an excessive
+growth of the parameter space, we ﬁx the parametersνθej and νηδ to 0 and 0.6, respectively.
+This means that we are left with a four-parameter model withlog10Mc,0, θej,0, ηδ,0, and
+νlog10Mc as freely variable parameters.
+In Fig. 11, we compare the new 4-parameter model (black dashed lines) to the results
+from simulations (coloured lines). This time, we do not ﬁt the signal at diﬀerent redshifts
+independently, but we perform a ﬁt to all three redshift bins, allowing all four parameters
+(log10Mc,0,θej,0,ηδ,0,νlog10Mc) to vary simultaneously. We obtain a 3-percent agreement for
+all redshifts up tok∼ 5 h/Mpc. For lower redshifts (z≤ 1) the agreement is at the level of
+3 percent up tok∼ 10 h/Mpc.
+Next to the 4-parameter model with redshift dependence, we also show the results for
+the redshift independent 3-parameter model as dotted black lines. This time, however (and
+unlike Fig. 9b), the model parameters are only ﬁtted to the simulation results atz = 0. This
+means that the black dotted lines indicate the expected redshift dependence ofS provided
+none of the model parameters are allowed to vary with redshift. A comparison between
+the dashed and dotted lines also illustrates the obtained gain when adding one additional
+parameter describing the explicit redshift dependence oflog10Mc.
+At the end of this section we want to emphasize that, while at least one redshift-
+dependent model parameter is clearly required to describe the simulation, there is currently
+no direct evidence from observations that model parameters have to vary with redshift. In-
+deed, Refs. [68, 69] ﬁnd no signiﬁcant redshift dependence in the X-ray cluster gas fraction
+between z = 0 and 1. Note, however, that the uncertainties on these measurements remain
+rather large.
+7 Conclusions
+In this work we built an emulator for the power suppression signalS = P/PN−body, which
+is primarily caused by baryonic feedback processes pushing gas out of galaxies into the inter-
+galactic space. The baryonic eﬀects are modeled using a slightly modiﬁed version of the bary-
+oniﬁcation method described in Ref. [12]. The baryoniﬁcation method relies on parametrised
+halo proﬁles and is implemented as a post-processing step into gravity-onlyN-body simu-
+lations. While being many orders of magnitude faster than running full hydro-dynamical
+simulations, baryoniﬁcation is not directly suitable for Bayesian inference using MCMC, as it
+involves reading and writing largeN-body output ﬁles. Constructing an emulator based on
+a large training set of baryoniﬁed simulations is therefore a natural and eﬃcient approach.
+– 20 –
+
+--- Page 22 ---
+Figure 11: Fits to the simulated baryonic power suppression (S) assuming an explicit red-
+shift dependence of the model. The coloured lines show the simulation results, while the
+dashed black lines correspond to the 4-parameter model which includes a power-law redshift
+dependence of thelog10Mc parameter (see text). Note that the model is ﬁtted to the simula-
+tion results from all redshifts simultaneously. For comparison, we also show the results from
+the redshift-independent 3-parameters model ﬁtted solely to thez = 0 results.
+In a ﬁrst step, we build ﬁve independent emulators at diﬀerent redshifts (z = 0, 0.5,
+1.0, 1.5, 2.0) assuming eight free parameters. Five parameters are related to the gas proﬁle
+(logMc, µ, θej, γ, δ), two to the stellar fractions (η, ηδ), and one parameter (fb = Ωb/Ωm)
+captures eﬀects from cosmology. The emulators are constructed using a modiﬁed kriging
+method, known askernel partial least squares (KPLS), which is a fast and memory-eﬃcient
+emulation technique well suited for MCMC analyses. We show that the emulators have an
+accuracy of better than 1 percent atz = 0, better than 2 percent atz = 0.5, 1.0, 1.5, and
+better than 2.5 percent atz = 2 for 95 percent of the cases and over allk-modes considered
+(k≤ 12.5 h/Mpc).
+The emulators (and the underlying baryionﬁcation method) are validated using suites
+of hydro-dynamical simulations, such ascosmo-OWLS 8.0 , cosmo-OWLS 8.5 , BAHAMAS, OWLS,
+Illustris-TNG, and Horizon-AGN. We ﬁnd that the emulators can ﬁt all simulation results
+to better than one percent forz = 0, 0.5, 1, and 1.5 over all scales (k≤ 12.5 h/Mpc). Only
+for z = 2, the agreement degrades somewhat but stays at the 3 percent level untilk ≲ 5
+h/Mpc.
+– 21 –
+
+--- Page 23 ---
+One of the important features of the baryoniﬁcation model is that its parameters are
+connected to halo proﬁles and are therefore physically meaningful. This makes it possible
+to constrain baryonic parameters using observational information from the gas and stellar
+distribution around clusters. We investigate this connection by testing the ability of the
+baryoniﬁcation model to recover the power suppression signal from simulations when provided
+with information on the gas and stellar fraction of haloes alone. We show that the model is
+indeed capable to recover the power spectrum based solely on halo gas and stellar fractions of
+galaxy groups and clusters. Inversely, it can also predict the gas and stellar fractions based
+on the matter power spectrum alone. This important cross-check opens the door towards
+cross-correlation studies between e.g. gas and weak-lensing observations.
+As a ﬁrst step in that direction, we perform a case study where we use X-ray and
+optical cluster observations to predict the baryonic power suppression with the help of the
+baryoniﬁcation model. We show that X-ray observations point towards a relatively strong
+baryonic suppression signal, exceeding the percent suppression atk∼ 0.1− 0.4 h/Mpc and
+growing to a maximum of more than 20 percent at aroundk∼ 7 h/Mpc. Such a suppression
+signal is in broad agreement withOWLS, cosmo-OWLS, and BAHAMAS, but signiﬁcantly stronger
+than the predictions from e.g.Illustris-TNG and Horizon-AGN.
+In a further step, we reduce the amount of model parameters from seven to ﬁve, to
+three and to one, investigating the level of agreement that can be maintained between the
+simulations and the emulators. Intriguingly, we ﬁnd the agreement to remain very good for
+the 5 and 3 parameter models, with deviations from simulations that stay well below 3 percent
+for most redshifts andk-ranges. Only the one parameter model performs signiﬁcantly worse,
+with 3 percent agreement up tok∼ 2 h/Mpc and strong deviations at smaller scales.
+Finally, we study the redshift dependencies of the baryoniﬁcation parameters, that are
+required to reproduce the simulated power suppression signal over cosmic time. Using our
+three-parameter model, we ﬁnd that we need at least one additional free parameter to describe
+theinherentredshiftdependenceoftheaforementionedhydro-dynamicalsimulations. Wethus
+provide a ﬁnal four-parameter model that can reproduce simulation results at the level of a
+few percent for wave-modes belowk∼ 10 h/Mpc and redshifts belowz = 2.
+Thebaryonicemulatorfromthispaperisavailableat https://github.com/sambit-giri/
+BCemu along with the documentation.
+Acknowledgments
+ThisworkissupportedbytheSwissNationalScienceFoundationviathegrant PCEFP2_181157.
+All the MCMC runs were done using theemcee [70] package. For analysis and plotting, we
+have used the following software packages: numpy [71], matplotlib [72] and corner [73].
+We would like to thank the anonymous referee for helping us improve this work with their
+constructive comments.
+A Construction of the training set
+In this section, we describe our procedure for building the training set. We started by ran-
+domly sampling the 8-dimensional parameter space of the baryoniﬁcation model with 100
+points and subsequently appended the training set with batches of 100 points. In Fig. 12, we
+show the accuracy (R2 score) of the emulators as a function of the number of points in the
+training set. We ﬁnd that all emulators attain a high accuracy with∼1000 training points
+– 22 –
+
+--- Page 24 ---
+Figure 12: The R2 score estimated for the testing set when emulator is built using using
+training set of various sizes.
+for z < 2. We keep on increasing the training points (2700 points) until we achieve anR2
+score of 0.99 atz = 1.5. With the ﬁnal training set, we get anR2 score of 0.975 atz = 2.
+B Method used for reducing the number of baryonic parameters
+Here we describe the procedure used to ﬁnd the values of the parameters to ﬁx in order to
+reduce the number of baryoniﬁcation model parameters. In this study, we ﬁx two parameter
+at a time, going from the original 7 baryonic parameters to 5, 3, and 1. For the ﬁrst step
+(from seven to ﬁve parameters), we choose two out of the seven parameters and bin them
+within their ranges (see Table 1) into 30 bins. After ﬁxing these two parameters to a certain
+value, we ﬁt this ﬁve parameter model to theS(k) from hydro-dynamical simulations. We
+sum the likelihood values of the best ﬁtting model of all the simulations. Note that we use
+S(k) from multiple redshifts and we ﬁt them independently.
+For the model selection, one can use the Akaike information criterion (AIC) and the
+Bayesian information criterion (BIC) that is given as,
+AIC = 2Np− 2logL , (B.1)
+BIC =Nplog(n)− 2logL . (B.2)
+In the above equations,Np, n andL are the number of parameters, number of observations
+ﬁtted and likelihood value respectively. The Occam’s razor argument is built into these
+criteria, and models with minimised AIC and BIC are preferred. See Refs. [65, 74] to read
+more about model selection approaches.
+Fig. 13 shows the negative sum of all the likelihood values of the best ﬁt models to the
+hydro-dynamical simulations (for description of the simulations, see Sec. 3). AsNp and n is
+the same for the models ﬁtted, the AIC and BIC only depend on the logL. In this ﬁgure,
+the dark-blue regions correspond to the best ﬁve-parameter models. Based on Fig. 13, we
+propose to ﬁxδ and η to 7 and 0.2 respectively. In Fig. 9a, we show the best ﬁt models to
+the hydro-dynamical simulations using the ﬁve parameter representations.
+As a next step, we further reduce the numbers of parameters from 5 to 3. Fig. 14 shows
+the negative sum of likelihood values (− logL) for all 3-parameter models with ﬁxed pairs of
+– 23 –
+
+--- Page 25 ---
+Figure 13: Best ﬁtting 5-parameter models for diﬀerent choices of ﬁxed parameters. Each
+sub-panel shows a combination of ﬁxed parameters with− logL summed over all simulations
+and redshifts considered. Dark-blue (dark-red) areas correspond to 5-parameter models that
+provide the best (worst) global ﬁt to the simulations. Based on this plot, we ﬁxδ = 7 and
+η = 0.2 for the 5-parameter model used in the main text.
+parameters ﬁtted to the simulations. Dark-blue areas correspond to models that provide the
+best global ﬁts over all simulations and redshifts considered. Based on Fig. 14, we propose
+to ﬁxµ and γ to 1 and 2.5, respectively, ending up with the 3-parameter model used in the
+main text.
+The ﬁnal step consists of reducing the amount of free parameters from 3 to 1. In Fig. 15,
+we show the values of− logL for all 1-parameter models ﬁtted to the simulations. Dark-blue
+regions again correspond to the models that provide the best overall ﬁt to the simulations.
+Based on the data shown in Fig. 15, we ﬁxθej to 3.5 andηδ to 0.2 to obtain the 1-parameter
+model used in the main text of this paper (see Sec. 5). Note that, contrary to the reductions
+from 7 to 5 and 5 to 3 parameters, the AIC and BIC values are signiﬁcantly larger for the 3 to
+1 parameter reduction. We have listed the AIC and BIC values for the best ﬁt models to all
+the simulations in Table 3. This suggests that the 3-parameter baryoniﬁcation model consists
+of the best compromise between accuracy and small number of free parameters optimal for
+Bayesian inference analyses.
+– 24 –
+
+--- Page 26 ---
+Figure 14: Best ﬁtting 3-parameter models for diﬀerent choices of ﬁxed parameters (starting
+from the 5-parameter model selected above). Each sub-panel shows a combination of ﬁxed
+parameters with− logL summed over all simulations and redshifts. Dark-blue (dark-red)
+areas correspond to 3-parameter models that provide the best (worst) global ﬁt to the simu-
+lations. Next to ﬁxingδ = 7 andη = 0.2 (see construction of the 5-parameter model), we ﬁx
+µ = 1 and γ = 2.5 to obtain the 3-parameter model used in the main text.
+Model AIC BIC
+7 parameters 28.3 34.1
+5 parameters 88.4 92.6
+3 parameters 110.6 113.1
+1 parameter 838.7 839.6
+Table 3: List of the AIC and BIC values from the best ﬁt models to all the hydro-dynamical
+simulations.
+C Single parameter baryoniﬁcation model
+Our one-parameter baryoniﬁcation model struggles to reproduce the baryonic power suppres-
+sion (S) from simulations when ﬁtted to scales betweenk = 0.1 h/Mpc and 12.5 h/Mpc (see
+Fig. 9c and description in Sec. 5). In this appendix, we show thatS can be reproduced to
+much better accuracy when only ﬁtted to large scales, i.e. untilk-modes ofk = 3 h/Mpc.
+In Fig. 16, we show the ﬁts to the power spectra suppression fork≤ 3 h/Mpc. The three
+panels show the results at redshift 0, 1, and 2. When focusing on large scales alone (with
+k ≲ 2 h/Mpc), the agreement between our model and the simulations stays within 3 percent
+for all redshifts. At smaller scales (largerk-modes) the curves diverge from the simulation
+– 25 –
+
+--- Page 27 ---
+Figure 15: Best ﬁtting 1-parameter models for diﬀerent choices of ﬁxed parameters (starting
+from the 3-parameter model selected above). Each sub-panel shows a combination of ﬁxed
+parameters with− logL summed over all simulations and redshifts. Dark-blue (dark-red)
+areas correspond to the 1-parameter models that provide the best (worst) global ﬁt to the
+simulations. Next to ﬁxingδ = 7, η = 0.2, µ = 1 and γ = 2.5 (see construction of the
+3-parameter model), we ﬁxθej = 3.5 and ηδ = 0.2 to obtain the 1-parameter model used in
+the main text.
+Figure 16: Fits to the simulated baryonic power suppression signal (S) at large scales (k ≲ 3
+h/Mpc) for one-parameter baryoniﬁcation model. From left to right we show results from
+redshift 0, 1, and 2 (which are ﬁtted independently). Coloured lines correspond to simulation
+results, dashed black lines to the emulator. We only ﬁt up tok = 3 h/Mpc, beyond this range
+the emulator results are shown as dotted lines.
+results, leading to substantial errors of up to 10-20 percent atk∼ 10 h/Mpc.
+References
+[1] M. P. van Daalen, J. Schaye, C. M. Booth, and C. Dalla Vecchia,The eﬀects of galaxy
+formation on the matter power spectrum: a challenge for precision cosmology, MNRAS 415
+(Aug., 2011) 3649–3665, [arXiv:1104.1174].
+– 26 –
+
+--- Page 28 ---
+[2] E. Semboloni, H. Hoekstra, J. Schaye, M. P. van Daalen, and I. G. McCarthy,Quantifying the
+eﬀect of baryon physics on weak lensing tomography, Monthly Notices of the Royal
+Astronomical Society417 (2011), no. 3 2020–2035.
+[3] J. Harnois-Déraps, L. van Waerbeke, M. Viola, and C. Heymans,Baryons, neutrinos, feedback
+and weak gravitational lensing, Monthly Notices of the Royal Astronomical Society450 (2015),
+no. 2 1212–1223.
+[4] H.-J. Huang, T. Eiﬂer, R. Mandelbaum, and S. Dodelson,Modelling baryonic physics in future
+weak lensing surveys, Monthly Notices of the Royal Astronomical Society488 (2019), no. 2
+1652–1678.
+[5] N. E. Chisari, A. J. Mead, S. Joudaki, P. G. Ferreira, A. Schneider, J. Mohr, T. Tröster,
+D. Alonso, I. G. McCarthy, S. Martin-Alvarez, et al.,Modelling baryonic feedback for survey
+cosmology, The Open Journal of Astrophysics2 (2019), no. 1 4.
+[6] J. Schaye, C. D. Vecchia, C. Booth, R. P. Wiersma, T. Theuns, M. R. Haas, S. Bertone, A. R.
+Duﬀy, I. McCarthy, and F. van de Voort,The physics driving the cosmic star formation
+history, Monthly Notices of the Royal Astronomical Society402 (2010), no. 3 1536–1560.
+[7] A. M. Le Brun, I. G. McCarthy, J. Schaye, and T. J. Ponman,Towards a realistic population of
+simulated galaxy groups and clusters, Monthly Notices of the Royal Astronomical Society441
+(2014), no. 2 1270–1290.
+[8] I. G. McCarthy, A. Le Brun, J. Schaye, and G. Holder,The thermal sunyaev–zel’dovich eﬀect
+power spectrum in light of planck, Monthly Notices of the Royal Astronomical Society440
+(2014), no. 4 3645–3657.
+[9] I. G. Mccarthy, J. Schaye, S. Bird, and A. M. C. Le Brun,The BAHAMAS project: calibrated
+hydrodynamical simulations for large-scale structure cosmology, MNRAS 465 (2017) 2936–2965.
+[10] I. G. Mccarthy, S. Bird, J. Schaye, J. Harnois-Deraps, A. S. Font, and L. Van Waerbeke,The
+BAHAMAS project: the CMB-large-scale structure tension and the roles of massive neutrinos
+and galaxy formation, MNRAS 476 (2018) 2999–3030.
+[11] A. Schneider and R. Teyssier,A new method to quantify the eﬀects of baryons on the matter
+power spectrum, Journal of Cosmology and Astroparticle Physics2015 (2015), no. 12.
+[12] A. Schneider, R. Teyssier, J. Stadel, N. E. Chisari, A. M. Brun, A. Amara, and A. Refregier,
+Quantifying baryon eﬀects on the matter power spectrum and the weak lensing shear
+correlation, Journal of Cosmology and Astroparticle Physics2019 (3, 2019).
+[13] G. Aricò, R. E. Angulo, C. Hernández-Monteagudo, S. Contreras, and M. Zennaro,
+Simultaneous modelling of matter power spectrum and bispectrum in the presence of baryons,
+Monthly Notices of the Royal Astronomical Society503 (2021), no. 3 3596–3609.
+[14] A. Schneider, N. Stoira, A. Refregier, A. J. Weiss, M. Knabenhans, J. Stadel, and R. Teyssier,
+Baryonic eﬀects for weak lensing: I. Power spectrum and covariance matrix, Journal of
+Cosmology and Astroparticle Physics(2019), no. 04.
+[15] J. F. Navarro, C. S. Frenk, and S. D. M. White,The Structure of Cold Dark Matter Halos, ApJ
+462 (May, 1996) 563, [astro-ph/9508025].
+[16] E. A. Baltz, P. Marshall, and M. Oguri,Analytic models of plausible gravitational lens
+potentials, J. Cosmology Astropart. Phys.2009 (Jan., 2009) 015, [arXiv:0705.0682].
+[17] A. V. Kravtsov, A. A. Vikhlinin, and A. V. Meshcheryakov,Stellar Mass—Halo Mass Relation
+and Star Formation Eﬃciency in High-Mass Halos, Astronomy Letters44 (Jan., 2018) 8–34,
+[arXiv:1401.7329].
+[18] A. J. Mead, S. Brieden, T. Tröster, and C. Heymans,hmcode-2020 : improved modelling of
+non-linear cosmological power spectra with baryonic feedback, Monthly Notices of the Royal
+Astronomical Society502 (2021), no. 1 1401–1422.
+– 27 –
+
+--- Page 29 ---
+[19] M. G. Abadi, J. F. Navarro, M. Fardal, A. Babul, and M. Steinmetz,Galaxy-induced
+transformation of dark matter haloes, MNRAS 407 (Sept., 2010) 435–446, [arXiv:0902.2477].
+[20] B. P. Moster, T. Naab, and S. D. M. White,Galactic star formation and accretion histories
+from matching galaxies to dark matter haloes, MNRAS 428 (Feb., 2013) 3121–3138,
+[arXiv:1205.5807].
+[21] D. Potter, J. Stadel, and R. Teyssier,PKDGRAV3: beyond trillion particle cosmological
+simulations for the next era of galaxy surveys, Computational Astrophysics and Cosmology4
+(May, 2017) 2, [arXiv:1609.08621].
+[22] Planck Collaboration, N. Aghanim, Y. Akrami, M. Ashdown, J. Aumont, C. Baccigalupi,
+M. Ballardini, A. J. Banday, R. B. Barreiro, N. Bartolo, S. Basak, R. Battye, K. Benabed, J. P.
+Bernard, M. Bersanelli, P. Bielewicz, J. J. Bock, J. R. Bond, J. Borrill, F. R. Bouchet,
+F. Boulanger, M. Bucher, C. Burigana, R. C. Butler, E. Calabrese, J. F. Cardoso, J. Carron,
+A. Challinor, H. C. Chiang, J. Chluba, L. P. L. Colombo, C. Combet, D. Contreras, B. P. Crill,
+F. Cuttaia, P. de Bernardis, G. de Zotti, J. Delabrouille, J. M. Delouis, E. Di Valentino, J. M.
+Diego, O. Doré, M. Douspis, A. Ducout, X. Dupac, S. Dusini, G. Efstathiou, F. Elsner, T. A.
+Enßlin, H. K. Eriksen, Y. Fantaye, M. Farhang, J. Fergusson, R. Fernandez-Cobos, F. Finelli,
+F. Forastieri, M. Frailis, E. Franceschi, A. Frolov, S. Galeotta, S. Galli, K. Ganga, R. T.
+Génova-Santos, M. Gerbino, T. Ghosh, J. González-Nuevo, K. M. Górski, S. Gratton,
+A. Gruppuso, J. E. Gudmundsson, J. Hamann, W. Handley, D. Herranz, E. Hivon, Z. Huang,
+A. H. Jaﬀe, W. C. Jones, A. Karakci, E. Keihänen, R. Keskitalo, K. Kiiveri, J. Kim, T. S.
+Kisner, L. Knox, N. Krachmalnicoﬀ, M. Kunz, H. Kurki-Suonio, G. Lagache, J. M. Lamarre,
+A. Lasenby, M. Lattanzi, C. R. Lawrence, M. L. Jeune, P. Lemos, J. Lesgourgues, F. Levrier,
+A. Lewis, M. Liguori, P. B. Lilje, M. Lilley, V. Lindholm, M. López-Caniego, P. M. Lubin,
+Y. Z. Ma, J. F. Macías-Pérez, G. Maggio, D. Maino, N. Mandolesi, A. Mangilli,
+A. Marcos-Caballero, M. Maris, P. G. Martin, M. Martinelli, E. Martínez-González,
+S. Matarrese, N. Mauri, J. D. McEwen, P. R. Meinhold, A. Melchiorri, A. Mennella,
+M. Migliaccio, M. Millea, S. Mitra, M. A. Miville-Deschênes, D. Molinari, L. Montier,
+G. Morgante, A. Moss, P. Natoli, H. U. Nørgaard-Nielsen, L. Pagano, D. Paoletti, B. Partridge,
+G. Patanchon, H. V. Peiris, F. Perrotta, V. Pettorino, F. Piacentini, L. Polastri, G. Polenta,
+J. L. Puget, J. P. Rachen, M. Reinecke, M. Remazeilles, A. Renzi, G. Rocha, C. Rosset,
+G. Roudier, J. A. Rubiño-Martín, B. Ruiz-Granados, L. Salvati, M. Sandri, M. Savelainen,
+D. Scott, E. P. S. Shellard, C. Sirignano, G. Sirri, L. D. Spencer, R. Sunyaev, A. S. Suur-Uski,
+J. A. Tauber, D. Tavagnacco, M. Tenti, L. Toﬀolatti, M. Tomasi, T. Trombetti, L. Valenziano,
+J. Valiviita, B. Van Tent, L. Vibert, P. Vielva, F. Villa, N. Vittorio, B. D. Wandelt, I. K.
+Wehus, M. White, S. D. M. White, A. Zacchei, and A. Zonca,Planck 2018 results. VI.
+Cosmological parameters, arXiv:1807.06209 (7, 2018).
+[23] G. Aricò, R. E. Angulo, S. Contreras, L. Ondaro-Mallea, M. Pellejero-Ibañez, and M. Zennaro,
+The BACCO simulation project: a baryoniﬁcation emulator with neural networks, Monthly
+Notices of the Royal Astronomical Society506 (2021), no. 3 4070–4082.
+[24] O. Roustant, D. Ginsbourger, and Y. Deville,Dicekriging, diceoptim: Two r packages for the
+analysis of computer experiments by kriging-based metamodeling and optimization, Journal of
+Statistical Software51 (2012), no. 1 1–55.
+[25] M. A. Bouhlel, N. Bartoli, A. Otsmane, and J. Morlier,Improving kriging surrogates of
+high-dimensional design models by partial least squares dimension reduction, Structural and
+Multidisciplinary Optimization 53 (2016), no. 5 935–952.
+[26] H. Wold,Soft modelling by latent variables: the non-linear iterative partial least squares
+(nipals) approach, Journal of Applied Probability12 (1975), no. S1 117–142.
+[27] R. E. Angulo, M. Zennaro, S. Contreras, G. Aricò, M. Pellejero-Ibañez, and J. Stücker,The
+bacco simulation project: Exploiting the full power of large-scale structure for cosmology, arXiv
+e-prints (2020) arXiv–2004.
+– 28 –
+
+--- Page 30 ---
+[28] G. Parimbelli, G. Scelfo, S. Giri, A. Schneider, M. Archidiacono, S. Camera, and M. Viel,
+Mixed dark matter: matter power spectrum and halo mass function, arXiv preprint
+arXiv:2106.04588 (2021).
+[29] S. Maitra and J. Yan,Principle component analysis and partial least squares: Two dimension
+reduction techniques for regression, Applying Multivariate Statistical Models79 (2008) 79–90.
+[30] M. A. Bouhlel, J. T. Hwang, N. Bartoli, R. Lafage, J. Morlier, and J. R. R. A. Martins,A
+python surrogate modeling framework with derivatives, Advances in Engineering Software
+(2019) 102662.
+[31] R. Bellman,Dynamic programming. Dover Publications, Mineola, N.Y, 2003.
+[32] S. Theodoridis and K. Koutroumbas,Pattern Recognition, Fourth Edition. Academic Press,
+Inc., USA, 4th ed., 2008.
+[33] A. Schneider, A. Refregier, S. Grandis, D. Eckert, N. Stoira, T. Kacprzak, M. Knabenhans,
+J. Stadel, and R. Teyssier,Baryonic eﬀects for weak lensing. Part II. Combination with X-ray
+data and extended cosmologies, J. Cosmology Astropart. Phys.2020 (Apr., 2020) 020,
+[arXiv:1911.08494].
+[34] V. Springel, R. Pakmor, A. Pillepich, R. Weinberger, D. Nelson, L. Hernquist, M. Vogelsberger,
+S. Genel, P. Torrey, F. Marinacci, et al.,First results from the illustristng simulations: matter
+and galaxy clustering, Monthly Notices of the Royal Astronomical Society475 (2018), no. 1
+676–698.
+[35] R. Weinberger, V. Springel, L. Hernquist, A. Pillepich, F. Marinacci, R. Pakmor, D. Nelson,
+S. Genel, M. Vogelsberger, J. Naiman, et al.,Simulating galaxy formation with black hole
+driven thermal and kinetic feedback, Monthly Notices of the Royal Astronomical Society465
+(2016), no. 3 3291–3308.
+[36] A. Pillepich, V. Springel, D. Nelson, S. Genel, J. Naiman, R. Pakmor, L. Hernquist, P. Torrey,
+M. Vogelsberger, R. Weinberger, et al.,Simulating galaxy formation with the illustristng model,
+Monthly Notices of the Royal Astronomical Society473 (2018), no. 3 4077–4106.
+[37] A. Pillepich, D. Nelson, L. Hernquist, V. Springel, R. Pakmor, P. Torrey, R. Weinberger,
+S. Genel, J. P. Naiman, F. Marinacci, et al.,First results from the illustristng simulations: the
+stellar mass content of groups and clusters of galaxies, Monthly Notices of the Royal
+Astronomical Society475 (2018), no. 1 648–675.
+[38] N. E. Chisari, M. L. Richardson, J. Devriendt, Y. Dubois, A. Schneider, A. Le Brun, R. S.
+Beckmann, S. Peirani, A. Slyz, and C. Pichon,The impact of baryons on the matter power
+spectrum from the horizon-agn cosmological hydrodynamical simulation, Monthly Notices of the
+Royal Astronomical Society480 (2018), no. 3 3962–3977.
+[39] G. Hinshaw, D. Larson, E. Komatsu, D. N. Spergel, C. L. Bennett, J. Dunkley, M. R. Nolta,
+M. Halpern, R. S. Hill, N. Odegard, L. Page, K. M. Smith, J. L. Weiland, B. Gold, N. Jarosik,
+A. Kogut, M. Limon, S. S. Meyer, G. S. Tucker, E. Wollack, and E. L. Wright,Nine-year
+Wilkinson Microwave Anisotropy Probe (WMAP) Observations: Cosmological Parameter
+Results, The Astrophysical Journal Supplement Series208 (2013), no. 2 19.
+[40] D. N. Spergel, R. Bean, O. Doré, M. Nolta, C. Bennett, J. Dunkley, G. Hinshaw, N. e. Jarosik,
+E. Komatsu, L. Page, et al.,Three-year wilkinson microwave anisotropy probe (wmap)
+observations: implications for cosmology, The Astrophysical Journal Supplement Series170
+(2007), no. 2 377.
+[41] E. Komatsu, K. M. Smith, J. Dunkley, C. L. Bennett, B. Gold, G. Hinshaw, N. Jarosik,
+D. Larson, M. R. Nolta, L. Page, D. N. Spergel, M. Halpern, R. S. Hill, A. Kogut, M. Limon,
+S. S. Meyer, N. Odegard, G. S. Tucker, J. L. Weiland, E. Wollack, and E. L. Wright,
+Seven-year Wilkinson Microwave Anisotropy Probe (WMAP) Observations: Cosmological
+Interpretation, The Astrophysical Journal Supplement Series192 (2, 2011) 18.
+– 29 –
+
+--- Page 31 ---
+[42] Planck Collaboration, P. A. R. Ade, N. Aghanim, M. Arnaud, M. Ashdown, J. Aumont,
+C. Baccigalupi, A. J. Banday, R. B. Barreiro, J. G. Bartlett, N. Bartolo, E. Battaner,
+R. Battye, K. Benabed, A. Benoît, A. Benoit-Lévy, J. P. Bernard, M. Bersanelli, P. Bielewicz,
+J. J. Bock, A. Bonaldi, L. Bonavera, J. R. Bond, J. Borrill, F. R. Bouchet, F. Boulanger,
+M. Bucher, C. Burigana, R. C. Butler, E. Calabrese, J. F. Cardoso, A. Catalano, A. Challinor,
+A. Chamballu, R. R. Chary, H. C. Chiang, J. Chluba, P. R. Christensen, S. Church, D. L.
+Clements, S. Colombi, L. P. L. Colombo, C. Combet, A. Coulais, B. P. Crill, A. Curto,
+F. Cuttaia, L. Danese, R. D. Davies, R. J. Davis, P. de Bernardis, A. de Rosa, G. de Zotti,
+J. Delabrouille, F. X. Désert, E. Di Valentino, C. Dickinson, J. M. Diego, K. Dolag, H. Dole,
+S. Donzelli, O. Doré, M. Douspis, A. Ducout, J. Dunkley, X. Dupac, G. Efstathiou, F. Elsner,
+T. A. Enßlin, H. K. Eriksen, M. Farhang, J. Fergusson, F. Finelli, O. Forni, M. Frailis, A. A.
+Fraisse, E. Franceschi, A. Frejsel, S. Galeotta, S. Galli, K. Ganga, C. Gauthier, M. Gerbino,
+T. Ghosh, M. Giard, Y. Giraud-Héraud, E. Giusarma, E. Gjerløw, J. González-Nuevo, K. M.
+Górski, S. Gratton, A. Gregorio, A. Gruppuso, J. E. Gudmundsson, J. Hamann, F. K. Hansen,
+D. Hanson, D. L. Harrison, G. Helou, S. Henrot-Versillé, C. Hernández-Monteagudo,
+D. Herranz, S. R. Hildebrandt, E. Hivon, M. Hobson, W. A. Holmes, A. Hornstrup, W. Hovest,
+Z. Huang, K. M. Huﬀenberger, G. Hurier, A. H. Jaﬀe, T. R. Jaﬀe, W. C. Jones, M. Juvela,
+E. Keihänen, R. Keskitalo, T. S. Kisner, R. Kneissl, J. Knoche, L. Knox, M. Kunz,
+H. Kurki-Suonio, G. Lagache, A. Lähteenmäki, J. M. Lamarre, A. Lasenby, M. Lattanzi, C. R.
+Lawrence, J. P. Leahy, R. Leonardi, J. Lesgourgues, F. Levrier, A. Lewis, M. Liguori, P. B.
+Lilje, M. Linden-Vørnle, M. López-Caniego, P. M. Lubin, J. F. Macías-Pérez, G. Maggio,
+D. Maino, N. Mandolesi, A. Mangilli, A. Marchini, M. Maris, P. G. Martin, M. Martinelli,
+E. Martínez-González, S. Masi, S. Matarrese, P. McGehee, P. R. Meinhold, A. Melchiorri, J. B.
+Melin, L. Mendes, A. Mennella, M. Migliaccio, M. Millea, S. Mitra, M. A. Miville-Deschênes,
+A. Moneti, L. Montier, G. Morgante, D. Mortlock, A. Moss, D. Munshi, J. A. Murphy,
+P. Naselsky, F. Nati, P. Natoli, C. B. Netterﬁeld, H. U. Nørgaard-Nielsen, F. Noviello,
+D. Novikov, I. Novikov, C. A. Oxborrow, F. Paci, L. Pagano, F. Pajot, R. Paladini, D. Paoletti,
+B. Partridge, F. Pasian, G. Patanchon, T. J. Pearson, O. Perdereau, L. Perotto, F. Perrotta,
+V. Pettorino, F. Piacentini, M. Piat, E. Pierpaoli, D. Pietrobon, S. Plaszczynski,
+E. Pointecouteau, G. Polenta, L. Popa, G. W. Pratt, G. Prézeau, S. Prunet, J. L. Puget, J. P.
+Rachen, W. T. Reach, R. Rebolo, M. Reinecke, M. Remazeilles, C. Renault, A. Renzi,
+I. Ristorcelli, G. Rocha, C. Rosset, M. Rossetti, G. Roudier, B. Rouillé d’Orfeuil,
+M. Rowan-Robinson, J. A. Rubiño-Martín, B. Rusholme, N. Said, V. Salvatelli, L. Salvati,
+M. Sandri, D. Santos, M. Savelainen, G. Savini, D. Scott, M. D. Seiﬀert, P. Serra, E. P. S.
+Shellard, L. D. Spencer, M. Spinelli, V. Stolyarov, R. Stompor, R. Sudiwala, R. Sunyaev,
+D. Sutton, A. S. Suur-Uski, J. F. Sygnet, J. A. Tauber, L. Terenzi, L. Toﬀolatti, M. Tomasi,
+M. Tristram, T. Trombetti, M. Tucci, J. Tuovinen, M. Türler, G. Umana, L. Valenziano,
+J. Valiviita, F. Van Tent, P. Vielva, F. Villa, L. A. Wade, B. D. Wandelt, I. K. Wehus,
+M. White, S. D. M. White, A. Wilkinson, D. Yvon, A. Zacchei, and A. Zonca,Planck 2015
+results. XIII. Cosmological parameters, A&A 594 (Sept., 2016) A13, [arXiv:1502.01589].
+[43] V. Springel,E pur si muove: Galilean-invariant cosmological hydrodynamical simulations on a
+moving mesh, Monthly Notices of the Royal Astronomical Society401 (2010), no. 2 791–851.
+[44] R. Teyssier,Cosmological hydrodynamics with adaptive mesh reﬁnement. A new high resolution
+code called RAMSES, A&A 385 (Apr., 2002) 337–364, [astro-ph/0111367].
+[45] P. Virtanen, R. Gommers, T. E. Oliphant, M. Haberland, T. Reddy, D. Cournapeau,
+E. Burovski, P. Peterson, W. Weckesser, J. Bright, et al.,Scipy 1.0: fundamental algorithms for
+scientiﬁc computing in python, Nature methods17 (2020), no. 3 261–272.
+[46] R. L. Chambers, D. G. Steel, S. Wang, and A. Welsh,Maximum likelihood estimation for
+sample surveys. CRC Press, 2012.
+[47] R. J. Rossi,Mathematical statistics: an introduction to likelihood based inference. John Wiley
+& Sons, 2018.
+– 30 –
+
+--- Page 32 ---
+[48] G. Aricò, R. E. Angulo, C. Hernández-Monteagudo, S. Contreras, M. Zennaro,
+M. Pellejero-Ibañez, and Y. Rosas-Guevara,Modelling the large-scale mass density ﬁeld of the
+universe as a function of cosmology and baryonic physics, Monthly Notices of the Royal
+Astronomical Society495 (2020), no. 4 4800–4819.
+[49] M. P. van Daalen, I. G. McCarthy, and J. Schaye,Exploring the eﬀects of galaxy formation on
+matter clustering through a library of simulation power spectra, Monthly Notices of the Royal
+Astronomical Society491 (6, 2019) 2424–2446.
+[50] M. Vogelsberger, S. Genel, V. Springel, P. Torrey, D. Sijacki, D. Xu, G. Snyder, S. Bird,
+D. Nelson, and L. Hernquist,Properties of galaxies reproduced by a hydrodynamic simulation,
+Nature 509 (2014), no. 7499 177–182.
+[51] M. Vogelsberger, S. Genel, V. Springel, P. Torrey, D. Sijacki, D. Xu, G. Snyder, D. Nelson, and
+L. Hernquist,Introducing the illustris project: simulating the coevolution of dark and visible
+matter in the universe, Monthly Notices of the Royal Astronomical Society444 (2014), no. 2
+1518–1547.
+[52] S. Genel, M. Vogelsberger, V. Springel, D. Sijacki, D. Nelson, G. Snyder, V. Rodriguez-Gomez,
+P. Torrey, and L. Hernquist,Introducing the illustris project: the evolution of galaxy
+populations across cosmic time, Monthly Notices of the Royal Astronomical Society445 (2014),
+no. 1 175–200.
+[53] M. Haider, D. Steinhauser, M. Vogelsberger, S. Genel, V. Springel, P. Torrey, and L. Hernquist,
+Large-scale mass distribution in the illustris simulation, Monthly Notices of the Royal
+Astronomical Society457 (2016), no. 3 3024–3035.
+[54] A. Vikhlinin, A. Kravtsov, W. Forman, C. Jones, M. Markevitch, S. Murray, and
+L. Van Speybroeck,Chandra sample of nearby relaxed galaxy clusters: Mass, gas fraction, and
+mass-temperature relation, The Astrophysical Journal640 (2006), no. 2 691.
+[55] A. H. Gonzalez, S. Sivanandam, A. I. Zabludoﬀ, and D. Zaritsky,Galaxy cluster baryon
+fractions revisited, The Astrophysical Journal778 (2013), no. 1 14.
+[56] A. J. Sanderson, E. O’Sullivan, T. J. Ponman, A. H. Gonzalez, S. Sivanandam, A. I. Zabludoﬀ,
+and D. Zaritsky,The baryon budget on the galaxy group/cluster boundary, Monthly Notices of
+the Royal Astronomical Society429 (2013), no. 4 3288–3304.
+[57] L. Lovisari, T. Reiprich, and G. Schellenberger,Scaling properties of a complete x-ray selected
+galaxy group sample, Astronomy & Astrophysics573 (2015) A118.
+[58] M. Sereno and S. Ettori,Comparing masses in literature (comalit)–i. bias and scatter in weak
+lensing and x-ray mass estimates of clusters, Monthly Notices of the Royal Astronomical
+Society 450 (2015), no. 4 3633–3648.
+[59] D. Eckert, V. Ghirardini, S. Ettori, E. Rasia, V. Biﬃ, E. Pointecouteau, M. Rossetti,
+S. Molendi, F. Vazza, F. Gastaldello, et al.,Non-thermal pressure support in x-cop galaxy
+clusters, Astronomy & Astrophysics621 (2019) A40.
+[60] S. Ettori, V. Ghirardini, D. Eckert, E. Pointecouteau, F. Gastaldello, M. Sereno, M. Gaspari,
+S. Ghizzardi, M. Roncarelli, and M. Rossetti,Hydrostatic mass proﬁles in x-cop galaxy clusters,
+Astronomy & Astrophysics621 (2019) A39.
+[61] G. Hurier and R. E. Angulo,Measuring the hydrostatic mass bias in galaxy clusters by
+combining Sunyaev-Zel’dovich and CMB lensing data, Astronomy and Astrophysics610 (11,
+2017).
+[62] M. Douspis, L. Salvati, and N. Aghanim,On the tension between large scale structures and
+cosmic microwave background, in2nd World Summit: Exploring the Dark Side of the Universe,
+vol. 335, p. 037, SISSA Medialab, 2018.
+– 31 –
+
+--- Page 33 ---
+[63] L. Salvati, M. Douspis, and N. Aghanim,Constraints from thermal sunyaev-zel’dovich cluster
+counts and power spectrum combined with cmb, Astronomy & Astrophysics614 (2018) A13.
+[64] H. Akaike,A new look at the statistical model identiﬁcation, IEEE transactions on automatic
+control 19 (1974), no. 6 716–723.
+[65] K. P. Burnham and D. R. Anderson,A practical information-theoretic approach, Model
+selection and multimodel inference2 (2002).
+[66] G. Schwarz,Estimating the dimension of a model, The annals of statistics(1978) 461–464.
+[67] A. Schneider, S. K. Giri, S. Amodeo, and A. Refregier,Constraining baryonic feedback and
+cosmology with weak-lensing, x-ray, and kinematic sunyaev-zeldovich observations, arXiv
+preprint arXiv:2110.02228(2021).
+[68] I. Chiu, J. Mohr, M. McDonald, S. Bocquet, S. Desai, M. Klein, H. Israel, M. Ashby,
+A. Stanford, B. Benson, et al.,Baryon content in a sample of 91 galaxy clusters selected by the
+south pole telescope at 0.2< z< 1.25, Monthly Notices of the Royal Astronomical Society478
+(2018), no. 3 3072–3099.
+[69] J. Sanders, A. Fabian, H. Russell, and S. Walker,Hydrostatic chandra x-ray analysis of
+spt-selected galaxy clusters–i. evolution of proﬁles and core properties, Monthly Notices of the
+Royal Astronomical Society474 (2018), no. 1 1065–1098.
+[70] D. Foreman-Mackey, D. W. Hogg, D. Lang, and J. Goodman,emcee: the mcmc hammer,
+Publications of the Astronomical Society of the Paciﬁc125 (2013), no. 925 306.
+[71] S. Van Der Walt, S. C. Colbert, and G. Varoquaux,The numpy array: a structure for eﬃcient
+numerical computation, Computing in science & engineering13 (2011), no. 2 22–30.
+[72] J. D. Hunter,Matplotlib: A 2d graphics environment, Computing in science & engineering9
+(2007), no. 03 90–95.
+[73] D. Foreman-Mackey,corner.py: Scatterplot matrices in python, The Journal of Open Source
+Software 1 (jun, 2016) 24.
+[74] P. Stoica and Y. Selen,Model-order selection: a review of information criterion rules, IEEE
+Signal Processing Magazine21 (2004), no. 4 36–47.
+– 32 –

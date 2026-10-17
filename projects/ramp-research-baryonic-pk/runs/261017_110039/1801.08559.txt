@@ -1,0 +1,1980 @@
+Title: The impact of baryons on the matter power spectrum from the Horizon-AGN cosmological hydrodynamical simulation
+Authors: Nora Elisa Chisari, Mark L. A. Richardson, Julien Devriendt, Yohan Dubois, Aurel Schneider, Amandine M. C. Le Brun, Ricarda S. Beckmann, Sebastien Peirani, Adrianne Slyz, Christophe Pichon
+Year: 2018
+arXiv ID: 1801.08559
+
+============================================================
+
+--- Page 1 ---
+arXiv:1801.08559v2  [astro-ph.CO]  24 Sep 2018
+Mon. Not. R. Astron. Soc. 000, 000–000 (0000) Printed September 26, 2018 (MN L ATEX style ﬁle v2.2)
+The impact of baryons on the matter power spectrum from
+the Horizon-AGN cosmological hydrodynamical simulation
+N. E. Chisari 1⋆, M. L. A. Richardson 1,2, J. Devriendt 1, Y. Dubois 3, A. Schneider 4,
+A. M. C. Le Brun 5,6, R. S. Beckmann 1,3, S. Peirani 3,7, A. Slyz 1, C. Pichon 3,8
+1Department of Physics, University of Oxford, Keble Road, Ox ford, OX1 3RH,UK.
+2Department of Astrophysics, American Museum of Natural His tory, 79th Street at Central Park West, New York, NY 10024, US A.
+3Institut d’Astrophysique de Paris, CNRS & UPMC, UMR 7095, 98 bis Boulevard Arago, 75014, Paris, France.
+4Institute for Particle Physics and Astrophysics, ETH Zuric h, Wolfgang-Pauli-Strasse 27, CH-8093 Zurich, Switzerlan d.
+5IRFU, CEA, Universit´ e Paris-Saclay, F-91191 Gif-sur-Yve tte, France.
+6Universit´ e Paris Diderot, AIM, Sorbonne Paris Cit´ e, CEA, CNRS, F-91191 Gif-sur-Yvette, France.
+7Universit´ e Cˆ ote d’Azur, Observatoire de la Cˆ ote d’Azur,CNRS, Laboratoire Lagrange, France.
+8Korea Institute of Advanced studies (KIAS), 85 Hoegiro, Don gdaemun-gu, Seoul, 02455, Republic of Korea.
+Accepted 2018 July 30. Received 2018 July 26; in original for m 2018 January 25.
+ABSTRACT
+Accurate cosmology from upcoming weak lensing surveys relies on kn owledge of
+the total matter power spectrum at percent level at scales k < 10 h/Mpc, for which
+modelling the impact of baryonic physics is crucial. We compare measur ements of the
+total matter power spectrum from the Horizon cosmological hydr odynamical simu-
+lations: a dark matter-only run, one with full baryonic physics, and another lacking
+Active Galactic Nuclei (AGN) feedback. Baryons cause a suppress ion of power at
+k ≃ 10 h/Mpc of < 15% at z = 0, and an enhancement of a factor of a few at smaller
+scales due to the more eﬃcient cooling and star formation. The resu lts are sensitive
+to the presence of the highest mass haloes in the simulation and the d istribution of
+dark matter is also impacted up to a few percent. The redshift evolu tion of the eﬀect
+is non-monotonic throughout z = 0 − 5 due to an interplay between AGN feedback
+and gas pressure, and the growth of structure. We investigate t he eﬀectiveness of an
+analytic “baryonic correction model” in describing our results. We re quire a diﬀerent
+redshift evolution and propose an alternative ﬁtting function with 4 free parameters
+that reproduces our results within 5%. Compared to other simulatio ns, we ﬁnd the
+impact of baryonic processes on the total matter power spectru m to be smaller at
+z = 0. Correspondingly, our results suggest that AGN feedback is no t strong enough
+in the simulation. Total matter power spectra from the Horizon simu lations are made
+publicly available at https://www.horizon-simulation.org/catalogues.html.
+Key words: cosmology: theory — gravitational lensing: weak – large-scale stru cture
+of Universe — methods: numerical
+1 INTRODUCTION
+The next generation of optical galaxy surveys will rely on
+diﬀerent proxies for the distribution of matter in the Uni-
+verse to constrain its components and their evolution. One
+such observable is the weak gravitational lensing of galax-
+⋆ elisa.chisari@physics.ox.ac.uk
+ies, percent-level distortions of their ellipticities whi ch are
+caused by bending of the path of distant photons due to
+gravity, ﬁrst detected by Tyson et al. (1990). These dis-
+tortions can be used to map the distribution of matter
+in the Universe through cosmic time to set constraints on
+the evolution of dark energy, theories of gravity and the
+nature of dark matter, among other applications. For re-
+views of weak lensing theory, methods and applications,
+© 0000 RAS
+
+--- Page 2 ---
+2 Chisari et al.
+see Bartelmann & Schneider (2001); Weinberg et al. (2013);
+Kilbinger (2015).
+Previous and ongoing weak lensing surveys, such as the
+Sloan Digital Sky Survey ( Huﬀ et al. 2014 ), the Canada-
+France-Hawaii Telescope Lensing Survey ( Heymans et al.
+2012), the Kilo Degree Survey ( de Jong et al. 2013 ), the
+Deep Lens Survey ( Wittman et al. 2002 ) and the Dark En-
+ergy Survey ( Troxel et al. 2017 ), among others, have demon-
+strated the feasibility and potential of this method for pre ci-
+sion cosmology. Future experiments with better constraini ng
+power are planned or under construction, such as the Large
+Synoptic Survey Telescope ( Ivezic et al. 2008 , LSST), Eu-
+clid (Laureijs et al. 2011 ) and WFIRST (Green et al. 2011 ).
+To successfully extract information from weak gravitation al
+lensing measurements from these next generation of galaxy
+surveys, accurate prior knowledge on the distribution of
+matter is required. This requirement is typically phrased
+in terms of knowledge of the total matter power spectrum ,
+P (k), which quantiﬁes the amount of statistical power in a
+given Fourier mode of the matter overdensity ﬁeld. For the
+next generation of surveys, the total matter power spectrum
+needs to be known to at least within 1% accuracy up to
+k = 10 h/Mpc to achieve the desired accuracy in cosmologi-
+cal parameter constraints ( Huterer & Takada 2005 ; Laureijs
+2009; Hearin et al. 2012 ).
+In the past, it was suﬃcient to model the total matter
+power spectrum via analytical techniques (e.g. Howlett et al.
+2012; Takahashi et al. 2012 ) or using dark matter-only
+(DMO) simulations (e.g. Heitmann et al. 2014 ). Recently,
+van Daalen et al. (2011) demonstrated that baryonic ef-
+fects can have a signiﬁcant impact on the distribution of
+matter, which needs to be incorporated into weak lens-
+ing analysis pipelines. The main eﬀect to model is the
+suppression of power at scales of a few Mpc associated
+with gas ejected by Active Galactic Nuclei (AGN). Cosmo-
+logical hydrodynamical simulations can provide these pre-
+dictions, and results from several state-of-the-art simul a-
+tions are available in the literature ( van Daalen et al. 2011 ;
+Vogelsberger et al. 2014 ; Hellwing et al. 2016 ; Tenneti et al.
+2015; Springel et al. 2017 ). Such simulations diﬀer in the nu-
+merical methods and the implementation of baryonic (‘sub-
+grid’) processes, which can in turn result in varying predic -
+tions for the total matter power spectrum at small scales,
+where these physical processes are relevant.
+Eﬀective analytical models to account for the impact
+of baryons on the total distribution of matter have also
+been devised. Some of these consist of modiﬁcations of the
+‘halo model’ (Seljak 2000; Semboloni et al. 2013 ; Fedeli 2014;
+Mead et al. 2015 ), others of eﬀective parameterisations of
+the transfer of power produced by the presence of baryons
+based on observational constraints and/or simulation resu lts
+(Mohammed & Seljak 2014 ; Schneider & Teyssier 2015 ).
+Several techniques to mitigate the presence of baryons have
+been proposed: marginalisation over the parameters of ef-
+fective models ( Semboloni et al. 2011 ) or over the principal
+components in linear combinations of observables that are
+most strongly aﬀected by baryonic eﬀects ( Eiﬂer et al. 2015 ;
+Kitching et al. 2016 ). The success of these techniques de-
+pends on the ﬂexibility of the models to capture the true un-
+derlying matter distribution ( Mohammed & Gnedin 2017 ).
+In this work, we present results on the impact of baryons
+on the distribution of matter from the Horizon set of sim-
+ulations, a state-of-the-art set of simulations with full i m-
+plementation of baryonic physics ( Dubois et al. 2014 , 2016).
+The Horizon set comprises three simulations with the same
+volume and initial conditions. The main run includes all
+baryonic physics processes, a second run lacks AGN feed-
+back and the third run is a DMO box for comparison. Hori-
+zon diﬀers from other cosmological hydrodynamic simula-
+tions in several aspects. The numerical method implemented
+is based on the “adaptive-mesh-reﬁnement” (AMR) tech-
+nique and the only requirement on sub-grid parameters is
+such that the simulation matches the observed stellar mass-
+black hole mass relation and the black hole mass-velocity
+dispersion ( MBH − σ) relation at z = 0. The full physics
+run, Horizon-AGN, has been shown to be in good agree-
+ment with observations of the star formation history of the
+Universe, and colours and luminosity functions of galaxies
+across a wide range of redshifts, as shown by Kaviraj et al.
+(2017). These authors nevertheless identiﬁed an excess of
+low-mass red galaxies at low redshift, which was attributed
+to supernovae feedback being too ineﬃcient in preventing
+the formation of these galaxies.
+We quantify the impact of baryons and the role of AGN
+feedback on the distribution of matter across the range of
+scales and redshifts of interest to weak gravitational lens ing
+surveys. We compare our results to those from other groups
+and we test the applicability of the baryonic correction (BC )
+model of Schneider & Teyssier (2015) using our results. We
+make tables of the total matter power spectrum from the
+Horizon set publicly available 1.
+This manuscript is organised as follows. Section 2 de-
+scribes the set of cosmological simulations used in this wor k.
+In section 3, we describe the method for computing the mat-
+ter power spectra. Section 4 describes the baryonic correc-
+tion model of Schneider & Teyssier (2015). We present our
+results in section 5, followed by a discussion and conclusions
+in sections 6 and 7, respectively. Unless otherwise noted,
+we adopt for this work a set of cosmological parameters
+consistent with those derived by the Wilkinson Microwave
+Anisotropy Probe team ( WMAP7, Komatsu et al. 2011 ), in
+accordance with the set-up of the hydrodynamical simula-
+tions, described in detail in the following section.
+2 THE HORIZON SIMULATION SET
+The Horizon set of simulations comprises three cosmolog-
+ical simulation boxes of L = 100 h−1 Mpc on each side
+ran using the AMR code ramses (Teyssier 2002): Horizon-
+AGN (with full baryonic physics implementation), Horizon-
+noAGN (solely lacking AGN feedback in comparison to
+Horizon-AGN) and Horizon-DM (a DMO run). The three
+1 https://www.horizon-simulation.org/catalogues.html
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 3 ---
+Baryons & the matter power spectrum 3
+simulations share the same initial conditions and cosmolog -
+ical parameters. For this work, this is crucial, as we are par -
+ticularly interested in the comparison between the three si m-
+ulations. All of the runs adopt the cosmological parameters
+obtained by WMAP7: a total matter density of Ω m = 0.272,
+a baryon density of Ω b = 0 .045, a dark energy density of
+Ω Λ = 0 .728, an amplitude of the matter power spectrum
+determined by σ8 = 0 .81, a Hubble constant of H0 = 70 .4
+km/s Mpc −1, and the index of the primordial power spec-
+trum given by ns = 0.967.
+There are 1024 3 dark matter (DM) particles in each
+box. The dark matter mass resolution is MDM,res = 8 .3 ×
+107 M⊙ for the baryonic runs and MDM,res = 9.9×107 M⊙ for
+Horizon-DM. This diﬀerence in the mass of the DM particles
+between the DMO run and the baryonic run is due to keeping
+Ω m constant between simulations.
+Details on the prescription for star formation, gas cool-
+ing and the reﬁnement scheme are available in our previous
+work ( Dubois et al. 2014 ). For the purposes of this work,
+it suﬃces to remind the reader that stellar feedback is im-
+plemented in both baryonic runs of the Horizon suite and
+that this mode of feedback is not expected to aﬀect the
+scales probed in this work. On the other hand, gas cool-
+ing is important for determining the distribution of mat-
+ter at small scales. In the Horizon runs, it is implemented
+by means of hydrogen and helium cooling down to a tem-
+perature of 10 4 K including the contribution from metals
+(Sutherland & Dopita 1993 ). The metallicity of the gas is
+modelled as a passive variable, changing according to the
+injection of gas ejecta from stellar winds and supernovae ex -
+plosions. In what follows, we focus here on describing the
+implementation of AGN feedback in detail, since our results
+and the comparison to other simulation suites are sensitive
+to this sub-grid model in particular.
+Black holes are seeded in Horizon-AGN with a seed mass
+of 10 5 M⊙ whenever the gas cell density exceeds the hy-
+drogen number density threshold n > n 0 where n0 = 0 .1
+H/cm3. Black holes are not allowed to form within 50 kpc
+of an existing black hole ( Dubois et al. 2010 ), and all black
+hole formation stops at z = 1.5 ( Volonteri et al. 2016b ).
+Once formed, black holes accrete using a Bondi-Hoyle-
+Lyttleton accretion prescription. The rate of accretion is
+given by ˙MBH = 4 παG2M 2
+BH ¯ρ/(¯c2
+s + ¯u2)3/2, where MBH
+is the black hole mass, ¯ ρ is the local average gas density,
+¯cs is the local average sound speed, ¯ u is the local average
+gas velocity relative to the black hole velocity, and α is a
+dimensionless boost factor. This boost factor allows us to
+compensate for our inability to capture the colder, denser
+regions of the interstellar medium due to lack of resolution .
+It is given by ( Booth & Schaye 2009 )
+α =
+{
+(n/n0)2, if n > n 0
+1, otherwise. (1)
+The eﬀective accretion rate onto black holes is not al-
+lowed to exceed the Eddington accretion rate: ˙MEdd =
+4πGMBHmp/(ǫrσTc), where σT is the Thompson cross-
+section, c is the speed of light, mp is the proton mass,
+and ǫr is the radiative eﬃciency, assumed to be equal to
+ǫr = 0.1 for the Shakura & Sunyaev (1973) accretion onto a
+Schwarzschild black hole.
+Thermal and kinetic feedback from AGN are im-
+plemented in Horizon-AGN as proposed by Dubois et al.
+(2012). At low accretion rates, feedback is in the form of
+bipolar outﬂows (“jets”) with wind velocities of 10 4 km/s
+(Omma et al. 2004 ), aligned with the spin of the black
+hole. At high accretion rates, AGN feedback is thermal,
+with energy deposited isotropically into a sphere of radius
+2∆ xmin around the black hole. For a given Eddington ratio
+χ = ˙MBH/ ˙MEdd, the energy is deposited into the two modes
+as follows:
+˙EAGN =
+{
+0.15ǫr ˙MBHc2, if χ > 0.01
+ǫr ˙MBHc2, if χ ⩽ 0.01 (2)
+with a ﬁxed radiative eﬃciency ǫr = 0 .1. Due to the evo-
+lution of black hole accretion rates with cosmic time, the
+vast majority of AGN are in isotropic (“quasar”) mode
+at z > 2, while most are in jet mode at lower redshift
+(Beckmann et al. 2017 ). The minimum heating temperature
+adopted for Horizon-AGN is eﬀectively null, allowing for
+continuous AGN feedback in the quasar mode. The Horizon-
+noAGN (Peirani et al. 2017 ) simulation lacks AGN feedback
+altogether, which allows us to isolate the impact of this par -
+ticular mechanism on the total distribution of matter.
+3 POWER SPECTRA COMPUTATION
+The distribution of matter is quantiﬁed through its power
+spectrum, P (k). If the density ﬁeld in the simulation at a
+given redshift is given by ρ(x, z), we can characterise the
+inhomogeneities in this ﬁeld via δ(x, z) = ρ(x, z)/¯ρ(z) − 1,
+where ¯ρ(z) is the mean density of the universe at a certain
+redshift. The Fourier transform of δ(x, z) is labelled ˜δ(k, z).
+The statistical properties of these inhomogeneities are de -
+scribed via the power spectrum,
+⟨˜δ(k, z)˜δ(k′, z)⟩ = (2π)3P (k)δ3
+D(k − k′), (3)
+with δ3
+D, the Dirac delta function. As the power spectrum has
+units of volume, we also work in terms of the dimensionless
+quantity ∆ 2, which is related to the power spectrum by
+∆ 2(k) ≡ k3
+2π2 P (k). (4)
+Nevertheless, we are most often interested in ratios betwee n
+power spectra, which are insensitive to whether we are work-
+ing with P (k) or ∆ 2(k).
+The computation of the total matter power spectrum re-
+quires the mapping of each matter component onto a three-
+dimensional grid. In the case of DM, stars, and black holes,
+the mapping involves the application of a kernel to smoothly
+distribute the mass of each particle over neighbouring cell s.
+In the case of the gas, the simulation outputs are given in
+terms of an AMR grid, with varying spatial resolution. To
+account for this, we convert the gas density ﬁeld into a dis-
+tribution of eﬀective particles. This is done by looping ove r
+all cells in the AMR grid and placing a particle with the to-
+tal mass of the cells in the centre-of-mass of the group. As a
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 4 ---
+4 Chisari et al.
+result, regions that are more reﬁned will have a higher num-
+ber of particles per unit volume. The calculation of the powe r
+spectrum described below does not explicitly correct for th is
+mapping from grid into eﬀective particles. However, to en-
+sure no bias is introduced by performing this step, we also
+consider the case where we ignore the grid reﬁnement above
+some cut-oﬀ scale. The result is that our ﬁducial method
+guarantees better than 1% convergence of the total matter
+power spectrum over our desired range of wave-vectors when
+compared to the case when sub-structures are averaged at
+scales of 12 h−1 kpc and above.
+For each matter component (eﬀective gas particles, DM
+particles, star and black hole particles) we map their mass
+to a uniform grid 1024 cells across a side using a piecewise
+quadratic spline ( Hockney & Eastwood 1981 ), whose Fourier
+transform is
+W (k) =
+[ sin(πk/2kN)
+πk/2kN
+]p
+, (5)
+where kN is the Nyquist wave number and we adopt
+p = 4 to reduce the amount of aliasing and shot noise
+(Lipatov 2002 ; Jing 2005 ; Cui et al. 2008 ). Each grid is
+Fourier transformed using the FOUR3M routine presented in
+Thacker & Couchman (2006), which is then convolved with
+a Green’s function to minimise errors from the mass map-
+ping (Hockney & Eastwood 1981 ), resulting in a Fourier grid
+for each component. Additionally, by summing these Fourier
+grids we construct a total matter grid. The power spectrum
+of any individual matter component or of the total matter is
+then the mean of the squares of the corresponding grid values
+within ﬁxed k bins. We have veriﬁed that adopting a 2048 3
+grid does not impact our results on the total matter power
+spectrum. For calculating cross correlations we ﬁrst multi ply
+the corresponding components’ Fourier grids together, and
+then take the mean of the resulting grid values within ﬁxed
+k bins.
+The estimation of the auto-power spectra is aﬀected by
+the discreteness of the tracers. In other words, there is an
+additive component to the power spectrum given by the con-
+tribution of “shot noise”,
+Pshot = V
+Neﬀ
+, (6)
+where V is the simulation volume. Neﬀ is the eﬀective num-
+ber of particles, which accounts for their diﬀerence in mass :
+Neﬀ = ( ∑ N
+i mi)2/(∑ N
+i m2
+i ), and where N is the number
+of particles and mi, their individual masses ( Peebles 1993 ).
+In this analysis, we present total matter power spectra af-
+ter subtracting the shot noise component. We have veriﬁed,
+however, that this subtraction does not modify our results
+given that we are usually restricted to scales where this com -
+ponent is sub-dominant.
+Finally, the outputs of the diﬀerent Horizon simulation
+runs that we compare in this work can diﬀer slightly in
+the value of the scale factor. We account for these diﬀer-
+ences by performing a linear re-scaling based on the pre-
+dicted linear growth function for our adopted cosmology,
+D(z). In linear theory, the power spectrum at a given z
+can be obtained by re-scaling the z = 0 power spectrum:
+P (k, z) = D2(z)P (k, 0). There are limitations associated
+with this re-scaling, which can lead to residual diﬀerences in
+the matter power spectrum at large scales. For a detailed dis -
+cussion of this eﬀect, see Appendix A. Cosmic variance can
+also have an impact in our predictions, which is discussed in
+Section 5.4. Appendix B presents several convergence tests
+of our results.
+4 BAR YONIC CORRECTION MODEL
+The BC model developed by Schneider & Teyssier (2015)
+was proposed to account for the impact of baryons on the
+total matter power spectrum by modifying the density ﬁeld
+of dark-matter-only N -body simulations to mimic the eﬀects
+of baryons from any underlying adopted feedback recipe. We
+summarise the BC model here and compare Horizon results
+to this model in the following section.
+The main assumption behind the BC model is that
+haloes can be decomposed into four constituents: hot gas
+in hydrostatic equilibrium, ejected gas from feedback pro-
+cesses, stars from a central galaxy, and adiabatically re-
+laxed dark matter. These four components alter the total
+distribution of matter, compared to that from dark matter-
+only simulations, by generating an excess at small scales
+due to eﬃcient cooling of the gas leading to star formation,
+and a suppression at intermediate scales which depends on
+the mass fraction of gas ejected by the AGN and its cor-
+responding ejection radius. The components of the model
+are constrained by a combination of low resolution hydro-
+dynamical simulations and observations. In particular, on e
+wishes to have accurate models for the abundance fraction
+of each matter component, and its spatial proﬁle. For ex-
+ample, Schneider & Teyssier (2015) adopt a parametrisa-
+tion of the fraction of stars in a central galaxy proposed by
+Kravtsov et al. (2014), and a stellar proﬁle following results
+from simulations of galaxy clusters by Mohammed et al.
+(2014).
+Putting together the diﬀerent model components, and
+studying the change in the predictions for a wide range of pa-
+rameter space, Schneider & Teyssier (2015) suggested that
+an eﬀective parametrisation of the impact of baryons on the
+total matter power spectrum would require capturing the
+amount and scale of suppression driven by gas ejection and
+the enhancement of the small-scale power spectrum due to
+the stellar component . As a consequence, the authors pro-
+posed a simpliﬁed parametrisation of baryonic eﬀects on the
+matter power spectrum in the form of the product of two
+functions which represent these two eﬀects:
+F (k, z) ≡ PBCM
+PDMO
+= G(k|Mc, ηb, z)S(k|ks), (7)
+where PBCM is the total matter power spectrum (“BCM”
+stands for the BC model) and PDMO is the matter power
+spectrum for a dark-matter-only simulation with the same
+cosmology. G is a function that captures the eﬀect of AGN
+on the distribution of matter, through the ejection of gas,
+and S represents the impact of star formation and baryonic
+cooling at small scales.
+The suppression due to gas ejected by AGN is
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 5 ---
+Baryons & the matter power spectrum 5
+parametrised with the following function
+G(k|Mc, ηb, z) = B(z)
+1 + [k/kg(z)]3 + [1 − B(z)], (8)
+where B(z) parametrises the redshift dependence of the
+power suppression due to AGN feedback, with a character-
+istic redshift zc = 2.3,
+B(z) = B0
+[
+1 +
+( z
+zc
+) 2.5
+] −1
+, (9)
+and an amplitude B0 related to the mass of the galaxy clus-
+ters typically responsible for the suppression, Mc,
+B0 = 0.105 log10
+( Mc
+M⊙/h
+)
+− 1.27. (10)
+The function kg(z) sets the typical scale of the gas ejection,
+kg(z) = 0.7[1 − B(z)]4η−1.6
+b
+h/Mpc , (11)
+parametrised by ηb, a parameter which relates the virial ra-
+dius of the cluster to the distance at which the gas is ejected .
+The stellar proﬁle enhances the total matter power spec-
+trum below scales of ks = 55 h Mpc−1 with a quadratic poly-
+nomial
+S(k|ks) = 1 + ( k/ks)2. (12)
+The redshift dependence of the BC model has not been
+explored in detail. Schneider & Teyssier (2015) assumed that
+the model parameters were redshift independent in their
+original study, and discussed the predictions of the BC mode l
+in the range z = 0 − 2 under this assumption. By compar-
+ing the BC model to the Horizon predictions for the impact
+of baryons on the total matter power spectrum at diﬀerent
+redshifts, we speciﬁcally test the validity of this assumpt ion
+in the following sections.
+5 RESULTS
+5.1 The impact of AGN feedback
+AGN feedback can have diﬀerent consequences on the distri-
+bution of matter at small scales. It can heat the gas around a
+halo, preventing it from cooling, being accreted, and formi ng
+stars, or it can directly expel gas from a halo. We isolate the
+impact of AGN feedback on large-scale structures by com-
+paring the total matter power spectrum of the Horizon-AGN
+and the Horizon-noAGN simulation runs.
+Figure 1 shows the ratio between the total matter power
+spectrum in Horizon-AGN and Horizon-noAGN at several
+redshifts, in the range from z = 4 .9 to z = 0. (For a dis-
+cussion on the numerical convergence of our results, see ap-
+pendix B.) As can be seen in Figure 1, AGN feedback sup-
+presses power at small scales ( k /greaterorequalslant10 h/Mpc) as early as
+z = 4.9, and the magnitude of this suppression increases to-
+wards low redshift. At intermediate scales ( k ∼ 2 h/Mpc),
+the AGN feedback suppression diminishes slightly from z =
+1 to z = 0.
+Drawing on our previous analysis of the impact
+10−1 100 101
+k [h/Mpc]
+0.5
+0.6
+0.7
+0.8
+0.9
+1.0
+1.1Δ2
+AGN /Δ2
+noAGN
+z = 0
+z = 0.23
+z = 0.5
+z = 1
+z = 2
+z = 3
+z = 3.3
+z = 3.8
+z = 4.3
+z = 4.9
+Figure 1. The impact of AGN feedback in the total matter power
+spectrum from the Horizon set across cosmic time, 0 ⩽ z < 6.
+Darker colours correspond to lower redshifts. At intermedi ate
+scales ( k ∼ 2 h/ Mpc), the AGN feedback suppression diminishes
+slightly from z = 1 to z = 0, an eﬀect that we attribute to AGN
+feedback being insuﬃcient to expel gas from the growing pote ntial
+well of the most massive haloes.
+of AGN feedback on the quenching of star formation
+(Beckmann et al. 2017 ), these results can be interpreted as
+follows. AGN feedback eﬀectively regulates baryonic con-
+tent at small scales, whether within smaller haloes or in the
+centre of larger ones, by heating the gas, redistributing it
+and preventing star formation. This process remains active
+throughout cosmic history. At redshifts z /greaterorequalslant1, AGN in mas-
+sive haloes drive large outﬂows and reduce inﬂows into their
+host galaxies, decreasing the power spectrum. In this red-
+shift range, the suppression increases for any given k as the
+black holes powering AGN continue to grow. Around z = 1,
+several eﬀects come into play that reduce the impact of AGN
+at a scale of a few h/Mpc. Volonteri et al. (2016a) showed
+that the biggest black holes at this redshift are accreting
+less eﬃciently. The combination of lower accretion rate and
+the transition to the jet regime at low redshift results in
+and overall decrease of feedback energy. As a consequence,
+gas accretion rates can increase at these redshifts. A poten -
+tial interpretation of these results is that previously eje cted
+gas can be re-accreted by haloes as they continue to grow.
+Beckmann et al. (2017) have indeed shown an increase of
+inﬂow rates for massive galaxies at low redshifts in Horizon -
+AGN compared to Horizon-noAGN. As a result, gas would
+no longer be ejected to large scales and previously ejected
+gas could be re-accreted, so the suppression caused by AGN
+around k ∼ 2 h/Mpc decreases. This intepretation is sup-
+ported by the non-monotonic trend in the fraction of gas
+within the virial radius of massive haloes, which decreases
+towards z = 1, and grows thereon. Nevertheless, we note
+that it is also possible to obtain a decrease in gas fraction i f
+the rate at which it is converted into stars increases. Mas-
+sive haloes tend to dominate the matter power spectrum at
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 6 ---
+6 Chisari et al.
+10−1 100 101
+k [h/Mpc]
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4Δ2
+noAGN/Δ2
+DM
+z = 0
+z = 0.23
+z = 0.5
+z = 1
+z = 2
+z = 3
+z = 3.3
+z = 3.8
+z = 4.3
+z = 4.9
+Figure 2. The fractional impact of baryons on the total matter
+power spectrum when comparing the Horizon-noAGN run (lack-
+ing AGN feedback) to the Horizon-DM run.
+k ∼ 2 h/Mpc, as shown by van Daalen & Schaye (2015). The
+power spectrum remains suppressed at small scales as feed-
+back continues to aﬀect the centre of large haloes and the
+environment of smaller ones.
+Figure 1 displays a large-scale excess of power below
+1% for several redshifts. This is intriguing because given t he
+same initial conditions, ﬁnite volume eﬀects are expected t o
+cancel at large scales. In brief, the simulation outputs we
+compare for the curves shown in Figure 1 diﬀer slightly in
+their scale factor ( < 0.1%) and we have attempted to correct
+for the large-scale evolution of the power spectrum in the bo x
+by re-scaling it using the linear growth factor. However, ev en
+after this correction, our results are subject to 1% biases o f
+the matter power spectrum. These eﬀects are sub-dominant
+compared to the impact of baryonic processes in which we
+are interested for this work. We have performed an extensive
+investigation of the source of this excess which we describe
+in detail in Appendix A.
+5.2 The impact of baryons
+In this section, we compare the total matter power spec-
+tra obtained from the baryonic simulation runs to that from
+the Horizon-DM run. Our results are shown in Figure 2 for
+Horizon-noAGN and Figure 3 for Horizon-AGN. The frac-
+tional impact of the eﬀect of including baryons amply ex-
+ceeds the 1% requirement on the knowledge of this observ-
+able at k = 10 h/Mpc for future missions.
+In Figure 2, we ﬁnd that the impact of baryons on the
+total matter power spectrum at high redshift is to produce a
+suppression of power at scales above a few h/Mpc, accompa-
+nied by an enhancement at the smallest scales probed. This
+is not a consequence of AGN feedback, since this feedback
+mechanism is not present in Horizon-noAGN. The cause of
+the small scale enhancement is the additional cooling pro-
+duced by the presence of baryons, which leads to an adia-
+batic contraction of the matter distribution at these scale s
+(Blumenthal et al. 1986 ). Compared to Horizon-DM, the
+Horizon-noAGN run also shows a suppression of power of
+approximately 10% at scales of k ≃ 10 h/Mpc at z = 4 .9.
+This is a consequence of the delayed collapse of DM haloes
+given the pressure contributed by the presence of baryons.
+Feedback processes do not have an impact on results at this
+redshift, neither from AGN nor from supernovae. 2 As red-
+shift decreases, the suppression tends to be removed by the
+overall growth of structure.
+Figure 3 shows the comparison between the Horizon-
+AGN run, including the impact of AGN feedback, and the
+Horizon-DM run, and is the main result of this work. The
+results at z = 4 .9 are very similar to those shown in the
+previous ﬁgure. This is a consequence of the small impact
+of AGN feedback at this redshift, which was evidenced in
+Figure 1 in the previous sub-section.
+The combined eﬀect of the clustering of matter with the
+impact of AGN on its distribution leads to a non-monotonic
+redshift evolution of the ratios of power spectra between si m-
+ulation runs. From z = 4 .9 to z = 3, the eﬀect of the AGN
+is not strong enough to compensate for adiabatic contrac-
+tion. From z = 3 to z = 1, we ﬁnd enhanced suppression
+due to the impact of AGN. From z = 1 to z = 0, the sup-
+pression is roughly constant but is shifted to smaller scale s.
+As mentioned in the previous section, this behaviour is a
+consequence of haloes becoming too massive for AGN feed-
+back to eﬃciently eject (or prevent the accretion of) mate-
+rial. As a result, clustering increases at intermediate sca les
+of k ∼ 2 h/Mpc. In Section 5.4, we demonstrate that this
+speciﬁc behaviour is determined by the largest mass haloes
+formed in the simulation box.
+5.3 Dark matter response to baryons
+Do DMO simulations capture the dark matter component of
+the hydrodynamical simulations correctly? In other words,
+do baryons signiﬁcantly aﬀect the distribution of dark mat-
+ter? We answer this question in Figure 4, where we show the
+ratio between the dark matter power spectrum in Horizon-
+AGN and Horizon-DM in the range 0 ⩽ z < 5. For compar-
+ison, we also show the ratio between Horizon-noAGN and
+Horizon-DM at selected redshifts only.
+At z = 4 .9 (right panel of Figure 4), the DM compo-
+nent in both Horizon-AGN and Horizon-noAGN runs has
+similar behaviour, as the AGN have not yet had time to
+cause a signiﬁcant eﬀect on the distribution of matter. Both
+curves show a ∼ 5% suppression at high redshifts, which
+we attribute to the delayed collapse of haloes in the pres-
+ence of baryons. As we go towards lower redshift and up to
+z = 2, this suppression is reduced for both Horizon-AGN and
+2 W e have veriﬁed this by running two unreﬁned simulations,
+a pure dark matter and an adiabatic simulation with gas but no
+galaxy formation, of the same volume and initial conditions as the
+Horizon suite, and we have found this suppression to be prese nt
+in the adiabatic run.
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 7 ---
+Baryons & the matter power spectrum 7
+10−1 100 101
+k [h/Mpc]
+0.80
+0.85
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20Δ2
+AGN/Δ2
+DM
+z = 0
+z = 0.23
+z = 0.5
+z = 1
+z = 2
+z = 3
+10−1 100 101
+k [h/Mpc]
+0.80
+0.85
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+z = 3
+z = 3.3
+z = 3.8
+z = 4.3
+z = 4.9
+Figure 3. The fractional impact of baryons on the total matter power sp ectrum when comparing the Horizon-AGN run (with AGN
+feedback) to the Horizon-DM run. Results are split in two pan els for diﬀerent redshift ranges: z ⩽ 3 (left panel) and z /greaterorequalslant3 (right panel).
+10−1 100 101
+k [h/Mpc]
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+Δ2
+hydro(DM)/Δ2
+DM
+z = 0
+z = 0.23
+z = 0.5
+z = 1
+z = 2
+z = 3
+noAGN, z = 0
+noAGN, z = 2
+10−1 100 101
+k [h/Mpc]
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+z = 3
+z = 3.3
+z = 3.8
+z = 4.3
+z = 4.9
+noAGN, z = 3.8
+noAGN, z = 4.9
+Figure 4. The fractional power spectrum of the dark matter component from the Horizon-AGN (solid) and the Horizon-noAGN (dashed )
+runs in the redshift range between 0 ⩽ z < 5. Only selected redshifts are shown for the Horizon-noAGN r uns.
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 8 ---
+8 Chisari et al.
+10−1 100 101
+k (h/Mpc)
+0.80
+0.85
+0.90
+0.95
+1.00
+1.05
+1.10/uni03942
+hydro//uni03942
+DM
+sub-volume (1/8)
+full volume
+10−1 100 101
+k (h/Mpc)
+0.80
+0.85
+0.90
+0.95
+1.00
+1.05
+1.10/uni03942 (DM)
+hydro//uni03942
+DM
+sub-volume (1/8)
+full volume
+Figure 5. The impact of cosmic variance on the total matter power spect rum (left) and on the power spectrum of the dark matter
+component (right) at z = 0. The results for the full volume are shown in thick solid bl ack; all other curves correspond to the 8 sub-
+volumes of the box. The large-scale excess is discussed in Ap pendix A. W e have not applied any correction for shot noise in this ﬁgu re,
+given that it is sub-dominant at this redshift.
+Horizon-noAGN, overcome by the cooling of the baryons,
+which enhances the gravitational potential wells of haloes
+in the hydrodynamical simulations and leads to adiabatic
+contraction of the DM component. From this point on, the
+noAGN simulation continues to cluster towards z = 0.
+On the contrary, at z = 2, we once again start to ﬁnd
+a decrement of power at intermediate scales in the Horizon-
+AGN run. At lower redshift, the excess of power is trans-
+ferred to smaller and smaller scales (haloes become more
+concentrated), while the suppression at scales of ∼ 10 h/Mpc
+is enhanced, and there is a compensation at scales of a few
+h/Mpc. As we discuss in Section 5.4, this speciﬁc scale-
+dependence is related to the limited cosmological volume
+of the simulation box, i.e., it is sensitive to cosmic varian ce.
+At low redshift, the suppression of the power in the DM
+component can be attributed to the DM following the re-
+distribution of gas as a consequence of AGN feedback. We
+have veriﬁed that indeed there is a strong correlation be-
+tween the gas and DM ﬁelds of the Horizon-AGN simulation
+at low redshift which shows a similar suppression. However,
+in this case, the eﬀect is a consequence of delayed cooling of
+the baryons. Below z = 2, AGN are predominantly in the
+jet regime ( Volonteri et al. 2016b ) and this mode deposits
+energy into a bipolar outﬂow that prevents hot gas from
+cooling, but drives only modest outﬂows.
+Peirani et al. (2017) performed an analysis of the im-
+pact of AGN feedback on the density proﬁle of DM haloes
+in the Horizon suite which is consistent our results. Using
+a cross-matched sample of DM haloes, they found that the
+haloes in Horizon-AGN are more steep that their DMO coun-
+terparts at z = 5 and z = 0 and that the evolution is non-
+monotonic, with haloes at z = 1.6 being more shallow. The
+authors suggested this is a consequence of successive phase s
+of contraction and expansion, with a “cusp re-generation”
+happening at low redshift as a consequence of dwindling
+AGN activity.
+5.4 Impact of cosmic variance
+In Section 5.1, we asserted that the availability of baryonic
+and DMO runs with the same initial conditions allowed us
+to neglect ﬁnite volume eﬀects at small wave-number values.
+This does not guarantee, however, that we are free from
+the impact of cosmic variance in our results. We explore
+the consequences of the limited volume of the simulation
+box by dividing the Horizon boxes in 8 sub-volumes and
+obtaining predictions of the impact of baryons on the total
+matter power spectrum from these sub-volumes. The results
+are shown in the left panel of Figure 5, where the black thick
+solid line corresponds to the full volume results, and all ot her
+lines correspond to diﬀerent sub-volumes, all at z = 0.
+The dispersion of the grey curves gives us an estimation
+of the impact of cosmic variance on our results. In particu-
+lar, we note that one of the sub-volumes displays an excess of
+power at k ∼ 3 h/Mpc in the total matter distribution with
+respect to the DM distribution in Horizon-DM. The compar-
+ison to the black solid curve suggests that our results from
+the full volume box are dominated by this particular sub-
+volume. The right panel of Figure 5 presents similar results
+for the power spectrum of the DM distribution alone. Most
+curves show some level of excess above zero at k ∼ 3 h/Mpc,
+but the full volume results once more are dominated by one
+of the sub-volumes. The sub-volume with the largest excess
+at these scales is the only one to host haloes with masses
+above 10 14.5M⊙. These two haloes have masses of approxi-
+mate 10 14.8M⊙ each. Since the shape of the DM power spec-
+trum changes from z = 1 to z = 0, it is possible that the
+assembly of these massive structures has a role to play in
+this result.
+Intriguingly, the fact that the IllustrisTNG300 simula-
+tion, with a larger box size of 300 Mpc, also displays this
+pattern (Figure 9) suggests that this is robust to increasing
+the simulation volume. van Daalen & Schaye (2015) investi-
+gated the contribution of haloes of diﬀerent masses to the
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 9 ---
+Baryons & the matter power spectrum 9
+total matter power spectrum in a set of simulations of dif-
+ferent volumes, and pointed out that scales of k ∼ 3 h/Mpc
+are typically dominated by the most massive ones, which
+is in line with our conclusions. Overall, our results sugges t
+that the accuracy of predictions for the impact of baryons on
+the matter power spectrum would improve by running larger
+volume hydrodynamic simulations with multiple realisatio ns
+of the initial conditions.
+5.5 Comparison to other hydrodynamical
+simulations
+Several other groups have quantiﬁed the impact of baryons
+on the matter power spectrum from their numerical sim-
+ulations. Their simulations vary in the numerical tech-
+nique implemented, volume, resolution and sub-grid recipe s
+adopted for baryonic physics processes. In this section, we
+discuss how their results compare to Horizon-AGN. Figure
+6 shows a comparison of the fractional impact of baryonic
+processes on the total matter power spectrum from dif-
+ferent simulations at z = 0: the OverWhelmingly Large
+Simulations ( van Daalen et al. 2011 , we refer here to the
+‘AGN’ run of OWLS which adopts a WMAP7 cosmol-
+ogy), the EAGLE simulation ( Hellwing et al. 2016 ), Illustris
+(Vogelsberger et al. 2014 ) and IllustrisTNG ( Springel et al.
+2017). The result from Horizon-noAGN is also shown for ref-
+erence, in which case there is an enhancement of power due
+to eﬃcient cooling of the gas, rather than a suppression of
+power. For reference, the simulation volumes are as follows :
+OWLS and Horizon are 100 Mpc /h on each side; EAGLE,
+100 Mpc on a side; Illustris, 75 Mpc /h on a side and the Illus-
+trisTNG runs are 100 and 300 Mpc on a side for “TNG100”
+and “TNG300”, respectively.
+While the qualitative behaviour of all simulations is sim-
+ilar, with a suppression of power due to the eﬀect of AGN
+feedback on the gas at k ∼ 10 h/Mpc, the exact scale and
+strength of the suppression diﬀers between them. Illustris
+shows the largest amount of suppression, reaching over 30%
+at scales of k ∼ 5 h/Mpc. This simulation is calibrated to
+match the overall observed star formation history of the
+Universe, but despite this calibration, their radio mode of
+AGN feedback is known to be too aggressive, resulting in
+lower than observed gas fractions inside of massive haloes
+(Haider et al. 2016 ).
+The OWLS ‘AGN’ run used by van Daalen et al. (2011)
+was calibrated to match the M −σ relation (Booth & Schaye
+2009; Schaye et al. 2010 ), similarly to Horizon-AGN, but
+diﬀers in other sub-grid recipes (e.g., stellar initial mas s
+function, stellar feedback prescription, black hole seedi ng,
+and thermal quasar AGN feedback for all accretion rates)
+and the numerical method implemented (smoothed-particle-
+hydrodynamics). McCarthy et al. (2010) have shown that
+this OWLS run reproduces the fraction of gas in mas-
+sive haloes and a further exploration, varying some of the
+sub-grid parameter models for the AGN feedback imple-
+mentation, was performed by McCarthy et al. (2011) and
+Le Brun et al. (2014). This is further discussed in Section
+6. At z = 0, OWLS predict signiﬁcantly more suppres-
+sion than Horizon-AGN, exceeding 20% at k ∼ 10 h/Mpc.
+10−1 100 101
+k [h/M c]
+0.6
+0.7
+0.8
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4
+Δ2
+hydro/Δ2
+DM
+Horizon-AGN
+Horizon-noAGN
+OWLS
+Illustris
+IllustrisTNG100
+IllustrisTNG300
+EAGLE
+Figure 6. The impact of baryons on the total matter power spec-
+trum (∆ 2
+hydro/ ∆ 2
+DMO) in Horizon-AGN (solid black) and Horizon-
+noAGN (dashed black) compared to the results of other cosmo-
+logical simulations at z = 0.
+The impact of baryons in the case of OWLS is not as
+strong as in the Illustris simulation. This model has been
+widely used in the literature for cosmic shear data analy-
+sis ( Mead et al. 2015 ), including recent cosmic shear sur-
+vey results ( Harnois-D´ eraps et al. 2015; Joudaki et al. 2017 ;
+Krause et al. 2017 ), and also for forecasting the performance
+of future surveys ( Semboloni et al. 2011 , 2013; Eiﬂer et al.
+2015).
+The EAGLE simulation ( Schaye et al. 2015 ) is a
+smoothed-particle-hydrodynamics simulation with simila r
+volume to Horizon-AGN and full baryonic physics implemen-
+tation. In this case, the simulation was calibrated to match
+the relation between stellar mass and halo mass, the present -
+day stellar mass function of galaxies and galaxy sizes. EA-
+GLE predicts that the impact of baryons on the matter
+power spectrum is predominant at scales smaller than in
+Horizon-AGN, Illustris or OWLS. The diﬀerence in the pre-
+ferred scale of suppression is particularly relevant to cos mic
+shear surveys adopting a cut on small scales in their analy-
+sis (Krause et al. 2017 ) instead of a marginalisation strategy
+(Joudaki et al. 2017 ).
+Springel et al. (2017) recently presented an analysis of
+the impact of baryons on the clustering of galaxies and mat-
+ter in the IllustrisTNG simulations. IllustrisTNG is a set
+of cosmological simulation boxes with diﬀerent volumes and
+physics implementations, and we are interested here in the
+comparison to the baryonic and DMO runs. IllustrisTNG im-
+plements an updated AGN feedback recipe compared to the
+previous Illustris runs ( Weinberger et al. 2017 ), among other
+changes (including SN feedback modelling). Their new AGN
+sub-grid model includes a diﬀerent approach of radio kineti c
+feedback mode compared to Illustris, which one is very sim-
+ilar to the one implemented in Horizon-AGN ( Dubois et al.
+2012) but with an isotropic momentum/energy injection (Il-
+lustrisTNG) instead of being jet-like shaped (Horizon-AGN ).
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 10 ---
+10 Chisari et al.
+10−1 100 101
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4
+Δ2
+hydro/Δ2
+DM
+z = 0
+Ho izon-AGN
+IllustrisTNG100
+IllustrisTNG300
+OWLS
+10−1 100 101
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4 z = 1
+10−1 100 101
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4 z = 3
+Figure 7. The impact of baryons on the power spectrum at redshifts z = 0 (left), z = 1 (middle) and z = 3 (right) for Horizon-AGN,
+OWLS and IllustrisTNG.
+10−1 100 101
+k [h/Mpc]
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4
+1.5
+Δ2
+hydro(k,z1)Δ2
+DM (k, 0)
+Δ2
+hydro(k, 0)Δ2
+DM (k,z1)
+z1 = 1
+Horizon-AGN
+IllustrisTNG100
+IllustrisTNG300
+OWLS
+10−1 100 101
+k [h/Mpc]
+0.9
+1.0
+1.1
+1.2
+1.3
+1.4
+1.5 z1 = 3
+Figure 8. The impact of baryons on the power spectrum at z = 0 compared to z1 = 1 , 3. The y-axis can be interpreted as the ratio
+between eﬀective scale-dependent growth functions: D2(k, z ) ≡ ∆ 2(k, z = 0)/ ∆ 2(k, z 1). It can also be understood as the relative redshift
+evolution of the impact of baryons on the power spectrum. The left panel corresponds to the growth from z1 = 1 to z = 0 and the right
+panel, from z1 = 3 to z = 0. Both panels compare diﬀerent curves for Horizon-AGN, OW LS and IllustrisTNG. The evolution of the
+impact of baryons is similar between the simulation in the ra nge from z1 = 1 to z = 0 but starts to diﬀer at higher redshift.
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 11 ---
+Baryons & the matter power spectrum 11
+10−1 100 101
+k [h/Mpc]
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+Δ2
+hydro(DM )/Δ2
+DM
+Horizon-AGN
+IllustrisTNG100
+IllustrisTNG300
+Figure 9. A comparison of the sensitivity of the DM component
+power spectrum to baryonic eﬀects in IllustrisTNG (orange a nd
+red for TNG100 and TNG300, respectively) and in Horizon-AGN
+(black).
+In Figure 6, we show the impact of baryons on the to-
+tal matter power spectrum from IllustrisTNG100 and Illus-
+trisTNG300 at z = 0 as obtained by Springel et al. (2017).
+The new IllustrisTNG runs show signiﬁcantly lower impact
+of baryons on the distribution of matter, with a reduction of
+the overall amplitude of the eﬀect and a restriction to small er
+scales compared to Illustris. The IllustrisTNG300 results are
+similar to those obtained by EAGLE, despite diﬀerent nu-
+merical methods and sub-grid physics implementations. The
+discrepancy between IllustrisTNG100 and IllustrisTNG300
+is attributed to diﬀerences in resolution and box size.
+Compared to Horizon-AGN, the IllustrisTNG simula-
+tions present enhanced suppression of the total matter powe r
+spectrum and a displacement of the peak of the suppression
+towards small scales at z = 0. Springel et al. (2017) and
+van Daalen et al. (2011) also presented results at higher red-
+shifts for IllustrisTNG and OWLS, respectively, which allo ws
+us to compare the redshift evolution across these simulatio ns
+in Figure 7. Compared to Horizon-AGN, the redshift evo-
+lution is much more dramatic in OWLS and IllustrisTNG
+from z = 3 to z = 0. The Horizon-AGN total matter power
+spectrum already shows signs of suppression at z = 3 due
+to AGN feedback (see discussion in Section 5.2), while Il-
+lustrisTNG only shows signs of gas cooling and adiabatic
+contraction at this redshift. IllustrisTNG undergoes a rap id
+redshift evolution towards z = 0, overtaking the suppression
+found in Horizon-AGN. In Figure 7, we have limited our
+results to the redshift range of interest to weak lensing sur -
+veys and to the range limited by the convergence timescales
+of galaxy stellar populations. A comparison between OWLS
+and Horizon-AGN at higher redshifts yields a similar sup-
+pression at z ≃ 3.8, while the two simulations start deviat-
+ing at even higher redshifts, with the suppression in OWLS
+becoming smaller while it increases in Horizon-AGN.
+Figure 8 shows a slightly diﬀerent rendering of the re-
+sults presented in Figure 7. The two panels of Figure 8
+show ratios of the impact of baryons between two redshifts:
+z = 0 and z1. The vertical axis represents an eﬀective scale-
+dependent growth in the hydrodynamic simulation com-
+pared to the DMO case, deﬁned as D2(k, z1) ≡ ∆ 2(k, z =
+0)/∆ 2(k, z1). The panels compare z1 = 1 (left) and z1 = 3
+(right) with z = 0. The vertical axis can also be interpreted
+as the relative redshift evolution of the impact of baryons
+on the power spectrum. From z = 1 to z = 0, this is quali-
+tatively similar across simulations. Discrepancies arise when
+comparing z = 3 and z = 0, in which case both OWLS and
+IllustrisTNG show stronger redshift evolution than Horizo n.
+In the case of IllustrisTNG, the downturn of the curves at
+large k reﬂects a lack of suppression due to the presence of
+baryons at z = 3. Weak lensing surveys which aim to con-
+strain the redshift evolution of the parameters of the equa-
+tion of state of dark energy should accommodate ﬂexible
+models of the redshift evolution of this eﬀect to avoid poten -
+tial biases.
+Finally, we have compared the impact of baryons in the
+DM distribution between Horizon-AGN and IllustrisTNG at
+z = 0 in Figure 9. Despite the diﬀerences evidenced for
+the suppression of the total matter power spectrum, the
+impact of baryonic eﬀects on the DM distribution is simi-
+lar in Horizon-AGN, IllustrisTNG and (although not shown
+here), EAGLE ( Hellwing et al. 2016 ). All of these simula-
+tions feature enhanced clustering of the DM at very small
+scales (cuspier haloes due to adiabatic contraction), a sup -
+pression at intermediate scales and an enhancement at large
+scales. Nevertheless, Springel et al. (2017) has shown (their
+Figure 8) that the Illustris simulation produces a widely di f-
+ferent prediction in this case, with a suppression at scales of
+a few h/Mpc. It is possible that the strong radio mode of
+AGN feedback used in Illustris is dominating the scales of
+the problem. Similar results are found by van Daalen et al.
+(2011) in their Figure 6 for OWLS, where the AGN feedback
+is also much stronger than that in Horizon-AGN, EAGLE
+and IllustrisTNG.
+5.6 Eﬀective modelling
+In this section, we discuss the application of the BC
+model introduced in section 4 to our simulation results. In
+Schneider & Teyssier (2015), the BC model parameters were
+estimated from a combination of observational constraints
+and results from numerical simulations. These parameters
+are: Mc, which drives the amount of suppression in the power
+spectrum, ηb, the parameter that governs the scale of the
+suppression of power, and ks, the wave-number associated to
+the slope of the stellar density proﬁle of the central galaxy .
+Figure 10 shows a comparison between the Horizon-AGN
+prediction of the fractional impact of baryons on the matter
+power spectrum (solid black curves) at z = 0 (left panel)
+and z = 3 (right panel) compared to the best ﬁt BC model
+(in red).
+The Horizon-AGN results are not well described by that
+ﬁducial choice of BC model parameters at z = 0. However,
+this should not come as a surprise since the BC model as-
+sumptions (such as the distribution of ejected gas or the
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 12 ---
+12 Chisari et al.
+10−1 100 101
+k [h/Mpc]
+0.7
+0.8
+0.9
+1.0
+1.1
+Δ2
+hydro/Δ2
+DM
+Hz-AGN vs. Hz-DM, z= 0
+BCM - best fit
+BCM - best M c, ηb = 0.3
+BCM - best M c, ηb = 0.5
+10−1 100 101
+k [h/Mpc]
+0.85
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+/uni03942
+hydro//uni03942
+DM
+Hz-AGN vs. Hz-DM, z = 3
+BCM - extrapolate z = Δ  fit
+BCM - best fit z = 3
+Figure 10. The impact of baryons on the total matter power spectrum (∆ 2
+hydro/ ∆ 2
+DM) in Horizon-AGN and a comparison to the BC
+model prediction at redshifts z = 0 (left panel) and z = 3 (right panel). The black curves show the Horizon-AGN resu lts. The red curves
+correspond to the best ﬁt BC model, freeing the parameters Mc, ηb and ks at each redshift. The left panel also shows the impact of
+changing the ηb parameter to 0 . 3 (dashed) and 0 . 5 (dot-dashed), values which are better motivated by observ ations, for comparison. The
+z = 0 ﬁt is also extrapolated to z = 3 in the right panel and compared to the Horizon results (ora nge). The ﬁducial BC model redshift
+evolution together with the z = 0 best ﬁt parameters does not match the BC model predictions .
+0 1 2 3
+z
+13.5
+14.0
+14.5
+15.0
+15.5
+16.0
+16.5
+17.0log 10 (M ch/M ⊙ )
+0 1 2 3
+z
+40
+45
+50
+55
+60
+65ks[h/Mpc]
+0 1 2 3
+z
+0.20
+0.25
+0.30
+0.35ηb
+Figure 11. The best ﬁt BC model parameters in each simulation snapshot i n the range 0 < z < 4. The left panel shows preferred values
+of Mc; the middle panel, for ks; and the right panel, for ηb. The ﬁducial BC model assumption is to keep these parameters constant as a
+function of redshift.
+stellar proﬁles) diﬀer from the results of the Horizon-AGN
+run. We therefore ﬁnd alternative best ﬁt parameters that
+match our simulation results. The preferred parameters val -
+ues are Mc = 10 13.8 M⊙/h, ks = 67 h/Mpc and ηb = 0.17 at
+this redshift. The lower value of ηb compared to the ﬁducial
+ηb = 0.5 value of Schneider & Teyssier (2015) indicates that
+the gas ejection of the Horizon-AGN run is less strong than
+the one assumed in the BC model. This is clearly shown in
+the comparison to the dashed and dot-dashed curves, which
+show the impact of changing ηb to 0 .3 and 0 .5, respectively,
+while keeping Mc ﬁxed to the best ﬁt value. Our results
+also prefer a lower value of Mc compared to the ﬁducial
+1014.07 M⊙/h value adopted in Schneider & Teyssier (2015).
+This ﬁnding is related to the fractional content of gas in
+haloes, which is discussed in Section 6. The increase in ks,
+on the other hand, compared to the ﬁducial 55 h/Mpc value
+corresponds to a higher concentration of matter at small
+scales.
+The right panel of Figure 10 shows that the extrapo-
+lation of the z = 0 best ﬁt case (in orange) predicts too
+little suppression of power at k of a few h/Mpc. This sug-
+gests that the BC model as formulated in Section 4 cannot
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 13 ---
+13
+0.15 0.20 0.25 0.30 0.35 0.40
+ηb
+40
+45
+50
+55
+60
+65
+70ks [h/Mpc]
+z = 0
+z = 0.23
+z = 0.5
+z = 1
+z = 2z = 3
+z = 3.3
+z = 3.8
+Figure 12. ks and ηb preferred values for the BC model at each
+redshift (indicated by the label on each point). W e ﬁnd an ant i-
+correlation between the two parameters.
+describe the redshift evolution of the Horizon-AGN predic-
+tions. To account for a redshift evolution diﬀerent than ori g-
+inally parametrised, we ﬁt the BC model parameters to the
+simulation results at each redshift. The preferred paramet er
+values are shown in Figure 11 as a function of redshift. We
+restrict to the redshift range 0 ⩽ z ⩽ 3.8. This high red-
+shift restriction is imposed due the impact of resolution on
+the stellar population assembly of galaxies, which require s at
+least 1 Gyr to converge ( Blaizot et al. 2004 ). We have veri-
+ﬁed that the majority of galaxies aﬀected by AGN feedback
+at z = 3 .8, namely galaxies above a stellar mass threshold
+of 109.5 M⊙ (Beckmann et al. 2017 ), have stellar populations
+older than this threshold.
+We ﬁnd that the parameter Mc, which determines the
+amount of suppression in the total matter power spectrum
+and is related to the mass of the haloes responsible for it, is
+roughly constant in the range 0 < z < 2, and it increases to
+higher redshift. The value of ks, which represents the scale
+below which the contribution of the stellar proﬁle sets in,
+decreases from z = 4 to z = 2, and then starts to increase
+again towards z = 0. Finally, ηb, which sets the physical scale
+for the suppression of power, also shows a non-monotonic
+evolution, with a peak at z = 2. The latter is a consequence
+of the redshift behaviour of the Horizon-AGN run discussed
+in Section 5.4 which is not captured by the BC model.
+The values of these preferred parameters can be inter-
+preted in the context of the BC model as follows. The typical
+mass of haloes where a large portion of the gas gets ejected
+by AGN processes is roughly constant between 0 ⩽ z < 2.
+In Section 5.1, we drew similar conclusions based on our
+results from previous work ( Beckmann et al. 2017 ). We sug-
+gested that, despite the availability of more massive haloe s
+at low redshift, AGN feedback is not strong enough once
+in “maintenance” mode. At the same time, ηb decreases,
+restricting the impact of AGN on the total matter power
+spectrum to smaller and smaller scales and once again indi-
+i Ai Bi Ci Di Ei
+2 80. 6 0 . 86 − 0. 11 0 . 10 − 2. 05
+1 − 35. 1 − 1. 29 0 . 67 − 0. 16 3 . 60
+0 5. 24 0 . 71 1 . 45 0 . 08 1 . 11
+T able 1. Best ﬁt parameters for F (k, z ) in the parametrisation
+proposed by Harnois-D´ eraps et al.(2015), as described by equa-
+tion ( 14).
+cating a progressively waning impact of AGN on the total
+matter power spectrum. It is interesting to note that there i s
+an anti-correlation between ks and ηb as a result of the ﬁts,
+shown in Figure 12. This is not built into the BC model, but
+can potentially suggest avenues for reducing its parameter
+space, as we discuss below.
+Figure 11 also shows that the preferred value for Mc
+increases by several orders or magnitude between z = 2
+and z = 4. This high redshift increase of Mc eﬀectively re-
+duces the number of haloes which can drive a suppression
+of power in the BC model. This is accompanied by a de-
+crease of ηb in this redshift range, suggesting that gas ejec-
+tion is less eﬃcient than in the ﬁducial model considered in
+Schneider & Teyssier (2015), and the gas is expelled up to
+shorter distances from the centre of haloes. A non-monotoni c
+evolution of ks, increasing from z = 2 to z = 4 is related to
+the eﬀect of adiabatic cooling, which is already present as
+early as z = 4.9 in Figures 2 and 3.
+The ﬁducial implementation of the BC model does not
+reproduce the redshift evolution of the Horizon total mat-
+ter power spectra. We have found that an alternative with
+a small number of parameters which captures the Horizon
+results in the range 0 ⩽ z ⩽ 3.8 is given by the following
+parametrisation of F (k, z):
+F (k, z) = 1 + [k/κs(z)]2
+1 + [k/κs(z)]β , (13)
+where κs(z) = κs,0 + κs,1z + κs,2z2 and κs,i for i = {0, 1, 2}
+are free parameters. The numerator of equation ( 13) cap-
+tures the small scale enhancement in power due to adiabatic
+cooling, while the denominator models the suppression due
+to AGN feedback. The typical scale for both eﬀects is con-
+nected to the value of κs(z) as a consequence of the anti-
+correlation found between BC model parameters in Figure
+12. The preferred values for the parameters are: β = 1 .39,
+κs,0 = 28.5, κs,1 = −11.9 and κs,2 = 2.50. For these param-
+eters, F (k, z) reproduces Horizon results within < 5% for
+all redshifts and scales considered. Physically driven mod i-
+ﬁcations to the BC model to account for redshift evolution
+are not straightforward. This would require looking into th e
+individual components of the model directly in the hydro-
+dynamical simulation, which is the topic of our future work.
+Other eﬀective parameterisations of the impact of
+baryons on the matter power spectrum have been pro-
+posed in the literature. For example, in the work by
+Harnois-D´ eraps et al. (2015), an eﬀective ﬁtting function
+was proposed to model the impact of baryons on the total
+matter power spectrum from the OWLS simulations. The
+functional form proposed by Harnois-D´ eraps et al. (2015)
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 14 ---
+14 Chisari et al.
+was ( bm in their notation):
+F (k, z) = 1 − Aze(Bz x−Cz )3
++ DzxeEzx, (14)
+where x = log 10(k/[h Mpc−1]), the function Az is
+parametrised as
+Az = A2a2 + A1a + A0, (15)
+with a the scale factor, and similarly for Bz, Cz, Dz and Ez.
+We ﬁnd that this expression for F (k, z) is suﬃciently ﬂexible
+to ﬁt the Horizon results to within 3% across z ⩽ 3.8 with
+preferred parameters as listed in Table 1. The disadvantages
+of this approach are the large number of free parameters (15
+in comparison to 3 in the ﬁducial BC model and 4 in equation
+13) and the fact that there is no physical interpretation for
+them. Nevertheless, we make the parameters for this ﬁtting
+function available here, as it might be useful for compariso n
+to Harnois-D´ eraps et al.(2015).
+Publicly available power spectra
+The power spectra obtained from the Horizon set and used
+in this manuscript are made publicly available. These corre -
+spond to the redshifts labelled in Figure 1 up to z = 3.8, fol-
+lowing the convergence criterion discussed above. Shot noi se
+is subtracted.
+To test the accuracy of the four-parameter ﬁtting func-
+tion F (k, z) of equation ( 13), we obtained additional curves
+to those presented in Figure 3 at z = 0 .76 and z = 1 .5. We
+ﬁnd that F (k, z) reproduces those results within 3 .4% and
+4.3%, respectively. On the other hand, directly interpolatin g
+the set of public power spectra with a cubic spline results
+in uncertainties of up to 1 .5% and 2 .2% for the fractional
+impact of baryons on the total matter power spectrum at
+z = 0 .76 and z = 1 .5, respectively. The individual power
+spectra (with and without baryons) are interpolated with
+much larger uncertainty ( ∼ 8%) than their ratio.
+6 DISCUSSION
+The results presented in this work suggest that there is
+signiﬁcant dispersion between predictions of the impact of
+baryons on the total matter power spectrum from diﬀer-
+ent cosmological hydrodynamical simulations (Figure 6) at
+z = 0. EAGLE shows the smallest impact from baryons on
+the distribution of matter at k < 10 h/Mpc, while the orig-
+inal Illustris run is most impacted. In addition, simulatio ns
+also predict diﬀerent redshift evolution of this eﬀect. Dis tin-
+guishing between these diﬀerent scenarios is impossible fr om
+simulation data.
+Observational constraints can be used to distinguish
+between diﬀerent predictions. Numerous observations are
+already available that test the accuracy of the hydrody-
+namical simulations across the redshift range of future sur -
+veys. Those observations include galaxy luminosity and mas s
+functions (see a comparison of Horizon-AGN results to
+these observations in Kaviraj et al. 2017 ) or stellar to halo
+mass relations ( Leauthaud et al. 2012 ; Wojtak & Mamon
+2013; Velander et al. 2014 ; Han et al. 2015 ; van Uitert et al.
+2016), for example.
+In their work, Schneider & Teyssier (2015) used con-
+straints on the fraction of bound gas within haloes to inform
+the BC model. Similarly, one can compare how well the sim-
+ulations reproduce this speciﬁc observation, as we show in
+Figure 13. Haloes in Horizon are identiﬁed using Adapta-
+hop (Aubert et al. 2004 ). This halo ﬁnder identiﬁes a local
+density as a halo if it has more than 50 particles and if den-
+sity computed from the twenty nearest neighbours exceeds
+178 times the cosmological average density. For each halo
+in Horizon-AGN we have extracted the fraction of the mass
+in gas within the volume enclosing a sphere of 500 times
+the critical density of the Universe, and we show it as a
+function of M500, the total mass of the halo within the cor-
+responding radius ( r500). Figure 13 shows that the Horizon-
+AGN simulation over-predicts the fraction of gas in massive
+haloes (black points) with respect to the parametrised ob-
+servational results at z = 0 described by the black solid line
+(Schneider & Teyssier 2015 ). This is the cause for our lower
+preferred value of Mc in the BC model ﬁts of Section 5.6,
+shown in Figure 10. The excess gas fraction in haloes sug-
+gests a lower strength of AGN feedback, which in the BC
+model is associated with a lower halo mass.
+The shaded areas in Figure 13 show the fraction of
+gas at z = 0 in the haloes of the cosmo-OWLS simu-
+lations ( Le Brun et al. 2014 ). The grey area corresponds
+to the AGN8.0 model, which shares the same parame-
+ters as the OWLS ‘AGN’ run. The orange area corre-
+sponds to the AGN8.5 cosmo-OWLS model, which adopts
+a slightly increased heating temperature for AGN feedback
+(Booth & Schaye 2009 ). Using synthetic X-ray observations
+to estimate the halo mass and gas mass fraction of simulated
+clusters, Le Brun et al. (2014) found that, in a WMAP7 cos-
+mology, observational results lie in between the predictio ns
+of the cosmo-OWLS AGN8.0 and AGN8.5 runs. The red
+crosses and green triangles in Figure 13 represent Horizon-
+AGN results at z = 1 and z = 2, respectively. The fraction
+of gas inside haloes decreases towards z = 0. Nevertheless,
+the decrease is not suﬃcient to bring the Horizon-AGN pre-
+dictions into agreement with observations, and the simula-
+tion tends to over-predict the amount of gas in haloes. While
+cosmo-OWLS provides a better ﬁt to the gas fraction, notice
+that the scatter in current observational constraints is la rge,
+as represented by the purple error bar shown in that ﬁgure,
+taken from Gonzalez et al. (2013) as an example. Cosmo-
+OWLS also shows some discrepancies with observations in
+respect to the stellar content of halos ( Le Brun et al. 2014 ).
+We emphasise that while some mitigation strategies for
+the impact of baryons on the matter power spectrum and
+cosmological observables from galaxy surveys have been pro -
+posed ( Semboloni et al. 2011 , 2013; Harnois-D´ eraps et al.
+2015; Mead et al. 2015 ), these have often relied on the
+OWLS predictions from van Daalen et al. (2011) alone, the
+ﬁrst predictions on the impact of baryons on the total matter
+power spectrum to become publicly available. Eiﬂer et al.
+(2015) is the exception, using the OWLS results in com-
+bination with two other sets of simulations. It is known
+that the success of these mitigation techniques depends on
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 15 ---
+15
+the ability to cover the parameter space of possible mod-
+els ( Mohammed & Gnedin 2017 ). Our results suggest that
+hydrodynamical simulations can give very diﬀerent predic-
+tions for the amplitude-, redshift- and scale-dependence o f
+the eﬀect. In principle, the success of the available mitiga tion
+strategies should be tested against the diﬀerent cosmologi -
+cal simulations taking into account observational priors a t
+the same time. An alternative is to perform a more aggres-
+sive calibration of sub-grid parameters based on observa-
+tional data. McCarthy et al. (2017) have recently reported
+on a new suite of simulations ( BAHAMAS) which adopt
+similar sub-grid models as cosmo-OWLS and where the free
+parameters are calibrated to reproduce the present-day ste l-
+lar mass function and gas fraction in groups and clusters. In
+McCarthy et al. (2018), it was shown that current uncertain-
+ties in these low redshift observations are suﬃciently smal l
+to provide useful information for cosmological purposes.
+Semboloni et al. (2011) pointed out potential degenera-
+cies between the impact of baryons on the total matter power
+spectrum and other physical processes. These included es-
+timates of neutrino mass, the running of the spectral in-
+dex to constrain inﬂation and the nature of dark matter. In
+this regard, Villaescusa-Navarro et al. (2017) recently sug-
+gested that the impact of neutrinos can be isolated from
+that of baryonic processes because of the distinct scale- an d
+redshift-dependence of the eﬀects. On the other hand, other
+degeneracies remain unexplored, including degeneracies w ith
+other astrophysical and observational systematics that aﬀ ect
+weak lensing (photometric redshifts, source blending, int rin-
+sic galaxy alignments). In particular, Hearin et al. (2012)
+showed that increased uncertainties in photometric redshi fts
+can make requirements on knowledge of the power spectrum
+more stringent.
+Finally, considering that the statistical uncertainties o n
+the total matter power spectrum from future weak lensing
+surveys (percent level) will be much smaller than the eﬀect o f
+baryons on this observable, it is expected that weak lensing
+measurements in the next decade will be able to distinguish
+between diﬀerent AGN feedback models ( Foreman et al.
+2016), although this depends on the level of control over
+weak lensing systematics at small scales.
+7 CONCLUSIONS
+In this work, we presented results on the distribution of
+matter at cosmological scales from the Horizon set of sim-
+ulations in terms of the total matter power spectrum be-
+tween z = 0 and z = 5. We found that intermediate scales
+(1 < k < 10 h/Mpc) are suppressed by 5 − 15% with re-
+spect to the DMO run. At smaller scales, the power spec-
+trum is enhanced due to eﬃcient cooling and star formation.
+The Horizon-noAGN simulation also displays suppression at
+high redshift compared to the DMO run, associated to the
+additional pressure provided by the baryons. At low red-
+shifts, Horizon-noAGN is purely enhanced with respect to
+the DMO run. We have also quantiﬁed the impact of baryons
+on the distribution of dark matter in the simulation, ﬁnding
+it to be of a few percent at low redshift. The results are sub-
+1012 1013 1014 1015
+M 500 [M/uni2299]
+0.00
+0.02
+0.04
+0.06
+0.08
+0.10
+0.12
+0.14
+0.16fgas
+z=0, AGN
+z=1
+z=2
+Ω b⊙Ω m
+ST15
+cosmoOWLS AGN8.0 z=0
+cosmoOWLS AGN8.5 z=0
+Figure 13. The fraction of gas by mass in haloes, fgas, as a
+function of the mass enclosed within r500. The dotted line rep-
+resents the baryon fraction for our adopted cosmology. The s olid
+line is a parametrisation of z = 0 observational constraints pre-
+sented in Schneider & Teyssier (2015). The black, red and green
+dots correspond to Horizon-AGN results at redshifts z = 0, z = 1
+and z = 2, respectively. The shaded area indicate results from
+the cosmo-OWLS simulations ( Le Brun et al. 2014 ), speciﬁcally:
+the gray area corresponds to the AGN8.0 model (similar to the
+one adopted in the OWLS AGN run) and the orange area, to
+the AGN8.5 model, with increased heating temperature in the
+AGN feedback implementation. The purple error bar in the top
+left indicates the typical scatter of current fgas constraints from
+Gonzalez et al. (2013).
+ject to cosmic variance and the presence of massive haloes,
+which we have veriﬁed by splitting the simulation volume
+into 8 sub-volumes.
+A comparison between the Horizon set and other cosmo-
+logical hydrodynamics simulations (Section 5.5) shows that
+the impact of baryons is smaller in Horizon, of typically
+∼ 12% at a scale of k ∼ 10 h/Mpc at z = 0. Correspondingly,
+the fraction of gas inside haloes in the Horizon-AGN simu-
+lation is enhanced compared to low redshift observations,
+suggesting AGN feedback as implemented here is not strong
+enough to eject or prevent the infall of material into haloes
+(Figure 13). In this regard, the cosmo-OWLS AGN8.0 run
+is in better agreement with observations although the scat-
+ter in current observational constraints of fgas is large. It
+is also possible that our over-predicting gas fractions is a
+late consequence of the weak stellar feedback. As large ha-
+los assemble hierarchically from smaller ones, if the small er
+halos contain an excessive amount of gas at the time of the
+merger, an overly strong AGN would be required to com-
+pensate. This nuanced approach to making the halos have
+gas fractions in better agreement with observations is con-
+sistent with Spacek et al. (2017), who ﬁnd that merely in-
+creasing the AGN feedback eﬃciency would make the ther-
+mal Sunyaev-Zeldovich signal for large-mass halos even les s
+consistent with observations. The investigation of how sub -
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 16 ---
+16 Chisari et al.
+grid models interplay in producing the simulated gas frac-
+tions is unfortunately not possible without running addi-
+tional simulations. In this context, we note that additiona l
+exploration of the impact of the minimum heating tempera-
+ture on the distribution of gas is needed. Hahn et al. (2017)
+have suggested that AMR simulations are not very sensitive
+to the choice of this parameters, in comparison to smoothed-
+particle-hydrodynamics simulations ( Le Brun et al. 2014 ).
+Nevertheless, their results from a suite of hydrodynamic
+AMR zoom simulations of massive clusters are not fully rep-
+resentative of the speciﬁc heating temperature and cosmo-
+logical volume of Horizon-AGN.
+The redshift evolution is also diﬀerent between simu-
+lations, with Horizon displaying a non-monotonic trend as-
+sociated with the impact of gas pressure and AGN feed-
+back, which competes with the growth of structure between
+0 < z < 6. It is likely that choosing diﬀerent sub-grid pa-
+rameters for the feedback eﬃciency could lead to modiﬁed
+predictions in this redshift evolution. The Horizon result s are
+well-approximated by the BC model of Schneider & Teyssier
+(2015) at z = 0, but with diﬀerent preferred values for the
+parameters that determine the amount and scale of suppres-
+sion of power due to baryons, and a smaller typical scale for
+the stellar component. The redshift dependence of our re-
+sults also diﬀers from the BC model prediction and we have
+provided an eﬀective parametrisation with 4 free parame-
+ters which approximates the Horizon results within < 5% at
+all redshifts. In the future, we plan to carry out a more de-
+tailed comparison between the BC model assumptions and
+components and the simulation predictions.
+The total matter power spectra obtained in this work
+from Horizon-AGN, Horizon-noAGN and Horizon-DM have
+been made publicly available.
+ACKNOWLEDGMENTS
+This work has made use of the HPC resources of CINES
+(Jade and Occigen supercomputer) under the time allo-
+cations 2013047012, 2014047012 and 2015047012 made by
+GENCI. This work is partially supported by the Spin(e)
+grants ANR-13-BS05-0005 ( http://cosmicorigin.org) of
+the French Agence Nationale de la Recherche and by the ILP
+LABEX (under reference ANR-10-LABX-63 and ANR-11-
+IDEX-0004-02). We thank S. Rouberol for running smoothly
+the Horizon cluster for us. Part of the analysis of the sim-
+ulation was performed on the DiRAC facility jointly funded
+by STFC, BIS and the University of Oxford.
+NEC acknowledges support from a Beecroft Postdoc-
+toral Research Fellowship and a Royal Astronomical Soci-
+ety Research Fellowship. RSB acknowledges support from
+STFC. AMCLB was supported by the European Research
+Council under the European Union’s Seventh Framework
+Programme (FP7/2007-2013) / ERC grant agreement num-
+ber 340519.
+We thank the anonymous referee for comments that
+helped improve this manuscript. We are grateful to Volker
+Springel, Ruediger Pakmor, Mark Vogelsberger, Lars Hern-
+quist and Wotjek Hellwing for providing the matter power
+spectra from IllustrisTNG, Illustris and EAGLE for compari -
+son to Horizon-AGN in this work. We thank the OWLS team
+for making their results publicly available. We are gratefu l to
+Joachim Harnois-D´ eraps for useful discussions and to Robert
+J. Thacker for help setting up and running pispec4 for the
+power spectrum computation. Some of the theoretical pre-
+dictions used in this work have made use of the Core Cosmol-
+ogy Library 3, which also uses the CLASS software (Blas et al.
+2011).
+References
+Angulo R. E., Hahn O., Abel T., 2013, MNRAS, 434, 1756
+Aubert D., Pichon C., Colombi S., 2004, MNRAS, 352, 376
+Bartelmann M., Schneider P., 2001, Phys. Rep. , 340, 291
+Beckmann R. S., et al., 2017, MNRAS, 472, 949
+Blaizot J., Guiderdoni B., Devriendt J. E. G., Bouchet
+F. R., Hatton S. J., Stoehr F., 2004, MNRAS, 352, 571
+Blas D., Lesgourgues J., Tram T., 2011, JCAP, 7, 034
+Blumenthal G. R., Faber S. M., Flores R., Primack J. R.,
+1986, ApJ, 301, 27
+Booth C. M., Schaye J., 2009, MNRAS, 398, 53
+Cui W., Liu L., Yang X., Wang Y., Feng L., Springel V.,
+2008, ApJ, 687, 738
+Dubois Y., Devriendt J., Slyz A., Teyssier R., 2010,
+MNRAS, 409, 985
+Dubois Y., Devriendt J., Slyz A., Teyssier R., 2012,
+MNRAS, 420, 2662
+Dubois Y., et al., 2014, MNRAS, 444, 1453
+Dubois Y., Peirani S., Pichon C., Devriendt J., Gavazzi R.,
+Welker C., Volonteri M., 2016, MNRAS, 463, 3948
+Eiﬂer T., Krause E., Dodelson S., Zentner A. R., Hearin
+A. P., Gnedin N. Y., 2015, MNRAS, 454, 2451
+Fedeli C., 2014, JCAP, 4, 028
+Foreman S., Becker M. R., Wechsler R. H., 2016, MNRAS,
+463, 3326
+Gonzalez A. H., Sivanandam S., Zabludoﬀ A. I., Zaritsky
+D., 2013, ApJ, 778, 14
+Green J., et al., 2011, preprint, ( arXiv:1108.1374)
+Hahn O., Martizzi D., Wu H.-Y., Evrard A. E., Teyssier
+R., Wechsler R. H., 2017, MNRAS, 470, 166
+Haider M., Steinhauser D., Vogelsberger M., Genel S.,
+Springel V., Torrey P., Hernquist L., 2016, MNRAS,
+457, 3024
+Han J., et al., 2015, MNRAS, 446, 1356
+Harnois-D´ eraps J., van Waerbeke L., Viola M., Heymans
+C., 2015, MNRAS, 450, 1212
+Hearin A. P., Zentner A. R., Ma Z., 2012, JCAP, 4, 034
+Heitmann K., Lawrence E., Kwan J., Habib S., Higdon D.,
+2014, ApJ, 780, 111
+Hellwing W. A., Schaller M., Frenk C. S., Theuns T.,
+Schaye J., Bower R. G., Crain R. A., 2016, MNRAS,
+461, L11
+Heymans C., et al., 2012, MNRAS, 427, 146
+Hockney R. W., Eastwood J. W., 1981, Computer Simula-
+tion Using Particles. McGraw-Hill
+3 https://github.com/LSSTDESC/CCL
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 17 ---
+17
+Howlett C., Lewis A., Hall A., Challinor A., 2012, JCAP,
+4, 27
+Huﬀ E. M., Hirata C. M., Mandelbaum R., Schlegel D.,
+Seljak U., Lupton R. H., 2014, MNRAS, 440, 1296
+Huterer D., Takada M., 2005, Astroparticle Physics ,
+23, 369
+Ivezic Z., et al., 2008, preprint, ( arXiv:0805.2366)
+Jing Y. P., 2005, ApJ, 620, 559
+Joudaki S., et al., 2017, MNRAS, 471, 1259
+Kaviraj S., et al., 2017, MNRAS, 467, 4739
+Kilbinger M., 2015, Reports on Progress in Physics ,
+78, 086901
+Kitching T. D., Verde L., Heavens A. F., Jimenez R., 2016,
+MNRAS, 459, 971
+Komatsu E., Smith K. M., Dunkley J., et al. 2011,
+ApJ Sup. , 192, 18
+Krause E., et al., 2017, preprint, ( arXiv:1706.09359)
+Kravtsov A., Vikhlinin A., Meshscheryakov A., 2014,
+preprint, ( arXiv:1401.7329)
+Laureijs R., 2009, preprint, ( arXiv:0912.0914)
+Laureijs R., et al., 2011, preprint, ( arXiv:1110.3193)
+Le Brun A. M. C., McCarthy I. G., Schaye J., Ponman
+T. J., 2014, MNRAS, 441, 1270
+Leauthaud A., et al., 2012, ApJ, 744, 159
+Lipatov A. S., 2002, The hybrid multiscale simulation tech-
+nology: an introduction with application to astrophysical
+and laboratory plasmas
+McCarthy I. G., et al., 2010, MNRAS, 406, 822
+McCarthy I. G., Schaye J., Bower R. G., Ponman T. J.,
+Booth C. M., Dalla Vecchia C., Springel V., 2011,
+MNRAS, 412, 1965
+McCarthy I. G., Schaye J., Bird S., Le Brun A. M. C., 2017,
+MNRAS, 465, 2936
+McCarthy I. G., Bird S., Schaye J., Harnois- Deraps J.,
+Font A. S., van Waerbeke L., 2018, MNRAS, 476, 2999
+Mead A. J., Peacock J. A., Heymans C., Joudaki S., Heav-
+ens A. F., 2015, MNRAS, 454, 1958
+Mohammed I., Gnedin N. Y., 2017, preprint,
+(arXiv:1707.02332)
+Mohammed I., Seljak U., 2014, MNRAS, 445, 3382
+Mohammed I., Martizzi D., Teyssier R., Amara A., 2014,
+preprint, ( arXiv:1410.6826)
+Mummery B. O., McCarthy I. G., Bird S., Schaye J., 2017,
+MNRAS, 471, 227
+Omma H., Binney J., Bryan G., Slyz A., 2004, MNRAS,
+348, 1105
+Peebles P. J. E., 1993, Principles of Physical Cosmology
+Peirani S., et al., 2017, MNRAS, 472, 2153
+Schaye J., et al., 2010, MNRAS, 402, 1536
+Schaye J., et al., 2015, MNRAS, 446, 521
+Schneider A., Teyssier R., 2015, JCAP, 12, 049
+Schneider A., et al., 2016, JCAP, 4, 047
+Seljak U., 2000, MNRAS, 318, 203
+Semboloni E., Hoekstra H., Schaye J., van Daalen M. P.,
+McCarthy I. G., 2011, MNRAS, 417, 2020
+Semboloni E., Hoekstra H., Schaye J., 2013, MNRAS,
+434, 148
+Shakura N. I., Sunyaev R. A., 1973, A&A, 24, 337
+Spacek A., Richardson M., Scannapieco E., 2017, preprint,
+(arXiv:1711.05304)
+Springel V., et al., 2017, preprint, ( arXiv:1707.03397)
+Sutherland R. S., Dopita M. A., 1993, ApJ Sup. , 88, 253
+Takahashi R., Sato M., Nishimichi T., Taruya A., Oguri
+M., 2012, ApJ, 761, 152
+Tenneti A., Mandelbaum R., Di Matteo T., Kiessling A.,
+Khandai N., 2015, MNRAS, 453, 469
+Teyssier R., 2002, A&A, 385, 337
+Thacker R. J., Couchman H. M. P., 2006,
+Computer Physics Communications , 174, 540
+Troxel M. A., et al., 2017, preprint, ( arXiv:1708.01538)
+Tyson J. A., Valdes F., Wenk R. A., 1990, ApJ Let. , 349, L1
+Valkenburg W., Villaescusa-Navarro F., 2017, MNRAS,
+467, 4401
+Velander M., et al., 2014, MNRAS, 437, 2111
+Villaescusa-Navarro F., Banerjee A., Dalal N., Castorina
+E., Scoccimarro R., Angulo R., Spergel D. N., 2017,
+preprint, ( arXiv:1708.01154)
+Vogelsberger M., et al., 2014, Nature, 509, 177
+Volonteri M., Dubois Y., Pichon C., Devriendt J., 2016a,
+preprint, ( arXiv:1602.01941)
+Volonteri M., Dubois Y., Pichon C., Devriendt J., 2016b,
+MNRAS, 460, 2979
+Weinberg D. H., Mortonson M. J., Eisenstein D. J., Hirata
+C., Riess A. G., Rozo E., 2013, Phys. Rep. , 530, 87
+Weinberger R., et al., 2017, MNRAS, 465, 3291
+Wittman D. M., et al., 2002, in Tyson J. A., Wolﬀ
+S., eds, Proc. SPIE Vol. 4836, Survey and Other
+Telescope Technologies and Discoveries. pp 73–82
+(arXiv:astro-ph/0210118), doi:10.1117/12.457348
+Wojtak R., Mamon G. A., 2013, MNRAS, 428, 2407
+de Jong J. T. A., et al., 2013, The Messenger, 154, 44
+van Daalen M. P., Schaye J., 2015, MNRAS, 452, 2247
+van Daalen M. P., Schaye J., Booth C. M., Dalla Vecchia
+C., 2011, MNRAS, 415, 3649
+van Uitert E., et al., 2016, MNRAS, 459, 3251
+APPENDIX A: ACCURACY AT LARGE
+SCALES
+Several of the results presented in this manuscript (Figs. 1
+through 10) refer to ratios between power spectra of Horizon-
+AGN, Horizon-noAGN and Horizon-DM, the three simula-
+tions of the Horizon set. In taking these ratios, it is often
+the case that the redshifts being compared across runs diﬀer
+slightly. For example, one of the snapshots is extracted at
+redshift z1, while the other one is extracted at z1 + δz 4. To
+ﬁrst order, we can and we do correct for this eﬀect by re-
+scaling the power spectra using the linear growth function.
+4 The time-step in the Horizon runs is set by the Courant con-
+dition: δt = Cδx/v max, where ∆ x is the spatial resolution of the
+AMR grid, C = 0 . 8 is a constant factor, and vmax is the maxi-
+mum characteristic velocity in the simulation (considerin g both
+ﬂuid and particles). vmax is usually set by the maximum sound
+speed, and the stronger the feedback (i.e. the presence or no t of
+AGN), the higher its value. As a consequence, this results in dif-
+ferent time-steps for the diﬀerent runs.
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 18 ---
+18 Chisari et al.
+In other words, in presenting the ratio of power spectra from
+simulations A (at z1) and B (at z1 + δz), we estimate
+∆ 2
+A(z1)
+∆ 2
+B(z1) = D2(z1 + δz)
+D2(z1)
+∆ 2
+A(z1)
+∆ 2
+B(z1 + δz) , (A1)
+where D is the linear growth factor normalised to 1 at z = 0.
+Even after performing this correction, we have found residu al
+eﬀects that aﬀect the ratio of power spectra across simula-
+tions at large scales at the 1% level, which can be clearly
+seen in Figures 1 and 3 at z = 0 for example. The re-scaling
+procedure based on the linear growth function is insuﬃcient
+to remove the large-scale excess power.
+On the one hand, we know that even the largest scales
+in the box are growing nonlinearly by z = 0. We have veriﬁed
+that this is the case by performing the following comparison .
+For each of the simulation runs, we compared power spectra
+at two diﬀerent redshifts by taking their ratio at large-sca les
+normalised by the growth factor such that
+χ ≡ D2(z2)
+D2(z1)
+∆ 2
+A(z1)
+∆ 2
+A(z2) . (A2)
+In practise, we chose z1 and z2 to be consecutive snapshots
+among those presented in Figure 1. The comparison demon-
+strated that indeed equation ( A2) deviates from unity by
+∼ 1% at large scales. Based on the results of Schneider et al.
+(2016), who studied the convergence of the large-scale power
+in N -body simulations with diﬀerent box sizes, this result is
+expected. Schneider et al. (2016) indeed suggest that a min-
+imum volume of (500 h/Mpc)3 is required for the simulation
+to probe linear scales at z = 0.
+We also considered the possibility of a transfer of power
+from small to large-scales due to the reﬁnement scheme of the
+RAMSES code. We ruled out this hypothesis by comparing
+the matter power spectrum from the Horizon-DM simula-
+tion at z = 2 to that of an additional unreﬁned run with
+10243 particles extracted at the same redshift. We show this
+comparison in the orange curve of Figure A1, which demon-
+strates that any large-scale diﬀerence in power is much less
+than 1% in this case.
+There are alternative possible explanations for the 1%
+excess of power at large scales. The work by Angulo et al.
+(2013) has demonstrated that depending on the gravitational
+kernel, the coupling of baryons and DM can result in spuri-
+ous large-scale power even in the case of linear theory. Fur-
+ther, this phenomenon is sensitive to the way that the ini-
+tial conditions are set for the baryons and the dark matter
+(Valkenburg & Villaescusa-Navarro 2017 ). Other hydrody-
+namic simulations seem to be aﬀected by small oﬀsets in
+large-scale power as well (see Figure 13 of Mummery et al.
+2017). We emphasise that a 1% accuracy at large scales sat-
+isﬁes our requirements for this work.
+APPENDIX B: CONVERGENCE TESTS
+In this section, we study the convergence properties of the
+matter power spectrum at small scales in the Horizon simu-
+lation. The ﬁducial resolution of Horizon is 1024 3 particles,
+with an approximate dark matter mass of 8 × 107 M⊙ in the
+10−1 100 101
+k [h/Mpc]
+0.94
+0.96
+0.98
+1.00
+1.02
+1.04
+1.06/uni03942 Δsim 1)
+DM //uni03942 Δsim 2)
+DM
+z = 0  AMR, 512 3 vs. 1024 3
+z = 2  AMR, 512 3 vs. 1024 3
+z = 2  no refinement 512 3 vs. AMR 1024 3
+z = 2  no refinement vs. AMR, 1024 3
+Figure A1. The impact of resolution (i.e., number of particles)
+in the matter power spectrum of the DMO run. The ﬁgure shows
+the ratio between the power spectrum from diﬀerent low resol u-
+tion runs and our ﬁducial run with 1024 3 particles. The black
+curve shows the results for the run with 512 3 particles and reﬁne-
+ment at z = 0; the grey curve corresponds to the same simulation
+at z = 2. The dot-dashed curve corresponds to the z = 2 case
+without AMR. The orange curve corresponds to an unreﬁned run
+with 1024 3 particles at z = 2. The shaded area represents ± 1%
+accuracy.
+baryonic runs, and slightly higher in the DMO run to ac-
+commodate the same Ω m value. To estimate the convergence
+rate of the simulation, we run two other DMO boxes with
+5123 particles (with and without reﬁnement) and a 1024 3
+box without reﬁnement, and we compare the matter power
+spectrum estimated from those boxes to the ﬁducial one in
+this work at z = 2 and z = 0.
+The results are shown in Figure A1. The shaded area
+in the ﬁgure represents the target of 1% accuracy below
+k < 10 h/Mpc. The results for z = 2 (solid grey) indicate
+that, due to resolution eﬀects on the number of particles, th is
+accuracy is achieved at k < 3 h/Mpc. The additional impact
+of the reﬁnement of the grid is then evidenced in the compar-
+ison between the solid grey curve and the dot-dashed grey
+curve, which corresponds to the unreﬁned 512 3 simulation at
+z = 2. The reduction in the convergence scale deﬁned by the
+1% accuracy requirement is of a factor of ∼ 2 for the dot-
+dashed grey curve. Focusing now on the orange curve which
+indicates the results of the 1024 3 unreﬁned run at z = 2,
+we ﬁnd that 1% accuracy is achieved at k = 3 h/Mpc. Ex-
+trapolating from the 512 3 case, this suggests that the 1024 3
+reﬁned simulation should have achieved 1% convergence at
+k ∼ 6 h/Mpc at least. Its convergence rate compared to a
+hypothetically 2048 3 reﬁned simulation should be shallower
+than in the case of the orange curve, thus suggesting we very
+likely achieve a few percent convergence throughout all the
+scales of interest in this work.
+At z = 0, the convergence rate is much better than
+at z = 2. This is evidenced from the results of the black
+© 0000 RAS, MNRAS 000, 000–000
+
+--- Page 19 ---
+19
+solid curve, which shows the comparison of the 512 3 reﬁned
+simulation to the 1024 3 reﬁned simulation at z = 0. In this
+case, the convergence scale is extended to k ∼ 10 h/Mpc,
+thus allowing us to infer that the 1024 3 runs have converged
+to approximately twice that value. Note that the convergence
+rate in the case of the presence of baryons should be even
+better due to the increased number of particles (roughly a
+factor of 2 at z = 0).
+Our results are in good agreement with Schneider et al.
+(2016), who studied the accuracy of matter power spectrum
+predictions from DMO simulations with a variety of box sizes
+and resolutions. Their results suggested that per cent accu -
+racy can be achieved up to k ∼ 4 h/Mpc for a (512 Mpc /h)3
+simulation with 1024 3 particles. Re-scaling the wave-number
+to our box size, we expect to achieve per cent accuracy at
+around k ∼ 20 h/Mpc, in line with the result quoted in the
+paragraph above. We conclude that we have achieved the de-
+sired numerical convergence in the matter power spectrum,
+and as the main results of this work highlight, the impact
+of baryons on the total matter power spectrum exceeds the
+numerical accuracy at the scales of interest and depends on
+the exact implementation of baryonic physics (Figure 6).
+© 0000 RAS, MNRAS 000, 000–000

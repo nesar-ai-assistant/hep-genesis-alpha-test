@@ -221,27 +221,39 @@ def server_specs():
 
 
 def research_topics():
-    """Rotating research topics spanning HEP/cosmo, matched to our MCP servers."""
+    """Rotating research topics spanning HEP/cosmo, matched to our MCP servers.
+
+    Each topic declares the server spec its query assumes (server_key); the
+    research profile passes that server alongside the bundled domain server.
+    Without it the agent gets prompted to "use the X tools" it doesn't have
+    (seen 2026-10-16 higgsino-dd and 2026-10-17 baryonic-pk runs).
+    """
     return [
         dict(slug="sterile-bbn-xray", title="Sterile neutrino DM: BBN + X-ray joint constraints",
+             server_key="SBBN",
              query=("Survey recent arXiv work (2024-2026) on sterile-neutrino dark matter. Combine BBN constraints "
                     "(use the sterile-nu tools for Yp/D/H numbers) and X-ray constraints: which (m_s, sin^2 2theta) "
                     "regions remain viable? Quantify with tool calls where possible.")),
         dict(slug="higgsino-dd", title="Higgsino thermal target vs direct detection",
+             server_key="IDM",
              query=("Survey recent arXiv work on the higgsino thermal relic target (1.0-1.2 TeV). Use the inelastic-DM "
                     "tools to compute the relic density at several masses; compare with LZ/XENONnT sensitivities and "
                     "the Planck abundance. Where does the higgsino sit relative to current limits?")),
         dict(slug="baryonic-pk", title="Baryonic suppression of the matter power spectrum",
+             server_key="HYD",
              query=("Survey recent work on baryonic suppression of the matter power spectrum. Use the hydrodynamics "
                     "emulator tools to predict the Pk-ratio at z=0 for a couple of parameter points, explain the AGN "
                     "feedback physics of suppression, and assess the impact on weak-lensing cosmology.")),
         dict(slug="sbl-neff", title="Short-baseline anomalies vs N_eff constraints",
+             server_key="SBBN",
              query=("Survey the sterile-neutrino short-baseline anomaly status (2024-2026) and contrast with "
                     "BBN/CMB N_eff limits (use the BBN tools for numbers). Are eV-scale sterile neutrinos still viable?")),
         dict(slug="lyman-wdm", title="Lyman-alpha forest constraints on warm/sterile DM",
+             server_key="SBBN",
              query=("Survey recent Lyman-alpha forest constraints on warm dark matter. How do they compare with "
                     "sterile-neutrino non-resonant production? Use the sterile-nu tools for production fractions.")),
         dict(slug="cluster-profiles", title="Cluster thermodynamic profiles and hydrostatic bias",
+             server_key="HYD",
              query=("Survey recent work on hydrostatic mass bias in galaxy clusters. Use the hydrodynamics emulator "
                     "to predict CGD (gas density) and CTP (temperature) profiles at two redshifts and discuss how "
                     "profile shape evolution affects mass reconstruction.")),
@@ -330,8 +342,9 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
     if profile == "research":
         topic = pick_topic()
         proj = f"ramp-research-{topic['slug']}"
+        topic_srv = S[topic["server_key"]]
         add(f"R1-{topic['slug']}", "research",
-            f'"{topic["query"]}" --project {proj} --servers {DOM} '
+            f'"{topic["query"]}" --project {proj} --servers {DOM} --servers {topic_srv} '
             '--max-waves 2 --workers 3 --max-tool-calls 60 --wall-clock 30',
             f"Research: {topic['title']}", 2400)
         add("R2-report", "cli", f"--report --project {proj}",

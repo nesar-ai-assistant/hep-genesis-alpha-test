@@ -1,0 +1,1192 @@
+Title: Matter Clustering in Astrid: Reduced Baryonic Suppression from Realistic Black Hole Dynamics
+Authors: Yanhui Yang, Simeon Bird, Yihao Zhou, Tiziana Di Matteo, Rupert Croft, Yueying Ni, Nianyi Chen
+Year: 2026
+arXiv ID: 2605.04176
+
+============================================================
+
+--- Page 1 ---
+Draft version August 11, 2026
+Typeset using LATEXtwocolumnstyle in AASTeX7.0.1
+Matter Clustering in Astrid: Reduced Baryonic Suppression from Realistic Black Hole Dynamics
+Yanhui Yang (杨焱辉)
+ ,1,∗ Simeon Bird
+ ,1 Yihao Zhou (周亦豪)
+ ,2 Tiziana Di Matteo
+ ,2 Rupert Croft
+ ,2
+Yueying Ni
+ ,3 and Nianyi Chen
+ 4
+1Department of Physics and Astronomy, University of California, Riverside, 900 University Avenue, Riverside, CA 92521, USA
+2McWilliams Center for Cosmology, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213, USA
+3Michigan Institute for Data and AI in Society, University of Michigan, Ann Arbor, MI, 48109, USA
+4School of Natural Sciences, Institute for Advanced Study, Princeton, NJ 08540, USA
+(Accepted 2026 July 19; Published 2026 August 6)
+ABSTRACT
+Baryonic feedback from active galactic nuclei (AGN) is often invoked as a major source of suppres-
+sion in the matter power spectrum, with implications for precision cosmology and theS 8 tension. We
+presentAstrid-DMO, the dark matter-only counterpart to the large-volumeAstridhydrodynamical
+simulation, and measure baryonic effects throughP hydro(k)/PDMO(k). We find no significant suppres-
+sion atz= 0 and mild suppression atz= 0.2, weaker than in other state-of-the-art simulations. Using
+controlled small-volume runs, we identify a key driver of this discrepancy: the treatment of black
+hole (BH) dynamics. The widely used BH repositioning scheme artificially enhances BH mergers and
+boosts kinetic AGN feedback (e.g., by a factor of 2 atz= 1.5), leading to overly strong suppression.
+By contrast, a more physical dynamical friction model reduces feedback efficiency and weakens cluster-
+ing suppression. Consequently, reconciling large-scale structure measurements with cosmic microwave
+background (CMB)-inferred ΛCDM cosmology, while matching observed halo gas fractions, becomes
+more challenging. Although strengthening AGN feedback can increase suppression, in our model this
+induces tensions with the observed galaxy stellar mass and AGN luminosity functions. These results
+sharpen the need for novel mechanisms that can efficiently eject gas from halos without compromising
+other galaxy properties.
+Keywords:Active galactic nuclei (16) — Cosmology (343) — Hydrodynamical simulations (767) —
+N-body simulations (1083) — Supermassive black holes (1663) — Large-scale structure of
+the universe (902)
+1.INTRODUCTION
+Interpreting measurements of cosmic large-scale struc-
+ture (e.g., ˇZ. Ivezi´ c et al. 2019; DESI Collaboration
+2016; H. Aihara et al. 2018; R. Laureijs et al. 2011; R.
+Akeson et al. 2019; Y. Gong et al. 2019) requires a ro-
+bust treatment of baryonic physics to fully exploit their
+constraining power. This is particularly relevant to the
+S8 tension (for an introduction, see H. Hildebrandt et al.
+2017; DES Collaboration 2018; C. Heymans et al. 2021),
+where baryonic suppression has been proposed as a po-
+tential solution (I. G. McCarthy et al. 2018; A. Amon
+& G. Efstathiou 2022), though disagreements remain
+Email: yyang440@ucr.edu, sbird@ucr.edu, tiziana@phys.cmu.edu
+∗ Corresponding author
+in the community. For instance, the recent reanalysis
+of the Hyper Suprime-Cam (HSC) Y3 data (J. Chop-
+pin de Janvry et al. 2025) models baryonic effects and
+derives a cosmology consistent with cosmic microwave
+background (CMB) measurements (F. J. Qu et al. 2026;
+T. Louis et al. 2025). In contrast, the Dark Energy Sur-
+vey (DES) Y6 analysis ( DES Collaboration et al. 2026)
+adopts conservative scale cuts that exclude data poten-
+tially sensitive to baryonic uncertainties, and continues
+to find a 2.6σS 8 discrepancy. Several studies argue that
+baryonic physics may not fully resolve the tension, as the
+required suppression is too strong to be consistent with
+observed properties of galaxy groups and clusters, such
+as the gas/baryon fraction (e.g., I. G. McCarthy et al.
+2025; J. Salcido & I. G. McCarthy 2025), implying that
+arXiv:2605.04176v2  [astro-ph.GA]  7 Aug 2026
+
+--- Page 2 ---
+2Yang et al.
+new physics (e.g., new dark sector models) may be re-
+quired.
+Active galactic nucleus (AGN) feedback is the dom-
+inant source of baryonic suppression of matter cluster-
+ing on Mpc scales (M. P. van Daalen et al. 2011; N. E.
+Chisari et al. 2018). In modern cosmological hydrody-
+namical simulations (e.g., the IllustrisTNG simulations;
+V. Springel et al. 2018), kinetic AGN feedback, associ-
+ated with high-mass black holes (BHs) accreting at low
+rates, is implemented to efficiently remove gas from ha-
+los without excessive galaxy sizes or X-ray luminosities
+associated with older models (e.g., G. F. Snyder et al.
+2015; E. Choi et al. 2015). Recent large-volume sim-
+ulations with AGN feedback implemented have shown
+considerable baryonic suppression of the matter power
+spectrum (tens of percent atk∼10hMpc −1) (e.g., V.
+Springel et al. 2018; N. E. Chisari et al. 2018; J. Schaye
+et al. 2023; W. A. Hellwing et al. 2016, selected simula-
+tions are shown in Fig. 1).
+TheAstridsimulation (Y. Zhou et al. 2026), one of
+the largest high-resolution cosmological hydrodynamical
+simulations to date, also includes a kinetic AGN feed-
+back model. In addition, it implements a relatively real-
+istic treatment of BH dynamics by including a subgrid
+dynamical friction (DF) model (N. Chen et al. 2022),
+which allows BHs to orbit within their host halos and
+merge only when they are sufficiently close and gravi-
+tationally bound (see also M. Hirschmann et al. 2014;
+M. Tremmel et al. 2015, 2017). In contrast, most ex-
+isting simulations artificially pin (or reposition) BHs to
+the centers (i.e., gravitational potential minima) of their
+host galaxies (e.g., C. M. Booth & J. Schaye 2009; V.
+Springel et al. 2018). 5 This treatment can lead to un-
+physically prompt BH mergers during early close pas-
+sages of their host halos. N. Chen et al. (2022) found
+that, in simulations with repositioning, BHs of small
+(sub)halos tend to merge into massive BHs in larger
+halos,6 resulting in artificially enhanced growth of high-
+mass BHs (see Fig. 9 of N. Chen et al. 2022). This effect
+is also observed in this work: as shown in Figure A1, the
+number of BHs withM BH <10 6 M⊙/his significantly
+lower in the repositioning simulations. Whether this ef-
+fect can alter AGN feedback and thus matter clustering
+has not yet been carefully investigated.
+In this work, we presentAstrid-DMO, the dark
+matter-only (DMO) counterpart simulation toAstrid,
+and examine baryonic effects on the matter power spec-
+5 This technique is used to avoid numerical dynamical heating
+of particles caused by insufficient mass resolution.
+6 In Fig. 7 of N. Chen et al. (2022), there are many halos that
+have lost their BHs.
+trum inAstrid. To compare DF and repositioning
+in their effects on baryonic suppression, we perform
+and analyze a set of smaller-volume simulations with
+varying BH dynamics and feedback configurations. We
+also present and discuss selected observables affected by
+these variations.
+2.SIMULATIONS
+2.1.AstridandAstrid-DMO
+TheAstridsimulation evolves 2×5500 3 particles in
+a 250 cMpc/hbox, with a gravitational softening length
+ofϵ g = 1.5 ckpc/h(S. Bird et al. 2022; Y. Ni et al.
+2022, 2025; Y. Zhou et al. 2026). Importantly,Astrid
+includes a realistic dynamical friction model described
+in N. Chen et al. (2022) and a model for kinetic-mode
+black hole feedback (R. Weinberger et al. 2017). This
+BH treatment allows us to track the orbital evolution
+of BHs and to impose a physical criterion for BH merg-
+ers that requires both sufficient proximity and gravita-
+tional binding (J. Bellovary et al. 2011; M. Tremmel
+et al. 2017). For the criterion adopted inAstrid, see
+Equation (1) in Y. Zhou et al. (2026).
+Astridemploys a two-mode AGN feedback model,
+with a thermal mode at high accretion rates and a ki-
+netic mode at low accretion rates. Following R. Wein-
+berger et al. (2017), the mode-switching criterion is
+based on both the BH mass and the Eddington ratio,
+fEdd = ˙MBH/ ˙MEdd, where ˙MBH ( ˙MEdd) is the BH (Ed-
+dington) accretion rate. The threshold for activating
+kinetic feedback is defined as:
+χthr = min
+"
+0.002
+ MBH
+Mpivot
+2
+,0.05
+#
+,(1)
+where the pivot massM pivot is set to 5×10 8 M⊙/h.
+Whenf Edd < χthr, AGN feedback switches to the ki-
+netic mode, in which energy is injected in the form of
+momentum kicks to surrounding gas particles. In the
+thermal (quasar) mode, the feedback energy is deposited
+as thermal energy into nearby gas.
+We note that this kinetic-mode activation criterion is
+more stringent than simulations such as IllustrisTNG
+(V. Springel et al. 2018), which also contributes to weak-
+ening baryonic suppression inAstridby reducing the
+number of BHs that can enter the kinetic mode (Y. Ni
+et al. 2023).
+We performAstrid-DMO, with the same cosmolog-
+ical parameters, volume and initial phases asAstrid,
+except that it contains 5500 3 dark matter particles and
+no baryons.Astrid-DMOalso evolves fromz= 99 to
+0, and has particle snapshots and halo catalogs saved at
+the same redshifts asAstrid, withz <3 halo catalogs
+
+--- Page 3 ---
+Astrid: Reduced Baryonic Suppression3
+saved at a finer redshift cadence for merger tree gener-
+ation. We use the Friends-of-Friends (FoF) algorithm
+(M. Davis et al. 1985) to identify particle groups and
+subfind(V. Springel et al. 2001; V. Springel 2010) to
+identify halos and subhalos.
+2.2.Small-volume simulations
+We investigate how the matter power spectrum is af-
+fected by different BH model choices with an additional
+set of small-volume (SV) simulations. Each hydrody-
+namical simulation includes 2×640 3 particles initially
+in a volume of (50 cMpc/h) 3, with particle masses of
+MDM = 3.43×10 7 M⊙/handM gas = 6.43×10 6 M⊙/h,
+and a softening length ofϵ SV
+g = 2.6 ckpc/h(2×lower
+resolution thanAstrid). The simulations are sum-
+marized in Table 1.SV-DFuses the same BH dy-
+namics model (dynamical friction) and AGN feedback
+model (fiducial) asAstrid. In addition, to verify
+that the effects of BH dynamics are generalizable to
+different feedback strengths, we run two more simula-
+tions with stronger AGN feedback,SV-DF-SandSV-
+Repos-S. The stronger feedback model is achieved by
+loosening the kinetic mode activation criterion and in-
+creasing the kinetic feedback efficiency (for the defini-
+tion of the efficiencyϵ f,kin, see Y. Zhou et al. 2026).
+Specifically, we change the activation threshold by set-
+ting the pivot mass to 1/5 of the fiducial value, i.e.,
+Mpivot = 10 8 M⊙/h, and double the cap from 0.05 to
+0.1, such that BHs can enter the kinetic mode more eas-
+ily (we will see in Fig. 3 that even low-mass BHs can
+release considerable energy). The kinetic feedback effi-
+ciency is enhanced by a factor of 4. All other cosmolog-
+ical and subgrid model parameters are the same as in
+Astrid. We have also runSV-DMO, a DMO counter-
+part of these small simulations with 640 3 dark matter
+particles in a box of the same size. All simulations are
+run withMP-Gadget(Y. Feng et al. 2018) throughout
+this study.
+In each hydrodynamical simulation, we track BH ac-
+tivity at every time step, recording instantaneous ac-
+cretion rates, energy release, and merger events. This
+high-cadence logging generates a continuous evolution-
+ary history, capturing transient dynamical events and
+feedback phases that would otherwise be missed between
+snapshots.
+3.RESULTS
+3.1.Baryonic suppression of matter clustering
+We plot the ratio of the matter power spectrum
+between the hydrodynamical and DMO simulations,
+Phydro(k)/PDMO(k), for both theAstridand SV simu-
+lations in Figure 1. In all simulations, the ratio is close
+T able 1.Small-volume simulations performed to study the
+effect of BH dynamics models on the matter power spectrum
+suppression. ‘Repositioning’ refers to the BH repositioning
+method. AGN feedback models are varied to confirm the
+generalizability of the effects of BH dynamics.
+Simulation BH dynamics Feedback model
+SV-DFDynamical friction Fiducial
+SV-ReposRepositioning Fiducial
+SV-DF-SDynamical friction Stronger feedback
+SV-Repos-SRepositioning Stronger feedback
+to unity at large scales (k≲1hMpc −1) where baryonic
+effects are negligible, and much greater than unity at
+the smallest scales due to the cooling and condensation
+of baryons in the centers of halos.
+InAstrid(violet), no suppression is seen prior to
+z= 0.5. Atz= 0.2, mild suppression extends to
+k∼1hMpc −1, before the power spectrum ratio rises
+back to above unity atz= 0; this behavior may re-
+flect gas reaccretion by sufficiently massive halos and/or
+continued adiabatic contraction of dark matter. 7 By
+contrast, Illustris and TNG300 show significantly sup-
+pressed matter power spectra. 8 Astrid’s SV counter-
+part,SV-DF(blue), differs because of its smaller box
+size and lower resolution. Its reduced small-scale power
+is due to the lower resolution, which increases BH merg-
+ers through the resolution (softening length)-dependent
+merging criterion. Accordingly, DF and repositioning
+are less distinguishable at lower resolution, as verified
+in Appendix B. BecauseSV-DFdoes not form halos as
+massive as inAstrid, it does not show the extended
+suppression or the subsequent recovery. AlthoughSV-
+DFis not fully converged, it is sufficient for examining
+the relative effects of the feedback variations.
+The SV runs show different baryonic effects on the
+matter power spectrum.SV-Repos(red) shows a
+stronger suppression thanSV-DF(blue) at all redshifts;
+e.g., atz= 0 the power ratio ofSV-Reposis lower than
+that ofSV-DFby∼10% aroundk= 20hMpc −1 (we
+expect the discrepancy to be≳20% forAstrid’s resolu-
+tion). This implies that the repositioning method leads
+to more efficient AGN feedback. The trend holds for
+the strong-feedback models (dashed), whereSV-Repos-
+7 We would not expect this behavior in simulations with smaller
+volumes and stronger feedback.
+8 We note that TNG300 has a mass resolution similar to that
+ofSV-Reposand is nearly identical toSV-Reposin its ki-
+netic feedback activation criterion and efficiency, except that
+it adopts a lowerM pivot of 10 8 M⊙= 0.6774×10 8 M⊙/h,
+making kinetic feedback easier to activate.
+
+--- Page 4 ---
+4Yang et al.
+0.8
+1.0
+1.2
+1.4
+1.6
+1.8
+Phydro(k)/PDMO(k)
+z = 0.0
+Astrid
+TNG300
+Illustris
+z = 0.2
+SV-DF
+SV-Repos
+SV-DF-S
+SV-Repos-S
+z = 0.5
+100 101
+k [h/Mpc]
+0.8
+1.0
+1.2
+1.4
+1.6
+1.8
+Phydro(k)/PDMO(k)
+z = 1.0
+100 101
+k [h/Mpc]
+z = 2.0
+100 101
+k [h/Mpc]
+z = 3.0
+Figure 1.Matter power spectra measured from theAstridsimulation and the small simulations (listed in Table 1) normalized
+by their corresponding DMO counterparts, atz= 0,0.2,0.5,1,2 and 3 in six panels respectively. For comparison, we also plot
+theP(k) suppression for the Illustris and TNG300 simulations atz= 0. Different simulations are color coded. Solid curves
+correspond to simulations with the fiducial feedback model, while dashed curves represent simulations with the stronger feedback
+model. The horizontal dotted line marks unity.
+S(orange) shows stronger suppression thanSV-DF-S
+(green), though the discrepancy is less significant than
+in the fiducial feedback runs (the relative difference is al-
+leviated by the increased number of kinetic-mode BHs,
+see Appendix A).
+To compare the baryonic effects of different models in
+more detail, we match halos in the hydrodynamical sim-
+ulations to their DMO counterparts atz= 0 and plot
+the ratios of their density profiles,ρ hydro(r)/ρDMO(r), in
+Fig. 2 (see Appendix C for details on the matching pro-
+cedure).ρ hydro(r) andρ DMO(r) are the one-dimensional
+total matter density profiles of the matched halos in
+the hydrodynamical and DMO simulations, respectively.
+Halo masses are expressed asM 500c, the mass enclosed
+within the radius centered on the potential minimum
+where the mean density is 500 times the critical density
+of the Universe.
+The density profile ratios show systematic differences
+among the models. ComparingSV-DF(blue) with
+SV-Repos(red), we see that the repositioning method
+leads to lower matter density atr≲100 kpc/hin
+the intermediate- (middle) and high-mass (right) bins,
+which is consistent with the stronger suppression of the
+matter power spectrum inSV-Reposthan inSV-DF
+observed in Fig. 1. In the low-mass bin (left panel),
+the difference betweenSV-DFandSV-Reposis less
+significant, because there are only small numbers of
+kinetic-mode BHs in these halos. In the strong AGN
+feedback runs (dashed), while the overall density pro-
+files shift downwards, we observe a similar trend as in
+the fiducial feedback runs, though the relative differ-
+ences are smaller.Astrid, as expected from the mat-
+ter power spectrum analysis (Fig. 1), shows a higher
+ρhydro(r)/ρDMO(r), especially in the inner regions of the
+halo, than the SV runs.
+3.2.Kinetic feedback energy
+In this section, we analyze how the BH dynamics
+treatment affects kinetic AGN feedback. We define
+Ukf(MBH,z), the density of the cumulative kinetic feed-
+back energy released from BHs with masses<M BH by
+redshiftz. The differential kinetic feedback energy den-
+
+--- Page 5 ---
+Astrid: Reduced Baryonic Suppression5
+0 101 102
+r [kpc/h]
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+ρhydro(r)/ρDMO(r)
+R500c = 69.2 kpc/h
+M500c ∈ [1011, 1012) M⊙/h
+5.13
+Astrid
+SV-DF
+SV-Repos
+SV-DF-S
+SV-Repos-S
+0 101 102
+r [kpc/h]
+R500c = 156.8 kpc/h
+M500c ∈ [1012, 1013) M⊙/h
+5.15 0 101 102 103
+r [kpc/h]
+R500c = 318.7 kpc/h
+M500c ∈ [1013, 1014) M⊙/h
+5.17
+Figure 2.Halo density profile ratios of halos in the hydrodynamical simulations to their matched DMO counterparts, atz= 0.
+The color and line styles are the same as in Figure 1. Unity is marked by a horizontal dotted line. Left, middle and right panels
+show ratios for halos in the mass ranges ofM 500c = 1011–1012 M⊙/h, 1012–1013 M⊙/hand 10 13–1014 M⊙/h, respectively. Shaded
+areas represent the 16th to 84th percentile scatter among the matched halo population. Ratios at radii within a certain scale
+(∼2ϵ SV
+g ),r lin, are plotted on a linear scale to cover the halo centers, while ratios at larger radii are plotted with a logarithmic
+x-axis.r lin = 5.13, 5.15 and 5.17 kpc/hfor the three mass bins, respectively. MedianR 500c value of the DMO halos (measured
+fromSV-DMO) in each mass bin is shown by a vertical grey line in the corresponding panel.
+107 108 109
+MBH [M⊙/h]
+10−1
+100
+101
+102
+103
+Ukf (MBH, z)
+[
+c2 M⊙ h□1
+(cMpc h□1)3 dex
+] Total energy density:
+1.07×103
+1.23×103
+1.29×103
+1.42×103
+z = 0.0
+SV-DF
+SV-Repos
+SV-DF-S
+SV-Repos-S
+107 108 109
+MBH [M⊙/h]
+Total energy density:
+2.57×102
+3.82×102
+4.27×102
+5.01×102
+z = 0.5
+107 108 109
+MBH [M⊙/h]
+Total energy density:
+5.26×101
+9.60×101
+1.34×102
+1.69×102
+z = 1.0
+107 108 109
+MBH [M⊙/h]
+Total energy density:
+1.29×101
+2.48×101
+4.32×101
+5.66×101
+z = 1.5
+Figure 3.Cumulative released kinetic feedback energy density distribution as a function of BH mass. The color and line styles
+are the same as in Figure 1. Panels from left to right show results atz= 0, 0.5, 1, and 1.5. Total released kinetic feedback
+energy [i.e.,U kf(∞,z)] is annotated for each SV simulation in the corresponding color.
+sity per logarithmic BH-mass interval is then
+Ukf(MBH,z) = ∂U kf(MBH,z)
+∂log(M BH [M⊙/h]).(2)
+Throughout this Letter, energy density is in units of
+h2 M⊙c2 cMpc−3. At a given redshift, the kinetic energy
+assigned to each BH includes contributions from all BHs
+that have merged into it (i.e., its progenitors).
+Figure 3 showsU kf(MBH,z) atz= 0, 0.5, 1 and
+1.5 in four panels for the SV simulations.SV-Repos
+(red) releases more kinetic feedback energy thanSV-
+DF(blue), with relative differences more pronounced
+at early times. For instance, atz= 1.5, the total ki-
+netic feedback energy released inSV-Reposis about
+twice that inSV-DF. We note that early kinetic feed-
+back removes gas very efficiently despite the still modest
+cumulative energy injection (we have explicitly verified
+this in Fig. B2). Figure 3 also shows that the most mas-
+sive BHs inSV-Reposhave higher masses than inSV-
+DF. The excess kinetic energy release in the reposition-
+ing method is driven by more BHs entering the kinetic
+mode, ultimately from the spurious mergers caused by
+repositioning (see also Appendix A).
+
+--- Page 6 ---
+6Yang et al.
+Though the discrepancy decreases with time,SV-
+Reposstill releases about 15% more kinetic feedback
+energy thanSV-DFatz= 0. We notice thatSV-
+DFhas more energy released at the low-mass end than
+SV-Repos, which is because the latter has significantly
+fewer low-mass BHs. However, the contribution of low-
+mass BHs to the total kinetic feedback energy is negli-
+gible.
+In the strong-feedback runs (dashed), the earlier
+kinetic-mode activation and increased kinetic feedback
+efficiency lead to more efficient gas expulsion at early
+times and suppress the growth of BHs; hence, we see
+lower maximum BH masses than in the fiducial feed-
+back runs. Nevertheless, we still find the repositioning
+run has more kinetic feedback energy injected than the
+DF run, despite a smaller fractional difference than in
+the fiducial feedback case [e.g.,U SV-Repos-S
+kf (∞,0) is 10%
+greater thanU SV-DF-S
+kf (∞,0), whileU SV-Repos
+kf (∞,0) is
+larger thanU SV-DF
+kf (∞,0) by 15%].
+Overall, this analysis indicates that the repositioning
+method artificially boosts kinetic AGN feedback (con-
+sistent with the matter clustering results shown in Sec-
+tion 3.1).
+3.3.AGN X-ray luminosity function
+40 41 42 43 44
+log(LX [erg s−1])
+−7
+−6
+−5
+−4
+−3
+−2
+−1
+log(ΦXL [Mpc−3dex−1])
+Astrid
+SV-DF
+SV-Repos
+SV-DF-S
+SV-Repos-S
+SIMBA
+Shen+20
+Buchner+15
+Shen+20
+Buchner+15
+Figure 4.AGN hard X-ray (2–10 keV) luminosity functions
+atz= 0. The line styles and colors are the same as in Fig. 1.
+The SIMBA luminosity function (data from M. Habouzit
+et al. 2022) is also plotted for comparison. Shaded regions
+show observational constraints compiled by X. Shen et al.
+(2020) (light blue) and J. Buchner et al. (2015) (z= 0.1,
+gray).
+We present the AGN hard X-ray (2–10 keV) luminos-
+ity functions atz= 0 for theAstridand SV simula-
+tions in Fig. 4. The BH X-ray luminosity (L X) is calcu-
+lated following the method of P. F. Hopkins et al. (2007).
+We show results assuming a fixed radiative efficiency of
+η= 0.1 (N. I. Shakura & R. A. Sunyaev 1973). For al-
+ternative choices ofηand related discussion, please refer
+to Y. Zhou et al. (2026). We remind the reader that the
+SV simulations are not fully converged and thus used
+only to compare the relative effects of BH dynamics and
+feedback models, rather than for direct comparison with
+observations.
+In this figure, one observes thatAstridagrees well
+with the observational constraints except at the bright
+end, where it underpredicts the number density of lu-
+minous AGN. Within the SV runs, the strong-feedback
+simulations yield significantly fewer luminous AGN than
+the fiducial runs. This trend is expected: in the strong-
+feedback regime, more gas is expelled from BH neigh-
+borhoods (see Fig. 2) and the BHs themselves are less
+massive (see Fig. A1). However, changing the BH dy-
+namics model (DF versus repositioning) does not yield
+a clear separation in thez= 0 luminosity functions. A
+likely explanation is compensating evolution: although
+SV-Reposhas more high-mass BHs at early times, its
+more efficient kinetic feedback removes more gas and
+thus suppresses later accretion, bringing its luminosity
+function atz= 0 close to that ofSV-DF(consistent
+with the behavior ofU kf discussed in Sec. 3.2). We note
+that the luminosity functions of the SV simulations are
+relatively noisy at the bright end because of the small
+volume; future work with larger volumes will further test
+the effects of BH dynamics on the luminosity function.
+For reference, we also plot the SIMBA luminosity
+function; it likewise shows a bright-end deficit, although
+this comparison is not strictly one-to-one because the
+underlying BH models differ from those inAstrid.
+We provide results for additional observables in ap-
+pendices, including the galaxy stellar mass function
+(GSMF) in Appendix D and halo gas fractions in Ap-
+pendix E. The former confirms that more efficient AGN
+feedback (either from BH dynamics treatment or feed-
+back model) can suppress star formation in massive
+galaxies, while the latter shows thatAstridproduces
+higher gas fractions than other simulations, which is con-
+sistent with its reduced baryonic suppression of matter
+clustering.
+4.CONCLUSIONS AND DISCUSSION
+In this study, we have presented the baryonic mat-
+ter power spectrum suppression ofAstridcompared
+to the newAstrid-DMOsimulation. In Fig. 1, while
+there is mild suppression atz= 0.2, we do not ob-
+serve significant suppression atz= 0. A set of small-
+
+--- Page 7 ---
+Astrid: Reduced Baryonic Suppression7
+volume simulations has been performed to compare ki-
+netic AGN feedback and baryonic suppression between
+the repositioning and dynamical friction methods for BH
+dynamics modeling. These simulations identify the im-
+proved and more physical BH dynamics model as a key
+reason for our reduced suppression compared to other
+simulations. Compared to the widely used reposition-
+ing method, the DF model treats BH merging more
+physically and yields less kinetic AGN feedback, lead-
+ing to significantly weaker suppression of matter cluster-
+ing, under the assumption that higher kinetic feedback
+energy corresponds to stronger suppression. This sug-
+gests that existing simulations exhibiting strong matter
+clustering suppression could show weaker suppression if
+feedback artifacts associated with BH repositioning were
+removed.
+The reducedP(k) suppression makes it more diffi-
+cult to reconcile the observed structure growth with
+the ΛCDM model by invoking baryonic feedback. In
+line with this,Astridproduces significantly higher gas
+fractions in halos than other simulations and observa-
+tional estimates (Appendix E). Although simply increas-
+ing feedback strength can expel gas more efficiently and
+produce stronger suppression of the matter power spec-
+trum, it also introduces undesired side effects in our
+model, including fewer luminous AGN atz= 0 (Fig. 4)
+and overquenched star formation in massive galaxies
+(Appendix D).
+Our findings strengthen the need for novel mecha-
+nisms capable of expelling baryons from halos without
+excessively altering other galaxy properties. Possible
+solutions include revising the BH seeding prescription
+or incorporating other feedback channels, such as jet
+feedback (R. Dav´ e et al. 2019) or variants of the radio-
+mode feedback used in Illustris (M. Vogelsberger et al.
+2014). We advocate exploring these possibilities with
+realistically modeled BH dynamics; otherwise, unphysi-
+cal feedback artifacts might obscure genuine signatures
+of new physics, such as nontrivial dark matter. An addi-
+tional question for future work is whether different BH
+dynamics methods affect how efficiently AGN feedback
+removes gas from halos, independently of their different
+BH merging histories, given that repositioning can pro-
+duce burstier AGN feedback (J. Wurster & R. J. Thacker
+2013; M. Tremmel et al. 2017). Answering this will re-
+quire more controlled experiments.
+DATA AVAILABILITY
+TheAstrid-DMOand SV simulation data will be
+shared upon reasonable request to the corresponding au-
+thor. The analysis code used in this work has been made
+publicly available at Y. Yang (2026).
+ACKNOWLEDGMENTS
+S.B. and Y.Y. were supported in part by grant 63667
+from the John Templeton Foundation. The opin-
+ions expressed in this publication are those of the
+author(s) and do not necessarily reflect the views of
+the John Templeton Foundation. S.B. and Y.Y. were
+supported by NSF AST-2509639. Y.Z. and T.D.M.
+acknowledge the support from the NASA FINESST
+grant 80NSSC25K0318. T.D.M. acknowledges fund-
+ing from NASA ATP 80NSSC20K0519, NSF PHY-
+2020295, NASA ATP NNX17AK56G, NASA Theory
+grant 80NSSC22K072, and NASA ATP 80NSSC18K101.
+Y.N. acknowledges support from the ITC Postdoc-
+toral Fellowship. N.C. acknowledges support from the
+Schmidt Futures Fund and MPA Postdoctoral Fellow-
+ship. ASTRID was run on the Frontera facility at the
+Texas Advanced Computing Center. The authors used
+ChatGPT ( OpenAI 2026) to assist with improving the
+clarity and language of the manuscript. The authors
+take full responsibility for the content of this publica-
+tion.
+APPENDIX
+A.BH–HALO MASS RELATION AND FEEDBACK
+ENERGY
+Figure A1 plots masses of individual BHs versus their
+host halo masses atz= 0 (top row) andz= 1 (bot-
+tom row) for the four SV simulations. Looking at the
+first two columns, we see that the repositioning method
+(column (2)) leads to more massive BHs at the high-
+mass end than the DF method (column (1)). InSV-
+Repos, we also find that there are fewer low-mass BHs
+in high-mass halos than inSV-DF, which is because
+the repositioning method makes central BHs of low-
+mass subhalos more likely to be swallowed by the cen-
+tral BH of the main halo. For example, atz= 1 and
+M500c ≳10 13 M⊙/h,SV-Reposhas visibly fewer BHs
+withM BH ≲10 6 M⊙/hthanSV-DF. Compared to the
+fiducial runs (columns (1) and (2)), the strong-feedback
+runs (columns (3) and (4)) show lower maximum BH
+masses and more extended distributions of BHs that
+have released kinetic feedback energy, which is expected
+given the looser kinetic-mode activation criterion. We
+also seeSV-Repos-Sdiffers fromSV-DF-Sin a sim-
+ilar way asSV-Reposdiffers fromSV-DF, e.g., more
+massive BHs at the high-mass end.
+
+--- Page 8 ---
+8Yang et al.
+9 10 11 12 13 14
+5
+6
+7
+8
+9
+10log(MBH [M⊙/h])
+SV-DFz = 0.0
+9 10 11 12 13 14
+SV-Repos
+9 10 11 12 13 14
+SV-DF-S
+9 10 11 12 13 14
+SV-Repos-S
+0
+1
+2
+3
+4
+5
+6
+log(Ekf [c2M⊙/h])
+9 10 11 12 13 14
+log(M500c [M⊙/h])
+5
+6
+7
+8
+9
+10log(MBH [M⊙/h])
+z = 1.0
+9 10 11 12 13 14
+log(M500c [M⊙/h])
+9 10 11 12 13 14
+log(M500c [M⊙/h])
+9 10 11 12 13 14
+log(M500c [M⊙/h])
+0
+1
+2
+3
+4
+5
+6
+log(Ekf [c2M⊙/h])
+Figure A1.Scatter plot of BH mass (M BH) versus halo mass (M 500c), colored by the cumulative released kinetic feedback
+energyE kf. The first and second rows show the relation atz= 0 andz= 1, respectively. The four columns correspond to the
+four different SV simulations. Color circles represent BHs that have released kinetic feedback energy, while gray points represent
+BHs that have not released kinetic feedback energy.
+100 101
+k [h/Mpc]
+0.8
+1.0
+1.2
+1.4
+1.6
+1.8
+Phydro(k)/PDMO(k)
+z = 0.0
+Astrid
+SV-DF
+SV-Repos
+SV-DF-LR
+SV-Repos-LR
+SV-Repos-T
+Figure B1.Comparison ofP(k) suppression among the
+simulations with different resolutions and feedback types
+atz= 0. The color and line styles are the same as in
+Fig. 1, with the addition ofSV-DF-LR(dashed–dotted
+cyan),SV-Repos-LR(dashed–dotted brown) andSV-Re-
+pos-T(solid gray). The horizontal dotted line marks unity.
+B.P(K) SUPPRESSION IN SUPPLEMENTARY
+RUNS
+We have performed several supplementary simulations
+summarized in Table B1. Each of these simulations is
+designed to isolate specific factors that may influence
+the matter power spectrum suppression, such as resolu-
+tion and feedback type (thermal versus kinetic).SV-
+DF-LRandSV-Repos-LRare low-resolution versions
+of the SV DF and repositioning runs, respectively. In
+SV-DF-LR/SV-Repos-LR, there are 2×500 3 parti-
+cles initially in the same volume as the SV runs listed
+in Table 1, with a softening length of 3.3 ckpc/h.SV-
+Repos-Tdiffers fromSV-Reposin that it only includes
+thermal feedback (i.e., even at low Eddington ratios,
+BHs inSV-Repos-Tstill inject feedback energy in the
+form of thermal energy instead of kinetic energy).SV-
+Repos-Soffz1is the same asSV-Repos, except that
+kinetic feedback is turned off fromz= 1 to 0, which
+allows us to investigate the effects of kinetic feedback at
+early and late times separately.
+Figure B1 compares the matter power spectrum sup-
+pression among the simulations with different resolu-
+tions and feedback types atz= 0. As expected, at low
+resolution (dashed–dotted), the discrepancy between the
+DF and repositioning runs is much less significant than
+
+--- Page 9 ---
+Astrid: Reduced Baryonic Suppression9
+100 101
+k [h/Mpc]
+0.6
+0.8
+1.0
+1.2
+1.4
+1.6
+1.8
+Phydro(k)/PDMO(k)
+z = 0.0
+SV-Repos-T
+SV-Repos
+SV-Repos-S
+SV-Repos-Soffz1
+100 101
+k [h/Mpc]
+z = 0.5
+100 101
+k [h/Mpc]
+z = 1.0
+Figure B2.Comparison ofP(k) suppression amongSV-Repos-T(solid gray),SV-Repos-S(dashed orange) andSV-Repos–
+Soffz1(dotted purple) atz= 0,0.5 andz= 1 (left, middle and right panels, respectively).SV-Reposis also included for
+reference (solid red).
+T able B1.Supplementary SV simulations. A DMO coun-
+terpart,SV-DMO-LR, is also performed for the low-resolu-
+tion runs.
+Simulation Description
+SV-DF-LRLower resolution
+SV-Repos-LRLower resolution
+SV-Repos-TThermal feedback only
+SV-Repos-Soffz1 Kinetic feedback turned off
+sincez= 1
+at the original resolution (solid blue and red), because
+the larger softening length leads to more BH mergers
+and thus more efficient kinetic feedback in the DF run.
+Unlike the SV runs with the fiducial feedback model
+(in which kinetic feedback is allowed), the thermal-only
+runSV-Repos-T(solid gray) shows no suppression over
+the entirekrange, which verifies that kinetic feedback
+is essential forP(k) suppression. In particular,SV-
+Repos-Tshows enhanced power atk≳10hMpc −1,
+by≳10% compared with the fiducial runs (including
+Astrid). This implies that kinetic AGN feedback in
+Astridhas already damped matter clustering at these
+scales with respect to simulations without kinetic feed-
+back, although the suppression is not significant enough
+to be detected in the ratio ofP hydro(k)/PDMO(k).
+From Fig. B2, we see that the power ratio ofSV-
+Repos-Sis already significantly lower than that ofSV-
+Repos-Tatz= 1 (right panel), indicating that the
+kinetic feedback inSV-Repos-Sis effective at gas ex-
+pulsion even at early times. As the simulation evolves,
+the power ratio ofSV-Repos-Skeeps decreasing while
+that ofSV-Repos-Tshows little change aroundk∼
+10hMpc −1. As forSV-Repos-Soffz1, its power ratio
+gradually approaches unity fromz= 1 toz= 0 around
+k= 10hMpc −1, with its deviation fromSV-Repos-
+Tremaining quite significant atz= 0. We note that,
+inSV-Repos-S, only 12% of the total kinetic feedback
+energy is released prior toz= 1 (see Fig. 3), but it
+accounts for almost half the total suppression atz= 0
+aroundk∼10hMpc −1 compared toSV-Repos-T. We
+also notice that, atz= 0.5, the power ratio ofSV-
+Repos-Soffz1is very close to that ofSV-Repos, even
+though the total kinetic feedback energy released inSV-
+Repos-Soffz1is less than half of that inSV-Repos.
+Early kinetic feedback is thus quite effective at suppress-
+ing matter clustering against cooling of baryons. This is
+likely because early halos have shallower potential wells
+and because the altered matter distribution can delay
+gravitational collapse.
+C.HALO MATCHING METHOD
+Here we introduce how we match halos between a pair
+of hydrodynamical and DMO simulations. For a certain
+halo in the hydrodynamical simulation, we first exclude
+all halos in the DMO counterpart that have masses that
+differ from the hydrodynamical halo by>15% and that
+are at a distance>100 ckpc/hfrom the hydrodynami-
+cal halo. The distance is measured between the potential
+minima of the two halos. Note that the mass and dis-
+tance thresholds are used to shrink the search space and
+thus speed up the matching process, and they are not
+used as strict criteria to determine whether a halo pair is
+matched. We then calculate the number of shared DM
+particles between the hydrodynamical halo and each of
+the remaining DMO halos according to their particle
+IDs. A merit function is used to determine the best
+
+--- Page 10 ---
+10Yang et al.
+match, which is defined as
+Mij = N 2
+ij
+N hydro
+i N DMO
+j
+,(C1)
+whereN ij is the number of shared DM particles be-
+tween thei-th hydrodynamical halo and thej-th DMO
+halo, andN hydro
+i andN DMO
+j are the total number of DM
+particles in thei-th hydrodynamical halo and thej-th
+DMO halo, respectively. The DMO halo with the high-
+est merit function value is considered as the best match
+for the hydrodynamical halo if the value is above 0.5.
+This particle-based matching technique follows methods
+commonly used in merger tree construction (e.g., C. Sri-
+sawat et al. 2013).
+For each SV simulation presented in Fig. 2, we match
+halos using the above method to their DMO counter-
+parts and keep only commonly matched halos in the
+four SV simulations for a fair comparison.
+D.GALAXY STELLAR MASS FUNCTION
+We examine the galaxy stellar mass function (GSMF),
+ΦGSM(M∗) (whereM ∗ refers to the galaxy stellar mass
+in M ⊙), in theAstridand SV simulations atz= 0,
+as shown in the top panel of Fig. D1. All galaxies (cen-
+tral and satellite) in the simulations are included in the
+GSMF measurement, andM ∗ is defined as the stellar
+mass within twice the stellar half-mass radius. We also
+plot several observational constraints for comparison.
+The GSMF ofAstrid(violet) is in good agreement
+with the observations, though it slightly overproduces
+galaxies at low masses (M ∗ ≲10 10 M⊙) and underpro-
+duces galaxies at high masses. For more discussion of
+the GSMF inAstrid, we refer the readers to Y. Zhou
+et al. (2026). At low and intermediate stellar masses, the
+GSMFs of the SV runs are similar to each other (while
+they are lower than that ofAstriddue to the lower
+resolution). By contrast, at the high-mass end where
+kinetic AGN feedback is most effective, they show sig-
+nificant differences caused by the different BH dynamics
+and feedback models.
+To better illustrate the variations induced by different
+models, we plot the ratio of the GSMF of each SV run
+to that ofSV-DFin the bottom panel of Fig. D1. Com-
+pared toSV-DF(blue),SV-Repos(red) shows a lower
+GSMF at the high-mass end with a relative difference of
+up to∼50% atM ∗≈2×10 11 M⊙, due to the enhanced
+kinetic feedback. In the strong-feedback runs (dashed),
+the GSMF at the high-mass end is further suppressed,
+and we also see a more significant suppression inSV-
+Repos-Sthan inSV-DF-S.
+−5
+−4
+−3
+−2
+−1
+log(ΦGSM [Mpc−3dex−1])
+Astrid
+Driver+22
+Rodriguez-Puebla+17
+D’Souza+15
+Bernardi+13
+Li&White09
+7 8 9 10 11 12
+log(M∗ [M⊙])
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+ΦGSM/ΦSV-DF
+GSM
+SV-DF
+SV-Repos
+SV-DF-S
+SV-Repos-S
+Figure D1.Top panel: GSMFs atz= 0 measured
+from theAstridand SV simulations (solid and dashed
+lines). Observational data from S. P. Driver et al. (2022);
+A. Rodr´ ıguez-Puebla et al. (2017); C. Li & S. D. M. White
+(2009); M. Bernardi et al. (2013); R. D’Souza et al. (2015)
+are plotted in gray markers. Bottom panel: Ratio of the
+GSMF of the SV runs to that ofSV-DF.
+E.GAS FRACTION IN HALOS
+In Fig. E1, we plot the mass fraction of hot gas,
+fgas =M gas/M500c, against halo mass for the hydro-
+dynamical simulations atz= 0. The gas mass is de-
+fined as the total mass of gas particles with temperatures
+>10 6 K withinR 500c. For comparison, we also plot ob-
+servational constraints from J. Siegel et al. (2026) and Y.
+Zhang et al. (2024) on X-ray (hot) gas mass fractions, 9
+and results from selected other simulations (extracted
+from P. Popesso et al. 2026). Although P. Popesso et al.
+(2026) used only 10 4 halos from TNG300 to measure
+gas fractions, we have verified that using all halos in
+TNG300 gives broadly consistent results, despite their
+curve being biased high at the low-mass end.
+9 The observational data are not exactly atz= 0, for example,
+the HSC-XXL samples arez∼0.3 clusters.
+
+--- Page 11 ---
+Astrid: Reduced Baryonic Suppression11
+1012 1013 1014 1015
+M500c [M⊙/h]
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+1.6
+fgas [Ω b/Ω m]
+Astrid
+SV-DF
+SV-Repos
+SV-DF-S
+SV-Repos-S
+TNG300
+SIMBA
+Illustris
+Siegel+2025
+HSC-XXL
+Siegel+2025
+kSZ+eROSITA
+Zhang+2024
+eROSITA
+Popesso+2024
+eROSITA
+TNG300
+SIMBA
+Illustris
+Figure E1.Gas mass fraction as a function of halo mass
+(normalized by the cosmic baryon fraction). Upper and lower
+bounds of shaded regions indicate the 16th and 84th per-
+centiles. Line styles follow those in Fig. 1. Constraints from
+the analyses of J. Siegel et al. (2026), Y. Zhang et al. (2024)
+and P. Popesso et al. (2026) are also shown for reference.
+Several other simulations are also plotted for comparison:
+IllustrisTNG, SIMBA (R. Dav´ e et al. 2019) and Illustris (we
+use curves shown in P. Popesso et al. 2026).
+Consistent with the results shown in Sec. 3.1,SV-
+Repos(red) has lower gas fractions thanSV-DF(blue)
+(the baryon fraction in groups correlates with theP(k)
+suppression, see e.g. M. P. van Daalen et al. 2020), espe-
+cially atM 500c ≲10 13 M⊙/h, due to the enhanced feed-
+back. Likewise, in the strong-feedback case,SV-Repos-
+Sshows more suppressed gas fractions thanSV-DF-S.
+Y. M. Bah´ e et al. (2022) similarly found that instan-
+taneous BH repositioning lowers the baryon fractions
+of massive halos relative to slower or no reposition-
+ing. However, because their comparison did not include
+an explicit physical DF model, it did not identify the
+repositioning-enhanced mergers as unphysically prompt
+or quantify their indirect effect on subsequent BH accre-
+tion and feedback.
+Compared to other large-volume simulations (dotted),
+Astridproduces higher gas fractions across wide halo
+mass ranges, which is consistent with its milder kinetic
+feedback. While neither IllustrisTNG norAstridevac-
+uates gas from halos as much as the observations sug-
+gest, SIMBA, which implements jet feedback, shows re-
+sults in good agreement with the relatively low gas frac-
+tions from the constraints. In contrast, Illustris exhibits
+overly efficient gas expulsion (see also P. Popesso et al.
+2026). A simple order-of-magnitude estimate of the ef-
+fect of using repositioning in the simulations suggests
+that a version of SIMBA with dynamical friction could
+have gas fractions that are too high, whereas a similar
+version of Illustris could match observations.
+REFERENCES
+Aihara, H., Armstrong, R., Bickerton, S., et al. 2018, PASJ,
+70, S8, doi: 10.1093/pasj/psx081
+Akeson, R., Armus, L., Bachelet, E., et al. 2019, arXiv
+e-prints, doi: 10.48550/arXiv.1902.05569
+Amon, A., & Efstathiou, G. 2022, MNRAS, 516, 5355,
+doi: 10.1093/mnras/stac2429
+Bah´ e, Y. M., Schaye, J., Schaller, M., et al. 2022, MNRAS,
+516, 167, doi: 10.1093/mnras/stac1339
+Bellovary, J., Volonteri, M., Governato, F., et al. 2011,
+ApJ, 742, 13, doi: 10.1088/0004-637X/742/1/13
+Bernardi, M., Meert, A., Sheth, R. K., et al. 2013, Monthly
+Notices of the Royal Astronomical Society, 436, 697,
+doi: 10.1093/mnras/stt1607
+Bird, S., Ni, Y., Di Matteo, T., et al. 2022, MNRAS, 512,
+3703, doi: 10.1093/mnras/stac648
+Booth, C. M., & Schaye, J. 2009, MNRAS, 398, 53,
+doi: 10.1111/j.1365-2966.2009.15043.x
+Buchner, J., Georgakakis, A., Nandra, K., et al. 2015, ApJ,
+802, 89, doi: 10.1088/0004-637X/802/2/89
+Chen, N., Ni, Y., Tremmel, M., et al. 2022, MNRAS, 510,
+531, doi: 10.1093/mnras/stab3411
+Chisari, N. E., van Daalen, M., McCarthy, I. G., et al.
+2018, MNRAS, 480, 3962, doi: 10.1093/mnras/sty2093
+Choi, E., Ostriker, J. P., Naab, T., Oser, L., & Moster, B. P.
+2015, MNRAS, 449, 4105, doi: 10.1093/mnras/stv575
+Choppin de Janvry, J., Dai, B., Gontcho, S. G. A., Seljak,
+U., & Zhang, T. 2025, arXiv e-prints, arXiv:2511.18134,
+doi: 10.48550/arXiv.2511.18134
+Dav´ e, R., Angl´ es-Alc´ azar, D., Narayanan, D., et al. 2019,
+MNRAS, 486, 2827, doi: 10.1093/mnras/stz937
+Davis, M., Efstathiou, G., Frenk, C. S., & White, S. D. M.
+1985, ApJ, 292, 371, doi: 10.1086/163168
+DES Collaboration. 2018, PhRvD, 98, 043526,
+doi: 10.1103/PhysRevD.98.043526
+DES Collaboration, Abbott, T. M. C., Adamow, M., et al.
+2026, arXiv e-prints, arXiv:2601.14559,
+doi: 10.48550/arXiv.2601.14559
+
+--- Page 12 ---
+12Yang et al.
+DESI Collaboration. 2016, arXiv e-prints,
+doi: 10.48550/arXiv.1611.00036
+Driver, S. P., Bellstedt, S., Robotham, A. S. G., et al. 2022,
+MNRAS, 513, 439, doi: 10.1093/mnras/stac472
+D’Souza, R., Vegetti, S., & Kauffmann, G. 2015, Monthly
+Notices of the Royal Astronomical Society, 454, 4027,
+doi: 10.1093/mnras/stv2234
+Feng, Y., Bird, S., Anderson, L., Font-Ribera, A., &
+Pedersen, C. 2018, MP-Gadget/MP-Gadget: A tag for
+getting a DOI, FirstDOI Zenodo,
+doi: 10.5281/zenodo.1451799
+Gong, Y., Liu, X., Cao, Y., et al. 2019, ApJ, 883, 203,
+doi: 10.3847/1538-4357/ab391e
+Habouzit, M., Somerville, R. S., Li, Y., et al. 2022,
+MNRAS, 509, 3015, doi: 10.1093/mnras/stab3147
+Hellwing, W. A., Schaller, M., Frenk, C. S., et al. 2016,
+MNRAS, 461, L11, doi: 10.1093/mnrasl/slw081
+Heymans, C., Tr¨ oster, T., Asgari, M., et al. 2021, A&A,
+646, A140, doi: 10.1051/0004-6361/202039063
+Hildebrandt, H., Viola, M., Heymans, C., et al. 2017,
+MNRAS, 465, 1454, doi: 10.1093/mnras/stw2805
+Hirschmann, M., Dolag, K., Saro, A., et al. 2014, MNRAS,
+442, 2304, doi: 10.1093/mnras/stu1023
+Hopkins, P. F., Richards, G. T., & Hernquist, L. 2007, The
+Astrophysical Journal, 654, 731, doi: 10.1086/509629
+Ivezi´ c,ˇZ., Kahn, S. M., Tyson, J. A., et al. 2019, ApJ, 873,
+111, doi: 10.3847/1538-4357/ab042c
+Laureijs, R., Amiaux, J., Arduini, S., et al. 2011, arXiv
+e-prints, doi: 10.48550/arXiv.1110.3193
+Li, C., & White, S. D. M. 2009, Monthly Notices of the
+Royal Astronomical Society, 398, 2177,
+doi: 10.1111/j.1365-2966.2009.15268.x
+Louis, T., La Posta, A., Atkins, Z., et al. 2025, JCAP,
+2025, 062, doi: 10.1088/1475-7516/2025/11/062
+McCarthy, I. G., Bird, S., Schaye, J., et al. 2018, MNRAS,
+476, 2999, doi: 10.1093/mnras/sty377
+McCarthy, I. G., Amon, A., Schaye, J., et al. 2025,
+MNRAS, 540, 143, doi: 10.1093/mnras/staf731
+Ni, Y., Chen, N., Zhou, Y., et al. 2025, ApJ, 990, 120,
+doi: 10.3847/1538-4357/adf3a7
+Ni, Y., Di Matteo, T., Bird, S., et al. 2022, MNRAS, 513,
+670, doi: 10.1093/mnras/stac351
+Ni, Y., Genel, S., Angl´ es-Alc´ azar, D., et al. 2023, MNRAS,
+525, 1376, doi: 10.1093/mnras/stad2397
+OpenAI. 2026, ChatGPT, GPT-5 OpenAI.
+https://chatgpt.com/
+Popesso, P., Biviano, A., Marini, I., et al. 2026, A&A, 707,
+A362, doi: 10.1051/0004-6361/202453256
+Qu, F. J., Ge, F., Wu, W. L. K., et al. 2026, PhRvL, 136,
+021001, doi: 10.1103/k5yr-3h6d
+Rodr´ ıguez-Puebla, A., Primack, J. R., Avila-Reese, V., &
+Faber, S. M. 2017, MNRAS, 470, 651,
+doi: 10.1093/mnras/stx1172
+Salcido, J., & McCarthy, I. G. 2025, MNRAS, 541, 899,
+doi: 10.1093/mnras/staf1055
+Schaye, J., Kugel, R., Schaller, M., et al. 2023, MNRAS,
+526, 4978, doi: 10.1093/mnras/stad2419
+Shakura, N. I., & Sunyaev, R. A. 1973, A&A, 24, 337
+Shen, X., Hopkins, P. F., Faucher-Gigu` ere, C.-A., et al.
+2020, MNRAS, 495, 3252, doi: 10.1093/mnras/staa1381
+Siegel, J., Bigwood, L., Amon, A., et al. 2026, MNRAS,
+549, stag993, doi: 10.1093/mnras/stag993
+Snyder, G. F., Torrey, P., Lotz, J. M., et al. 2015, MNRAS,
+454, 1886, doi: 10.1093/mnras/stv2078
+Springel, V. 2010, MNRAS, 401, 791,
+doi: 10.1111/j.1365-2966.2009.15715.x
+Springel, V., White, S. D. M., Tormen, G., & Kauffmann,
+G. 2001, MNRAS, 328, 726,
+doi: 10.1046/j.1365-8711.2001.04912.x
+Springel, V., Pakmor, R., Pillepich, A., et al. 2018,
+MNRAS, 475, 676, doi: 10.1093/mnras/stx3304
+Srisawat, C., Knebe, A., Pearce, F. R., et al. 2013,
+MNRAS, 436, 150, doi: 10.1093/mnras/stt1545
+Tremmel, M., Governato, F., Volonteri, M., & Quinn, T. R.
+2015, MNRAS, 451, 1868, doi: 10.1093/mnras/stv1060
+Tremmel, M., Karcher, M., Governato, F., et al. 2017,
+MNRAS, 470, 1121, doi: 10.1093/mnras/stx1160
+van Daalen, M. P., McCarthy, I. G., & Schaye, J. 2020,
+MNRAS, 491, 2424, doi: 10.1093/mnras/stz3199
+van Daalen, M. P., Schaye, J., Booth, C. M., & Dalla
+Vecchia, C. 2011, MNRAS, 415, 3649,
+doi: 10.1111/j.1365-2966.2011.18981.x
+Vogelsberger, M., Genel, S., Springel, V., et al. 2014,
+Nature, 509, 177, doi: 10.1038/nature13316
+Weinberger, R., Springel, V., Hernquist, L., et al. 2017,
+MNRAS, 465, 3291, doi: 10.1093/mnras/stw2944
+Wurster, J., & Thacker, R. J. 2013, MNRAS, 431, 2513,
+doi: 10.1093/mnras/stt346
+Yang, Y. 2026, astro-YYH/Astrid feedback analysis: v1.0.0,
+v1.0.0 Zenodo, doi: 10.5281/zenodo.20667014
+Zhang, Y., Comparat, J., Ponti, G., et al. 2024, A&A, 690,
+A267, doi: 10.1051/0004-6361/202449412
+Zhou, Y., Di Matteo, T., Bird, S., et al. 2026, The
+Astrophysical Journal, 999, 41,
+doi: 10.3847/1538-4357/ae3c08

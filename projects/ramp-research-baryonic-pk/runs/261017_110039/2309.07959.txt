@@ -1,0 +1,3201 @@
+Title: The FLAMINGO project: revisiting the $S_8$ tension and the role of baryonic physics
+Authors: Ian G. McCarthy, Jaime Salcido, Joop Schaye, Juliana Kwan, Willem Elbers, Roi Kugel, Matthieu Schaller, John C. Helly, Joey Braspenning, Carlos S. Frenk, Marcel P. van Daalen, Bert Vandenbroucke, Jonah T. Conley, Andreea S. Font, Amol Upadhye
+Year: 2023
+arXiv ID: 2309.07959
+
+============================================================
+
+--- Page 1 ---
+MNRAS000, 1–23 (2015) Preprint 10 October 2023 Compiled using MNRAS L ATEX style file v3.0
+The FLAMINGO project: revisiting the𝑆8 tension and the role of baryonic
+physics
+Ian G. McCarthy,1★ Jaime Salcido,1 Joop Schaye,2 Juliana Kwan,1 Willem Elbers,3 Roi Kugel,2
+Matthieu Schaller,4,2 John C. Helly,3 Joey Braspenning,2 Carlos S. Frenk,3 Marcel P. van Daalen,2
+Bert Vandenbroucke,2 Jonah T. Conley,1 Andreea S. Font,1 Amol Upadhye,1
+1Astrophysics Research Institute, Liverpool John Moores University, Liverpool, L3 5RF , UK
+2Leiden Observatory, Leiden University, PO Box 9513, 2300 RA Leiden, the Netherlands
+3Institute for Computational Cosmology, Department of Physics, University of Durham, South Road, Durham, DH1 3LE, UK
+4Lorentz Institute for Theoretical Physics, Leiden University, PO box 9506, 2300 RA Leiden, the Netherlands
+Accepted XXX. Received YYY; in original form ZZZ
+ABSTRACT
+A number of recent studies have found evidence for a tension between observations of large-scale structure (LSS) and the
+predictions of the standard model of cosmology with the cosmological parameters fit to the cosmic microwave background
+(CMB). The origin of this ‘𝑆8 tension’ remains unclear, but possibilities include new physics beyond the standard model,
+unaccounted for systematic errors in the observational measurements and/or uncertainties in the role that baryons play. Here
+we carefully examine the latter possibility using the new FLAMINGO suite of large-volume cosmological hydrodynamical
+simulations. We project the simulations onto observable harmonic space and compare with observational measurements of the
+power and cross-power spectra of cosmic shear, CMB lensing, and the thermal Sunyaev-Zel’dovich (tSZ) effect. We explore
+the dependence of the predictions on box size and resolution, cosmological parameters including the neutrino mass, and the
+efficiencyandnatureofbaryonic‘feedback’.Despitethewiderangeofastrophysicalbehaviourssimulated,wefindthatbaryonic
+effectsarenotsufficientlylargetoremovethe 𝑆8tension.Consistentwithrecentstudies,wefindtheCMBlensingpowerspectrum
+is in excellent agreement with the standard model, whilst the cosmic shear power spectrum, tSZ effect power spectrum, and
+the cross-spectra between shear, CMB lensing, and the tSZ effect are all in varying degrees of tension with the CMB-specified
+standardmodel.Theseresultssuggestthatsomemechanismisrequiredtoslowthegrowthoffluctuationsatlatetimesand/oron
+non-linear scales, but that it is unlikely that baryon physics is driving this modification.
+Keywords: large-scalestructureofUniverse–cosmology:theory–methods:numerical–galaxies:clusters:general–galaxies:
+formation
+1 INTRODUCTION
+The standard model of cosmology, the so-calledΛCDM model, is
+based on the Friedmann–Lemaître–Robertson–Walker solution to
+Einstein’s field equations for an isotropic and homogeneous uni-
+verse. The standard model contains only 6 free parameters but de-
+scribes a wealth of large-scale cosmological data remarkably well,
+includingthetemperatureandpolarizationanisotropiesinthecosmic
+microwavebackground(CMB),measurementsofbaryonacousticos-
+cillations (BAO) in the clustering of galaxies, the redshift–distance
+relationsofsupernovae(Sn)TypeIa,andmeasurementsofthegrowth
+of large-scale structure (LSS) including the abundance of galaxy
+clusters, galaxy clustering, cosmic shear and CMB lensing, and the
+thermal Sunyaev-Zel’dovich (tSZ) effect (see, e.g., Planck Collabo-
+ration et al. 2020a). Fits to these data point to a Universe which is
+spatially flat and whose present-day energy density is dominated by
+dark matter and dark energy. However, the physical nature of these
+components has so far remained elusive.
+★ E-mail: i.g.mccarthy@ljmu.ac.uk
+Afruitfulavenueforexplorationintothenatureofdarkmatterand
+dark energy, and to test the standard cosmological paradigm gener-
+ally, is to look for signs of deviations in cosmological data sets from
+the predictions of the standard model and its possible extensions.
+On this front there has been much activity in the past few years as
+the fidelity of cosmological data sets has rapidly increased. Interest-
+ingly, even though the standard model describes many cosmological
+data sets extremely well, the best-fit parameter values from different
+observables do not always appear fully consistent with each other.
+The most notable example of this is the so-called ‘Hubble tension’,
+whichisthatmeasurementsofthelocalexpansionrateofspaceyield
+avalueforHubble’sconstant, 𝐻0,thatislargerthanpredictedbythe
+standard model of cosmology when it is fit to the CMB temperature
+and polarization anisotropies and BAO data (e.g., Planck Collabora-
+tion et al. 2020a; Riess et al. 2022). This tension has now reached
+the≈ 5𝜎 level (Riess et al. 2022).
+Another notable tension, which we focus on in the present study,
+is the so-called ‘𝑆8 tension’, where𝑆8 is defined as𝜎8
+√︁
+Ωm/0.3,
+whereΩ𝑚 is the present-day matter density and𝜎8 is the linearly-
+evolved variance of the present-day matter density field filtered on a
+© 2015 The Authors
+arXiv:2309.07959v2  [astro-ph.CO]  9 Oct 2023
+
+--- Page 2 ---
+2 I. G. McCarthy et al.
+8Mpc/ℎscale.Notethat 𝑆8 bestdescribesthecombinationof 𝜎8 and
+Ω𝑚 that is constrained by cosmic shear (weak lensing) data. In this
+case, the best-fit value of𝑆8 from several low-redshift observations
+of LSS, including cosmic shear (e.g., Heymans et al. 2021; Abbott
+etal.2022)andotherprobes,appearstobeinmild( ≈ 1-3𝜎)tension
+with the predictions of the standard model with parameter values
+specifiedbytheCMBandBAOand,aswediscussbelow,alsoCMB
+lensing. While a tension of this magnitude is often not regarded as
+being statistically compelling, it is worth highlighting here that the
+tension has been persistent for nearly a decade now, since the first
+Planck data release, and spans several independent probes, each of
+which appear to show tensions with this level of significance and in
+the same direction (e.g., see figure 1 of McCarthy et al. 2018).
+Various possible solutions have been put forward to reconcile
+the low-redshift LSS observations with the primary CMB + BAO
+combination. This includes mischaracterised systematic uncertain-
+tiesintheLSSobservations(e.g.,photometricredshift,galaxyshape,
+andintrinsicalignmentuncertaintiesincosmicshearmeasurements,
+non-linear biasing in galaxy clustering, halo mass biasing in cluster
+counts, etc.), or possibly even in the primary CMB measurements
+(e.g., Addison et al. 2016; Planck Collaboration et al. 2017; but see
+Rosenberg et al. 2022). On the theory side, LSS tests of cosmology
+oftenprobethenon-linearregimeandthereforerequirecosmological
+simulations, or models which have been calibrated on such simula-
+tions, to predict the clustering of matter on small scales and at late
+times. Furthermore, part and parcel of this non-linear evolution is
+that matter collapses along filaments forming ‘haloes’ at the nodes.
+Herethedensitiesreachsufficientlyhighvaluesthatradiativecooling
+of the gas becomes efficient, leading to further collapse and eventu-
+allygalaxyformation(e.g.,White&Frenk1991).Withthiscomesa
+varietyofenergeticfeedbackprocessesassociatedwiththeformation
+of stars and the accretion of matter onto supermassive black holes.
+Itisstraightforwardtoshowthattheenergyreleasedbytheaccre-
+tionofmatterontosupermassiveblackholescanbeofcosmological
+significance if it is able to efficiently couple to the gas (e.g., Silk &
+Rees 1998). That is, the energy is sufficient to expel baryons from
+galaxy groups (e.g., McCarthy et al. 2010, 2011), which will also
+lead to a back reaction on the dark matter halo (e.g., Van Daalen
+et al. 2011). In short, in the presence of energetic feedback, we ex-
+pecttheclusteringofmattertobesignificantlyaffectedonnon-linear
+scales, and the results of full cosmological hydrodynamical simula-
+tions (e.g., Van Daalen et al. 2011, 2020; Mummery et al. 2017;
+Springel et al. 2018; Salcido et al. 2023) as well as analytic halo
+models that use the observed baryon content of massive haloes as
+input (e.g., Debackere et al. 2020) back up this physical intuition.
+Recent studies have shown that if such processes are not accounted
+for, they will lead to significant biases in the recovered cosmologi-
+cal parameters in forthcoming surveys (e.g., Semboloni et al. 2011,
+2013; Schneider et al. 2020; Castro et al. 2021; for a recent review
+see Chisari et al. 2019).
+But what role, if any, do unaccounted for (or mischaracterised)
+baryonic effects have on the current𝑆8 tension? Based on the BA-
+HAMAS simulations (McCarthy et al. 2017), we have previously
+arguedthattheeffectsarelikelytobetoosmalltoexplainthecurrent
+tension (McCarthy et al. 2018). Consistent with this are the findings
+of several recent analyses of cosmic shear data, which have made
+marginal detections of the impact of baryons on the matter clus-
+tering and find that its magnitude aligns well with the predictions
+of cosmological hydrodynamical simulations such as BAHAMAS
+(see, e.g, Tröster et al. 2022; Chen et al. 2023; Aricò et al. 2023).
+However, Amon & Efstathiou (2022) and Preston et al. (2023) have
+recentlychallengedthisconventionalwisdom,showingthattheexist-
+ing constraints on the impact of baryons are sensitive to the adopted
+priors on the baryon parameters and that with a wider set of priors,
+allowing for much more aggressive feedback beyond what is typi-
+cally simulated, it may be possible after all to reconcile the primary
+CMB(+BAO+CMB lensing) measurements with low-redshift LSS
+measurements.
+In the present study we revisit the𝑆8 tension and the role that
+baryons play. We use the new FLAMINGO suite of large-volume
+cosmologicalsimulations(Schayeetal.2023;Kugeletal.2023)that
+includes variations in box size, resolution, cosmology (including
+massive neutrino cosmologies), and, importantly, a careful, system-
+atic variation of the efficiencies and nature of feedback from star
+formation and Active Galactic Nuclei (AGN). We project the simu-
+lationsontoobservableharmonicspaceandmakepredictionsforthe
+power and cross-power spectra of cosmic shear, CMB lensing, and
+the thermal Sunyaev-Zel’dovich (tSZ) effect, which sample fluctua-
+tionsoveraverywiderangeofphysicalscalesandredshiftsandhave
+differentsensitivitiestohalomass.Whilethereisasignificantdegree
+ofoverlapintermsofthescalesbetweenthevariousauto-andcross-
+power spectra (allowing for important consistency checks), there is
+also a great deal of complementarity. We compare the FLAMINGO
+predictionswiththelatestmeasurementsofthesequantitiesfromthe
+KiDS 1000 (Tröster et al. 2022) and DES Y3 survey (Doux et al.
+2022) cosmic shear data, Planck and SPT tSZ data (Bolliet et al.
+2018 and Reichardt et al. 2021, respectively), and Planck, ACT, and
+SPTCMBlensingdata(PlanckCollaborationetal.2020b,Wuetal.
+2019, and Qu et al. 2023, respectively). Despite the wide range of
+astrophysical behaviours simulated, we will show that baryonic ef-
+fects and their uncertainties encapsulated within the FLAMINGO
+simulationsarenotsufficientlylargetosignificantlyalterthecurrent
+𝑆8 discussion.
+Thepresentstudyisorganisedasfollows.InSection2wedescribe
+the FLAMINGO suite of cosmological hydrodynamical simulations
+and our approach to projecting these simulations onto observable
+harmonic space. In Section 3 we present our main results, including
+an examination of the box size, resolution, cosmological, and feed-
+back dependencies of the auto- and cross-spectra involving cosmic
+shear,CMBlensing,andtSZeffectdata.Wealsocomparetothemost
+recentmeasurementsofthesequantities.InSection4wesummarise
+our main findings and conclude.
+2 SIMULATIONS AND COMPUTATION OF
+COSMOLOGICAL OBSERVABLES
+2.1 Description of simulations
+We provide here a brief summary of the FLAMINGO simulations,
+referring the reader to Schaye et al. (2023) and Kugel et al. (2023)
+for in depth presentations.
+The FLAMINGO simulations were performed using Swift
+(Schaller et al. 2023), a fully open-source coupled cosmology, grav-
+ity,hydrodynamics,andgalaxyformationcode 1.Gravitationalforces
+are computed using a 4th-order fast multipole method (Greengard &
+Rokhlin 1987; Cheng et al. 1999; Dehnen 2014) on small scales
+and a particle-mesh method solved in Fourier space on large scales,
+following the force splitting approach of Bagla & Ray (2003). The
+1 Publicly available, including the version used for these simulations, at
+www.swiftsim.com
+MNRAS000, 1–23 (2015)
+
+--- Page 3 ---
+FLAMINGO: Baryons and the 𝑆8 tension 3
+Table 1.FLAMINGO hydrodynamical simulations. The first four lines list the simulations that use the fiducial galaxy formation model and assume the fiducial
+cosmology(D3A),butusedifferentvolumesandresolutions.Theremaininglineslistthemodelvariations,whichallusea1Gpcboxandintermediateresolution.
+Thecolumnslistthesimulationidentifier(wherem8,m9andm10indicate log10 ofthemeaninitialbaryonicparticlemassandcorrespondtohigh,intermediate,
+and low resolution,respectively; absence of thispart implies m9 resolution); thenumber of standard deviations bywhich the observed stellarmasses are shifted
+before calibration,Δ𝑚∗; the number of standard deviations by which the observed cluster gas fractions are shifted before calibration,Δ𝑓gas; the AGN feedback
+implementation (thermal or jets); the comoving box side length,𝐿; the number of baryonic particles,𝑁b (which equals the number of CDM particles,𝑁CDM);
+the number of neutrino particles,𝑁𝜈; the initial mean baryonic particle mass,𝑚g; the mean CDM particle mass,𝑚CDM; the Plummer-equivalent comoving
+gravitational softening length,𝜖com; the maximum proper gravitational softening length,𝜖prop; and the assumed cosmology which is specified in Table 2.
+Identifier Δ𝑚∗ Δ𝑓gas AGN 𝐿 𝑁 b 𝑁𝜈 𝑚g 𝑚CDM 𝜖com 𝜖prop Cosmology
+(𝜎) ( 𝜎) (cGpc) (M ⊙) (M ⊙) (ckpc) (pkpc)
+L1_m8 0 0 thermal 1 36003 20003 1.34× 108 7.06× 108 11.2 2.85 D3A
+L1_m9 0 0 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+L1_m10 0 0 thermal 1 9003 5003 8.56× 109 4.52× 1010 44.6 11.40 D3A
+L2p8_m9 0 0 thermal 2.8 50403 28003 1.07× 109 5.65× 109 22.3 5.70 D3A
+fgas+2𝜎 0 +2 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+fgas−2𝜎 0 −2 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+fgas−4𝜎 0 −4 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+fgas−8𝜎 0 −8 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+M*−𝜎 −1 0 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+M*−𝜎_fgas−4𝜎 −1 −4 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+Jet 0 0 jets 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+Jet_fgas−4𝜎 0 −4 jets 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 D3A
+Planck 0 0 thermal 1 18003 10003 1.07× 109 5.72× 109 22.3 5.70 Planck
+PlanckNu0p24Var 0 0 thermal 1 18003 10003 1.06× 109 5.67× 109 22.3 5.70 PlanckNu0p24Var
+PlanckNu0p24Fix 0 0 thermal 1 18003 10003 1.07× 109 5.62× 109 22.3 5.70 PlanckNu0p24Fix
+LS8 0 0 thermal 1 18003 10003 1.07× 109 5.65× 109 22.3 5.70 LS8
+hydrodynamic equations are solved using the smoothed-particle hy-
+drodynamics(SPH)method(forareview,seePrice2012),inpartic-
+ular the SPHENIX flavour of SPH (Borrow et al. 2022) which was
+designed specifically for simulations of galaxy formation.
+The suite consists of the 16 hydrodynamical simulations, listed
+in Table 1 (reproduced from Table 2 of Schaye et al. 2023), and 12
+gravity-only simulations. We examine only the hydro simulations in
+the present study. The majority of the runs adopt a(1 Gpc)3 cubic
+volume, denoted by ‘L1’ in the simulation identifier, although one
+runhasavolumeof (2.8Gpc)3 (‘L2p8’).Thesimulationsspanthree
+different resolutions (‘m10’, ‘m9’ and ‘m8’, where the number indi-
+cates the rounded logarithm base 10 of the baryonic particle mass),
+with the mass (spatial) resolution between consecutive resolutions
+changing by a factor of 8 (2). Most runs adopt intermediate resolu-
+tion(‘m9’),whichcorrespondstoan(initial)meanbaryonicparticle
+mass of≈ 1× 109M⊙, a mean cold dark matter particle mass of
+≈ 6× 109M⊙,andamaximumpropergravitationalsofteninglength
+of 5.7 kpc, all of which are similar to our previous BAHAMAS
+simulations (McCarthy et al. 2017) but within considerably larger
+volumes than BAHAMAS. At𝑧 >2.91 the softening length is held
+constant in comoving units at 22.3 kpc. All runs use equal numbers
+of baryonic and dark matter particles, while the number of neutrino
+particles is a factor1.83 smaller. Table 1 provides the parameter
+values specifying the numerical resolution the various runs.
+The values of the cosmological parameters for our fiducial model
+are the maximum likelihood values from the Dark Energy Survey
+Year Three (DES Y3; Abbott et al. 2022) ‘3×2pt + All Ext.’ΛCDM
+cosmology (‘D3A’ in Table 2). These values assume a spatially
+flat universe and are based on the combination of constraints from
+DES Y3 ‘3× 2-point’ correlation functions: cosmic shear, galaxy
+clustering,andgalaxy-galaxylensing,withconstraintsfromexternal
+data from BAO, redshift-space distortions, SN Type Ia, and Planck
+observations of the CMB (including CMB lensing), Big Bang nu-
+cleosynthesis, and local measurements of the Hubble constant (see
+Abbottetal.2022fordetails).Ourfiducialcosmology,D3A,usesthe
+minimumneutrinomassallowedbyneutrinooscillationexperiments
+of ˝𝑚𝜈 = 0.06eV(Estebanetal.2020;deSalasetal.2021),which
+is consistent with the 95 per cent confidence upper limit of 0.13 eV
+from DES Y3. Note that the simulations include neutrino particles
+using the new𝛿𝑓 method of Elbers et al. (2021).
+For the purposes of the present study, it is important to highlight
+the inclusion of the Planck primary CMB constraints in the D3A
+cosmology.AsalreadydiscussedinSection1,thereisamildtension
+between some LSS observables, such as cosmic shear, and the pri-
+maryCMB,suchthatthelatterprefersalargervalueof 𝑆8.Hence,a
+jointfittotheseobservableswillgenerallyresultinavalueof 𝑆8 that
+willbelargerthanpreferredbycosmicshearalone,andthestatistical
+precision of the Planck data set is such that the joint value is closer
+to that preferred by the primary CMB. This will become relevant
+later on, when we compare the predictions of the simulatons to LSS
+observables.
+Animportantaspectofourhydrodynamicalsimulationsisthecal-
+ibration of parameters which characterise the efficiencies of stellar
+and AGN feedback. Following our approach in BAHAMAS (Mc-
+Carthy et al. 2017), the subgrid models for BH accretion and for
+stellarandAGNfeedbackarecalibratedtotheobserved 𝑧= 0galaxy
+stellar mass function (SMF), gas mass fractions within𝑅500c for
+galaxy groups and clusters at𝑧≈ 0.1− 0.3 from a combination of
+X-rayandweaklensingdata,andthe 𝑧= 0relationbetweenBHmass
+and stellar mass. Our choice of calibration observables is motivated
+by the fact that the impact of baryon physics on LSS is highly cor-
+related with the baryon fractions of galaxy groups and clusters (e.g.,
+Sembolonietal.2011,2013;Schneideretal.2019;VanDaalenetal.
+2020;Salcidoetal.2023),astheseobjectsdominatethematterclus-
+teringsignal(e.g.,vanDaalen&Schaye2015;Meadetal.2020).For
+FLAMINGO we use a systematic Bayesian approach to the fitting
+that has previously been applied to the semi-analytic model GAL-
+FORM (Bower et al. 2010; Rodrigues et al. 2017) and to a variety
+of cosmological emulators based on gravity-only simulations (e.g.,
+Heitmann et al. 2014; Lawrence et al. 2017; Euclid Collaboration
+MNRAS000, 1–23 (2015)
+
+--- Page 4 ---
+4 I. G. McCarthy et al.
+Table 2.The values of the cosmological parameters used in different simulations. The columns list the prefix used to indicate the
+cosmology in the simulation name (note that for brevity the prefix ‘D3A’ that indicates the fiducial cosmology is omitted from the
+simulationidentifiers);thedimensionlessHubbleconstant, ℎ;thetotalmatterdensityparameter, Ωm;thedarkenergydensityparameter,
+ΩΛ; the baryonic matter density parameter,Ωb; the sum of the particle masses of the neutrino species,˝𝑚𝜈; the amplitude of the
+primordial matter power spectrum,𝐴s; the power-law index of the primordial matter power spectrum,𝑛s; the amplitude of the initial
+power spectrum parametrized as the r.m.s. mass density fluctuation in spheres of radius8ℎ−1Mpc extrapolated to𝑧 = 0 using linear
+theory, 𝜎8; the amplitude of the initial power spectrum parametrized as𝑆8≡ 𝜎8
+√︁
+Ωm/0.3; the neutrino matter density parameter,
+Ω𝜈  ˝𝑚𝜈/( 93.14ℎ2eV).NotethatthevaluesoftheHubbleanddensityparametersaregivenat 𝑧= 0.Thevaluesoftheparameters
+that are listed in the last three columns have been computed from the other parameters.
+Prefix ℎ Ωm ΩΛ Ωb
+˝𝑚𝜈 𝐴s 𝑛s 𝜎8 𝑆8 Ω𝜈
+- 0.681 0.306 0.694 0.0486 0.06 eV 2.099× 10−9 0.967 0.807 0.815 1.39× 10−3
+Planck 0.673 0.316 0.684 0.0494 0.06 eV 2.101× 10−9 0.966 0.812 0.833 1.42× 10−3
+PlanckNu0p24Var 0.662 0.328 0.672 0.0510 0.24 eV 2.109× 10−9 0.968 0.772 0.807 5.87× 10−3
+PlanckNu0p24Fix 0.673 0.316 0.684 0.0494 0.24 eV 2.101× 10−9 0.966 0.769 0.789 5.69× 10−3
+LS8 0.682 0.305 0.695 0.0473 0.06 eV 1.836× 10−9 0.965 0.760 0.766 1.39× 10−3
+etal.2019).AsdescribedinKugeletal.(2023),weemploymachine
+learning to fit the subgrid parameters to the calibration data. We use
+Gaussian process emulators trained on 32-node Latin hypercubes of
+simulations. The 32 nodes are distributed approximately randomly
+in the hypercube so that the minimum distance between the nodes
+is maximized. A hydrodynamical simulation is run for each node
+and we then build a separate emulator for each observable based
+on all 32 simulations. The SMF emulator takes as input the stellar
+mass, 𝑀∗, and the subgrid parameter vector,𝜽, and it predicts the
+SMF, 𝑓(𝑀∗). The inputs for the gas fraction emulator are the to-
+tal group/cluster mass,𝑀500c (i.e. the mass inside the radius𝑅500c
+withinwhichthemeandensityis500timesthecriticaldensity),and
+the subgrid parameters𝜽. It outputs the gas fraction as a function of
+mass, 𝑓gas,500c(𝑀500c).
+We re-calibrate the feedback model as the resolution of the simu-
+lationsisvaried.Thisismotivatedbythefactthatahigher-resolution
+simulation resolves smaller scales and higher gas densities and will
+therefore, for example, yield different radiative losses and different
+BH accretion rates (and hence different AGN feedback), which will,
+inturn,changethestructureoftheinterstellarmediumevenonscales
+resolved by the lower-resolution run (e.g., Schaye et al. 2015). An-
+other novel aspect of our approach is that the calibration takes into
+accounttheexpectedobservationalerrorsandbiases.Weimposeran-
+dom errors on the simulated stellar masses to account for Eddington
+bias. During the calibration of the fiducial intermediate-resolution
+model we fit for systematic errors in the SMF due to cosmic vari-
+ance, bias in the inferred stellar mass, and for hydrostatic mass bias
+in the cluster gas fractions inferred from X-ray observations. The
+best-fitting bias factors, which are negligible for cosmic variance
+and stellar mass, and which is consistent with the literature for the
+hydrostatic mass bias, are then applied to the calibration data for all
+resolutions and models.
+Notethattheemulatorsarenotonlyusedtodesignsimulationsthat
+reproduce the observations, but also to create models in which the
+SMF and/or cluster gas fractions are shifted to higher/lower values.
+This allows us to specify model variations in terms of the number
+of𝜎 by which they deviate from the calibration data, which is more
+intuitive and useful than specifying simulations solely by the values
+of subgrid parameters that are not directly observable. FLAMINGO
+includesfourmodelsinwhichclustergasfractionsarevaried(by +2,
+−2,−4 and−8𝜎, respectively) while keeping the SMF unchanged,
+one model in which the SMF is reduced by decreasing the stellar
+masses by the expected systematic error (0.14 dex; Behroozi et al.
+2019)whilekeepinggasfractionsfixed,andtwomodelsthatsimulta-
+neously vary the gas fractions and the SMF. Finally, two models use
+jet-like AGN feedback rather than the fiducial isotropic and thermal
+AGN feedback, one of which is calibrated to the fiducial data and
+one to gas fractions shifted down by4𝜎. Comparison of these last
+two models with the corresponding fiducial ones enables estimates
+of the uncertainty due to differences in the implementation of AGN
+feedback for a common calibration.
+FLAMINGO includes 4 intermediate-resolution hydrodynamical
+simulations with the fiducial calibration of the subgrid physics in
+(1 Gpc)3 volumes that vary the cosmological parameters. Three of
+the alternative cosmologies we consider are variations on Planck
+Collaboration et al. (2020a): their best-fittingΛCDM model with
+the minimum allowed neutrino mass,˝𝑚𝜈 = 0.06 eV (‘Planck’); a
+model with a high neutrino mass,˝𝑚𝜈 = 0.24 eV, (allowed at 95
+per cent confidence by Planck) in which the other cosmological pa-
+rameterstaketheircorrespondingbest-fittingvaluesfromthePlanck
+MCMC chains (‘PlanckNu0p24Var’); and a model with the same
+highneutrinomass, ˝𝑚𝜈 = 0.24eV,thatkeepsallotherparameters
+fixed to the values of model Planck, except forΩCDM which was
+reduced in order to keepΩm constant (‘PlanckNu0p24Fix’). Note
+thatforthelattermodelwefixtheprimordialpowerspectrumampli-
+tude,𝐴𝑠, rather than𝑆8. All models with˝𝑚𝜈 = 0.24 eV use three
+massive neutrinospecies of0.08 eV. Finally,we includethe ‘lensing
+cosmology’fromAmonetal.(2023)(‘LS8’).Thismodelhasalower
+amplitude of the power spectrum,𝑆8= 0.766, compared with 0.815
+and0.833forD3AandPlanck,respectively.Amonetal.(2023)show
+that the lensing cosmology is consistent with observations of galaxy
+clustering from BOSS DR12 (Reid et al. 2016) and galaxy-galaxy
+lensingfromD3A(Abbottetal.2022),HSCY1(Aiharaetal.2018)
+and KiDS 1000 (Kuĳken et al. 2019) over a wide range of scales,
+0.15− 60 ℎ−1Mpc, if allowances are made for theoretical uncer-
+tainties associated with baryonic feedback and assembly bias. By
+contrast, they show that the Planck cosmology does not fit the same
+data on small scales. We note that Heymans et al. (2021) showed
+that the LS8 model is also consistent with KiDS-1000 cosmic shear
+measurements.
+The simulations are initialised at𝑧 = 31, using multi-fluid third-
+orderLagrangianperturbationtheory(3LPT)ICsgeneratedwiththe
+monofonIC code (Hahn et al. 2020; Michaux et al. 2021). The ICs
+accuratelyreproducetherelativegrowthoftheindividualfluidcom-
+ponents. For FLAMINGO, a modified version ofmonofonIC was
+used that implements the effects of massive neutrinos2. We use the
+prescriptions for 3-fluid ICs with CDM, baryons, and massive neu-
+trinos outlined in Elbers et al. (2022), which builds on the 2-fluid
+2 https://github.com/wullm/monofonic
+MNRAS000, 1–23 (2015)
+
+--- Page 5 ---
+FLAMINGO: Baryons and the 𝑆8 tension 5
+formalism of Rampf et al. (2021) and Hahn et al. (2021). CDM and
+baryonparticlesaresetupinatwo-stageprocess.First,thecombined
+mass-weighted CDM + baryon fluid is initialized with single-fluid
+3LPT, accounting for the presence of neutrinos. This single fluid is
+then split into separate components with distinct transfer functions
+by perturbing the masses and velocities in accordance with the first-
+ordercompensatedmode.Hahnetal.(2021)showedthatdiscreteness
+errors can be suppressed by perturbing particle masses rather than
+displacements, thereby eliminating spurious growth of the compen-
+satedmode(seealsoBirdetal.2020;Liuetal.2023).Theunderlying
+Gaussian random fields were chosen from subregions ofpanphasia
+to facilitate future zoom-in resimulations (Jenkins 2013). To limit
+cosmic variance without compromising the ability to do zooms, we
+usedpartiallyfixedICs(Angulo&Pontzen2016),settingtheampli-
+tudesofmodeswith (𝑘𝐿)2 < 1025tothemeanvariance,where 𝑘 is
+thewavenumberand 𝐿 isthesidelengthofthesimulationbox.Fora
+moreindepthdescriptionoftheICs,pleaseseeSchayeetal.(2023).
+2.2 Projecting to cosmological observables
+Below we describe how the FLAMINGO data set accompanying
+each simulation is projected onto cosmological observables. In the
+presentstudy,wefocusonobservablesinsphericalharmonicsspace,
+namely the angular power spectrum, and reserve a configuration-
+space analysis for a future study.
+2.2.1 Fiducial Limber 1D analysis
+The observed 2D angular power spectrum,𝐶ℓ, between two fields
+at a multipole momentℓ can be derived employing the Limber ap-
+proximation (i.e., fluctuations are only in the plane of the sky) and
+integrating the relevant weighted 3D power spectrum along the line
+of sight (e.g., Kaiser 1992; Tröster et al. 2022):
+𝐶ℓ =
+∫ 𝜒(𝑧max)
+0
+𝑊A(𝜒)𝑊B(𝜒)
+𝜒2 𝑃A,B
+ 
+ℓ+ 1
+2
+𝜒 ,𝑧(𝜒)
+!
+d𝜒 , (1)
+where 𝑃(𝑘,𝑧) is the relevant 3D power (or cross-power) spectrum,
+𝑊A and𝑊B are the window functions (or weighting kernels) of the
+two fields, and the integral is taken over comoving distance,𝜒, back
+to 𝜒(𝑧max) where𝑧max is the maximum redshift, which we specify
+below for each of the power spectra.
+Our focus in the present study will be on the angular auto and
+cross-spectra between cosmic shear3, CMB lensing, and the tSZ ef-
+fect. As we have already investigated the cross-spectrum between
+CMBlensingandthetSZeffectinSchayeetal.(2023),wewillcon-
+centrate here on the shear, CMB lensing, and tSZ effect auto-power
+spectra and the shear–tSZ and shear–CMB lensing cross spectra.
+Taken together with the CMB lensing–tSZ effect cross in Schaye
+et al. (2023), we will therefore have examined all possible auto and
+cross-spectra of these three observables. Note that when examining
+auto- and cross-spectra that involve cosmic shear and CMB lensing
+but not the tSZ effect, the relevant 3D power spectrum,𝑃A,B, in
+eqn. 1 is the matter power spectrum,𝑃m,m(𝑘,𝑧), which is computed
+using the matter overdensity field and has units of Mpc3. For the
+tSZ effect auto power spectrum,𝑃A,B is the 3D electron pressure
+power spectrum,𝑃e,e(𝑘,𝑧), which is computed using the electron
+pressure field and has units of eV2 cm−6. For the cosmic shear–tSZ
+effectcross, 𝑃A,B isthe3Dmatter–electronpressurecross-spectrum,
+3 Specifically E-mode shear, which we refer to here as just shear.
+𝑃m,e(𝑘,𝑧) and has units of Mpc3 eV cm−3. We calculate the shot
+noise-subtracted auto and cross power spectra of the hydrodyamical
+simulationsfollowingaprocedurethatisequivalenttothatdescribed
+in the appendix of Mead et al. (2020).
+To ensure accurate computation of the observable power spectra
+via the Limber approximation, 3D power spectra are output on the
+fly with a high redshift cadence, particularly at low redshifts where
+non-linear and baryonic effects are most evident. Specifically, we
+adoptanoutputfrequencyof Δ𝑧= 0.05between𝑧= 0and𝑧= 3(60
+outputs),Δ𝑧= 0.25between𝑧= 3and𝑧= 12(36outputs), Δ𝑧= 0.5
+between𝑧= 12 and𝑧= 20 (16 ouputs), andΔ𝑧= 1 between𝑧= 20
+and 𝑧 = 30 (10 outputs). Note that the fine sampling ofΔ𝑧 = 0.05
+below𝑧= 3wasdeliberatelychosentomatchthatofthebackground
+sourceredshiftdistributionsoftheKiDSandDESdatasets.Wehave
+tested the convergence of our calculations by using only half of the
+3D power spectra (every second one) and find that resulting power
+spectra agree with those from our full calculation to typically better
+than a percent accuracy over the range of scales examined here.
+In the present study, we limit our analysis to multipoles withℓ >
+100 (corresponding to𝜃≈ 1°), for which our assumption of a flat
+sky, which is implicit in eqn. 1, is highly accurate. This multipole
+limit is also motivated by the fact that our 2D lightcone-based maps
+(describedbelow)havebeenconstructedassumingaflatskyandthat
+forsometeststhatweexaminewhichhaveasignificanthigh-redshift
+contribution (e.g., CMB lensing), the simulation box size prevents
+us from probing very large angular scales.
+In the flat-sky limit, the window function of the shear field of the
+𝑖-th source sample,𝑊𝛾𝑖(𝜒), may be written as (e.g., Bartelmann &
+Schneider 2001)
+𝑊𝛾𝑖(𝜒)= 3
+2
+𝐻0
+𝑐
+2
+Ωm
+𝜒
+𝑎(𝜒)
+∫ 𝑧max
+𝑧
+𝑛𝑖(𝑧′)
+
+1− 𝜒(𝑧)
+𝜒(𝑧′)
+
+d𝑧′ , (2)
+where 𝑐 is the speed of light,𝑎(𝜒) is the scale factor at comoving
+distance𝜒,and 𝑛𝑖(𝑧) isthesourceredshiftdistributionofthesample
+𝑖,whichisnormalisedsuchthatitsintegrationfrom 𝑧= 0to𝑧=𝑧max
+isunity.Forautoandcross-spectrainvolvingcosmicshear, 𝑧maxisset
+bythemaximumredshiftoftheobservedsourceredshiftdistribution.
+Here we compare to KiDS 1000 and DES Y3 samples, for which
+𝑧max= 3.
+The window function of the CMB lensing convergence field,
+𝑊𝜅CMB, can be derived from eqn. 2 by replacing the source red-
+shift distribution,𝑛(𝑧), with the Dirac delta function (i.e., a single
+source plane) and integrating to yield
+𝑊𝜅CMB = 3
+2
+𝐻0
+𝑐
+2
+Ωm
+𝜒
+𝑎(𝜒)
+
+1− 𝜒
+𝜒CMB
+
+, (3)
+where 𝜒CMB is the comoving distance to the surface of last-
+scattering, assumed to be at𝑧CMB = 1100. For the CMB lensing
+auto power spectrum, which has a very extended window in redshift
+space(i.e.,issensitivetofluctuationsoverawiderangeofdistances),
+we integrate eqn. 1 back to the initial conditions of the simulations,
+corresponding to𝑧max = 31. We have checked that contributions
+from higher redshifts are negligible by using the linear power spec-
+trum beyond this maximum redshift. Note that when comparing to
+observational measurements below, we use both the CMB lensing
+convergence (𝜅CMB) and deflection potential (𝜙) which, in terms of
+theirangularpowerspectra,arerelatedvia 𝜙ℓ = 2𝜅CMB,ℓ/[ℓ(ℓ+1)].
+The window function of the tSZ effect,𝑊𝑦(𝜒), is
+𝑊𝑦(𝜒)= 𝜎T
+𝑚e𝑐2
+1
+𝑎2(𝜒) , (4)
+where𝜎TistheThompsonscatteringcross-sectionand 𝑚eistheelec-
+tron rest mass. As for the case of the CMB lensing power spectrum,
+MNRAS000, 1–23 (2015)
+
+--- Page 6 ---
+6 I. G. McCarthy et al.
+we integrate eqn. 1 for the tSZ power spectrum back to𝑧max = 31.
+However we note that, as the tSZ effect emerges from the inverse
+Compton scattering of CMB photons by hot free electrons, there is
+essentiallynocontributionfromredshiftsgreaterthan 𝑧= 7.8,which
+corresponds to the redshift of reionisation of the simulations. Fur-
+thermore,overtherangeofscalesaccessibletocurrentobservations,
+the tSZ effect power spectrum is mainly sensitive to massive, rela-
+tively nearby clusters (e.g., Komatsu & Seljak 2002; Battaglia et al.
+2012; McCarthy et al. 2014) and the integrated signal is converged
+beyond𝑧≈ 3.
+2.2.2 Map-based 2D analysis
+We describe here an alternative, map-based (2D) analysis of the
+simulations, which we will compare to the fiducial 1D analysis de-
+scribed above. This will provide a consistency check of our results
+but also allows us to get a handle on the role of cosmic variance, as
+our lightcones are constructed for multiple observer locations. Note
+that since our lightcones in most cases are restricted to a maximum
+redshift of𝑧 = 3, we do not attempt to compute the CMB lensing
+autopowerspectrumwitha2Danalysis,asanon-negligiblefraction
+of the signal comes from beyond this redshift for that statistic.
+As described in the appendix of Schaye et al. (2023), tSZ effect
+maps are constructed on-the-fly by accumulating the Compton𝑦
+values of individual particles crossing the lightcone ontoHEALPix
+mapsoverfixedintervalsinredshift.Toconstructatotal(integrated)
+Compton𝑦 map, we simply sum these maps along the line of sight
+backto 𝑧= 3,whichissufficientforthetSZpowerspectrumandthe
+tSZ–cosmic shear cross-spectra that we consider.
+To construct cosmic shear and CMB lensing convergence maps,
+we follow the method described in McCarthy et al. (2018), which
+employs the so-called Born approximation (i.e. light ray paths are
+approximated as straight lines). In short, for eachHEALPix total
+mass map (of which there are 60 per lightcone back to𝑧 = 3, also
+producedon-the-fly),wecomputeaprojected(2D)overdensitymap,
+𝛿(𝜒, 𝜽).Themapsarethenintegratedalongthelineofsightweighted
+bythewindowfunction(lensingkernel)toyieldthetotalconvergence
+map:
+𝜅(𝜽)=
+∫ 𝜒(𝑧max)
+0
+𝑊𝛾𝑖, 𝜅CMB(𝜒)𝛿(𝜒, 𝜽)d𝜒 , (5)
+where𝑊𝛾𝑖, 𝜅CMB(𝜒) is the window function corresponding to either
+the𝑖-th galaxy sample (as in eqn. 2) for cosmic shear or the CMB
+lensing single source plane (as in eqn. 3), and𝑧max = 3. Note that
+𝑧max = 3 is sufficient for cross-correlations between CMB lensing,
+cosmic shear, and the tSZ effect.
+We use theNaMaster4 package (Alonso et al. 2019) to com-
+pute the auto- and cross-spectra of the dimensionless scalar (spin-0)
+quantities𝑦 and𝜅.Tosavecomputationaleffort,the HEALPixmaps
+here have been downsampled from𝑁side = 16384 to𝑁side = 4096,
+corresponding to an angular resolution of≈ 0.86 arcmin, which is
+sufficientforthecomparisonstoobservationspresentedbelow.When
+computing the spectra, we initially use a multipole moment resolu-
+tion (bandpower) ofΔℓ= 8 but then employ a Savitzky-Golay filter
+of order 3 and window size of 15 to further smooth the simulated
+spectra. Note that the smoothing is applied for visual (plotting) pur-
+poses only. Unlike for the fiducial Limber 1D analysis, we do not
+quantitatively compare the smoothed 2D map-based power spectra
+to the observed power spectra (e.g., compute a goodness of fit). We
+4 https://namaster.readthedocs.io/en/latest/
+deconvolve the𝑁side = 4096 pixel window function from the com-
+puted cross-spectra using thepixwin function within theHEALPix
+package.
+We note that within the flat-sky limit adopted here, the𝐶ℓ’s for
+(E-mode) shear are the same as those for the convergence,𝜅 (e.g.,
+Kilbingeretal.2017;Weietal.2018).Thus,forour2Dcosmicshear
+analysis, there is no need to convert the convergence field,𝜅(𝜽), in
+eqn. 5 into a shear field,𝛾𝑖(𝜽), before computing the shear power
+spectra5.
+3 RESULTS
+In this section we present the main results of our analyses. We be-
+gin by examining the power spectra of cosmic shear, tSZ effect, and
+CMB lensing, before examining the cross-spectra between these ob-
+servables. For each case we make use of the full FLAMINGO suite
+of variations, exploring the dependence of the signals on cosmol-
+ogy, the efficiency and nature of feedback, and simulation volume
+and resolution. We compare the simulations with the most recent
+observational measurements of these quantities.
+3.1 Effective length scales and redshifts probed by different
+observables
+To help aid the interpretation of the results presented below and to
+assess consistency between the different tests, we show in Fig. 1 the
+𝐶ℓ-weightedmean 𝑘-scale(𝑘eff;toppanel)andredshift( 𝑧eff;bottom
+panel) of the various auto and cross-power spectra considered here.
+To compute𝑘eff and𝑧eff we use the fiducial 1D Limber integration
+(eqn. 1) with 3D power spectra from the largest FLAMINGO hydro
+run(L2p8_m9).Morespecifically,tocompute 𝑘eff wemodifyeqn.1
+to include an additional multiplicative term,𝑘≡( ℓ+ 1/2)/𝜒, and
+thenintegratethemodifiedequationover 𝜒.Wethendividetheresult
+bytheintegrationoftheunmodifiedeqn.1,toyieldthe 𝐶ℓ-weighted
+𝑘 scale, 𝑘eff. The calculation of𝑧eff is performed in an analogous
+way, but using𝑧(𝜒) as the additional multiplicative term. Note that
+forcosmicshear( 𝛾E−𝛾E),weusesourceredshiftdistributionsofthe
+5 tomographic bins of the KiDS 1000 survey (Tröster et al. 2022; as
+discussed below in Section 3.2), apart from the shear–CMB lensing
+cross, for which we use the combined (single bin) distribution from
+Robertson et al. (2021), as described in Section 3.6.
+ThetoppanelofFig.1showsthat 𝑘eff generallyriseswithincreas-
+ingℓ as expected, though the gradient is significantly more shallow
+for spectra involving tSZ𝑦 relative to pure lensing power spectra. In
+general,thecosmicshearpowerspectrum,tSZeffectpowerspectrum,
+andtheircross-spectrumprobethesmallestscales(largest 𝑘eff’s)ata
+givenmultipole,followedbytheKiDS2Dcosmicshear–CMBlens-
+ing cross and CMB lensing–𝑦 cross which probe larger scales, and
+the CMB lensing power spectrum which samples the largest scales
+at a given multipole.
+ThebottompanelofFig.1showstheeffectiveredshiftsoftheauto
+and cross spectra are rank ordered in the opposite sense to𝑘, with
+the cosmic shear power spectrum, tSZ effect power spectrum, and
+theircross-spectrumbeingsensitivetothelowestredshifts(generally
+𝑧eff≈ 0.1− 0.4, apart from the tSZ effect power spectrum on small
+angularscaleswhichprobessomewhatlargerredshifts),followedby
+5 We have verified this to very high precision by converting the spin-0 con-
+vergence field into a spin-2 shear field using the method of Kaiser & Squires
+(1993) and then computing the shear power spectra usingNaMaster.
+MNRAS000, 1–23 (2015)
+
+--- Page 7 ---
+FLAMINGO: Baryons and the 𝑆8 tension 7
+102 103
+10 2
+10 1
+100
+101
+keff [h/Mpc]
+E E
+y y
+CMB CMB
+E y
+CMB y
+E CMB
+102 103
+10 1
+100
+101
+zeff
+E E
+y y
+CMB CMB
+E y
+CMB y
+E CMB
+Figure 1.𝐶ℓ-weighted 𝑘-scale (𝑘eff; top panel) and redshift (𝑧eff; bottom
+panel) of the auto and cross-power spectra involving cosmic shear, the tSZ
+effect, and CMB lensing considered in this paper. For cosmic shear power
+spectra (𝛾E-𝛾E) we plot only the auto spectra for the 5 tomographic bins of
+the KiDS 1000 survey (i.e., 1-1, 2-2, ..., 5-5, shown in light green curves),
+where the 1-1 power spectrum has the smallest effective redshift and the
+largest effective𝑘. Similarly, for the cosmic shear–tSZ effect cross-spectrum
+(dashedbrowncurves),the1- 𝑦 crosshasthesmallest 𝑧eff andthelargest 𝑘eff.
+The top panel shows that𝑘eff rises with increasingℓ, though the gradient
+is significantly shallower for spectra involving tSZ𝑦 relative to pure lensing
+powerspectra.Ingeneral,thecosmicshearpowerspectrum,tSZeffectpower
+spectrum, and their cross probe the smallest scales (largest𝑘eff’s) at a given
+ℓ, with the KiDS 2D cosmic shear–CMB lensing cross and CMB lensing–𝑦
+cross probing larger scales, and the CMB lensing power spectrum probing
+thelargestscales.Theeffectiveredshiftoftheautoandcrossspectraarerank
+ordered in the opposite sense to𝑘, with the cosmic shear power spectrum,
+tSZ effect power spectrum, and their cross-spectrum being sensitive to the
+lowest redshifts (generally𝑧eff≈ 0.1− 0.4, apart from the tSZ effect power
+spectrum on small angular scales), followed by the KiDS 2D cosmic shear–
+CMB lensing cross (𝑧eff≈ 0.5), the CMB lensing–𝑦 cross (𝑧eff≈ 0.8), and
+theCMBlensingpowerspectrumsamplingthehighestredshifts( 𝑧eff≈ 3−4).
+theKiDS2Dcosmicshear–CMBlensingcross( 𝑧eff≈ 0.5),theCMB
+lensing–𝑦 cross(𝑧eff≈ 0.8)exploredinSchayeetal.(2023),andthe
+CMBlensingpowerspectrumbeingsensitivetothehighestredshifts
+(𝑧eff≈ 3−4).Thus,asimultaneousanalysisofallthesestatisticswill
+sample fluctuations over very wide ranges of redshift and physical
+scale, and in this respect there is a significant degree of overlap but
+also complementarity between the different observables.
+AnotherrelevantdimensionwhichwedonotconsiderinFig.1,but
+whichwouldbefruitfultoexamineinfuturestudiesinthecontextof
+thehalomodel,isthehalomassandradialdependenceofthevarious
+auto-andcross-spectra.Forexample,whilethecosmicshearandtSZ
+effectpowerspectramayprobesimilarphysicalscalesandredshifts,
+they are known to depend quite differently on halo mass and this
+is likely to be important in the context of potential baryon/feedback
+effects.Whendescribingtheimpactofbaryonsonthevariouspower
+spectra below, we will provide a qualitative link to the role of halo
+mass, leaving a quantitative exploration for future work.
+3.2 Cosmic shear power spectrum
+We begin by comparing the FLAMINGO simulations to measure-
+ments of the cosmic shear power spectrum from the KiDS 1000
+survey6 (Kuĳken et al. 2019; Heymans et al. 2021) from the recent
+study of Tröster et al. (2022). The background source galaxies are
+divided into 5 tomographic bins based on their photometric red-
+shifts, which are derived from nine-band imaging data spanning
+optical to infrared wavelengths (Hildebrandt et al. 2021). The to-
+mographic bins, labelled 1 through 5, have selection windows of
+0.1 < 𝑧B < 0.3, 0.3 < 𝑧B < 0.5, 0.5 < 𝑧B < 0.7, 0.7 < 𝑧B < 0.9,
+and 0.9 < 𝑧B < 1.2, respectively, where𝑧B corresponds to the
+maximum in the redshift posterior probability distribution for indi-
+vidual galaxies. The source redshift distributions,𝑛𝑖(𝑧), for the 5
+tomographic bins are shown in figure 1 of Tröster et al. (2022). We
+use these distributions when computing the shear window function
+(eqn. 2) in order to project the simulation 3D power spectra (or 2D
+maps) onto shear power spectra for comparison to the KiDS 1000
+measurements. Tröster et al. (2022) measure the auto- and cross-
+powerspectrabetweenthe5tomographicbins.Followingtheiranal-
+ysis, we adopt angular scale cuts of100<ℓ < 1500, corresponding
+to the range over which the KiDS cosmic shear methodology has
+been validated. Tröster et al. (2022) have made the measurements,
+covariance matrices, source redshift distributions, and their analysis
+software publicly available7. These authors have also measured the
+shear–tSZeffectcross-spectrum,whichwecomparetoinSection3.5
+below.
+In Fig. 2 we examine the box size and resolution dependence of
+the predicted cosmic shear power spectra. The numbers in the top
+right corner of each panel indicate the tomographic bins being used
+(e.g., 3-2 indicates a cross-spectrum between the third and second
+tomographic bins, which is equivalent to 2-3). The open circles cor-
+respondtotheKiDS1000measurementsofTrösteretal.(2022)and
+theerrorbarsshowncorrespondtothediagonalcomponentsonlyof
+the covariance matrix. The solid coloured curves correspond to the
+predicted spectra for the FLAMINGO calibrated hydro simulations
+with the fiducial D3A cosmology while the box size and resolution
+are varied. Following the same colour coding, the numbers on the
+left of each panel indicate𝜒2 for the L1_m9 run and theΔ𝜒2 (in
+parentheses) of the other runs with respect to L1_m9. Note that the
+𝜒2’s are computed here adopting the diagonal elements of the co-
+variance matrix and we compute them for the fiducial 1D Limber
+method only (solid curves). The blue dashed curve and shaded re-
+gion correspond to the mean power spectra and scatter from the 2D
+map-based analysis of the 8 light cones for the L2p8_m9 run, which
+6 https://kids.strw.leidenuniv.nl/
+7 https://github.com/tilmantroester/KiDS-1000xtSZ
+MNRAS000, 1–23 (2015)
+
+--- Page 8 ---
+8 I. G. McCarthy et al.
+2
+0
+2
+4
+6
+ 10.7
+(0.0)
+(-0.0)
+(-0.0)
+1-1
+L1_m9
+L2p8_m9
+L1_m10
+L1_m8
+L2p8_m9 (2D mean)
+L2p8_m9 (2D scatter)
+KiDS 1000
+2
+0
+2
+4
+6
+ 4.3
+(0.0)
+(-0.0)
+(0.0)
+2-1
+2
+0
+2
+4
+6
+107 C E E
+17.9
+(0.1)
+(-0.1)
+(0.1)
+3-1
+2
+0
+2
+4
+6
+ 11.2
+(0.1)
+(-0.1)
+(0.1)
+4-1
+102 103
+2
+0
+2
+4
+6
+ 29.7
+(0.1)
+(-0.0)
+(0.1)
+5-1
+10.6
+(-0.1)
+(0.1)
+(-0.1)
+2-2
+6.4
+(-0.1)
+(0.1)
+(-0.1)
+3-2
+10.6
+(0.0)
+(-0.0)
+(0.1)
+4-2
+102 103
+14.6
+(0.1)
+(-0.1)
+(0.2)
+5-2
+11.8
+(0.4)
+(-0.2)
+(0.1)
+3-3
+21.6
+(1.1)
+(-0.7)
+(0.5)
+4-3
+102 103
+22.9
+(1.0)
+(-0.6)
+(0.5)
+5-3
+15.6
+(0.5)
+(-0.5)
+(0.4)
+4-4
+102 103
+23.4
+(1.5)
+(-1.2)
+(0.8)
+5-4
+102 103
+6.2
+(0.3)
+(-0.2)
+(0.1)
+5-5
+Figure 2.Dependence of the predicted KiDS 1000 cosmic shear power spectrum on simulation box size and resolution. The numbers in the top right corner of
+each panel indicate the tomographic bins being used (e.g., 3-2 indicates a cross-spectrum between the third and second tomographic bins, which is equivalent
+to 2-3). The open circles correspond to the KiDS 1000 measurements of Tröster et al. (2022) and the error bars correspond to the diagonal components of
+the covariance matrix. The solid coloured curves correspond to the predicted spectra for the FLAMINGO simulations with the fiducial D3A cosmology as
+the box size and resolution are varied. Following the same colour coding, the numbers on the left of each panel indicate𝜒2 for the L1_m9 run and theΔ𝜒2
+(in parentheses) of the other runs with respect to L1_m9. Note that the𝜒2’s are computed here using the diagonal elements of the covariance matrix and we
+compute them for the fiducial 1D Limber method only (solid curves). A negative value for theΔ𝜒2 indicates a better match to the data. The blue dashed curve
+and shaded region correspond to the mean power spectra and scatter from the 2D map-based analysis of the 8 light cones for the L2p8_m9 run, which has the
+sameresolution,cosmology,andcalibratedfeedbackmodelasL1_m9.Thesimulationpredictionsareconvergedwithboxsizeandresolution,buttendtopredict
+spectra with slightly higher amplitude than observed (i.e., the𝑆8 tension), particularly for the spectra involving the higher tomographic bins.
+MNRAS000, 1–23 (2015)
+
+--- Page 9 ---
+FLAMINGO: Baryons and the 𝑆8 tension 9
+2
+0
+2
+4
+6
+ 10.7
+(0.0)
+(-0.0)
+(0.0)
+(-0.0)
+1-1
+L1_m9
+Planck
+PlanckNu0p24Fix 
+PlanckNu0p24Var
+LS8
+KiDS 1000
+2
+0
+2
+4
+6
+ 4.3
+(0.1)
+(-0.1)
+(-0.0)
+(-0.1)
+2-1
+2
+0
+2
+4
+6
+107 C E E
+17.9
+(0.9)
+(-1.0)
+(-0.2)
+(-1.6)
+3-1
+2
+0
+2
+4
+6
+ 11.2
+(0.7)
+(-0.8)
+(-0.1)
+(-1.2)
+4-1
+102 103
+2
+0
+2
+4
+6
+ 29.7
+(0.8)
+(-1.0)
+(-0.2)
+(-1.5)
+5-1
+10.6
+(-0.7)
+(1.1)
+(0.2)
+(1.8)
+2-2
+6.4
+(-0.2)
+(1.0)
+(0.3)
+(1.9)
+3-2
+10.6
+(1.1)
+(-0.7)
+(-0.2)
+(-0.8)
+4-2
+102 103
+14.6
+(2.4)
+(-2.4)
+(-0.7)
+(-3.5)
+5-2
+11.8
+(2.5)
+(-2.6)
+(-0.8)
+(-3.6)
+3-3
+21.6
+(6.7)
+(-7.2)
+(-2.3)
+(-10.1)
+4-3
+102 103
+22.9
+(6.3)
+(-6.9)
+(-2.6)
+(-9.3)
+5-3
+15.6
+(4.7)
+(-5.5)
+(-2.2)
+(-7.5)
+4-4
+102 103
+23.4
+(9.9)
+(-11.4)
+(-4.8)
+(-15.1)
+5-4
+102 103
+6.2
+(1.6)
+(0.1)
+(-0.4)
+(1.7)
+5-5
+Figure3. AsFig.2,butshowingthedependenceofthepredictedKiDS1000cosmicshearpowerspectrumoncosmology.Thesolidcolouredcurvescorrespond
+to the predicted spectra for the FLAMINGO simulations as the background cosmology is varied. A Planck maximum-likelihood cosmology yields spectra with
+elevatedpowerrelativetothefiducialD3A(andisthusinstrongertensionwiththelensingmeasurements),whereasincreasingthesummedneutrinomassfrom
+0.06eV(fiducial)to0.24eVsuppressesthepoweroverallscalessampledhere.TheLS8‘lensing’cosmologypredictsthelowestpowerandisinbestagreement
+with the measurements, particularly for the high tomographic bin data (except 5-5).
+has the same resolution, cosmology, and calibrated feedback model
+as L1_m9. Generally speaking, the predicted signal is strongest for
+spectra involving the higher tomographic bin numbers, simply as a
+resultoftherebeingalongerpathlengthalongthelineofsightfrom
+the observer to the galaxy samples and thus more lensing.
+From Fig. 2 we conclude that the predictions of the simulations
+are robust to variations in box size and resolution, as well anal-
+ysis method (1D Limber vs. 2D map-based). There is perhaps a
+hint that the larger 2.8 Gpc volume has slightly more power on the
+largest scales (ℓ<∼ 500) for the spectra involving the most distant
+tomographic bins. However, these differences are generally small
+compared to variations of the simulations with respect to the KiDS
+1000 measurements, variations between neighbouring data points,
+and the estimated uncertanties.
+Also evident from Fig. 2 is the tendency of the simulations to
+predict power spectra that are elevated with respect to the KiDS
+MNRAS000, 1–23 (2015)
+
+--- Page 10 ---
+10 I. G. McCarthy et al.
+1000 measurements, particularly for the higher tomographic bins
+from which much of the signal originates. This is confirmation of
+the well-known𝑆8 tension, noting again that the D3A cosmology
+includes Planck CMB constraints which pull the preferred value of
+𝑆8tohighervaluesthanfavouredbycosmicshearalone.However,we
+highlightherethatourconclusionsareonlyqualitative,aswehavenot
+takenintoaccounttheuncertaintiesintheD3Acosmology,norhave
+wemarginalisedoverrelevantsystematicuncertaintiesinthelensing
+measurements(e.g.,intrinsicalignments,photo- 𝑧uncertainties,etc.).
+In Fig. 3 we examine the FLAMINGO cosmological variations in
+the context of the fiducial calibrated hydro model. Specifically, in
+1 Gpc volumes we compare the fiducial D3A cosmology with the
+maximumlikelihoodPlanck2018cosmology(‘Planck’),twoPlanck-
+based cosmologies where the summed mass of neutrinos is raised
+fromtheminimumvalueof0.06eVto0.24eV(seeTable2),andthe
+‘lensing’ cosmology (LS8) of Amon et al. (2023), which uses CMB
+datatoinformthemassdensitiesofbaryonsandCDMaswellasthe
+primordial power spectrum shape (𝑛𝑠), but uses cosmic shear to set
+the amplitude (𝑆8, or𝐴𝑠).
+Thedependenceoncosmologyisparticularlyevidentinthespectra
+involving the higher tomographic bins, with the Planck cosmology
+yielding spectra that are elevated with respect to the fiducial D3A
+cosmology(andthusinslightlystrongertensionwiththeKiDS1000
+measurements), whereas increasing the summed neutrino mass sup-
+presses the power over all scales sampled here. Note that increasing
+theneutrinomassandlowering 𝑆8 havesimilareffectsonthecosmic
+shearpowerspectra.Thisisaconsequenceofourapproachoffixing
+𝐴𝑠 (i.e., using the CMB to specify it) when increasing the summed
+neutrino mass, as the main effect of increasing the neutrino mass in
+this case is to suppress the clustering amplitude at late times (i.e.,
+lower𝑆8). The LS8 ‘lensing’ cosmology, with𝑆8 = 0.766, predicts
+the lowest power and is in best agreement with the measurements,
+which is essentially by construction. Our findings appear consistent
+with those of Tröster et al. (2022), who obtain𝑆8≈ 0.75± 0.02 us-
+ingthe HMxmodelofMeadetal.(2020)tomodelthecosmicshear
+power spectrum and cosmic shear–tSZ cross-spectrum. Note that
+HMxincludes a model for marginalising over the impact of baryons
+which was calibrated on our previous BAHAMAS simulations.
+We now turn to the impact of variations in baryon physics on the
+cosmic shear power spectrum. In Fig. 4 we show how varying the
+gas fractions of groups and clusters (as mediated through variations
+in stellar and primarily AGN feedback) affects cosmic shear. Even
+thoughthefeedbackvariationsspanawiderange( +2𝜎to−8𝜎about
+the observed gas mass fraction–halo mass relation; see Schaye et al.
+2023;Kugeletal.2023),theyresultinonlyrelativelyminoreffectson
+the power spectra, which are most evident atℓ >∼ 700. In particular,
+reducing the gas fractions slightly improves the match to the mea-
+surements of the high tomographic bin data. Note, however, that the
+improvement is generally small compared to that which is obtained
+from variations in the baseline cosmology. Indeed, the slight pref-
+erence for increased feedback with respect to the fiducial calibrated
+model is most likely driven by the fact that there is an offset with
+respect to the baseline D3A cosmology generally (that is, increased
+feedback is partially compensating for a difference in cosmology).
+We can test this by assuming the impact of cosmology variations is
+separable from the impact of baryon variations (Van Daalen et al.
+2011;Mummeryetal.2017;VanDaalenetal.2020).Specifically,we
+compute the ‘suppression function’ of the fgas−8𝜎 run with respect
+to the fiducial hydro model (both in the fiducial D3A cosmology)
+by simply taking the ratio of their power spectra (e.g., Semboloni
+et al. 2011). Assuming this ratio is independent of cosmology, we
+multiply it with the LS8 power spectrum (which uses the fiducial
+Table 3.𝜒2 values of the predicted KiDS 1000 and DES Y3 cosmic shear
+power spectra with respect to the measurements of Tröster et al. (2022) and
+Douxetal.(2022),respectively.Thereare120(270)independentdatapoints
+summed over the 15 (10) KiDS 1000 (DES Y3) auto- and cross-spectra.
+Values in parentheses indicate theΔ𝜒2 with respect to the L1_m9 run.𝜒2
+values using either the diagonal elements alone or the full covariance matrix
+are provided.
+KiDS 1000 DES Y3
+Prefix 𝜒2
+diag 𝜒2covar 𝜒2
+diag 𝜒2covar
+L1_m9 217.5 183.2 355.2 324.3
+L2p8_m9 (5.1) (2.2) (11.3) (3.5)
+L1_m10 (-3.7) (-1.7) (-6.5) (-2.8)
+L1_m8 (2.8) (1.4) (3.9) (1.2)
+fgas+2𝜎 (4.7) (2.4) (5.6) (1.3)
+fgas−2𝜎 (-4.0) (-2.0) (-4.5) (-1.0)
+fgas−4𝜎 (-7.8) (-3.8) (-8.4) (-1.7)
+fgas−8𝜎 (-13.7) (-6.7) (-14.0) (-2.6)
+M*−𝜎 (-2.6) (-1.3) (-2.8) (-0.5)
+M*−𝜎_fgas−4𝜎 (-9.3) (-4.6) (-9.6) (-1.7)
+Jet (0.8) (0.6) (-0.5) (-0.7)
+Jet_fgas−4𝜎 (-14.8) (-7.2) (-16.9) (-4.2)
+Planck (36.9) (16.1) (76.4) (24.2)
+PlanckNu0p24Fix (-37.3) (-16.3) (-43.9) (-13.1)
+PlanckNu0p24Var (-14.2) (-6.3) (-21.7) (-7.5)
+LS8 (-48.8) (-21.2) (-34.4) (-8.5)
+calibratedhydromodel).Thisprocedureapproximatestheimpactof
+running the LS8 cosmology but with stronger feedback. Comparing
+the unmodified LS8 and its enhanced feedback variant to the obser-
+vationalmeasurements,wefindthatthepreferenceforstrongerfeed-
+backlargelygoesaway.Forexample,inthe5-3and5-4crossspectra
+cases, which have the strongest preference for increased feedback in
+the fiducial D3A cosmology, theΔ𝜒2’s between the LS8 model and
+its increased feedback (fgas−8𝜎) variant are only−0.9 and−1.5,
+compared to−2.6 and−4.2 in the D3A cosmology in Fig. 4. Thus,
+we confirm that cosmology and baryon feedback can be degenerate
+when fitting to the observational measurements, which underscores
+the importance of external data sets (e.g., group baryon fractions) in
+constraining baryonic feedback.
+We examine other baryonic feedback scenarios in Fig. A1 in Ap-
+pendixA,namelytheimpactofvariationsintheSMF(bothatfiducial
+and reduced gas fractions) and the calibrated and stronger jet model
+of AGN feedback. Similar to what was concluded above, we find
+that these variations in the feedback models have generally a minor
+impact on the cosmic shear power spectrum. Variations in the SMF
+at fixed gas fraction have a negligible impact on all scales, which
+is not unexpected as the baryon fractions of groups and clusters are
+generally dominated by the hot gas. The jet models yield similar
+results to the fiducial thermal AGN model at fixed gas fraction.
+TheDESY3releaseprovidesanindependentdatasetwithsimilar
+statistical precision to the KiDS 1000 survey against which we can
+compare the simulations to test for consistency (or lack thereof). In
+AppendixAwecomparetheFLAMINGOsimulationswiththeDES
+Y3 harmonic space measurements of Doux et al. (2022). As shown
+inFig.A2,thelensingLS8cosmologyyieldsasomewhatbetterfitto
+thedatarelativetothefiducialD3Acosmology(particularlyamongst
+themajorityofthehighertomographicbins),whereasaPlanckCMB
+cosmology yields a worse fit for virtually all bins. Also consistent
+with the KiDS 1000 comparison above, increasing the efficiency of
+feedback slightly improves the fit to the DES measurements, but
+is less significant than the improvement that results from lowering
+of 𝑆8. We conclude that while there is evidence for (mild) tension
+of the DES Y3 measurements with the Planck CMB cosmology,
+MNRAS000, 1–23 (2015)
+
+--- Page 11 ---
+FLAMINGO: Baryons and the 𝑆8 tension 11
+2
+0
+2
+4
+6
+ 10.7
+(-0.0)
+(0.0)
+(0.0)
+(0.0)
+1-1
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+KiDS 1000
+2
+0
+2
+4
+6
+ 4.3
+(-0.0)
+(0.0)
+(0.0)
+(0.0)
+2-1
+2
+0
+2
+4
+6
+107 C E E
+17.9
+(0.1)
+(-0.1)
+(-0.2)
+(-0.3)
+3-1
+2
+0
+2
+4
+6
+ 11.2
+(0.1)
+(-0.1)
+(-0.2)
+(-0.4)
+4-1
+102 103
+2
+0
+2
+4
+6
+ 29.7
+(0.2)
+(-0.1)
+(-0.3)
+(-0.4)
+5-1
+10.6
+(-0.2)
+(0.2)
+(0.3)
+(0.6)
+2-2
+6.4
+(-0.2)
+(0.2)
+(0.4)
+(0.7)
+3-2
+10.6
+(0.2)
+(-0.1)
+(-0.2)
+(-0.4)
+4-2
+102 103
+14.6
+(0.4)
+(-0.3)
+(-0.6)
+(-1.0)
+5-2
+11.8
+(0.2)
+(-0.2)
+(-0.4)
+(-0.7)
+3-3
+21.6
+(0.8)
+(-0.7)
+(-1.4)
+(-2.5)
+4-3
+102 103
+22.9
+(0.9)
+(-0.8)
+(-1.5)
+(-2.6)
+5-3
+15.6
+(0.7)
+(-0.6)
+(-1.3)
+(-2.2)
+4-4
+102 103
+23.4
+(1.3)
+(-1.2)
+(-2.3)
+(-4.2)
+5-4
+102 103
+6.2
+(0.1)
+(-0.1)
+(-0.2)
+(-0.3)
+5-5
+Figure 4.As Fig. 2, but showing the dependence of the predicted KiDS 1000 cosmic shear power spectrum on baryon physics, namely variations in the gas
+fractions of groups and clusters which are mediated primarily through variations in the AGN feedback strength. The solid coloured curves correspond to the
+predictedspectrafortheFLAMINGOsimulationsasthegasfractionsarevariedfrom +2𝜎 to−8𝜎 withrespecttotheobservedgasfraction–halomassrelation
+(see Schaye et al. 2023; Kugel et al. 2023). Lowering the gas fractions (increasing the feedback strength) relative to the fiducial calibrated model results in
+a slightly improved match to the data, though the improvement is generally small compared to that from the investigated changes in the baseline cosmology
+(Fig. 3).
+it is of slightly lower significance than for the KiDS 1000 survey.
+This is consistent with findings of Doux et al. (2022), who infer
+𝑆8 = 0.784± 0.026 from the DES Y3 power spectra, representing
+a 1.5𝜎 tension with Planck. We note that KiDS 1000 and DES Y3
+shearresultsareconsistentwitheachothertowithin 1𝜎(e.g.,Abbott
+et al. 2023).
+For completeness, in Table 3 we present the𝜒2 values of the pre-
+dicted cosmic shear power spectra with respect to the observational
+KiDS1000andDESY3measurements.Thevaluesaresummedover
+the 15 and 10 auto- and cross-spectra from KiDS and DES, respec-
+tively,andareshownforboththecaseswhereonlythediagonalerrors
+are adopted and when the full covariance matrix is used. The results
+confirm those shown in the figures, although the differentiability of
+MNRAS000, 1–23 (2015)
+
+--- Page 12 ---
+12 I. G. McCarthy et al.
+the models is reduced when taking into account the full covariance
+of the measurements (as expected).
+3.3 tSZ effect power spectrum
+We now turn our attention to the tSZ effect power spectrum. The
+tSZ effect is induced from the inverse Compton scattering of CMB
+photons by hot, free electrons in the intracluster medium (ICM) of
+galaxy groups and clusters (Sunyaev & Zeldovich 1972; Birkinshaw
+1999). The effect appears as adecrement in CMB temperature maps
+at radio wavelengths and an increment at millimetre scales (for a
+review see Carlstrom et al. 2002). As its amplitude is proportional
+to both the ICM electron number density and temperature, it is par-
+ticularly strong for massive galaxy clusters. Indeed, the self-similar
+expectation is that the integrated tSZ flux scales with halo mass to
+the 5/3 power (e.g., White et al. 2002; Planck Collaboration et al.
+2013) and previous studies have shown that massive clusters tend
+to dominate the tSZ effect power spectrum (e.g., Komatsu & Seljak
+2002;Battagliaetal.2012;McCarthyetal.2014).Astheabundance
+of massive clusters is a sensitive probe ofΩ𝑚 and particularly𝜎8,
+the tSZ effect, which is proportional to the square of the tSZ flux, is
+evenmoresensitivetothesecosmologicalparameters(e.g.,Komatsu
+& Seljak 2002; Shaw et al. 2010; Millea et al. 2012). For example,
+theamplitudeofthetSZeffectpowerspectrumscalesapproximately
+as𝜎8.3
+8 (Shaw et al. 2010).
+We compare the FLAMINGO simulations to the latest tSZ effect
+power spectrum measurements, namely the Planck-based measure-
+ments reported in Bolliet et al. (2018) and the South Pole Telescope
+(SPT) data in Reichardt et al. (2021). Note that Bolliet et al. (2018)
+presentanimprovedre-analysisofthePlanck2015tSZdatasetfrom
+Planck Collaboration et al. (2016), by taking into account the tri-
+spectrum in the covariance matrix and placing physical constraints
+on the amplitudes of foreground contaminants (particularly radio
+and infrared point sources and the clustered infrared background,
+or CIB). We use the tabulated tSZ power spectrum measurements
+and total diagonal uncertainties from table 4 of Bolliet et al. (2018).
+Note that total uncertainties include the non-Gaussian contribution
+from the tri-spectrum which dominates on large scales (Komatsu &
+Seljak 2002). The full covariance matrix was not tabulated, though
+asshowninfigure3ofBollietetal.(2018)thediagonaluncertainties
+tend to dominate.
+In the top left panel of Fig. 5 we examine the dependence of the
+tSZ effect power spectrum on simulation box size and resolution.
+Thesolidcolouredcurvescorrespondtothepredictedspectraforthe
+FLAMINGO simulations with the fiducial D3A cosmology as the
+boxsizeandresolutionarevaried.Weseethatthesimulationpredic-
+tionsarelargelyconvergedwithresolutionatfixedboxsize(1Gpc),
+but the 1 Gpc boxes are missing a small amount of power compared
+tothe2.8Gpcvolumeonallscales.Weattributethisoffset,whichis
+larger than for the case of cosmic shear, as being due to the dispro-
+portionate influence of very massive, rare clusters on this statistic.
+Consistent with this interpretation is the relatively large degree of
+cosmic variance in the 2D map-based analysis (shaded blue region),
+which shows significant variation between the 8 lightcones, partic-
+ularly forℓ<∼ 300. We note, however, that the mean power spectrum
+from the 2D method (dashed blue curve) is generally in very good
+agreement with the fiducial 1D Limber calculation.
+Comparing the simulations to the observational measurements, it
+is immediately obvious from the top left panel of Fig. 5 that the
+simulations predict far too much power on all scales relative to the
+Planck and SPT measurements. However, as already noted, the tSZ
+effectpowerspectrumisverysensitivetotheadoptedcosmology.In
+the top right panel of Fig. 5 we therefore explore the cosmological
+variations in FLAMINGO. A Planck maximum-likelihood cosmol-
+ogyyieldsspectrawithslightlyelevatedpowerrelativetothefiducial
+D3A cosmology (and is thus in stronger tension with the measure-
+ments),whereasincreasingthesummedneutrinomassfrom0.06eV
+(fiducial) to 0.24 eV suppresses the power over all scales sampled
+here, though not sufficiently to bring the simulations into agreement
+withthedata.TheLS8‘lensing’cosmologypredictsthelowestpower
+andisinbestagreementwiththetSZpowerspectrummeasurements,
+althoughitstillpredictsslightlytoomuchpowerrelativetothePlanck
+measurementsatintermediatescalesandparticularlywithrespectto
+the SPT measurements on small angular scales.
+In the bottom panels of Fig. 5 we examine the feedback depen-
+dence of the tSZ effect. The bottom left panel explores variations in
+the gas mass fractions of groups and clusters (again mediated pri-
+marily through AGN feedback variations), while the bottom right
+panelexploresvariationsintheSMF(atthefiducialandreducedgas
+fractions) and variations in the nature of the AGN feedback imple-
+mentation (thermal vs. jet). We conclude from these comparisons
+that the tSZ power spectrum is generally insensitive to even large
+variations in the baryon physics on the large angular scales probed
+by Planck, which is consistent with the findings of previous studies
+thatusedcosmologicalhydrosimulations(e.g.,Battagliaetal.2012;
+McCarthy et al. 2014). Note that while the feedback variations we
+have explored are generally unable to liberate baryons from the very
+massive haloes and large physical scales that dominate the tSZ ef-
+fect, baryon physics can still in principle alter the power spectrum
+on large scales through variations in the efficiency of star forma-
+tion, as star formation siphons off the hot gas reservoir that gives
+rise to the tSZ effect (see da Silva et al. 2001 for a dramatic ex-
+ample).However,currentobservationalmeasurementsofthebaryon
+fractions of massive clusters indicate that they have approximately
+their full cosmological complement of baryons (with𝑓𝑏≈Ω𝑏/Ω𝑚)
+and that the hot gas dominates (e.g., Gonzalez et al. 2013; Akino
+et al. 2022), implying that feedback has strongly curtailed star for-
+mationinthesesystemsandtheirprogenitors.Suchbehaviourisalso
+effectivelyenforcedintheFLAMINGOsimulationsthroughcalibra-
+tion to the observed𝑧 = 0 galaxy SMF. We further highlight that
+the fiducial FLAMINGO simulation predicts a tSZ effect–halo mass
+scalingrelationthatisinexcellentagreementwithPlancktSZcluster
+measurements (see figure 15 of Schaye et al. 2023).
+The situation changes on the smaller scales probed by SPT (a few
+arcminutes),whicharemoresensitivetogroup-masshaloes.Herethe
+variations in feedback can give rise to relatively large effects on the
+tSZpower,althoughnoneofthevariationswehaveexploredherecan
+reproducethelowamplitudeoftheSPTmeasurementsforthefiducial
+cosmology.Itispossiblethatsomecombinationofcosmologicaland
+feedback modifications (e.g., similar to the ‘lensing’ cosmology but
+withstronger-than-fiducialfeedback,oraloweramplitudecosmology
+with fiducial feedback) could reconcile these measurements, but we
+leave that as an open question for future work.
+Insummary,similartothecosmicshearcomparisoninSection3.2,
+but with higher significance, the tSZ effect power spectrum prefers
+a low𝑆8 cosmology compared to the D3A and Planck cosmologies.
+This conclusion is qualitatively consistent with some previous stud-
+ies of the tSZ effect that also used cosmological hydrodynamical
+simulations (e.g., McCarthy et al. 2014, 2018). It is also consistent
+with the halo model-based analyses8 of Planck Collaboration et al.
+8 WenotethatthetSZpowerspectruminPlanckCollaborationetal.(2016)is
+ofsomewhathigheramplitudethaninthere-analysisbyBollietetal.(2018),
+MNRAS000, 1–23 (2015)
+
+--- Page 13 ---
+FLAMINGO: Baryons and the 𝑆8 tension 13
+102 103 104
+10 1
+100
+1012 Cy y ( + 1)/(2 )
+139.7
+(86.0)
+(20.3)
+(-24.5)
+L1_m9
+L2p8_m9
+L1_m10
+L1_m8
+L2p8_m9 (2D mean)
+L2p8_m9 (2D scatter)
+Planck
+SPT
+102 103 104
+10 1
+100
+1012 Cy y ( + 1)/(2 )
+139.7
+(47.3)
+(-92.3)
+(-64.7)
+(-130.9)
+L1_m9
+Planck
+PlanckNu0p24Fix 
+PlanckNu0p24Var
+LS8
+Planck
+SPT
+102 103 104
+10 1
+100
+1012 Cy y ( + 1)/(2 )
+139.7
+(0.7)
+(-10.7)
+(-22.5)
+(-48.2)
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+Planck
+SPT
+102 103 104
+10 1
+100
+1012 Cy y ( + 1)/(2 )
+139.7
+(-22.5)
+(21.3)
+(-2.5)
+(-33.0)
+(-41.9)
+L1_m9
+fgas 4
+M*
+M* _fgas 4
+Jet
+Jet_fgas 4
+Planck
+SPT
+Figure 5.The tSZ effect angular power spectrum. The open triangles correspond to the Planck tSZ measurements of Bolliet et al. (2018) while the open circle
+corresponds to the SPT measurements of Reichardt et al. (2021).Top left:Dependence on simulation box size and resolution. Note that the𝜒2 values displayed
+in the bottom left are computed with respect to the Planck tSZ measurements are take into account only the diagonal elements of the covariance matrix. The
+simulationpredictionsarelargelyconvergedwithresolution,thoughthe1Gpcboxesaremissingasmallamountofpowercomparedtothe2.8Gpcvolume. Top
+right:Dependence on cosmology. A Planck maximum-likelihood cosmology yields spectra with elevated power relative to the fiducial D3A cosmology (and is
+thusinstrongertensionwiththemeasurements),whereasincreasingthesummedneutrinomassfrom0.06eV(fiducial)to0.24eVsuppressesthepoweroverall
+scales sampled here. The LS8 ‘lensing’ cosmology predicts the lowest power and is in best agreement with the tSZ power spectrum measurements.Bottom left:
+Dependence of the predicted tSZ power spectrum on baryon physics, namely variations in the gas fractions of groups and clusters which are mediated primarily
+through variations in the AGN feedback strength. Feedback effects are most evident at small angular scales (ℓ>∼ 2000) and cannot reconcile the offset from the
+large-scalePlanckmeasurements. Bottom right:Dependenceonotherbaryonvariations,includingvariationsinthestellarmassfunction(bothatthefiducialand
+reduced gas fractions) and the calibrated and strong jet models of AGN feedback. The effects of variations in the stellar mass function are generally negligible
+compared to those of variations in the gas fractions.
+(2014,2016)andBollietetal.(2018)whoinfer 𝑆8≈ 0.78±0.02and
+𝑆8≈ 0.75±0.04,respectively,whenadoptingahydrostaticmassbias
+consistentwithweaklensingobservationsandthepredictionsofsim-
+ulations.(Bycontrast,Reichardtetal.2021require 𝑆8≈ 0.69± 0.03
+to match their SPT measurements when using the halo model of
+Shaw et al. 2010, although as already noted these scales can be sig-
+nificantly affected by feedback.) Note, however, that in the context
+of the halo model one can boost the best-fit𝑆8 by appealing to a
+whichislikelythereasonwhytheinferredvalueof 𝑆8 fromtheformerstudy
+isslightlylargerthanonewouldanticipatebasedonthecomparisoninFig.5.
+Inaddition,theuncertaintiesarelargerinthelatterstudyduetotheinclusion
+of the tri-spectrum in the covariance matrix. See Bolliet et al. (2018) for
+further discussion.
+largerhalomassbias,butonlyattheexpenseofagreementwithsim-
+ulationpredictionsandobservationalweaklensingmassconstraints.
+One advantage of the comparison in the present study is that we go
+directly from either 3D power spectra or 2D maps to a tSZ power
+spectrum prediction without the intermediate step of defining and
+counting haloes and choosing a mass bias. The comparison here is
+therefore more direct.
+While the discussion of the impact of baryon feedback on current
+cosmicshearpowerspectrumconstraintsremainsanopendiscussion
+duetothedegeneracybetweencosmologyandbaryonfeedback(e.g.,
+Schneider et al. 2022; Tröster et al. 2022; Amon & Efstathiou 2022;
+Chen et al. 2023; Aricò et al. 2023), it is much more difficult to
+appeal to baryons as a solution to the tSZ effect power offset on
+large scales, owing to the fact that this statistic is dominated by very
+MNRAS000, 1–23 (2015)
+
+--- Page 14 ---
+14 I. G. McCarthy et al.
+102 103
+10 2
+10 1
+100
+107C [ ( + 1)]2/2
+29.5
+(-4.0)
+(36.7)
+(23.9)
+(63.9)
+L1_m9
+Planck
+PlanckNu0p24Fix 
+PlanckNu0p24Var
+LS8
+Planck 2018
+SPTpol 500d
+ACT DR6
+Figure 6.Dependence of the CMB lensing angular power spectrum on cos-
+mology. The open triangles, circles, and squares, correspond to the Planck
+2018, SPTpol 500d, and ACT DR6 measurements of Planck Collaboration
+et al. (2020b), Wu et al. (2019) and Qu et al. (2023), respectively. The er-
+ror bars correspond to the diagonal components of the covariance matrices.
+Note that the𝜒2 values displayed in the top left are computed by summing
+over the three data sets and take into account only the diagonal errors. A
+Planck maximum-likelihood cosmology yields spectra with slightly elevated
+power relative to the fiducial D3A (with a similarly good match to the mea-
+surements), whereas increasing the summed neutrino mass from 0.06 eV
+(fiducial) to 0.24 eV suppresses the power and worsens the agreement with
+thedata.TheLS8‘lensing’cosmologypredictsthelowestpower,butincon-
+trast with galaxy lensing and the tSZ effect tests, this model yields the worst
+agreement with the CMB lensing measurements.
+massive clusters which are observed to be ‘baryonically closed’ and
+dominated by hot gas.
+3.4 CMB lensing power spectrum
+The final auto power spectrum that we consider is the CMB lens-
+ing power spectrum. As already noted in Section 2.2, CMB lensing
+receives contributions from matter fluctuations over a wide range
+of redshifts, with a𝐶ℓ-weighted mean redshift of𝑧eff≈ 3− 4 (see
+Fig.1).ForareviewofCMBlensing,seeLewis&Challinor(2006).
+Current measurements of this statistic, which are essentially derived
+from four-point measurements of the CMB temperature and polari-
+sation maps (Hu & Okamoto 2002), are generally restricted to rela-
+tivelylargeangularscalesof ℓ<∼ 2000.Giventhatmuchofthesignal
+arises from high redshifts, existing measurements typically probe
+linear scales, which considerably simplifies the modelling the CMB
+lensing power spectrum. Indeed, in Appendix A we confirm that
+this statistic is insensitive to variations in box size, resolution, and
+baryon physics. This situation will change in the near future, how-
+ever, as forthcoming CMB lensing experiments such as the Simons
+Observatory (Ade et al. 2019) and CMB-S4 (Abazajian et al. 2019)
+will begin to probe scales that are more sensitive to non-linear evo-
+lution and baryonic physics (McCarthy et al. 2022; Upadhye et al.
+2023). Here we focus on the cosmological dependence of the CMB
+lensing power spectrum.
+InFig.6weexplorethecosmologyvariationsinFLAMINGOand
+compare with the latest measurements from Planck 2018 (Planck
+Collaborationetal.2020b),SPTpol500d(Wuetal.2019),andACT
+DR6 (Qu et al. 2023). The quoted𝜒2 values sum over the three
+data sets and are calculated with respect to the diagonal elements
+onlyoftherespectivecovariancematrices.Whilethefullcovariance
+matrices are available, combining them in a rigorous way is non-
+trivial due to the spatial overlap of the surveys. Furthermore, as the
+CMB lensing power spectrum probes mainly linear scales, the off-
+diagonal uncertainties are expected to be small. Indeed, Qu et al.
+(2023) find the off-diagonal correlations to typically be less than
+10% of the total uncertainty.
+In agreement with the above studies, we find that a Planck-like
+cosmology yields an excellent match to the CMB lensing measure-
+ments. The Planck maximum-likelihood cosmology yields spectra
+with slightly elevated power relative to the fiducial D3A, but with a
+similarly good match to the measurements. Increasing the summed
+neutrinomassfrom0.06eV(fiducial)to0.24eVsuppressesthepower
+and worsens the agreement with the observed power spectrum. This
+isanimportantresult,sinceoneoftheproposedwaysofreconciling
+the primary CMB fluctuations with the apparent suppression of the
+growth of LSS is to appeal to the fact that neutrinos do not cluster
+significantly on small scales. Some previous studies have suggested
+values of˝𝑚𝜈≈ 0.2− 0.4 eV (e.g., Battye & Moss 2014; Beutler
+et al. 2014; Wyman et al. 2014; McCarthy et al. 2018) could rec-
+oncile most of the tension. However, here we see that raising the
+summedmassofneutrinosworsenstheagreementwiththeobserved
+CMB lensing power spectrum, by suppressing the predicted ampli-
+tude below what is measured. Thus, CMB lensing observations play
+a critical role in challenging massive neutrinos as a solution to the
+𝑆8 tension. Lastly, the LS8 ‘lensing’ cosmology predicts the lowest
+power and in contrast with cosmic shear and the tSZ effect tests dis-
+cussed above, this model yields the worst agreement with the CMB
+lensing measurements.
+In the most recent analysis using data from ACT DR6, Mad-
+havacheril et al. (2023) find that the combination of ACT lensing +
+Planck lensing + BAO yields a tight constraint of𝑆8 = 0.83± 0.02,
+in excellent agreement with the Planck CMB cosmology and the
+fiducial D3A cosmology. Note that CMB lensing alone actually best
+constrains the parameter combination𝜎8Ω0.25𝑚 (rather than𝑆8) and
+afittotheACTDR6measurementsyields 0.61± 0.02forthisquan-
+tity (Qu et al. 2023). For context, our fiducial D3A, Planck, and
+LS8 cosmologies have𝜎8Ω0.25𝑚 = 0.60, 0.61, and0.56. Thus, CMB
+lensing alone agrees extremely well with the Planck CMB and D3A
+cosmologiesandisinamoderatedegreeoftensionwiththeLS8cos-
+mology.Notethatthetwo0.24eVneutrinocosmologiesyieldvalues
+of 0.61 and 0.59 for the Var and Fix variants, respectively, which is
+consistentwiththeCMBlensing-onlyconstraintsof(Quetal.2023).
+However, it is clear from the𝜒2 values in Fig. 6 that the neutrino
+cosmologies fit the measurements worse than the D3A and Planck
+cosmologies, which may imply that the𝜎8Ω0.25𝑚 parameter does not
+capture the full cosmological dependence of the CMB lensing-only
+constraints.
+Assuming no significant systematic errors have been neglected in
+the three auto-power spectra comparisons above (either on the ob-
+servational or theoretical sides) which would alter the conclusions
+drawn, then based on Fig. 1 there are two possible generic ways
+to reconcile the three probes explored so far: i) a modification to
+the redshift evolution of matter fluctuations, such that the fluctua-
+tions grow more slowly at late times than predicted in the fiducial
+cosmology (noting that CMB lensing probes higher redshifts than
+cosmicshear orthetSZ effect;seeFig.1, bottompanel);and/or ii)a
+modificationonnon-linearscales,suchthatthefluctuationsonthese
+scales grow more slowly than expected (cosmic shear and tSZ effect
+probe non-linear scales, whereas CMB lensing probes linear scales;
+see Fig. 1, top panel). Preston et al. (2023) (see also Nguyen et al.
+MNRAS000, 1–23 (2015)
+
+--- Page 15 ---
+FLAMINGO: Baryons and the 𝑆8 tension 15
+2023)recentlycametothesamegeneralconclusions.Here,however,
+we argue using the FLAMINGO hydrodynamical simulations that
+baryonic feedback is unlikely to be the physics driving the required
+modifications.
+3.5 Cosmic shear – tSZ effect cross-spectrum
+Having examined the auto power spectra of the three observables
+(shear,tSZ,CMBlensing)intheprevioussections,wenowexamine
+the cross-spectra between these variables. Importantly, the cross-
+spectra contain additional information about these observables. For
+example,currentmeasurementsofthecosmicshearpowerspectrum
+are most sensitive to the clustering (2-halo) and structure (1-halo)
+of group-mass haloes (𝑀∼ 1013−14 M⊙) at a distance roughly half
+way to the background source population, whereas the tSZ effect
+power spectrum is mostly sensitive to the structure of low-redshift,
+very massive haloes (𝑀 ∼ 1015 M⊙; Komatsu & Seljak 2002).
+The cross-spectrum, however, is sensitive to both the clustering and
+structure of haloes with redshifts and masses intermediate between
+these regimes (i.e.,𝑀 ∼ 1014−15 M⊙), as shown in Mead et al.
+(2020). This is simply because the cross-spectrum picks out (only
+those) structures that contribute significantly to both observables.
+Another important benefit of cross-spectra measurements is that
+they have different biases than auto power spectra. For example, the
+noise (e.g., shot noise, detector noise) in two independent maps,
+such as cosmic shear and tSZ, is expected to be uncorrelated and
+therefore will not contribute to the cross-spectrum between those
+maps, whereas if unaccounted for, noise can significantly bias both
+observational and simulation measurements of auto power spectra.
+In the case of simulations, for example, particle shot noise must
+be subtracted from the power spectra. Other forms of bias (e.g., in
+galaxyshapeestimation,theseparationofthetSZfromtheclustered
+infrared background, etc.) will enter into the auto power spectrum
+differently than for the cross-spectrum. For example, multiplicative
+forms of bias will enter into the power spectrum squared, but only
+linearly in the cross-spectrum. Thus, a simultaneous examination of
+the auto and cross-power spectra gives an important cross-check on
+possible biases that could be affecting both measurements.
+Inthecontextoftheimpactofbaryonsonlarge-scalestructure,the
+cosmicshear–tSZeffectcross-spectrumisalsointerestingforanother
+reason.Specifically,thiscross-spectrumisessentiallyameasurement
+ofhowthehotgas(inparticularitsthermalenergydensity)tracesthat
+of the underlying matter field. Thus, in addition to yielding another
+cosmological test, this statistic also provides a valuable opportunity
+toassesstherealismoffeedbackmodelswhenitisexaminedonsmall
+scales, as feedback is known to strongly alter the hot gas properties
+of groups and clusters (e.g., McCarthy et al. 2010; Planelles et al.
+2014; Le Brun et al. 2014; Henden et al. 2018; Oppenheimer et al.
+2021).
+Trösteretal.(2022)recentlyperformedaspatialcross-correlation
+analysisoftheKiDS1000tomographicdatasetwithtSZeffectmaps
+constructed from the Planck 2015 data set (Planck Collaboration
+et al. 2016) and the ACT DR4 data set (Mallaby-Kay et al. 2021).
+TheACTdatahavelowernoisethanthePlanck 𝑦map,buttheoverlap
+betweentheACTDR4andKiDS1000surveysisonlypartial.Thus,
+in practice the cross-spectrum derived using the Planck data set is
+betterconstrainedandwethereforefocusourcomparisononthatdata
+set. Note that in the comparisons presented in the previous sections,
+theeffectsofthebeamandpixelwindowfunctionweredeconvolved
+from the observed power spectra, whereas Tröster et al. (2022) have
+notdeconvolvedeithereffect(electinginsteadtoconvolvethetheory).
+For consistency with the previous comparisons, we deconvolve the
+Table 4.𝜒2 values of the predicted KiDS 1000 cosmic shear–Planck tSZ
+cross-powerspectrawithrespecttothemeasurementsofTrösteretal.(2022),
+for which there are 40 independent data points summed over the 5 cross-
+spectra. Values in parentheses indicate theΔ𝜒2 with respect to the L1_m9
+run.𝜒2 valuesusingeitherthediagonalelementsaloneorthefullcovariance
+matrix are provided.
+Prefix 𝜒2
+diag 𝜒2covar
+L1_m9 198.9 78.9
+L2p8_m9 (30.4) (7.7)
+L1_m10 (-4.1) (-2.0)
+L1_m8 (-12.7) (-3.0)
+fgas+2𝜎 (9.9) (3.9)
+fgas−2𝜎 (-15.5) (-5.5)
+fgas−4𝜎 (-31.8) (-11.0)
+fgas−8𝜎 (-59.5) (-19.9)
+M*−𝜎 (8.3) (1.7)
+M*−𝜎_fgas−4𝜎 (-21.0) (-8.3)
+Jet (-23.4) (-6.5)
+Jet_fgas−4𝜎 (-55.6) (-18.8)
+Planck (58.1) (16.2)
+PlanckNu0p24Fix (-97.4) (-26.9)
+PlanckNu0p24Var (-57.7) (-16.3)
+LS8 (-146.5) (-39.8)
+Planck beam and the𝑁side= 2048 pixel window functions from the
+measured cross-spectra of Tröster et al. (2022).
+InFig.7wepresentacomparisonofthefullsuiteofFLAMINGO
+simulationswiththemeasurementsofTrösteretal.(2022),processed
+as described above. The columns are organised by cosmic shear
+tomographicbin(1-5;lowredshifttohighredshiftfromlefttoright).
+The rows follow our previous comparisons (from top to bottom): i)
+impactofsimulationresolution,boxsize,andanalysismethod(1Dvs.
+2D);ii)dependenceoncosmology;iii)dependenceongroup/cluster
+gas fraction; and iv) other baryonic variations.
+In the top row of Fig. 7 we see that the predicted cross-spectra
+are relatively well converged with resolution at fixed box size (1
+Gpc). The high-resolution simulation (L1_m8) predicts slightly less
+power than the fiducial (L1_m9) and low res (L1_m10) runs, owing
+toaslightlyhigherstarformationefficiencyingroups/clustersinthe
+high res. simulation (this was also visible in the tSZ effect power
+spectrum in Fig. 5). Comparing the 1 Gpc and 2.8 Gpc fiducial
+resolution runs, the former are missing a small amount of power
+on the largest angular scales, which is most evident for the cross
+spectra involving the higher tomographic bins. Similar to the tSZ
+effect power spectrum, we attribute this slight offset as being due
+to a non-negligible contribution of massive, rare haloes. There is
+goodagreementbetweenthefiducial1DLimbermethodology(solid
+curves) and the map-based 2D analysis (dashed curve), the latter
+of which shows that cosmic variance becomes relevant on scales of
+ℓ<∼ 500(shadedregion).ItisalsoclearfromthetoprowofFig.7that
+the fiducial calibrated FLAMINGO simulations in the fiducial D3A
+cosmology predicts too much power compared to the observational
+measurements on all but the smallest scales. This is particularly
+evident for the highest tomographic bins.
+In the second row from the top, we examine the cosmology de-
+pendence of the shear–tSZ cross. Here we see that increasing the
+neutrino mass, whose main effect is to lower𝑆8 (or, more generally,
+the clustering amplitude), or directly lowering𝑆8 at a fixed minimal
+neutrino mass (LS8), lowers the amplitude of the predicted cross-
+spectra, yielding an improved match to the data. Consistent with
+thecosmicshearandtSZeffectpowerspectrumcomparisonsinSec-
+tions3.2and3.3,respectively,wefindthe‘lensing’cosmology(LS8)
+MNRAS000, 1–23 (2015)
+
+--- Page 16 ---
+16 I. G. McCarthy et al.
+0
+2
+4
+61011 C E y
+1-y12.5
+(1.2)
+(-0.1)
+(-0.3)
+2-y20.1
+(2.9)
+(-0.2)
+(-1.0)
+3-y50.7
+(7.4)
+(-0.8)
+(-2.9)
+4-y52.1
+(8.7)
+(-1.4)
+(-3.8)
+5-y63.5
+(10.2)
+(-1.6)
+(-4.7)
+L1_m9
+L2p8_m9
+L1_m10
+L1_m8
+L2p8_m9 (2D mean)
+L2p8_m9 (2D scatter)
+0
+2
+4
+61011 C E y
+1-y12.5
+(1.9)
+(-3.1)
+(-1.5)
+(-5.2)
+2-y20.1
+(5.2)
+(-7.9)
+(-4.3)
+(-12.1)
+3-y50.7
+(13.6)
+(-22.6)
+(-12.9)
+(-35.1)
+4-y52.1
+(17.1)
+(-28.8)
+(-17.3)
+(-43.0)
+5-y63.5
+(20.4)
+(-34.9)
+(-21.7)
+(-51.1)
+Planck
+PlanckNu0p24Fix 
+PlanckNu0p24Var
+LS8
+0
+2
+4
+61011 C E y
+1-y12.5
+(0.6)
+(-0.8)
+(-1.6)
+(-2.9)
+2-y20.1
+(1.0)
+(-1.4)
+(-2.8)
+(-5.1)
+3-y50.7
+(2.5)
+(-3.8)
+(-7.7)
+(-14.3)
+4-y52.1
+(2.9)
+(-4.6)
+(-9.5)
+(-17.8)
+5-y63.5
+(2.9)
+(-5.0)
+(-10.3)
+(-19.4)
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+102 103
+0
+2
+4
+61011 C E y
+1-y12.5
+(-1.6)
+(0.2)
+(-1.3)
+(-0.7)
+(-2.5)
+102 103
+2-y20.1
+(-2.8)
+(0.7)
+(-1.9)
+(-1.8)
+(-4.8)
+102 103
+3-y50.7
+(-7.7)
+(1.8)
+(-5.2)
+(-5.2)
+(-13.3)
+102 103
+4-y52.1
+(-9.5)
+(2.4)
+(-6.4)
+(-6.9)
+(-16.7)
+102 103
+5-y63.5
+(-10.3)
+(3.2)
+(-6.3)
+(-8.7)
+(-18.3)
+fgas 4
+M*
+M* _fgas 4
+Jet
+Jet_fgas 4
+KiDS × Planck
+Figure 7.The cosmic shear–tSZ effect angular cross-power spectrum. The open triangles correspond to the KiDS1000× Planck measurements of Tröster et al.
+(2022). The different columns correspond to the cross-spectrum between different KiDS tomographic bins (1-5) and the tSZ data.Top row: Dependence on
+simulation box size and resolution. The simulation predictions are largely converged with resolution, though the 1 Gpc boxes are missing a small amount of
+power compared to the 2.8 Gpc volume.Second row:Dependence on cosmology. A Planck maximum-likelihood cosmology yields spectra with elevated power
+relativetothefiducialD3A(andisthusinstrongertensionwiththemeasurements),whereasincreasingthesummedneutrinomassfrom0.06eV(fiducial)to0.24
+eV suppresses the power over all scales sampled here. The LS8 ‘lensing’ cosmology predicts the lowest power and is in best agreement with the measurements,
+though it still predicts slightly too much power.Third row:Dependence on baryon physics, namely variations in the gas fractions of groups and clusters which
+are mediated primarily through variations in the AGN feedback strength. Feedback effects are significant on scales ofℓ>∼ 500 but cannot reconcile the offset
+at larger scales.Bottom row: Dependence on other baryon variations, including variations in the stellar mass function (both at the fiducial and reduced gas
+fractions) and the fiducial and strong jet models of AGN feedback. The effects of variations in the stellar mass function are generally negligible compared to
+those of variations in the gas fractions.
+MNRAS000, 1–23 (2015)
+
+--- Page 17 ---
+FLAMINGO: Baryons and the 𝑆8 tension 17
+yieldsthebestagreementwiththedata,althoughitisstillsomewhat
+elevated with respect to the observations (similar to the tSZ effect
+powerspectruminFig.5).ThePlanckcosmology,ontheotherhand,
+yields a higher amplitude than the fiducial D3A cosmology and is
+therefore in slightly stronger tension with the observational mea-
+surements. Note that the shear–tSZ cross spectrum best constrains
+a combination of𝜎8 andΩ𝑚 that differs from the definition of𝑆8.
+Tröster et al. (2022) find that the parameterΣ0.2
+8 ≡ 𝜎8(Ω𝑚/0.3)0.2
+describes the degeneracy well for the shear–tSZ cross. They deter-
+mineΣ0.2
+8 ≈ 0.72±0.04.Forcomparison,theD3A,Planck,andLS8
+cosmologies used here haveΣ0.2
+8 = 0.81, 0.82, and 0.76, respec-
+tively. Because cosmic shear and the shear–tSZ cross have different
+dependencies onΩ𝑚 and𝜎8, a joint analysis helps to break the de-
+generacy between these parameters (see figure 6 of Tröster et al.
+2022; see also Fang et al. 2023). As already mentioned in Section
+3.2, jointly modelling these two probes, Tröster et al. (2022) find
+𝑆8≈ 0.75± 0.02,representinga ≈ 3𝜎 tensionwiththePlanckCMB
+cosmology.
+In the bottom two rows of Fig. 7 we examine the feedback de-
+pendence of the shear–tSZ cross spectrum. Variations in feedback
+lead to noticeable differences in the predictions on scales ofℓ>∼ 400
+and the spread in the predictions becomes comparable to the spread
+due to cosmological variations on scales ofℓ>∼ 2000, making this
+statistic more sensitive to feedback variations than the cosmic shear
+power spectrum on these scales. Nevertheless, on the basis of Fig. 7
+wegenerallyconcludethatthefeedbackvariationswehaveexplored
+cannot reconcile the offset between the data and the fiducial D3A
+cosmology,asmanyofthebinsareonangularscalesthatarenotsig-
+nificantly impacted by baryons. This is consistent with the findings
+of Tröster et al. (2022) who, even though the impact of baryons has
+been marginalised over using the halo model of Mead et al. (2020),
+stillfinda ≈ 3𝜎 tensionwiththePlanckCMBcosmology,similarto
+that derived from cosmic shear alone.
+In Table 4 we list the𝜒2 values of the cosmic shear–tSZ cross
+power spectra. The values are summed over the 5 cross-spectra and
+arelistedforboththecaseswhereonlythediagonalerrorsareadopted
+and when the full covariance matrix is used. The tabulated values
+confirm the visual trends in Fig. 7, although the differentiability of
+the models is reduced when taking into account the full covariance
+of the measurements.
+In Appendix A we present a comparison to an independent mea-
+surementoftheshear–tSZcrossspectrumfromHojjatietal.(2017).
+Thoseauthorsperformedaspatialcross-correlationanalysisbetween
+the Planck 2015 tSZ map and cosmic shear data from the RCSLenS
+survey (Hildebrandt et al. 2016). While the KiDS 1000 survey cov-
+ers a larger area and is significantly deeper than RCSLenS, it is
+nevertheless useful to check whether the conclusions are consistent.
+In short, as shown in Fig. A4, four of the five multipole bins from
+Hojjatietal.(2017)haveamplitudeslowerthanpredictedbythefidu-
+cial FLAMINGO model in the fiducial D3A cosmology, in general
+agreement with the findings above. However, these also correspond
+to relatively small angular scales ofℓ∼ 1000 where the impact of
+feedback is non-negligible. Thus, while there is general consistency
+with the KiDS 1000× Planck tSZ results above, the significance
+of the tension with the D3A cosmology is less compelling for the
+RCSLenS-based comparison owing to the uncertainties of baryonic
+modelling.
+3.6 Cosmic shear – CMB lensing cross-spectrum
+The final statistic we examine is the cross-spectrum between cos-
+mic shear and CMB lensing. Specifically, in Fig. 8 we compare the
+predictions of the FLAMINGO simulations to the recent measure-
+ments of Robertson et al. (2021). Those authors performed a spatial
+cross-correlationanalysisbetweentheKiDS1000cosmicsheardata
+and the CMB lensing maps from the Planck 2018 and ACT DR4
+releases.WeusetheircombinedPlanck/ACTmeasurementsandun-
+certainties. The uncertainties correspond to the diagonal elements
+of the covariance matrix only, as the full covariance matrix is not
+publicly available. Note that Robertson et al. (2021) used a single
+largetomographicbinforKiDSdata( 0.1< 𝑧B < 1.2)andweusethe
+source redshift distribution,𝑛(𝑧), shown in figure 1 of their paper.
+As we demonstrated in Fig. 1 of the present study, this particular
+cross-spectrum generally probes larger scales and higher redshifts
+than cosmic shear alone. We find that the measurements of Robert-
+sonetal.(2021)aresensitivetobothlinearscales( 𝑘≈ 0.1[ℎ/Mpc])
+atℓ≈ 100 and non-linear scales (𝑘≈ 3 [ℎ/Mpc]) atℓ≈ 2000, with
+a mean (𝐶ℓ-weighted) redshift of𝑧eff≈ 0.5.
+In the top left panel of Fig. 8 we examine the dependence of the
+predictedshear–CMBlensingcross-spectrumonsimulationboxsize
+and resolution, as well as analysis method (1D vs. 2D). We find this
+cross-spectrum is converged with respect to box size and resolution.
+Furthermore, there is excellent consistency between the fiducial 1D
+Limbermethodandthe2Dmap-basedmethodforanalysingthesim-
+ulations. The map-based analysis demonstrates that there is consid-
+erable cosmic variance between the different light cones on angular
+scales ofℓ<∼ 500, owing to the fact that this corresponds to large
+physicalscaleswhicharesampledwithrelativelyfewmodesevenin
+the large 2.8 Gpc box. As highlighted previously, the simulation ICs
+employmodefixingonlargephysicsscalesandthereforethefiducial
+1DLimberpredictionsoughttopredictthemeanshear–CMBlensing
+power spectrum to high accuracy for our chosen cosmology.
+As in the previous comparisons (with the clear exception of the
+CMB lensing power spectrum in Section 3.4), the predicted shear–
+CMBlensingcross-spectrumforthefiducialcalibratedFLAMINGO
+hydrosimulationinthefiducialD3Acosmologyhastoomuchpower
+comparedtotheobservationalmeasurements.Inthetoprightpanelof
+Fig.8weexaminethecosmologydependenceofthecross-spectrum.
+Consistent with the previous statistics explored above, we find that
+lowering the value of𝑆8 (whether directly, or via an increase in
+the summed neutrino mass) improves the match to the measure-
+ments, with the LS8 cosmology yielding the best match. Even the
+LS8 cosmology is somewhat elevated with respect to the measure-
+ments, however. This is consistent with the findings of Robertson
+et al. (2021), who used linear theory +halofit (Smith et al. 2003;
+Takahashi et al. 2012) to predict the cross-spectrum and measured
+𝑆8 = 0.64± 0.08. A more recent configuration-space analysis by
+Chang et al. (2023), using galaxy lensing and galaxy clustering data
+from DES Y3 cross-correlated with Planck + SPT CMB lensing,
+found a somewhat larger amplitude of𝑆8≈ 0.73± 0.03, though still
+low compared to the D3A or Planck CMB cosmologies. For com-
+parison, the D3A, Planck, and LS8 cosmologies have S8 values of
+0.815, 0.833, 0.766, respectively.
+The bottom panels of Fig. 8 examine the feedback dependence of
+the predicted shear–CMB lensing cross. Minor effects are visible at
+ℓ>∼ 500but these do not alter the conclusions drawn above.
+Going forward, there is considerable promise in measurements of
+this particular cross-spectrum, as high signal-to-noise tomographic
+analysis will be possible by combining Euclid and LSST shear mea-
+surements with Planck, Advanced ACT, and Simons Observatory
+MNRAS000, 1–23 (2015)
+
+--- Page 18 ---
+18 I. G. McCarthy et al.
+102 103
+0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+106 C E CMB
+7.5
+(0.4)
+(-0.1)
+(0.1)
+L1_m9
+L2p8_m9
+L1_m10
+L1_m8
+L2p8_m9 (2D mean)
+L2p8_m9 (2D scatter)
+KiDS × Planck/ACT
+102 103
+0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+106 C E CMB
+7.5
+(2.1)
+(-2.6)
+(-1.0)
+(-3.5)
+L1_m9
+Planck
+PlanckNu0p24Fix 
+PlanckNu0p24Var
+LS8
+KiDS × Planck/ACT
+102 103
+0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+106 C E CMB
+7.5
+(0.2)
+(-0.2)
+(-0.3)
+(-0.5)
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+KiDS × Planck/ACT
+102 103
+0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+106 C E CMB
+7.5
+(-0.3)
+(-0.1)
+(-0.4)
+(0.0)
+(-0.6)
+L1_m9
+fgas 4
+M*
+M* _fgas 4
+Jet
+Jet_fgas 4
+KiDS × Planck/ACT
+Figure8. Thecosmicshear–CMBlensingangularcross-spectrum.TheopentrianglescorrespondtotheKiDS1000 ×Planck/ACTCMBlensingcross-spectrum
+measurements of Robertson et al. (2021). The𝜒2 values displayed in the top left of each panel take into account only the diagonal elements of the covariance
+matrix. Top left:Dependenceonsimulationresolutionandboxsize.Thesimulationpredictionsareconvergedwithresolution,boxsize,andanalysismethod(1D;
+solid curves vs. 2D; dashed curve). The shaded region shows the scatter between the different light cones for the 2D map-based method.Top right:Dependence
+on cosmology. A Planck maximum-likelihood cosmology yields spectra with elevated power relative to the fiducial D3A (and is thus in stronger tension with
+the measurements), whereas increasing the summed neutrino mass from 0.06 eV (fiducial) to 0.24 eV suppresses the power over all scales sampled here. The
+LS8 ‘lensing’ cosmology predicts the lowest power and is in best agreement with the cross power spectrum measurements.Bottom left: Dependence on baryon
+physics, namely variations in the gas fractions of groups and clusters which are mediated primarily through variations in the AGN feedback strength. Feedback
+effects are most evident at small angular scales (ℓ>∼ 1000) and cannot reconcile the offset from the large-scale measurements.Bottom right: Dependence on
+otherbaryonvariations,includingvariationsinthestellarmassfunction(bothatthefiducialandreducedgasfractions)andthefiducialandstrongjetmodelsof
+AGN feedback. The effects of variations in the stellar mass function are generally negligible compared to variations in the gas fractions.
+CMBlensingmeasurements,allowingonetobridgethegapinscale
+and redshift between current cosmic shear-only and CMB lensing-
+only measurements.
+3.7 Summary of comparison to observational data
+We provide here an overall summary of the comparison of the
+FLAMINGO suite of simulations to the various observed auto- and
+cross-spectra discussed above, along with the CMB lensing–tSZ ef-
+fectcross-spectrumpresentedinSchayeetal.(2023).Inparticular,in
+Table5wepresentthe 𝜒2 valuesandnumberofstandarddeviations,
+𝑁𝜎, of each simulation with respect to the observed power spectra.
+Forthecosmicshearpowerspectrum( 𝛾E-𝛾E)andcosmicshear–tSZ
+effect cross-spectrum (𝛾E-𝑦), we use the full covariance matrices to
+compute 𝜒2, whereas for the other cases we use the diagonal ele-
+mentsofthecovariancematrixonly,asthecovariancematriceswere
+either unavailable or could not be straightforwardly combined when
+multiple data sets were used. The numbers displayed in bold face
+correspond to the models that are within3𝜎 of the observational
+measurements.
+We see from Table 5 that the LS8 model performs the best for
+all the comparisons apart from the CMB lensing power spectrum,
+where it is clearly disfavoured, and the DES Y3 cosmic shear power
+spectrum (PlanckNu0p24Fix performs marginally better). However,
+the cosmic shear–CMB lensing (𝛾E-𝜅CMB) and CMB lensing–tSZ
+effect9 (𝜅CMB-𝑦) cross-spectra are not particularly constraining at
+9 Just prior to submission of this paper, McCarthy & Hill (2023) presented
+anupdatedmeasurementoftheCMBlensing-tSZeffectcross-spectrumusing
+Planck data. For their highest signal-to-noise measurement, they find an am-
+plitudeof 𝐴= 0.82± 0.21comparedtoaPlanckcosmologywithexpectation
+MNRAS000, 1–23 (2015)
+
+--- Page 19 ---
+FLAMINGO: Baryons and the 𝑆8 tension 19
+Table 5.The 𝜒2 values and number of standard deviations,𝑁𝜎, of each simulation with respect to the observed auto- and cross-power spectra. For the
+cosmic shear power spectrum (𝛾E-𝛾E) and cosmic shear–tSZ effect cross-spectrum (𝛾E-𝑦) we use the full covariance matrices to compute𝜒2, whereas for
+the other cases we use the diagonal errors only. We compute𝜒2 values with respect to the following observational data sets: the KiDS 1000 cosmic shear
+measurements of Tröster et al. (2022) [𝛾E-𝛾E (KiDS)], the DES Y3 cosmic shear measurements of Doux et al. (2022) [𝛾E-𝛾E (DES)], the Planck tSZ effect
+power spectrum measurements of Bolliet et al. (2018) [𝑦-𝑦], the Planck+SPT tSZ effect power spectrum measurements of Bolliet et al. (2018) and Reichardt
+et al. (2021) [𝑦-𝑦 (+SPT)], the Planck, SPT, and ACT CMB lensing power spectrum measurements of Planck Collaboration et al. (2020b), Wu et al. (2019),
+and Qu et al. (2023), respectively [𝜅CMB-𝜅CMB], the KiDS 1000 cosmic shear–Planck tSZ effect cross-spectrum of Tröster et al. (2022) [𝛾E-𝑦], the KiDS 1000
+cosmic shear–ACT/Planck CMB lensing cross-spectrum of Robertson et al. (2021) [𝛾E-𝜅CMB], and the Planck CMB lensing–tSZ effect cross-spectrum of Hill
+& Spergel (2014) [𝜅CMB-𝑦]. The numbers displayed in bold face correspond to the models that are within3𝜎 of the observational measurements.
+𝛾E-𝛾E (KiDS) 𝛾E-𝛾E (DES) 𝑦-𝑦 𝑦 -𝑦 (+SPT) 𝜅CMB-𝜅CMB 𝛾E-𝑦 𝛾 E-𝜅CMB 𝜅CMB-𝑦
+Prefix 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎 𝜒2 𝑁𝜎
+L1_m9 183.2 3.6 324.3 2.3 139.7 10.5 435.3 19.9 29.5 0.4 78.9 3.6 7.5 1.2 2.8 0.2
+L2p8_m9 185.4 3.7 327.7 2.4 225.7 13.9 568.4 22.9 27.1 0.1 86.6 4.1 8.0 1.3 3.2 0.4
+L1_m10 181.5 3.5 321.5 2.2 160.0 11.4 455.3 20.4 29.8 0.5 76.9 3.5 7.4 1.2 2.8 0.2
+L1_m8 184.6 3.7 325.5 2.3 115.2 9.4 372.0 18.2 29.4 0.4 75.9 3.4 7.7 1.3 2.6 0.1
+fgas+2𝜎 185.6 3.7 325.5 2.3 140.4 10.6 470.6 20.7 29.4 0.4 82.8 3.9 7.7 1.3 2.7 0.2
+fgas−2𝜎 181.2 3.5 323.3 2.2 129.0 10.0 368.0 18.1 29.5 0.4 73.5 3.2 7.4 1.2 2.8 0.2
+fgas−4𝜎 179.4 3.4 322.5 2.2 117.2 9.5 302.8 16.3 29.6 0.4 67.9 2.8 7.2 1.1 2.8 0.2
+fgas−8𝜎 176.6 3.3 321.6 2.2 91.5 8.1 198.4 12.8 29.7 0.4 59.0 2.0 7.0 1.1 3.0 0.3
+M*−𝜎 181.9 3.6 323.8 2.2 161.0 11.5 468.9 20.7 29.5 0.4 80.7 3.7 7.4 1.2 3.1 0.3
+M*−𝜎_fgas−4𝜎 178.6 3.4 322.6 2.2 137.2 10.4 333.1 17.2 29.6 0.4 70.6 3.0 7.2 1.1 3.2 0.4
+Jet 183.8 3.7 323.6 2.2 106.7 8.9 327.4 17.1 29.6 0.4 72.4 3.1 7.6 1.2 2.3 0.0
+Jet_fgas−4𝜎 176.1 3.3 320.1 2.1 97.8 8.5 231.1 14.1 29.8 0.5 60.1 2.1 6.9 1.1 3.4 0.4
+Planck 199.3 4.4 348.5 3.2 187.0 12.5 552.9 22.6 25.4 0.1 95.2 4.7 9.6 1.7 3.8 0.6
+PlanckNu0p24Fix 166.9 2.8 311.2 1.8 47.4 5.2 184.4 12.3 66.2 4.0 52.0 1.4 5.0 0.6 1.8 0.3
+PlanckNu0p24Var 176.9 3.3 316.8 2.0 75.0 7.1 258.1 14.9 53.4 2.9 62.6 2.3 6.5 1.0 1.9 0.2
+LS8 162.0 2.6 315.7 1.9 8.8 0.4 63.2 6.2 93.4 5.8 39.2 0.1 4.0 0.2 2.4 0.0
+present and the Planck and D3A cosmologies are only in mild ten-
+sion with the data for these tests. The strongest evidence for a𝑆8
+tension comes from the tSZ effect power spectrum (𝑦-𝑦), the cos-
+mic shear–tSZ effect cross-spectrum (𝛾E-𝑦) and the cosmic shear
+power spectrum (𝛾E-𝛾E) in order of decreasing tension level. This
+highlights the importance of the tSZ effect for constraining cosmol-
+ogy.Wealsohighlightthatwhenthesmall-scaleSPTmeasurements
+are included in the tSZ power spectrum comparison, all models are
+formallyrejected.Asnotedpreviously,somecombinationofasome-
+what reduced value of𝑆8 and more extreme feedback may be able
+to accommodate the SPT measurements, but we leave that for future
+work.
+While Table 5 provides a convenient way to compare the models
+and to demonstrate which tests are most constraining, there are two
+caveatstobearinmind,particularlywithregardtotheleveloftension
+reported. First, we have not marginalised over any possible sources
+of systematic error in the observations, such as photometric redshift
+uncertainties and intrinsic alignments in the case of cosmic shear,
+CIB leakage in the tSZ effect, and so on. Indeed, this likely explains
+why the LS8 model does not provide a particularly good fit to the
+KiDS1000cosmicshearpowerspectrum,with 𝑁𝜎 = 2.6inthatcase
+(althoughwenotethatapproximately 1𝜎 ofthistensioncomesfrom
+a single cross, the 5-1 bin, which shows large point-to-point fluctu-
+ations). Marginalising over these uncertainties will tend to decrease
+themagnitudeofthereporteddeviations.Secondly,wequotethe 𝜒2
+and𝑁𝜎 values with respect to a specific set of cosmological param-
+eters.Forexample,forthePlancksimulationweusethePlanck2018
+of 𝐴= 1. Hill & Spergel (2014) found𝐴= 1.10± 0.22 with respect to the
+same cosmology. In the analysis of Schaye et al. (2023) and in Table 5, we
+scaledtheamplitudeofHill&Spergel(2014)downby20%basedonHurier
+(2015),whichwouldcorrespondto 𝐴= 0.92± 0.18,whichisconsistentwith
+the new findings of McCarthy & Hill (2023). The slightly lower amplitude
+of the new measurements implies a slightly stronger tension with the Planck
+cosmology, though only at the≈ 1𝜎 level (compared to0.6𝜎 in Table 5).
+maximum-likelihood cosmological parameters and the statistics we
+reportarethereforewithrespecttothatspecificchoiceofparameters.
+The level of tension we report does not factor in the uncertainties in
+thecosmologicalparametersfromthePlanckprimaryCMBdataset,
+it is only with respect to the maximum-likelihood cosmology. Thus,
+our estimates will be an upper limit for the level of tension between
+the primary CMB and LSS observables in this case.
+4 DISCUSSION AND CONCLUSIONS
+WehaveusedthenewFLAMINGOsimulationstoexplorethespatial
+clustering and cross-correlation signals of three large-scale tracers:
+cosmic shear, CMB lensing, and the thermal Sunyaev-Zel’dovich
+(tSZ) effect. Our analysis, carried out in harmonic space, included
+an exploration of the dependence of these signals on the choice of
+cosmologicalparametersincludingneutrinomass,theefficiencyand
+natureofso-called‘baryonicfeedback’(specificallystellarandAGN
+feedback), and simulation box size, resolution, and method of anal-
+ysis (1D Limber integration vs. a 2D map-based analysis). Note that
+the stellar and AGN feedback were calibrated using machine learn-
+ing methods to reproduce the observed galaxy stellar mass func-
+tion and the gas fractions of galaxy groups and clusters. However,
+FLAMINGOalsoincludesextremevariationswithrespecttotheob-
+served baryon fractions, obtained by varying the feedback efficien-
+cies.WecomparedthefullFLAMINGOsuiteofhydrosimulationsto
+thelatestmeasurementsoftheauto-andcross-powerspectrainvolv-
+ing the three observables and commented on the evidence for an ‘𝑆8
+tension’ and its robustness to uncertainties in baryonic modelling.
+Themainconclusionsofthisstudymaybesummarisedasfollows:
+• Theauto-andcross-powerspectrainvolvingcosmicshear,CMB
+lensing, and the tSZ effect include contributions from a very wide
+range of physical scales and redshifts (Fig. 1). While there is con-
+siderable overlap between the different 2-point functions in terms of
+MNRAS 000, 1–23 (2015)
+
+--- Page 20 ---
+20 I. G. McCarthy et al.
+physical scale and redshift (allowing for consistency tests), there is
+alsoalargedegreeofcomplementarity,withtheCMBlensingpower
+spectrum probing generally linear scales and higher redshifts while
+the cosmic shear and tSZ effect power spectra probe low redshifts
+and into the non-linear regime though they are sensitive to differ-
+enthalomasses.Cross-spectrabetweenthedifferentobservablesare
+typically sensitive to physical scales, redshifts, and halo masses that
+are intermediate between the power spectra of the individual fields,
+thus adding additional information.
+• The predicted cosmic shear power spectrum is robust to varia-
+tions in box size, resolution, and method of analysis (Fig. 2). Con-
+sistent with recent studies (e.g., Heymans et al. 2021; Tröster et al.
+2022;Amonetal.2023),wefindthataPlanckCMBcosmology,and
+the fiducial cosmology which combines DES Y3 constraints with a
+varietyofexternaldatasetsincludingtheprimaryCMB(D3A),pre-
+dicts power spectra that are elevated with respect to the KiDS 1000
+measurements and to a lesser extent the DES Y3 measurements.
+Thisisinthecontextofourfiducialcalibratedhydrosimulation.We
+find that adopting a lower value of𝑆8, as suggested by recent cos-
+micshearmeasurements(LS8run),yieldsanimprovedmatchtothe
+measurements, particularly for the higher tomographic bins which
+contain much of the integrated signal (Fig. 3). Increasing the feed-
+back efficiency with respect to the fiducial calibrated model, which
+has the effect of lowering the gas fractions of groups and clusters,
+also marginally improves the quality of the fit (Fig. 4) in the con-
+text of the D3A cosmology, but this preference largely evaporates
+when adopting a lower𝑆8. Even though it contains extreme varia-
+tions in feedback, FLAMINGO predicts that current cosmic shear
+measurements are only marginally sensitive to the impact of baryon
+physics.
+• The predicted tSZ effect power spectrum is generally robust to
+variations in resolution, box size, and method of analysis (Fig. 5).
+As much of the signal is produced by local, massive clusters, very
+large simulation boxes (>∼ 1 Gpc) are required to accurately predict
+the power. Another consequence of this dependence on massive,
+nearby clusters is that cosmic variance uncertainties are important
+onlargescales(particularly ℓ<∼ 300).ThetSZeffectpowerspectrum
+isextremelysensitivetotheamplitudeoffluctuations( 𝜎8)and,onthe
+angularscalesprobedbyPlanck,isgenerallyinsensitivetovariations
+in the efficiency of feedback (owing to the fact that it is dominated
+by ‘baryonically-closed’ massive clusters). The situation changes on
+smaller angular scales probed by SPT and ACT, which are more
+sensitive to group-mass haloes and therefore more susceptible to
+feedback effects. Current measurements of the tSZ effect on large
+scales (Bolliet et al. 2018) are in strong tension with the predictions
+of the hydrodynamical simulations in either a D3A or Planck CMB
+cosmology (see Table 5). Adopting a lower value of𝑆8, however,
+yieldsasignificantlyimprovedmatchtothemeasurements,consistent
+with the cosmic shear power spectrum analysis.
+• We find that the CMB lensing power spectrum is insensitive
+to simulation box size, resolution, method of analysis, and feedback
+implementation(seeFig.A3).Thisisadirectconsequenceofitprob-
+ing mainly linear scales and high redshifts. In contrast to the cosmic
+shearandtSZeffectpowerspectra,thepredictedCMBlensingpower
+spectrum for both the D3A and Planck CMB cosmologies is in ex-
+cellent agreement with recent measurements from Planck, SPT, and
+ACT, whereas the cosmologies with an increased neutrino mass and
+(particularly) LS8 are disfavoured (Fig. 6).
+• The predicted cosmic shear–tSZ effect cross-spectrum is gen-
+erally robust to variations in resolution, box size, and method of
+analysis (Fig. 7). Similar to the tSZ effect power spectrum, much of
+thesignalisproducedbylocal,massiveclusters,thusrequiringlarge
+simulation boxes to accurately predict this statistic. Consistent with
+Trösteretal.(2022),wefindthatthepredictedcross-spectruminboth
+the D3A or Planck CMB cosmologies is elevated with respect to the
+observed cross-spectrum between KiDS 1000 and Planck and ACT
+tSZonscalesof ℓ<∼ 1500.Decreasingthegasfractionsofgroupsand
+clusters by increasing the efficiency of feedback leads to a marginal
+improvement in the fit but cannot accommodate the observed offset
+onlargeangularscales( ℓ<∼ 1000).Adoptingalower 𝑆8 improvesthe
+match to the data.
+• The predicted cosmic shear–CMB lensing cross-spectrum is
+veryrobusttovariationsinresolution,boxsize,andmethodofanal-
+ysis (Fig. 8). The impact of baryons is also minimal compared to
+current measurement uncertainties. Consistent with Robertson et al.
+(2021), we find that the predicted cross-spectrum in either the D3A
+orPlanckCMBcosmologiesisgenerallyelevatedwithrespecttothe
+observed cross-spectrum between KiDS 1000 and Planck and ACT
+CMB lensing. Adopting a lower𝑆8 improves the match to the data.
+• We summarise the level of tension of the simulations with re-
+spect to the observations for all of the auto- and cross-power spectra
+we have considered in Table 5.
+Our findings are largely consistent with those of the individual
+studies which presented the measurements we compare to, at least
+in terms of qualitative conclusions. This was not guaranteed to be
+the case, as the individual studies all use very different theoretical
+frameworks,whichisacrucialpartofcosmologicalparameterinfer-
+ence. For example, some of the studies employ linear theory (e.g.,
+Madhavacheril et al. 2023; Qu et al. 2023) while others use the halo
+model (e.g., Bolliet et al. 2018; Tröster et al. 2022) or gravity-only
+emulators (e.g., Robertson et al. 2021; Doux et al. 2022) to com-
+putethenon-linearevolution.Withregardstothepotentialimpactof
+baryons, in some studies it was not taken into account (e.g., Robert-
+son et al. 2021; Madhavacheril et al. 2023; Qu et al. 2023) while
+others employed the halo model and marginalised over the uncer-
+tainties(e.g.,Bollietetal.2018;Trösteretal.2022)whilestillothers
+discarded small scale measurements (e.g., Doux et al. 2022) in an
+attempttoavoidbiasingduetobaryons.Herewehavetakenasingle
+suite of hydro simulations and projected them into different observ-
+ables, thus allowing a direct comparison between the different tests.
+From this comparison, three major conclusions are: i) power spectra
+that probe late times and/or non-linear scales are in tension with the
+predictions of the standard LCDM model with parameters set by the
+primaryCMB,BAO,andCMBlensing;ii)whileincreasingtheneu-
+trinomasscanreducethetensionbetweentheCMB+BAOandLSS,
+measurements of the CMB lensing power spectrum disfavour this
+solution; and iii) the effects of baryon physics and, importantly, its
+uncertainties, are generally insufficient to reconcile these tensions.
+Our results do not preclude baryons from playing some minor
+role in the current discussion which, perhaps when combined with
+otherfactors(e.g.,systematicerrorsinobservationalmeasurements),
+could help to resolve the tension. Indeed recent cosmic shear anal-
+yses claim to have marginally detected deviations from the predic-
+tions of gravity-only simulations and at a level that is consistent
+with that predicted by calibrated simulations such as BAHAMAS
+and FLAMINGO (e.g., Chen et al. 2023; Aricò et al. 2023). And
+while including baryons in the modelling tends to boost the inferred
+value of𝑆8, in general the value is shifted by less than1𝜎. Thus,
+both calibrated simulations and current cosmic shear measurements
+point to a fairly benign role for baryons at present. However, this
+situation will change radically for forthcoming Stage IV surveys, in-
+cluding LSST, Euclid, and DESI, since the statistical precision of
+themeasurementswillbesignificantlyhigherandthemeasurements
+MNRAS000, 1–23 (2015)
+
+--- Page 21 ---
+FLAMINGO: Baryons and the 𝑆8 tension 21
+will extend to smaller scales, thus requiring a much more careful
+accounting of the impact of baryon physics.
+Returning to the recent studies of Amon & Efstathiou (2022) and
+Prestonetal.(2023),theseauthorsshowedthat,givensufficientflex-
+ibilityintheincorporatedbaryonicmodelling,itispossibletoobtain
+a satisfactory fit to both the primary CMB and cosmic shear mea-
+surements.Therequiredsuppressionofthematterpowerspectrumis,
+however,typicallymuchstrongerthanpredictedbysimulationssuch
+as BAHAMAS and FLAMINGO, for which the baryon physics has
+been calibrated to reproduce the baryon fractions of galaxy groups
+andclusters.Recentworkhasshownthatthesuppressionisstrongly
+tiedtothebaryonfractions(e.g.,Sembolonietal.2011,2013;Schnei-
+der et al. 2019; Van Daalen et al. 2020; Salcido et al. 2023), which
+was a motivating factor in the calibration strategies of these simula-
+tions. Thus, appealing to a much stronger suppression of the matter
+power spectrum in order to reconcile the primary CMB and LSS
+would appear to require baryon fractions that violate observational
+constraints on the baryon fractions of groups and clusters. Grandis
+et al. (2023) have recently come to similar conclusions using weak
+lensing-calibrated cluster gas and stellar fractions together with the
+baryonification methods of Schneider et al. (2019) and Aricò et al.
+(2021) to predict the suppression of the matter power spectrum.
+However, we note that the level of feedback required to reconcile
+the primary CMB and the cosmic shear measurements depends on
+the cosmic shear data set employed. Preston et al. (2023) find that
+relatively weaker feedback, which is more comparable to that in
+BAHAMAS and FLAMINGO, is required to reconcile the DES Y3
+measurementswiththeCMB,whereasstrongerfeedbackisrequired
+when using the KiDS 1000 measurements. This is likely driven by
+the fact that the tension in𝑆8 between the DES Y3 measurements
+andtheCMBisrelativelymildtobeginwith,beforebaryoniceffects
+are considered.
+In terms of using baryon fractions to constrain baryonic effects
+on the matter power spectrum, a caveat that is worth further consid-
+eration is that carefully accounting for the X-ray selection function
+of galaxy groups is non-trivial (e.g., Pearson et al. 2017). Also, the
+present cosmic shear data is sensitive to LSS over a wider range of
+redshifts than for which we presently have useful observational con-
+straints on group/cluster baryon fractions. Thus, if the simulations
+significantly underestimate the efficiency of feedback at higher red-
+shifts (𝑧>∼ 0.3), then they could underestimate the impact of baryons
+onthecosmicshearpowerspectrum.Observationsofgroups/clusters
+at higher redshift and with a well-defined selection function would
+behighlyvaluable.TherecentkineticSZ(kSZ)effectstackingmea-
+surementsofSDSSeBOSSgalaxiesat 𝑧≈ 0.5inSchaanetal.(2021)
+appear to be well suited as an independent test of feedback models
+(e.g., Schneider et al. 2022). We emphasise, however, that the most
+strongly discrepant power spectrum we examined is the Planck tSZ
+effect power spectrum, which is primarily sensitive to low-redshift,
+massive clusters which are baryonically-closed, dominated by hot
+gas, and for which X-ray and tSZ surveys are typically highly com-
+plete. Increasing feedback at higher redshifts will not significantly
+impact this metric.
+Ifneitherfeedbacknorunaccountedfor(ormischaracterised)sys-
+tematicerrorsarebehindthetension(thoughitwillrequireadditional
+worktoconclusivelydemonstratethelatter),thentheexcitingimpli-
+cationwouldappeartobethatnewphysics,perhapsinthedarksector,
+isrequired.Specifically,newphysicsthatpreferentiallyimpactsnon-
+linear scales and/or late times in order to retain consistency with the
+CMB lensing power spectrum, as proposed by Amon & Efstathiou
+(2022) and Preston et al. (2023) as an alternative interpretation (to
+baryon physics) of the required suppression. Many suggestions in
+this vein have recently been put forward, including a contribution
+from ultra-light axions to the dark matter (e.g., Rogers et al. 2023),
+mild baryon–dark matter scattering (He et al. 2023), and invoking
+interactions (in the form of a frictional drag) between dark matter
+and dark energy (Poulin et al. 2023). Testing these extensions will
+requireforthcomingStageIVsurveys,whichwillmeasurethepower
+and cross-power spectra with much higher statistical precision and
+willallowformuchfinerbinninginredshift,physicalscale,andhalo
+mass.Withtheincreasedstatisticalprecisioncomestherequirement
+for a very careful consideration of baryonic effects, which may be
+degenerate with the additional degrees of freedom in the dark sector
+extensions.
+Finally, to make stronger statements about tensions and possible
+resolutions thereof in the context of cosmological hydrodynamical
+simulations and which simultaneously accounts for relevant obser-
+vational systematic uncertainties, we will require a way to quickly
+spanawiderangeofbaryonfeedbackscenariosandbackgroundcos-
+mologies in order to incorporate the predictions of such simulations
+intocosmologicalpipelines.Thelatter(cosmologicalvariations)has
+already been achieved but only in the context of gravity-only sim-
+ulations, through emulators constructed from grids of simulations
+that span some range of cosmological parameters (e.g., Heitmann
+et al. 2014; Lawrence et al. 2017; Euclid Collaboration et al. 2019;
+McClintock et al. 2019; Euclid Collaboration et al. 2021). The for-
+mer has just recently been achieved for the first time in volumes of
+sufficient size for LSS applications, in Salcido et al. (2023). Those
+authors produced a suite of 400 cosmological hydro simulations in
+100 Mpc/ℎ volumes (the Antilles simulations) and have developed
+an emulator for the relative impact of baryons on the matter power
+spectrum that takes the mass-dependent baryon fractions of groups
+and clusters as its input and predicts the suppression of the matter
+power spectrum. In the context of current cosmic shear measure-
+ments,thisisthemostaccurateemulatorcurrentlyavailableandcan
+be easily applied in existing pipelines.
+However, for the next generation of measurements, which will
+have significantly improved statistical precision, the assumed sepa-
+rability of baryonic effects and cosmological effects in the approach
+of Salcido et al. (2023) and other approximate methods for incor-
+porating baryons (e.g., HMcode; Mead et al. 2020) will need to be
+revisited. Ideally, a single emulator based on a grid of cosmological
+hydrodynamical simulations thatsimultaneously varies the relevant
+astrophysical and cosmological parameters should be the basis of
+cosmological pipelines. Furthermore, to take advantage of the wide
+variety of complementary LSS observables, including weak lens-
+ing, galaxy clustering, redshift-space distortions, the tSZ and kSZ
+effects, cluster counts, etc. box sizes of∼ 1 Gpc are required. With
+FLAMINGO we have taken an important step forward to show that
+it is possible to carry out such simulations in a careful way, using
+machine learning-based emulators as part of the calibration. The
+next step is to extend this approach to a simultaneous exploration of
+cosmology and astrophysics, which is the subject of ongoing work.
+ACKNOWLEDGEMENTS
+The authors thank the referee for a prompt and constructive report.
+IGM thanks Tilman Tröster and Cyrille Doux for assistance with
+KiDS and DES cosmic shear measurements and Alexandra Amon
+for helpful comments on a draft version of the paper. This project
+has received funding from the European Research Council (ERC)
+under the European Union’s Horizon 2020 research and innova-
+tion programme (grant agreement No 769130). CSF acknowledges
+MNRAS000, 1–23 (2015)
+
+--- Page 22 ---
+22 I. G. McCarthy et al.
+support from the European Research Council (ERC) through Ad-
+vanced Investigator grant DMIDAS (GA 786910). This work used
+the DiRAC@Durham facility managed by the Institute for Compu-
+tational Cosmology on behalf of the STFC DiRAC HPC Facility
+(www.dirac.ac.uk). The equipment was funded by BEIS capi-
+tal funding via STFC capital grants ST/K00042X/1, ST/P002293/1,
+ST/R002371/1 and ST/S002502/1, Durham University and STFC
+operations grant ST/R000832/1. DiRAC is part of the National e-
+Infrastructure.
+DATA AVAILABILITY
+The data supporting the plots within this article are available on
+reasonable request to the corresponding author. The FLAMINGO
+simulation data will eventually be made publicly available, though
+we note that the data volume (several petabytes) may prohibit us
+from simply placing the raw data on a server. In the meantime,
+people interested in using the simulations are encouraged to contact
+the corresponding author.
+REFERENCES
+Abazajian K., et al., 2019, arXiv e-prints, p. arXiv:1907.04473
+Abbott T. M. C., et al., 2022, Phys. Rev. D, 105, 023520
+Abbott T. M. C., et al., 2023, arXiv e-prints, p. arXiv:2305.17173
+Addison G. E., Huang Y., Watts D. J., Bennett C. L., Halpern M., Hinshaw
+G., Weiland J. L., 2016, ApJ, 818, 132
+Ade P., et al., 2019, J. Cosmology Astropart. Phys., 2019, 056
+Aihara H., et al., 2018, PASJ, 70, S8
+Akino D., et al., 2022, PASJ, 74, 175
+Alonso D., Sanchez J., Slosar A., LSST Dark Energy Science Collaboration
+2019, MNRAS, 484, 4127
+Amon A., Efstathiou G., 2022, MNRAS, 516, 5355
+Amon A., et al., 2023, MNRAS, 518, 477
+Angulo R. E., Pontzen A., 2016, MNRAS, 462, L1
+Aricò G., Angulo R. E., Contreras S., Ondaro-Mallea L., Pellejero-Ibañez
+M., Zennaro M., 2021, MNRAS, 506, 4070
+Aricò G., Angulo R. E., Zennaro M., Contreras S., Chen A., Hernández-
+Monteagudo C., 2023, arXiv e-prints, p. arXiv:2303.05537
+Bagla J. S., Ray S., 2003, New Astron., 8, 665
+Bartelmann M., Schneider P., 2001, Phys. Rep., 340, 291
+Battaglia N., Bond J. R., Pfrommer C., Sievers J. L., 2012, ApJ, 758, 75
+Battye R. A., Moss A., 2014, Phys. Rev. Lett., 112, 051303
+Behroozi P., Wechsler R. H., Hearin A. P., Conroy C., 2019, MNRAS, 488,
+3143
+Beutler F., et al., 2014, MNRAS, 444, 3501
+BirdS.,FengY.,PedersenC.,Font-RiberaA.,2020,J.CosmologyAstropart.
+Phys., 2020, 002
+Birkinshaw M., 1999, Phys. Rep., 310, 97
+Bolliet B., Comis B., Komatsu E., Macías-Pérez J. F., 2018, MNRAS, 477,
+4957
+Borrow J., Schaller M., Bower R. G., Schaye J., 2022, MNRAS, 511, 2367
+Bower R. G., Vernon I., Goldstein M., Benson A. J., Lacey C. G., Baugh
+C. M., Cole S., Frenk C. S., 2010, MNRAS, 407, 2017
+Carlstrom J. E., Holder G. P., Reese E. D., 2002, ARA&A, 40, 643
+Castro T., Borgani S., Dolag K., Marra V., Quartin M., Saro A., Sefusatti E.,
+2021, MNRAS, 500, 2316
+Chang C., et al., 2023, Phys. Rev. D, 107, 023530
+Chen A., et al., 2023, MNRAS, 518, 5340
+ChengH.,GreengardL.,RokhlinV.,1999,JournalofComputationalPhysics,
+155, 468
+Chisari N. E., et al., 2019, The Open Journal of Astrophysics, 2, 4
+Debackere S. N. B., Schaye J., Hoekstra H., 2020, MNRAS, 492, 2285
+deSalasP.F.,ForeroD.V.,GariazzoS.,Martínez-MiravéP.,MenaO.,Ternes
+C. A., Tórtola M., Valle J. W. F., 2021, Journal of High Energy Physics,
+2021, 71
+Dehnen W., 2014, Computational Astrophysics and Cosmology, 1, 1
+Doux C., et al., 2022, MNRAS, 515, 1942
+Elbers W., Frenk C. S., Jenkins A., Li B., Pascoli S., 2021, MNRAS, 507,
+2614
+Elbers W., Frenk C. S., Jenkins A., Li B., Pascoli S., 2022, MNRAS, 516,
+3821
+Esteban I., Gonzalez-Garcia M. C., Maltoni M., Schwetz T., Zhou A., 2020,
+Journal of High Energy Physics, 2020, 178
+Euclid Collaboration et al., 2019, MNRAS, 484, 5509
+Euclid Collaboration et al., 2021, MNRAS, 505, 2840
+Fang X., et al., 2023, arXiv e-prints, p. arXiv:2308.01856
+GonzalezA.H.,SivanandamS.,ZabludoffA.I.,ZaritskyD.,2013,ApJ,778,
+14
+Grandis S., Arico’ G., Schneider A., Linke L., 2023, arXiv e-prints, p.
+arXiv:2309.02920
+Greengard L., Rokhlin V., 1987, Journal of Computational Physics, 73, 325
+Hahn O., Michaux M., Rampf C., Uhlemann C., Angulo R. E., 2020, Astro-
+physics Source Code Library, pp ascl–2008
+Hahn O., Rampf C., Uhlemann C., 2021, MNRAS, 503, 426
+He A., Ivanov M. M., An R., Gluscevic V., 2023, ApJ, 954, L8
+Heitmann K., Lawrence E., Kwan J., Habib S., Higdon D., 2014, ApJ, 780,
+111
+Henden N. A., Puchwein E., Shen S., Sĳacki D., 2018, MNRAS, 479, 5385
+Heymans C., et al., 2021, A&A, 646, A140
+Hildebrandt H., et al., 2016, MNRAS, 463, 635
+Hildebrandt H., et al., 2021, A&A, 647, A124
+Hill J. C., Spergel D. N., 2014, J. Cosmology Astropart. Phys., 2014, 030
+Hojjati A., et al., 2017, MNRAS, 471, 1565
+Hu W., Okamoto T., 2002, ApJ, 574, 566
+Hurier G., 2015, A&A, 575, L11
+Jenkins A., 2013, MNRAS, 434, 2094
+Kaiser N., 1992, ApJ, 388, 272
+Kaiser N., Squires G., 1993, ApJ, 404, 441
+Kilbinger M., et al., 2017, MNRAS, 472, 2126
+Komatsu E., Seljak U., 2002, MNRAS, 336, 1256
+Kugel R., et al., 2023, arXiv e-prints, p. arXiv:2306.05492
+Kuĳken K., et al., 2019, A&A, 625, A2
+Lawrence E., et al., 2017, ApJ, 847, 50
+Le Brun A. M. C., McCarthy I. G., Schaye J., Ponman T. J., 2014, MNRAS,
+441, 1270
+Lewis A., Challinor A., 2006, Phys. Rep., 429, 1
+Liu X., Emberson J. D., Buehlmann M., Frontiere N., Habib S., 2023, MN-
+RAS, 522, 3631
+Madhavacheril M. S., et al., 2023, arXiv e-prints, p. arXiv:2304.05203
+Mallaby-Kay M., et al., 2021, ApJS, 255, 11
+McCarthy F., Hill J. C., 2023, arXiv e-prints, p. arXiv:2308.16260
+McCarthy I. G., et al., 2010, MNRAS, 406, 822
+McCarthy I. G., Schaye J., Bower R. G., Ponman T. J., Booth C. M., Dalla
+Vecchia C., Springel V., 2011, MNRAS, 412, 1965
+McCarthy I. G., Le Brun A. M. C., Schaye J., Holder G. P., 2014, MNRAS,
+440, 3645
+McCarthy I. G., Schaye J., Bird S., Le Brun A. M. C., 2017, MNRAS, 465,
+2936
+McCarthy I. G., Bird S., Schaye J., Harnois-Deraps J., Font A. S., van Waer-
+beke L., 2018, MNRAS, 476, 2999
+McCarthy F., Hill J. C., Madhavacheril M. S., 2022, Phys. Rev. D, 105,
+023517
+McClintock T., et al., 2019, ApJ, 872, 53
+MeadA.J.,TrösterT.,HeymansC.,VanWaerbekeL.,McCarthyI.G.,2020,
+A&A, 641, A130
+Michaux M., Hahn O., Rampf C., Angulo R. E., 2021, MNRAS, 500, 663
+Millea M., Doré O., Dudley J., Holder G., Knox L., Shaw L., Song Y. S.,
+Zahn O., 2012, ApJ, 746, 4
+Mummery B. O., McCarthy I. G., Bird S., Schaye J., 2017, MNRAS, 471,
+227
+MNRAS000, 1–23 (2015)
+
+--- Page 23 ---
+FLAMINGO: Baryons and the 𝑆8 tension 23
+Nguyen N.-M., Huterer D., Wen Y., 2023, Phys. Rev. Lett., 131, 111001
+Oppenheimer B. D., Babul A., Bahé Y., Butsky I. S., McCarthy I. G., 2021,
+Universe, 7, 209
+Pearson R. J., et al., 2017, MNRAS, 469, 3489
+Planck Collaboration et al., 2013, A&A, 557, A52
+Planck Collaboration et al., 2014, A&A, 571, A21
+Planck Collaboration et al., 2016, A&A, 594, A22
+Planck Collaboration et al., 2017, A&A, 607, A95
+Planck Collaboration et al., 2020a, A&A, 641, A6
+Planck Collaboration et al., 2020b, A&A, 641, A8
+Planelles S., Borgani S., Fabjan D., Killedar M., Murante G., Granato G. L.,
+Ragone-Figueroa C., Dolag K., 2014, MNRAS, 438, 195
+PoulinV.,BernalJ.L.,KovetzE.D.,KamionkowskiM.,2023,Phys.Rev.D,
+107, 123538
+Preston C., Amon A., Efstathiou G., 2023, MNRAS, 525, 5554
+Price D. J., 2012, Journal of Computational Physics, 231, 759
+Qu F. J., et al., 2023, arXiv e-prints, p. arXiv:2304.05202
+Rampf C., Uhlemann C., Hahn O., 2021, MNRAS, 503, 406
+Reichardt C. L., et al., 2021, ApJ, 908, 199
+Reid B., et al., 2016, MNRAS, 455, 1553
+Riess A. G., et al., 2022, ApJ, 934, L7
+Robertson N. C., et al., 2021, A&A, 649, A146
+Rodrigues L. F. S., Vernon I., Bower R. G., 2017, MNRAS, 466, 2418
+Rogers K. K., Hložek R., Laguë A., Ivanov M. M., Philcox O. H. E., Cabass
+G.,AkitsuK.,MarshD.J.E.,2023,J.CosmologyAstropart.Phys.,2023,
+023
+Rosenberg E., Gratton S., Efstathiou G., 2022, MNRAS, 517, 4620
+SalcidoJ.,McCarthyI.G.,KwanJ.,UpadhyeA.,FontA.S.,2023,MNRAS,
+523, 2247
+Schaan E., et al., 2021, Phys. Rev. D, 103, 063513
+Schaller M., et al., 2023, arXiv e-prints, p. arXiv:2305.13380
+Schaye J., et al., 2015, MNRAS, 446, 521
+Schaye J., et al., 2023, arXiv e-prints, p. arXiv:2306.04024
+Schneider A., Teyssier R., Stadel J., Chisari N. E., Le Brun A. M. C., Amara
+A., Refregier A., 2019, J. Cosmology Astropart. Phys., 2019, 020
+SchneiderA.,StoiraN.,RefregierA.,WeissA.J.,KnabenhansM.,StadelJ.,
+Teyssier R., 2020, J. Cosmology Astropart. Phys., 2020, 019
+SchneiderA.,GiriS.K.,AmodeoS.,RefregierA.,2022,MNRAS,514,3802
+Semboloni E., Hoekstra H., Schaye J., van Daalen M. P., McCarthy I. G.,
+2011, MNRAS, 417, 2020
+Semboloni E., Hoekstra H., Schaye J., 2013, MNRAS, 434, 148
+Shaw L. D., Nagai D., Bhattacharya S., Lau E. T., 2010, ApJ, 725, 1452
+Silk J., Rees M. J., 1998, A&A, 331, L1
+Smith R. E., et al., 2003, MNRAS, 341, 1311
+Springel V., et al., 2018, MNRAS, 475, 676
+SunyaevR.A.,ZeldovichY.B.,1972,CommentsonAstrophysicsandSpace
+Physics, 4, 173
+Takahashi R., Sato M., Nishimichi T., Taruya A., Oguri M., 2012, ApJ, 761,
+152
+Tröster T., et al., 2022, A&A, 660, A27
+Upadhye A., et al., 2023, arXiv e-prints, p. arXiv:2308.09755
+van Daalen M. P., Schaye J., Booth C. M., Dalla Vecchia C., 2011, MNRAS,
+415, 3649
+van Daalen M. P., McCarthy I. G., Schaye J., 2020, MNRAS, 491, 2424
+Wei C., et al., 2018, ApJ, 853, 25
+White S. D. M., Frenk C. S., 1991, ApJ, 379, 52
+White M., Hernquist L., Springel V., 2002, ApJ, 579, 16
+Wu W. L. K., et al., 2019, ApJ, 884, 70
+Wyman M., Rudd D. H., Vanderveld R. A., Hu W., 2014, Phys. Rev. Lett.,
+112, 051302
+da Silva A. C., Kay S. T., Liddle A. R., Thomas P. A., Pearce F. R., Barbosa
+D., 2001, ApJ, 561, L15
+van Daalen M. P., Schaye J., 2015, MNRAS, 452, 2247
+APPENDIX A: ADDITIONAL COMPARISONS
+In this Appendix we present additional analyses referred to in the
+main text.
+In Fig. A1 we examine the dependence of the predicted KiDS
+1000 cosmic shear power spectrum on baryon physics, specifically
+variationsintheSMF(bothatthefiducialandreducedgasfractions)
+andthefiducialandstrongjetmodelsofAGNfeedback.Weconclude
+that variations in the SMF are generally negligible compared to that
+of variations in the gas fractions.
+InFig.A2wecompareselectedFLAMINGOrunstotheDESY3
+cosmic shear power spectra data from Doux et al. (2022). The DES
+Y3 background galaxy population is split amongst 4 tomographic
+bins shown in figure 2 of Doux et al. (2022). We use these source
+redshift distributions in eqn. 2 to compute their respective window
+functions. As we are particularly interested in the role of baryons,
+we do not include any scale cuts to the DES Y3 power spectra.
+Examining Fig. A2, we see that the lensing LS8 cosmology yields a
+somewhatbetterfittothedatarelativetothefiducialD3Acosmology
+(particularly amongst the majority of the higher tomographic bins),
+whereas a Planck CMB cosmology yields a worse fit for virtually
+all bins. Increasing the efficiency of feedback also slightly improves
+the fit, but less than the improvement due to lowering𝑆8. Consistent
+with findings in the literature (e.g., Abbott et al. 2022, 2023), we
+conclude that while there is some evidence for tension of the DES
+Y3 measurements with the Planck CMB cosmology, it is of slightly
+lower significance than for the KiDS 1000 survey.
+In Fig. A3 we examine the dependence of the predicted CMB
+lensingangularpowerspectrumonsimulationboxsizeandresolution
+(top panel) and baryon physics (bottom panels). Over the range of
+scalesexaminedhere,thepredictedCMBlensingpowerspectrumis
+converged (i.e., unaltered) with respect to these variations.
+In Fig. A4 we compare the FLAMINGO cosmology and gas frac-
+tion variation runs with the cosmic shear–tSZ effect angular cross-
+power spectrum measurements of Hojjati et al. (2017), using data
+fromRCSLenS(shear)andPlanck(tSZ).AsRCSLenSisarelatively
+shallow survey, Hojjati et al. (2017) combined the data into a single
+large tomographic bin. We use the source redshift distribution from
+that study to compute the predicted shear–tSZ effect cross. Consis-
+tent with the KiDS 1000× Planck cross examined in the main text,
+we see that four of the five multipole bins have amplitudes lower
+thanthatpredictedbythefiducialFLAMINGOmodelinthefiducial
+D3Acosmology.However,asthesefourbinssamplerelativelysmall
+angular scales ofℓ∼ 1000, where the impact of feedback is non-
+negligible, the significance of the tension with the D3A cosmology
+isclearlylesspronouncedthanfortheKiDS1000comparisoninthe
+main text.
+This paper has been typeset from a TEX/LATEX file prepared by the author.
+MNRAS000, 1–23 (2015)
+
+--- Page 24 ---
+24 I. G. McCarthy et al.
+2
+0
+2
+4
+6
+ 10.7
+(0.0)
+(0.0)
+(0.0)
+(-0.0)
+(0.0)
+1-1
+L1_m9
+fgas 4
+M*
+M* _fgas 4
+Jet
+Jet_fgas 4
+KiDS 1000
+2
+0
+2
+4
+6
+ 4.3
+(0.0)
+(0.0)
+(0.0)
+(-0.0)
+(0.0)
+2-1
+2
+0
+2
+4
+6
+107 C E E
+17.9
+(-0.2)
+(-0.1)
+(-0.2)
+(0.0)
+(-0.3)
+3-1
+2
+0
+2
+4
+6
+ 11.2
+(-0.2)
+(-0.1)
+(-0.2)
+(0.0)
+(-0.4)
+4-1
+102 103
+2
+0
+2
+4
+6
+ 29.7
+(-0.3)
+(-0.1)
+(-0.3)
+(0.1)
+(-0.4)
+5-1
+10.6
+(0.3)
+(0.1)
+(0.4)
+(-0.1)
+(0.5)
+2-2
+6.4
+(0.4)
+(0.1)
+(0.5)
+(-0.1)
+(0.6)
+3-2
+10.6
+(-0.2)
+(-0.1)
+(-0.3)
+(0.1)
+(-0.3)
+4-2
+102 103
+14.6
+(-0.6)
+(-0.2)
+(-0.7)
+(0.1)
+(-1.0)
+5-2
+11.8
+(-0.4)
+(-0.1)
+(-0.4)
+(0.0)
+(-0.8)
+3-3
+21.6
+(-1.4)
+(-0.5)
+(-1.7)
+(0.1)
+(-2.7)
+4-3
+102 103
+22.9
+(-1.5)
+(-0.5)
+(-1.8)
+(0.2)
+(-2.8)
+5-3
+15.6
+(-1.3)
+(-0.4)
+(-1.5)
+(0.2)
+(-2.3)
+4-4
+102 103
+23.4
+(-2.3)
+(-0.8)
+(-2.8)
+(0.2)
+(-4.6)
+5-4
+102 103
+6.2
+(-0.2)
+(-0.1)
+(-0.2)
+(0.0)
+(-0.4)
+5-5
+FigureA1. AsFig.2,butshowingthedependenceofthepredictedKiDS1000cosmicshearpowerspectrumonbaryonphysics,namelyvariationsinthestellar
+massfunction(boththefiducialandreducedclustergasfractions)andthefiducialandstrongjetmodelsofAGNfeedback.Thesolidcolouredcurvescorrespond
+tothepredictedspectrafortheFLAMINGOsimulationsasbaryonmodelsarevaried.Theeffectofvariationsinthestellarmassfunctionisgenerallynegligible
+compared to that of variations in the gas fractions.
+MNRAS000, 1–23 (2015)
+
+--- Page 25 ---
+FLAMINGO: Baryons and the 𝑆8 tension 25
+2
+0
+2
+4
+6
+107 C E E
+48.6
+(0.7)
+(-0.0)
+(1.0)
+1-1
+L1_m9
+fgas 8
+Planck
+LS8
+DES Y3
+2
+0
+2
+4
+6
+107 C E E
+28.0
+(1.1)
+(0.3)
+(3.6)
+2-1
+2
+0
+2
+4
+6
+107 C E E
+28.6
+(-2.1)
+(6.2)
+(-6.6)
+3-1
+102 103
+2
+0
+2
+4
+6
+107 C E E
+28.5
+(-2.2)
+(6.5)
+(-8.3)
+4-1
+30.7
+(0.3)
+(1.6)
+(2.1)
+2-2
+44.1
+(-1.6)
+(11.0)
+(-4.9)
+3-2
+102 103
+33.9
+(-0.9)
+(9.4)
+(-4.1)
+4-2
+27.1
+(-2.0)
+(8.7)
+(1.5)
+3-3
+102 103
+47.5
+(-7.6)
+(24.9)
+(-20.3)
+4-3
+102 103
+38.3
+(0.3)
+(7.9)
+(1.4)
+4-4
+FigureA2. AsFig.2,butshowingselectedpredictionsfortheDESY3cosmicshearpowerspectrum.TheopentrianglescorrespondtotheDESY3measurements
+of Doux et al. (2022) and the error bars correspond to the diagonal components of the covariance matrix. Note that the𝜒2’s are computed here adopting the
+diagonalerrorsonly.AlensingLS8cosmologyyieldssomewhatbetterfittothedatarelativetothefiducialD3Acosmology,whereasaPlanckCMBcosmology
+yields a worse fit. Increasing the efficiency of feedback also slightly improves the fit, but less than the improvement due to lowering𝑆8.
+MNRAS000, 1–23 (2015)
+
+--- Page 26 ---
+26 I. G. McCarthy et al.
+102 103
+10 2
+10 1
+100
+107C [ ( + 1)]2/2
+29.5
+(-2.3)
+(0.4)
+(-0.1)
+L1_m9
+L2p8_m9
+L1_m10
+L1_m8
+Planck 2018
+SPTpol 500d
+ACT DR6
+102 103
+10 2
+10 1
+100
+107C [ ( + 1)]2/2
+29.5
+(-0.0)
+(0.1)
+(0.1)
+(0.2)
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+Planck 2018
+SPTpol 500d
+ACT DR6
+102 103
+10 2
+10 1
+100
+107C [ ( + 1)]2/2
+35.8
+(0.1)
+(0.0)
+(0.1)
+(0.2)
+(0.4)
+L1_m9
+fgas 4
+M*
+M* _fgas 4
+Jet
+Jet_fgas 4
+Planck 2018
+SPT-3G 2018
+ACT DR6
+FigureA3. AsFig.6,butshowingthedependenceofthepredictedCMBlens-
+ingangularpowerspectrumonsimulationboxsizeandresolution(toppanel)
+and baryon physics (middle and bottom panels). Over the range of scales ex-
+amined here, the predicted CMB lensing power spectrum is converged (i.e.,
+unaltered) with respect to these variations.
+102 103
+1
+0
+1
+2
+3
+4
+5
+6
+1011 C y
+6.7
+(3.4)
+(-3.6)
+(-2.7)
+(-2.6)
+L1_m9
+Planck
+PlanckNu0p24Fix 
+PlanckNu0p24Var
+LS8
+RCSLenS × Planck
+102 103
+1
+0
+1
+2
+3
+4
+5
+6
+1011 C y
+6.7
+(1.0)
+(-1.3)
+(-2.4)
+(-4.0)
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+RCSLenS × Planck
+Figure A4.The cosmic shear–tSZ effect angular cross-power spectrum. The
+open triangles correspond to the RCSLenS× Planck tSZ measurements of
+Hojjati et al. (2017).Top: Dependence on cosmology. The solid coloured
+curvescorrespondtothepredictedspectrafortheFLAMINGOsimulationsfor
+different background cosmologies.Bottom: Dependence on baryon physics,
+namely variations in the gas fractions of groups and clusters, which are
+mediated primarily through variations in the AGN feedback strength. The
+solidcolouredcurvescorrespondtothepredictedspectrafortheFLAMINGO
+simulations as the gas fractions are varied from+2𝜎 to−8𝜎 with respect to
+the observed gas fraction–halo mass relation.
+MNRAS000, 1–23 (2015)

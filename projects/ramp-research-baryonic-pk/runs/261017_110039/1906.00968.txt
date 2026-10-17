@@ -1,0 +1,2368 @@
+Title: Exploring the effects of galaxy formation on matter clustering through a library of simulation power spectra
+Authors: Marcel P. van Daalen, Ian G. McCarthy, Joop Schaye
+Year: 2019
+arXiv ID: 1906.00968
+
+============================================================
+
+--- Page 1 ---
+arXiv:1906.00968v2  [astro-ph.CO]  8 Oct 2019
+Mon. Not. R. Astron. Soc. 000, 1–26 (2019) Printed 10th October 2019 (MN L ATEX style ﬁle v2.2)
+Exploring the eﬀects of galaxy formation on matter
+clustering through a library of simulation power spectra
+Marcel P. van Daalen 1,2⋆, Ian G. McCarthy 3 and Joop Schaye 1
+1Leiden Observatory, Leiden University, P.O. Box 9513, 2300 RA Leiden, The Netherlands
+2Institute for Astronomy, University of Edinburgh, Royal Ob servatory, Blackford Hill, Edinburgh, EH9 3HJ, UK
+3Astrophysics Research Institute, Liverpool John Moores Un iversity, 146 Brownlow Hill, Liverpool L3 5RF, UK
+10th October 2019
+ABSTRACT
+Upcoming weak lensing surveys require a detailed theoretical under standing of the
+matter power spectrum in order to derive accurate and precise co smological para-
+meter values. While galaxy formation is known to play an important role , its precise
+eﬀects are currently unknown. We present a set of 92 matter pow er spectra from
+the OWLS, cosmo-OWLS and bahamas simulation suites, including diﬀerent ΛCDM
+cosmologies, neutrino masses, subgrid prescriptions and AGN feed back strengths. We
+conduct a detailed investigation of the dependence of the relative d iﬀerence between
+the total matter power spectra in hydrodynamical and collisionless simulations on the
+eﬀectiveness of stellar and AGN feedback, cosmology and redshift . The strength of
+AGN feedback can greatly aﬀect the power on a range of scales, wh ile a lack of stellar
+feedback can greatly increase the eﬀectiveness of AGN feedback on large scales. We also
+examine diﬀerences in the initial conditions of hydrodynamic and N-bo dy simulations
+that can lead to a ∼ 1% discrepancy in the large-scale power, and furthermore show
+our results to be insensitive to cosmic variance. We present an empir ical model capable
+of predicting the eﬀect of galaxy formation on the matter power sp ectrum at z = 0 to
+within 1% for k < 1 h Mpc− 1, given only the mean baryon fraction in galaxy groups.
+Diﬀerences in group baryon fractions can also explain the quantitat ive disagreement
+between predictions from the literature. All total and dark matte r only power spectra
+in this library will be made publicly available at powerlib.strw.leidenuniv.nl.
+Key words: cosmology: theory, large-scale structure of Universe – galaxies: formation
+– gravitational lensing: weak, surveys
+1 INTRODUCTION
+Current and near-future weak lensing surveys like DES 1,
+LSST2, Euclid 3 and WFIRST 4 face a signiﬁcant challenge
+when attempting to interpret their measurements: they re-
+quire predictions of the matter power spectrum with a pre-
+cision better than 1% (Huterer & Takada 2005, Ivezi´ c et al.
+2008, Laureijs 2009). Presently, making predictions at thi s
+level down to suﬃciently small scales is challenging even in
+a dark matter only Universe (e.g. Schneider et al. 2016) –
+but unfortunately, the presence of baryons causes large ad-
+ditional complications. As ﬁrst shown in van Daalen et al.
+⋆ E-mail: daalen@strw.leidenuniv.nl
+1 darkenergysurvey.org
+2 lsst.org
+3 euclid-ec.org
+4 wfirst.gsfc.nasa.gov
+(2011, hereafter VD11), based on the OWLS suite of sim-
+ulations (Schaye et al. 2010), stellar feedback and feedbac k
+from active galactic nuclei (AGN) in particular has a strong
+eﬀect on the power out to relatively large scales, reducing
+the power by 1% at a Fourier scale of k = 0 . 3 h Mpc− 1 to
+28% at k = 10 h Mpc− 1, relative to a dark matter only uni-
+verse. This large-scale suppression in power primarily com es
+about by feedback heating and ejecting gas out to large dis-
+tances, which is required in order to match X-ray obser-
+vations of groups and clusters (e.g. McCarthy et al. 2010,
+2011, Le Brun et al. 2014). Secondary to this is the resulting
+change in the clustering of cold dark matter itself, dubbed
+the back-reaction. Follow-up work has shown that galaxy
+formation, when ignored, may result in biases of cosmolo-
+gical parameters that exceed the statistical errors of upco m-
+ing surveys by an order of magnitude (e.g. Semboloni et al.
+2011, Zentner et al. 2013).
+The publicly available power spectra from VD11
+c© 2019 RAS
+
+--- Page 2 ---
+2 M. P. van Daalen, I. G. McCarthy and J. Schaye
+only included one model with AGN feedback. Many au-
+thors have used the VD11 OWLS AGN power spectra
+and others to inform their models and test whether the
+eﬀects of galaxy formation can be marginalized over
+(e.g. Semboloni, Hoekstra & Schaye 2013, Zentner et al.
+2013, Mohammed & Seljak 2014, Harnois-D´ eraps et al.
+2015, Eiﬂer et al. 2015, Schneider & Teyssier 2015,
+Foreman, Becker & Wechsler 2016, Mohammed & Gnedin
+2018, Huang et al. 2018, Schneider et al. 2019). While
+other authors besides VD11 also ﬁnd that AGN feed-
+back has a signiﬁcant eﬀect on the power spectrum (e.g.
+Vogelsberger et al. 2014a, Hellwing et al. 2016, Peters et al .
+2018, Springel et al. 2018, Chisari et al. 2018), there is no
+consensus at anywhere near the 1% level required – which,
+itself, is an issue worth addressing.
+The lack of (publicly available) simulations that test the
+eﬀects of galaxy formation including AGN feedback (and,
+ideally, simultaneously cosmology) means that the simulat ed
+power spectra used in the literature do not fully reﬂect the
+theoretical uncertainties in the ﬁeld of galaxy formation t hat
+still exist today. In addition, Mohammed & Gnedin (2018)
+have shown that methods aiming to mitigate the eﬀects of
+baryons on weak lensing observables beneﬁt from including
+models that are more extreme than is realistic in their train -
+ing sets. Currently, the most realistic simulations, i.e. t hose
+including AGN, are often the most extreme as well, which
+is undesirable from a modelling perspective. The work of
+Huang et al. (2018) supports these ﬁndings, showing that
+adding more simulations with AGN feedback to the training
+set of a mitigating scheme allows for a stronger reduction of
+the bias in cosmological parameters.
+The parametrization of the eﬀects of galaxy form-
+ation on the matter power spectrum as formulated by
+Mead et al. (2015, 2016) is particularly widely used in clus-
+tering observations to marginalize over the eﬀects of ba-
+ryons, either directly or through its implementation in
+the model of Joudaki et al. (2017) (e.g. Hildebrandt et al.
+2017, Copeland, Taylor & Hall 2018, van Uitert et al. 2018,
+Planck Collaboration et al. 2018, Yoon et al. 2019). Import-
+antly, this model was calibrated solely to power spectra
+presented in VD11. Therefore, if the modiﬁcations to the
+dark matter only power spectrum are suﬃciently diﬀerent
+from those considered by VD11, they may not be captured
+by this model – or not within the parameter range probed –
+which may impact the interpretation of the observed data.
+In this work, we take a step towards remedying some of
+these problems by presenting a large library of power spec-
+tra from OWLS, cosmo-OWLS (Le Brun et al. 2014) and
+bahamas (McCarthy et al. 2017), the latter containing –
+for the ﬁrst time – AGN feedback that was calibrated to ob-
+servations, with diﬀerent cosmologies and neutrino masses .
+All power spectra presented here will become publicly avail -
+able with the publication of this paper. While the underlyin g
+model in simulations with AGN is the same in each of the
+simulations presented here, many variations with diﬀerent
+feedback strengths and/or scalings are explored, includin g
+some that go beyond what is expected to be realistic in or-
+der to allow suﬃcient ﬂexibility for emulators and margin-
+alization schemes. Using these power spectra, we attempt
+to deepen our understanding of how feedback inﬂuences the
+clustering of matter, and how this depends on some of the
+choices made when running the simulations. Most import-
+antly, using these simulations we are able to present a model
+which is able to highly accurately predict the suppression o f
+power due to galaxy formation at z = 0 for k < 1 h Mpc− 1,
+as a function of only the baryon fraction at the galaxy group
+scale.
+The simulations and methods used to calculate the
+power spectra are described in §2, with Table 1 showing
+a list of all simulations with power spectra. In §3 we present
+a selection of these power spectra and investigate the eﬀect
+of e.g. feedback strength, neutrino mass, redshift, cosmol ogy
+and cosmic variance on the total matter and cold dark mat-
+ter power spectrum. We also compare to power spectra from
+simulations including AGN from the literature and consider
+the reasons for the quantitative diﬀerences in the eﬀects of
+galaxy formation on clustering found. At the end of §3, we
+present and discuss our model for the large-scale suppressi on
+of power based on the baryon fraction of groups. Finally, we
+summarize and discuss our ﬁndings in §4.
+2 SIMULATIONS AND POWER SPECTRA
+2.1 Simulation sets
+In this work we present power spectra for three related
+sets of cosmological, hydrodynamical simulations: OWLS
+(Schaye et al. 2010), cosmo-OWLS (Le Brun et al. 2014)
+and bahamas (McCarthy et al. 2017, 2018). Since many of
+the OWLS power spectra were already presented in VD11,
+we focus on the latter two sets here. For some of the simu-
+lations in this set, power spectra were independently calcu -
+lated and considered in Mummery et al. (2017).
+Cosmo-OWLS is an extension of OWLS that is aimed
+at studying the properties of groups and clusters, and to
+this end it includes simulations with larger boxes compared
+to OWLS (200 and 400 h− 1 Mpc on a side versus at most
+100 h− 1 Mpc for OWLS), as well as variations in the strength
+of AGN feedback for those simulations that include it. ba-
+hamas (BAryons and HAloes of MAssive Systems) is in turn
+a follow-up to cosmo-OWLS and even better suited for cos-
+mological tests, as it includes more accurate initial condi -
+tions (using the Boltzmann code camb in combination with
+a modiﬁed version of N-GenIC that uses 2LPT), massive
+neutrinos (following Ali-Ha ¨ ımoud & Bird 2013), AGN in all
+hydrodynamical simulations, and more recent cosmologies.
+In addition, bahamas is the ﬁrst of these sets to calibrate
+the subgrid parameters for feedback from supernovae and
+active galactic nuclei to the observed present-day galaxy
+stellar mass function (SMF) and the hot gas mass frac-
+tions of groups and clusters, placing them among the most
+realistic cosmological simulations yet. In particular, th e ba-
+hamas simulations provide an excellent match to the galaxy
+SMF for all M∗ > 1010 h− 1 M⊙ (see McCarthy et al. 2017).
+Relative to the standard OWLS and cosmo-OWLS AGN
+simulations, the subgrid physics prescriptions are unmodi -
+ﬁed, but the parameters are not. The subgrid parameters
+that were changed in bahamas were the supernova-driven
+galactic wind velocity (from 600 km s − 1 to 300 km s − 1), the
+number of particles heated by each AGN event (from 1
+to 20) and the AGN minimum heating temperature (from
+/greaterorequalslant108 K to 10 7.8 K). The weaker stellar feedback is ne-
+cessary to ﬁnd agreement with observations at low stellar
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 3 ---
+Linking the halo baryon fraction with P (k) 3
+masses, as both OWLS AGN and cosmo-OWLS formed too
+few galaxies below M∗ = 10 11 h− 1 M⊙ (Le Brun et al. 2014,
+McCarthy et al. 2017). Because of this change, the baryon
+fraction in stars goes up and the fraction in hot gas goes
+down, but the cold gas available for accretion by the super-
+massive black holes also increases. The lower minimum AGN
+heating temperature compensates for these shifts and bring s
+the X-ray gas fractions in massive haloes back in agreement
+with observations. As a consequence of these adjustments,
+the relative role of strong feedback in bahamas is somewhat
+smaller than it was in the previous models, and as we show
+in §3 this aﬀects the power spectrum as well.
+The most realistic simulation in the VD11 set of power
+spectra – that is, the simulation in simultaneous agreement
+with the most observables – is the WMAP7 OWLS AGN
+model with camb initial conditions, while the most realistic
+simulation in the current set is the bahamas simulation with
+the low but non-zero total neutrino mass of ∑ mν = 0. 06 eV
+and an up-to-date Planck 2015 cosmology. We will therefore
+often use one of these simulations as a baseline for compar-
+ison – though we stress again that no currently available
+simulation is expected to match the real Universe at the 1%
+level. We will preﬁx the name of each hydrodynamical sim-
+ulation with the set it belongs to; the former model we will
+dub OWLS AGN WMAP7 CAMB (named AGN WMAP7
+in VD11) and the latter BAHAMAS nu0.06 Planck2015. All
+bahamas simulations contain AGN, and therefore do not ex-
+plicitly contain “AGN” in their name. Dark matter only sim-
+ulations are given suﬃxes indicating box size and resolutio n,
+e.g. L100N512 for simulations with boxes 100 h− 1 Mpc on a
+side and 512 3 particles per type (ﬁducial values for OWLS),
+and L400N1024 for 400 h− 1 Mpc boxes with 1024 3 particles
+per type (ﬁducial values for cosmo-OWLS and bahamas).
+To keep the names of the hydrodynamical simulations relat-
+ively short, their box size and resolution are only included
+when they diﬀer from the ﬁducial values of the set. While the
+simulations from OWLS have an 8 × higher mass resolution,
+the bahamas simulations are calibrated to observations and
+probe 64 × larger volumes.
+For a few of the models power spectra are available
+for diﬀerent mass resolutions and/or box sizes. We investig -
+ate the eﬀects these have on the matter clustering in detail
+in Appendix A. The main conclusions are that the limited
+resolution of the simulations ( ∼ 109 h− 1 M⊙ and 4 h− 1 kpc
+at z = 0 for the 400 h− 1 Mpc boxes) mainly plays a role
+for k /greaterorsimilar10 h Mpc− 1, and that calibrating simulations to ob-
+servables at a ﬁxed resolution is of greater importance than
+increasing said resolution.
+A list of all simulations that we provide power
+spectra for can be found in Table 1. The cosmolo-
+gical parameters corresponding to the diﬀerent cosmo-
+logies of these simulations are listed in Table 2. The
+cosmologies probed here are based on the WMAP3
+(Spergel et al. 2007), WMAP5 (Komatsu et al. 2009),
+WMAP7 (Komatsu et al. 2011), WMAP9 (Hinshaw et al.
+2013), Planck 2013 (Planck Collaboration et al. 2014) and
+Planck 2015 (Planck Collaboration et al. 2016) data, with
+an additional cosmology (“BAO”) taking cosmological para-
+meter values roughly in between those of WMAP and
+Planck. Note that the Planck 2015 cosmological paramet-
+ers depend on the neutrino mass in such a way as to pre-
+serve the ﬁt to CMB data, while for WMAP9 the density of
+CDM, Ω c, was reduced with increasing neutrino mass so as
+to preserve the total matter density Ω m; see McCarthy et al.
+(2018) for more information. Models for which power spectra
+were included in the VD11 release are marked with an aster-
+isk. Below, we brieﬂy expand on a few of the new physical
+models.
+2.1.1 Models with AGN
+As in the OWLS AGN model, cosmo-OWLS and bahamas
+use the Springel, Di Matteo & Hernquist (2005) prescrip-
+tion for black hole seeding, and the Booth & Schaye (2009)
+prescriptions for black hole merging, accretion and AGN
+feedback. This model has several free parameters, although
+its authors have shown the model to be insensitive to some
+of these due to self-regulation. The most important para-
+meter for the eﬀect of feedback on large scales is the min-
+imum heating temperature for AGN feedback, ∆ Theat (see
+Le Brun et al. 2014, Pike et al. 2014). 5 Black holes in this
+model store a fraction of the energy gained from accretion
+until they are able to heat a ﬁxed number of particles ( nheat)
+by ∆ Theat, to ensure that the heated gas does not cool in
+an artiﬁcially short time for numerical reasons and that the
+time between feedback events is shorter than the Salpeter
+time for Eddington-limited accretion. The ﬁducial value of
+this parameter is 10 8 K in OWLS and cosmo-OWLS and
+107.8 K in bahamas. For some simulations in the current
+set, a diﬀerent value than the ﬁducial one is adopted; in this
+case the simulation name includes a suﬃx “TheatX.Y” for
+∆ Theat = 10 X.Y K.
+Besides the minimum heating temperature several other
+parameters concerning the AGN can be varied. By default,
+seed black holes are placed in any halo with at least 100 dark
+matter particles in its Friends-of-Friends group, which makes
+the black hole seeding resolution-dependent. To investiga te
+the eﬀect of this, several simulations were re-run with a bla ck
+hole seeding criterion of 800 dark matter particles, thus ha v-
+ing the same halo mass threshold as a simulation with 8 ×
+worse mass resolution. The names of these simulations in-
+clude the suﬃx “Mseed800”.
+In the ﬁducial AGN model the accretion eﬃciency scales
+as a power law of the density in the high-density regime.
+The power law slope is β = 2 by default. In some models, a
+shallower slope of β = 1 is explored. Such simulations have
+the suﬃx “LOBETA” in their name.
+Finally, note that all bahamas simulations adopt stellar
+and AGN feedback parameters calibrated to observations. In
+bahamas simulations that include the suﬃx “Theat” only
+the AGN heating parameter adopts a non-calibrated value.
+The calibrated values are based on the L400N1024 simula-
+tions, but to test for strong convergence a L100N512 simula-
+tion with the same parameters was also run, and power spec-
+tra for it are presented here. Care was taken that the physical
+parameters were kept ﬁxed with the change in box size and
+resolution, for example by keeping the minimum halo mass
+5 W e note here that the parameters that the large-scale gas pro p-
+erties are most sensitive to may be diﬀerent for simulations using
+a hydro solver diﬀerent from SPH. See e.g. Dubois et al. (2012 ),
+Hahn et al. (2017).
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 4 ---
+4 M. P. van Daalen, I. G. McCarthy and J. Schaye
+T able 1. A list of the simulations that we provide total matter power s pectra for, along with their dark matter counterparts. All
+simulations have z = 0 power spectra, and most have power spectra that cover z ⩽ 3. A brief explanation of models that were not
+considered in VD11 can be found in §2.1. For more details on the diﬀerent models we refer to the pa pers which introduced them:
+Schaye et al. (2010) for OWLS, Le Brun et al. (2014) for cosmo- OWLS and McCarthy et al. (2017) for bahamas. The total mass in
+diﬀerent neutrino species, Mν = ∑ mν , is listed where applicable. Simulations with power spectr a that were made publicly available by
+VD11 are marked with a star. Simulation names start with the s et they belong to (“C-OWLS” referring to cosmo-OWLS). The ﬁd ucial
+box size and particle number identiﬁer for cosmo-OWLS and bahamas is L400N1024, that for OWLS is L100N512.
+Simulation Cosmology Mν [eV] DMO counterpart Comments
+BAHAMAS nu0.06 Planck2015 Planck ’15 0.06 DMONL Y 2ﬂuid nu0.06 Planck2015 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.06 WMAP9 WMAP9 0.06 DMONL Y 2ﬂuid nu0.06 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.12 Planck2015 Planck ’15 0.12 DMONL Y 2ﬂuid nu0.12 Planck2015 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.12 WMAP9 WMAP9 0.12 DMONL Y 2ﬂuid nu0.12 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.24 Planck2015 Planck ’15 0.24 DMONL Y 2ﬂuid nu0.24 Planck2015 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.24 WMAP9 WMAP9 0.24 DMONL Y 2ﬂuid nu0.24 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.48 Planck2015 Planck ’15 0.48 DMONL Y 2ﬂuid nu0.48 Planck2015 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0.48 WMAP9 WMAP9 0.48 DMONL Y 2ﬂuid nu0.48 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0 BAO L200N512 BAO 0 DMONL Y nu0 BAO L200N512 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0 Planck2013 Planck ’13 0 DMONL Y 2ﬂuid nu0 Planck2013 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0 WMAP9 WMAP9 0 DMONL Y 2ﬂuid nu0 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0 WMAP9 L100N512 WMAP9 0 DMONL Y 2ﬂuid nu0 WMAP9 L100N512 Using the L400N1024 calib. params.
+BAHAMAS nu0 WMAP9 v2 WMAP9 0 DMONL Y 2ﬂuid nu0 v2 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS nu0 WMAP9 v3 WMAP9 0 DMONL Y 2ﬂuid nu0 v3 WMAP9 L400N1024 AGN/SN feedback calibrated to obs.
+BAHAMAS Theat7.6 nu0 WMAP9 WMAP9 0 DMONL Y 2ﬂuid nu0 WMAP9 L400N1024 As calibr., but lower AGN heating
+BAHAMAS Theat8.0 nu0 WMAP9 WMAP9 0 DMONL Y 2ﬂuid nu0 WMAP9 L400N1024 As calibr., but higher AGN heating
+C-OWLS AGN Mseed800 Theat8.5 WMAP7 L100N512 WMAP7 - DMONL Y WMAP7 L100N512 BHs seeded for /greaterorequalslant800 DM particles
+C-OWLS AGN Mseed800 Theat8.7 WMAP7 L100N512 WMAP7 - DMONL Y WMAP7 L100N512 BHs seeded for /greaterorequalslant800 DM particles
+C-OWLS AGN Mseed800 WMAP7 L100N512 WMAP7 - DMONL Y WMAP7 L100N512 BHs seeded for /greaterorequalslant800 DM particles
+C-OWLS AGN Planck2013 Planck ’13 - DMONL Y Planck2013 L400N1024 -
+C-OWLS AGN Theat8.3 WMAP7 WMAP7 - DMONL Y WMAP7 L400N1024 -
+C-OWLS AGN Theat8.5 Planck2013 Planck ’13 - DMONL Y Planck2013 L400N1024 -
+C-OWLS AGN Theat8.5 WMAP7 WMAP7 - DMONL Y WMAP7 L400N1024 -
+C-OWLS AGN Theat8.5 WMAP7 L100N256 WMAP7 - DMONL Y WMAP7 L100N256 -
+C-OWLS AGN Theat8.5 WMAP7 L100N512 WMAP7 - DMONL Y WMAP7 L100N512 -
+C-OWLS AGN Theat8.7 Planck2013 Planck ’13 - DMONL Y Planck2013 L400N1024 -
+C-OWLS AGN Theat8.7 WMAP7 WMAP7 - DMONL Y WMAP7 L400N1024 -
+C-OWLS AGN WMAP7 WMAP7 - DMONL Y WMAP7 L400N1024 -
+C-OWLS AGN WMAP7 L200N1024 WMAP7 - DMONL Y WMAP7 L200N1024 -
+C-OWLS AGN WMAP7 L200N512 WMAP7 - DMONL Y WMAP7 L200N512 -
+C-OWLS NOCOOL UVB Planck2013 Planck ’13 - DMONL Y Planck2013 L400N1024 No AGN feedback
+C-OWLS NOCOOL UVB WMAP7 WMAP7 - DMONL Y WMAP7 L400N1024 No AGN feedback
+C-OWLS NOCOOL UVB WMAP7 L100N256 WMAP7 - DMONL Y WMAP7 L100N256 No AGN feedback
+C-OWLS NOCOOL UVB WMAP7 L100N512 WMAP7 - DMONL Y WMAP7 L100N512 No AGN feedback
+C-OWLS NOCOOL UVB WMAP7 L200N512 WMAP7 - DMONL Y WMAP7 L200N512 No AGN feedback
+C-OWLS REF Planck2013 Planck ’13 - DMONL Y Planck2013 L400N1024 No AGN feedback
+C-OWLS REF WMAP7 WMAP7 - DMONL Y WMAP7 L400N1024 No AGN feedback
+C-OWLS REF WMAP7 L200N1024 WMAP7 - DMONL Y WMAP7 L200N1024 No AGN feedback
+C-OWLS REF WMAP7 L200N512 WMAP7 - DMONL Y WMAP7 L200N512 No AGN feedback
+OWLS AGN∗ WMAP3 - DMONL Y L100N512∗ -
+OWLS AGN LOBETA WMAP3 - DMONL Y L100N512∗ Alternative AGN model
+OWLS AGN LOBETA NOSN WMAP3 - DMONL Y L100N512∗ No SN feedback, alt. AGN model
+OWLS AGN LOBETA Theat7.0 WMAP3 - DMONL Y L100N512∗ Alternative AGN model
+OWLS AGN WMAP7 WMAP7 - DMONL Y WMAP7 L100N512 -
+OWLS AGN WMAP7 CAMB∗ WMAP7 - DMONL Y WMAP7 CAMB L100N512∗ Uses CAMB initial power spectrum
+OWLS AGN WMAP7 L100N256 WMAP7 - DMONL Y WMAP7 L100N256 -
+OWLS DBLIMFCONTSFML14 WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS DBLIMFCONTSFV1618 WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS DBLIMFV1618∗ WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS EOS1p0 WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS IMFSALP WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS NOAGB L100N256 WMAP3 - DMONL Y L100N256 No AGN feedback
+OWLS NOAGB NOSNIa WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS NONRAD WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS NOSN∗ WMAP3 - DMONL Y L100N512∗ No AGN or SN feedback
+OWLS NOSN NOZCOOL∗ WMAP3 - DMONL Y L100N512∗ No AGN or SN feedback
+OWLS NOZCOOL∗ WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS REF∗ WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS REF L100N256 WMAP3 - DMONL Y L100N256 No AGN feedback
+OWLS REF WMAP7 WMAP7 - DMONL Y WMAP7 L100N512 No AGN feedback
+OWLS REF WMAP7 L100N256 WMAP7 - DMONL Y WMAP7 L100N256 No AGN feedback
+OWLS SNIaGAUSS WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS WDENS∗ WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS WML1V848∗ WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS WML4∗ WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS WPOTNOKICK WMAP3 - DMONL Y L100N512∗ No AGN feedback
+OWLS WTHERMAL WMAP5 WMAP5 - DMONL Y WMAP5 L100N512 No AGN feedback
+OWLS WVCIRC WMAP3 - DMONL Y L100N512∗ No AGN feedback
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 5 ---
+Linking the halo baryon fraction with P (k) 5
+T able 2. The cosmological parameters of the simulations in Table 1. T he “BAO” parameters are chosen to be roughly in between those
+of WMAP9 and Planck. Numbers in parentheses are total neutri no masses in eV.
+Cosmology Ω m Ω Λ Ω b Ω ν σ 8 ns h
+WMAP3 0.238 0.762 0.0418 0 0.74 0.951 0.73
+WMAP5 0.258 0.742 0.0441 0 0.796 0.963 0.719
+WMAP7 0.272 0.728 0.0455 0 0.81 0.967 0.704
+WMAP9 (0) 0.2793 0.7207 0.0463 0 0.8211 0.972 0.700
+WMAP9 (0 . 06) 0.2793 0.7207 0.0463 0.0013 0.8069 0.972 0.700
+WMAP9 (0 . 12) 0.2793 0.7207 0.0463 0.0026 0.7924 0.972 0.700
+WMAP9 (0 . 24) 0.2793 0.7207 0.0463 0.0053 0.7600 0.972 0.700
+WMAP9 (0 . 48) 0.2793 0.7207 0.0463 0.0105 0.7001 0.972 0.700
+BAO 0.3 0.7 0.05 0 0.8 0.96 0.7
+Planck 2013 (0) 0.3175 0.6825 0.049 0 0.8341 0.9624 0.6711
+Planck 2015 (0 . 06) 0.3067 0.6933 0.0482 0.0014 0.8085 0.9701 0.6787
+Planck 2015 (0 . 12) 0.3091 0.6909 0.0488 0.0028 0.7943 0.9693 0.6768
+Planck 2015 (0 . 24) 0.3129 0.6871 0.0496 0.0057 0.7664 0.9733 0.6723
+Planck 2015 (0 . 48) 0.3197 0.6803 0.0513 0.0117 0.7030 0.9811 0.6643
+rather than the number of DM particles for black hole seed-
+ing ﬁxed – we refer to Appendix C of McCarthy et al. (2017)
+for more information.
+2.1.2 Models with physical processes turned oﬀ
+Many OWLS and cosmo-OWLS simulations in the current
+set do not include AGN (indicated by the lack of “AGN”
+in their name), but in some the eﬀect of switching oﬀ
+(additional) subgrid physics was tested. Examples include
+“NOSN” (no SN feedback) and “NOZCOOL” (no metal-line
+cooling), both of which featured in VD11. New in the cur-
+rent set are “NOAGB”, in which mass loss from Asymptotic
+Giant Branch stars is turned oﬀ; “NOSNIa”, in which there
+is no mass loss from type Ia supernovae; “NONRAD”, a
+non-radiative simulation which includes no radiative cool ing
+or heating at all (and hence no star formation etc. either);
+and “NOCOOL UVB”, which also does not include radi-
+ative cooling, although net photoheating is allowed. While
+such simulations are not seen as realistic, they can still oﬀ er
+interesting extremes for modelling the eﬀects of baryons on
+the clustering of matter. Simulations without SNe but with
+AGN are particularly interesting to examine the interplay
+between the two types of feedback, which we consider in
+§3.6.
+2.1.3 Models with non-standard star formation or stellar
+winds
+In VD11 power spectra were presented for several OWLS
+models with subgrid prescriptions for star formation or ste l-
+lar winds that diﬀered from those used in the reference sim-
+ulations. In the current set several more are included, whic h
+we will brieﬂy explain in alphabetical order here. We do not
+focus on the eﬀects of these models in this work, but they
+are still useful to gauge the impact of theoretical uncertai n-
+ties on the matter power spectrum. For all of these models
+more information can be found in Schaye et al. (2010).
+Models named “DBLIMF” use a top-heavy stellar ini-
+tial mass function (IMF) in high-pressure environments.
+This increases the number of SNe per unit stellar mass,
+and this additional available energy can be applied in
+subgrid models in various ways. One such simulation,
+“DBLIMFV1618”, was included in the VD11 release; in
+it, the additional energy was used to increase the wind
+speed from 600 to 1618 km s − 1, which had a similar eﬀect
+on the matter clustering as including AGN. An underly-
+ing assumption of this model is that the rate of formation
+of massive stars is continuous with the gas pressure as the
+IMF changes suddenly. Here we include two more variations
+on “DBLIMF”, for both of which a continuous star form-
+ation law is assumed instead (“CONTSF”). One of these
+still puts the additional energy from a top-heavy IMF into
+a faster supernova-driven wind (“V1618”), but the other in-
+stead puts the additional energy into increasing the wind’s
+mass loading (“ML14”). While we do not show so here, as-
+suming a continuous star formation law somewhat dimin-
+ishes the eﬀect that the SNe have on the power spectrum
+(though there is still an up to 10% decrease in power for
+k < 10 h Mpc− 1 compared to dark matter only), and in-
+creasing the mass loading instead of the wind speed barely
+changes the matter clustering at z = 0 compared to the
+ﬁducial model (“REF”).
+To model the interstellar medium a polytropic equation
+of state with slope γeﬀ = 4 / 3 is imposed; in “EOS1p0”,
+this slope is instead 1. While this somewhat diminishes star
+formation at high redshift, the eﬀect on matter clustering a t
+z = 0 is negligible.
+The ﬁducial stellar initial mass function is that of
+Chabrier (2003), but “IMFSALP” uses the Salpeter (1955)
+IMF instead. This causes the amount of metals and thereby
+the amount of star formation to decrease, and SNe are less
+frequent. As a consequence, matter clusters ∼ 1% stronger
+for 1 ⩽ k ⩽ 10 h Mpc− 1 compared to the ﬁducial model.
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 6 ---
+6 M. P. van Daalen, I. G. McCarthy and J. Schaye
+The time between the formation of its progenitor and
+a type Ia supernova depends on binary evolution, and the
+distribution of delay times has some uncertainty. The ﬁdu-
+cial model assumes an exponential decline with time, but in
+“SNIaGAUSS” a Gaussian distribution is assumed instead
+(see Wiersma et al. 2009). The diﬀerence in clustering com-
+pared to the ﬁducial model is quite small (roughly half that
+of assuming a Salpeter IMF).
+Finally, we include three more models in which the
+implementation of SN-driven winds is varied, in addi-
+tion to those included in VD11 (which were “WDENS”,
+“WML1V848” and “WML4”). “WPOTNOKICK” and
+“WVCIRC” are both approximations of momentum-driven
+winds, i.e. galactic outﬂows driven not primarily by SN ex-
+plosions but by radiation pressure. “WPOTNOKICK” is
+based on the Oppenheimer & Dav´ e (2006) model (though
+without hydrodynamical decoupling) and assumes wind ve-
+locities vw = 3σ with mass loading η = 150 km s− 1/σ , where
+σ is the galaxy velocity dispersion as estimated from the
+local potential. “WVCIRC” is the same, except that the
+velocity dispersion is estimated by ﬁrst running an on-the-
+ﬂy halo ﬁnder and then calculating the circular velocity,
+vc, from the resulting halo mass and virial radius, setting
+σ =
+√
+2vc. Both models diminish the amount of clustering on
+scales k ≲ 40 h Mpc− 1 by up to 30%, with a magnitude and
+scale-dependence that is highly similar to that of the OWLS
+AGN model. We note however that in these kind of imple-
+mentations of momentum-driven winds the total amount of
+energy is not limited, and may exceed that available from
+radiation. Lastly, in “WTHERMAL” the ﬁducial kinetic SN
+feedback model is replaced by the energy-driven (thermal)
+model of Dalla Vecchia & Schaye (2012), which, like the ﬁ-
+ducial model, injects only 40% of the available SN energy to
+drive winds. The thermal feedback model is more eﬀective at
+driving winds and the simulation is less sensitive to its par a-
+meters compared to the kinetic SN feedback model. Its eﬀect
+on the power spectrum is also larger, on average only a factor
+of two below that of AGN feedback for k < 10 h Mpc− 1, in
+terms of the suppression relative to dark matter only.
+2.2 Modiﬁed dark matter only simulations
+OWLS and cosmo-OWLS use the common approximation
+of initializing the particles using the total matter transf er
+function, while for the bahamas simulations the dark matter
+and baryons are initialized instead with their own respect-
+ive transfer functions. As Valkenburg & Villaescusa-Navar ro
+(2017) have shown, this can create percent-level diﬀerence s
+on all scales of the matter power spectrum at redshift zero.
+A consequence of the change in initialization between ba-
+hamas and its predecessors is that it introduces a 1 − 2%
+oﬀset in clustering between a hydrodynamical bahamas sim-
+ulation and its dark matter only counterpart, which is espe-
+cially noticeable on large scales. As our goal is to probe
+the eﬀect of galaxy formation, rather than initial condi-
+tions, we have run a second set of dark matter only simu-
+lations which, like the hydrodynamical simulations, conta in
+2 × 10243 particles with mass ratios Ω b : Ω c. While both
+particle species act like dark matter, the lighter (baryon-
+mass) particle species is initialized with the baryon trans fer
+function instead of the cold dark matter one, the end result
+of which is a 1 − 2% stronger clustering on all scales. We
+ﬁnd that the large-scale power in these simulations agree
+with their hydrodynamical counterparts to < 0. 1%. Simula-
+tions run in this way are dubbed “DMONLY 2ﬂuid”.
+Even though the total matter transfer function is used
+in both dark matter only and hydrodynamical simulations
+in OWLS and cosmo-OWLS, for some of them we still ob-
+serve 0 . 1 − 0. 2% oﬀsets on large scales between the two.
+This is due to several related eﬀects, all consequences of
+how the initial conditions were set up: having twice as many
+particles in one versus the other leading to numerical dif-
+ferences in their evolution; not including a phase shift whe n
+splitting the initial particles in oﬀset dark matter and ba-
+ryon particles which creates artiﬁcial power; and spurious
+clumping between dark matter and baryon particles when
+the force softening is smaller than the interparticle spa-
+cing, as it is here, even with staggered initial conditions
+(see e.g. O’Leary & McQuinn 2012, Angulo, Hahn & Abel
+2013, Valkenburg & Villaescusa-Navarro 2017). These issue s
+do not arise in the comparison of the bahamas 2-ﬂuid simu-
+lations and their hydrodynamical counterparts, as there th e
+ﬁrst of these eﬀects is absent while the others are present in
+equal measure in both runs.
+We further explore the diﬀerences between the 1-ﬂuid
+and 2-ﬂuid simulations in Appendix B. As we conclude
+there, replacing the DMONLY counterparts of the (cosmo-)
+OWLS simulations with 2-ﬂuid runs that, unlike those for
+bahamas, use the same (total) transfer function for both
+components, would remove the ∼ 0. 1% large-scale oﬀsets
+currently present for some of these simulations. However,
+since the eﬀect is small and re-running many simulations
+would be computationally expensive, we have chosen not to
+do so. For the results of §3.9, we instead correct the power
+spectra of cosmo-OWLS DMONLY simulations by multiply-
+ing with a constant so as to bring them into < 0. 1% agree-
+ment with their hydrodynamical counterparts on the largest
+scales measured, motivated by the results of Appendix B.
+2.3 Power spectra
+Like VD11, we have used a modiﬁed version of powmes
+(Colombi et al. 2009) to calculate highly accurate power
+spectra for each of the simulations in our sample from
+their particle data, down to k ≈ 500 h Mpc− 1. We refer
+to these publications for more information on the method
+and its accuracy. We have used the same method to cal-
+culate power spectra for EAGLE, which we compare to in
+§3.8. For the bahamas simulations with massive neutrinos
+an additional step is needed, as the neutrinos themselves
+are not included as particles but using the method out-
+lined in Ali-Ha ¨ ımoud & Bird (2013). A useful by-product
+of this method is the neutrino-only power spectrum, which
+is included with every simulation output. Since the neut-
+rino overdensities can be assumed to be in phase with those
+of the remaining (non-relativistic) matter in the simulati on
+(see Ali-Ha ¨ ımoud & Bird 2013), we can write:
+ˆδν(k) =
+( Pν (k)
+Pm(k)
+) 1/2
+ˆδm(k), (1)
+where ˆδ(k) is the Fourier transform of the density contrast
+δ(x), P (k) =
+⟨
+|ˆδ(k)|2
+⟩
+k
+is the power on Fourier scale k and
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 7 ---
+Linking the halo baryon fraction with P (k) 7
+Figure 1. All matter power spectra provided with the current
+paper are shown in green. The power spectra released by VD11,
+which are also part of this set, are shown in red. The current
+set expands on the 2011 release with more cosmologies, non-z ero
+neutrino masses and diﬀerent strengths of AGN feedback. The
+bottom x-axis shows the comoving Fourier scale k while the top
+axis shows the corresponding comoving physical scale λ = 2π/k .
+the subscripts ν and m denote the neutrinos and the remain-
+ing matter, respectively. Denoting the fraction of matter i n
+neutrinos as fν = Ω ν / Ω m, we can write the density contrast
+ﬁeld of all matter in Fourier space as:
+ˆδtot(k) = (1 − fν)ˆδm(k) + fν ˆδν (k)
+=
+[
+(1 − fν ) + fν
+( Pν(k)
+Pm(k)
+) 1/2
+]
+ˆδm(k). (2)
+For the bahamas simulations with massive neutrinos we can
+therefore combine the neutrino-only and particle power spe c-
+tra to ﬁnd a total matter power spectrum through:
+Ptot(k) =
+[
+(1 − fν ) + fν
+( Pν (k)
+Pm(k)
+) 1/2] 2
+Pm(k). (3)
+All power spectra are normalized to the total matter density
+in the simulated volume and shot-noise subtracted.
+When showing a ratio of power spectra, we re-bin our
+power spectra in bins of minimum size 0 . 05 dex in k to reduce
+visual noise.
+3 A COMP ARISON OF POWER SPECTRA
+In this section we use power spectra from the current set
+to investigate the range of relative eﬀects on the total and
+CDM power spectra that can be brought about with AGN
+feedback, which changes in the models have the largest im-
+pact on the clustering of matter, and how these impacts
+change with cosmology and redshift. We also compare to
+power spectra in the literature, starting with the power spe c-
+tra released by VD11.
+3.1 Comparison to VD11
+In Figure 1 we show all power spectra in the current set,
+highlighting those previously released by VD11. The ver-
+tical range spanned on large scales is mostly an indication
+of the range in cosmology probed, while that on the smal-
+lest scales indicates the range in galaxy formation models.
+The simulations in the current set allow us to probe larger
+scales and provide both a denser and broader sampling of
+parameter space.
+Since AGN feedback has previously been shown to have
+the largest impact on the matter power spectrum out of all
+investigated aspects of galaxy formation, we show the diﬀer -
+ence in the power spectrum relative to the dark matter only
+prediction for all simulations that include AGN feedback in
+Figure 2. Once again the AGN simulations from VD11 are
+highlighted. This ﬁgure shows the wide range in AGN feed-
+back impacts on the matter power spectrum tested by the
+current set, including both models with more extreme and
+milder eﬀects than the AGN simulations of VD11. As previ-
+ous authors have shown, the relative eﬀect of galaxy form-
+ation is only weakly dependent on cosmology or neutrino
+mass (e.g. VD11, Mead et al. 2016, Mummery et al. 2017),
+and the range in eﬀects seen here is therefore mainly due
+to changes in the strength of AGN (or – as we show in §3.6
+– stellar) feedback. In some cases, the AGN feedback is so
+strong as to even aﬀect the power spectrum on the largest
+scales probed, but in most cases the oﬀsets of 0 . 1 − 0. 2%
+on the largest scales (visible in the logarithmic right-han d
+panel) have numerical origins (see §2.2).
+We note here that the power spectrum is changed by
+feedback rearranging matter – primarily gas –around galax-
+ies, in some cases out to beyond the virial radius. While the
+positions of galaxies and haloes may change as well when
+baryons are added or feedback is varied, van Daalen et al.
+(2014) have shown that this does not drive the shifts in the
+power spectrum. Furthermore, note that the power spec-
+trum changes on scales larger than the maximum scale over
+which matter is displaced in real space. In the language of
+the halo model, feedback changes the large-scale power by
+decreasing the 2-halo term in a mass-dependent way.
+We compare the most realistic simulation from VD11
+(a WMAP7 OWLS AGN simulation, in grey) to that of
+the current set (a Planck 2015 bahamas simulation, in
+red) in Figure 3. Overall, the feedback in the newer sim-
+ulation is weaker, though it extends to larger scales and
+still reduces the power by > 10% for k < 10 h Mpc− 1.6 The
+transition from suppressed to enhanced clustering, relati ve
+to dark matter only, has shifted from k ≈ 70 h Mpc− 1 to
+k ≈ 20 h Mpc− 1. We will refer to this as the cross-over scale.
+As discussed in McCarthy et al. (2017), the feedback
+in the bahamas simulations was calibrated to the galaxy
+stellar mass function and the gas fractions in groups and
+clusters. Relative to the (cosmo)OWLS AGN model, the SN
+feedback wind velocity is lower in bahamas, reducing its
+6 W e note here that the diﬀerences between the two simulations
+on the largest scales, k ≲ 0. 5 h Mpc− 1, can be largely attributed
+to the eﬀects described in Appendix B. Using a 2-ﬂuid DMONLY
+run – which mimics the initial conditions of the AGN simulati on
+more closely – to compute the relative OWLS power spectrum
+brings the two results into much closer agreement.
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 8 ---
+8 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 2. The eﬀect of galaxy formation including AGN feedback on the m atter power spectrum. The y-axis shows the change in power
+relative to a simulation with only dark matter, but otherwis e identical initial conditions, linear on the left and logar ithmic on the right.
+Each line shows a simulation with a diﬀerent feedback streng th, cosmology, and/or neutrino mass. The power spectra from the two AGN
+simulations included in VD11 are highlighted in red (both ha ve identical physics but a slightly diﬀerent cosmology). Th e relative eﬀect
+of galaxy formation is only weakly dependent on cosmology or neutrino mass, and the range in eﬀects seen here is therefore mainly due
+to changes in the strength of AGN (or stellar) feedback. All s ubsequent ﬁgures will use a logarithmic axis, as we are inter ested in small
+changes to the power.
+eﬀectiveness and allowing more low-mass galaxies to form.
+Since this means less gas is ejected than before, and there-
+fore more is available to the supermassive black holes, the
+heating temperature of AGN feedback is slightly lowered in
+order to bring the hot gas fractions back in agreement with
+observations. This may explain the reduction in the peak of
+the eﬀect of AGN feedback seen in Figure 3.
+AGN feedback – at least as implemented in these
+simulations – is not independent of resolution. This is
+in part because only haloes resolved with at least 100
+dark matter particles are seeded with a black hole, but
+more importantly, because of the expected lack of con-
+vergence when subgrid prescriptions and parameters are
+held ﬁxed as the physically resolved scales change (see e.g.
+Bourne, Zubovas & Nayakshin 2015, McCarthy et al. 2017).
+We explore the eﬀects of resolution in Appendix A. One
+of our ﬁndings is that lowering the mass resolution causes
+the large-scale decrease in power due to feedback to di-
+minish, as is also seen in Figure 3. In addition, the cross-
+over scale is sensitive to resolution. However, as shown in
+McCarthy et al. (2017), the bahamas simulations are in
+much better agreement with observables than the OWLS
+AGN model, including the galaxy stellar mass function, the
+stellar-to-halo mass relation and the hot gas fraction as a
+function of halo mass for groups and clusters. Despite its
+lower resolution – due to its larger box size – the eﬀects of
+galaxy formation as seen in the simulation shown in red in
+Figure 3 should therefore be viewed as the most realistic, at
+least up to k ≈ 10 h Mpc− 1.
+Considering the large changes in e.g. the galaxy SMF
+in bahamas versus that in (cosmo)OWLS, it is perhaps sur-
+prising that the relative eﬀect on the matter power spectrum
+is similar on large scales. As shown by van Daalen & Schaye
+(2015), the dominant contribution to the power spectrum
+on scales k ≲ 20 h Mpc− 1 comes from groups and clusters
+(M /greaterorsimilar1013.5 h− 1 M⊙), which provide almost all the signal
+on scales k ≈ 1 h Mpc− 1 – and the properties of groups and
+clusters are well reproduced by the AGN feedback in both
+OWLS and bahamas (by construction in the latter). This
+also explains why the diﬀerences between the two simula-
+tions shown in Figure 3 are smallest around k ≈ 1 h Mpc− 1.
+We come back to this point in §3.8.
+Finally, we consider the power spectra of the diﬀer-
+ent mass components from the most realistic simulations
+in VD11 and the current set in Figure 4: cold dark matter
+(blue), gas (yellow), stars (red), and for the latter simula -
+tion, neutrinos (purple). The OWLS AGN components are
+shown as dashed lines, the bahamas components as solid.
+All components are normalized to the total mass in the simu-
+lated volume, and the total power is shown in black. To allow
+for easier comparison we show the dimensionless power for
+each, ∆ 2(k) ≡ k3P (k)/ (2π 2), with the VD11 power spec-
+tra renormalized to the Planck 2015 cosmology through a
+factor D(P15)2/D (W7)2, where D(X) is the linear growth
+factor for cosmology X. Signiﬁcant diﬀerences between the
+power spectra for the two simulations remain in spite of this
+renormalization, which are partly due to variations in gala xy
+formation, and partly due to diﬀerences in resolution (and
+on the very largest scales, box size).
+The clustering in all components in bahamas is stronger
+on almost all scales, with the exception of the gas for
+k ≲ 8 h Mpc− 1. The diﬀerences are especially large on small
+scales, k /greaterorsimilar20 h Mpc− 1 – but these, unlike the changes seen
+for k < 10 h Mpc− 1, are almost entirely driven by the diﬀer-
+ence in resolution. Furthermore, the larger box size contri b-
+utes to a slightly increased clustering in all components du e
+to the presence of more massive objects. The eﬀects of the
+diﬀerences in galaxy formation are to decrease the clusteri ng
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 9 ---
+Linking the halo baryon fraction with P (k) 9
+Figure 3. A comparison of the relative eﬀect of galaxy forma-
+tion between the most realistic simulation included in the V D11
+power spectra (grey, OWLS) and the most realistic simulatio n
+in the current set (red, bahamas). In the new model, the feed-
+back lowers the power less overall, although the eﬀect exten ds to
+slightly larger scales. While the latter can be attributed t o the
+larger box size, the former is a combined result of changes in
+the feedback prescription and a lower resolution (see main t ext).
+However, the new model is in much better agreement with ob-
+servables, including the galaxy stellar mass function, the stellar-
+to-halo mass relation and the hot gas fraction as a function o f
+halo mass for groups and clusters.
+Figure 4. A comparison of the power spectra of the diﬀerent com-
+ponents for the most realistic simulation included in the VD 11
+power spectra (dashed lines) and the most realistic simulat ion
+in the current set (solid lines, bahamas). The power spectra of
+OWLS AGN have been renormalized to the Planck 2015 cosmo-
+logy through the square of the linear growth factor. Despite this,
+the bahamas simulations generally show stronger clustering in
+all components except the gas on scales k ≲ 10 h Mpc− 1. The
+primary reason for this is the weaker feedback in bahamas com-
+pared to OWLS, allowing more low-mass galaxies to form. On
+smaller scales, the diﬀerences seen here are driven by the ch ange
+in resolution.
+of gas on scales k ≲ 10 h Mpc− 1, and to increase the cluster-
+ing of stars. This is expected, as the weaker SN feedback in
+bahamas, relative to (cosmo)OWLS, allows more gas to cool
+and form stars. At ﬁxed box size and resolution, the main ef-
+fects of increasing the strength of AGN feedback are to sup-
+press the clustering of gas on scales 0 . 5 ≲ k ≲ 10 h Mpc− 1,
+and to slightly decrease the clustering of stars on all scale s
+(not shown here).
+3.2 Variations in AGN feedback
+By comparing power spectra of cosmo-OWLS simulations
+that use diﬀerent AGN heating temperatures but are oth-
+erwise identical, we can examine how the strength of AGN
+feedback impacts the total matter power spectrum. We do so
+in Figure 5, where the AGN heating temperature increases
+from blue (ﬁducial) to red. In the left-hand panel, we con-
+sider the eﬀects relative to the dark matter only counterpar t,
+while in the right-hand panel we compare the simulations to
+the one with the lowest (the ﬁducial) heating temperature of
+108 K. Increasing the temperature increases the duty cycle
+of the AGN, as it takes longer for the black holes to reach
+the threshold energy for feedback, but the individual event s
+are more powerful. The latter eﬀect dominates, making the
+impact of galaxy formation larger when the heating tem-
+perature goes up and more gas is being blown out of the
+galaxies.
+Looking at the left-hand panel of Figure 5, we see that
+the matter power spectrum is indeed more suppressed as
+the heating temperature increases. The diﬀerences caused
+by increasing the heating temperature can be better appre-
+ciated when looking at the changes relative to the ﬁducial
+simulations, as in the right-hand panel of Figure 5. Here we
+see that increasing the heating temperature has the largest
+relative impact for k /greaterorsimilar1 h Mpc− 1, increasing the small-scale
+suppression by an amount nearly independent of scale. Lar-
+ger heating temperatures suppress the power out to larger
+scales.
+The ﬁducial bahamas simulations, which have a heating
+temperature of 10 7.8 K but also a larger reservoir of cold gas
+available for accretion, agree very well with the results fo r
+108 K (blue) on scales k > 1 h Mpc− 1, but are closer to those
+for 10 8.3 K (cyan) for 0 . 1 < k < 1 h Mpc− 1.
+3.3 Variations in cosmology
+VD11 showed that the eﬀect of galaxy formation was al-
+most completely independent of (reasonably small) changes
+in cosmology by comparing the results a WMAP3 and a
+WMAP7 AGN simulation. In Figure 6 we conduct a similar
+investigation by comparing the baryonic eﬀects for bahamas
+simulations with a WMAP9 (blue), Planck 2013 (green)
+and Planck 2015 (red) cosmology. The latter is the only
+one that includes a non-zero neutrino mass, but as we will
+show shortly, the impact of this is negligible. While the dif -
+ferences are generally small, signiﬁcant shifts (up to 4% in
+absolute or 30% in relative terms) in the suppression for
+1 < k < 10 h Mpc− 1 can be seen here. The largest diﬀer-
+ence is between WMAP9 and Planck 2013, which are known
+to be in tension. However, the distance in parameter space
+between these cosmologies is similar to that of WMAP3 and
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 10 ---
+10 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 5. The eﬀect of the strength of AGN feedback. Shown are relative power spectra for four WMAP7 cosmo-OWLS simulations with
+diﬀerent values for the heating temperature ∆ Theat of AGN feedback. From blue to red, the values are ∆ Theat = 10 8.0 K (ﬁducial), 10 8.3 K,
+108.5 K and 10 8.7 K. Left: The eﬀect of galaxy formation relative to a dark matter only s imulation. Increasing the heating temperature
+generally increases the eﬀectiveness of AGN feedback. For c osmo-OWLS, the best observational agreement with the prope rties of groups
+and clusters is found for ∆ Theat = 10 8.3 K (green line, see Le Brun et al. 2014). Right: The eﬀect of increasing the eﬀectiveness of AGN
+feedback relative to the ﬁducial cosmo-OWLS AGN simulation (∆ Theat = 10 8.0 K). As the eﬀectiveness of AGN feedback is increased
+the power is reduced on all scales.
+WMAP7 (and signiﬁcantly smaller for σ 8), so there is a
+priori no reason to expect a larger change than found by
+VD11 for the cosmologies shown here. The fact that the
+simulations have a 64 × larger volume than those of VD11,
+and therefore include more massive objects, may well play
+a role here. The Planck 2015 results are in between those of
+WMAP9 and Planck 2013, as one might expect from Table 2.
+Based on the limited cosmologies tested here, we can-
+not exclude the possibility that cosmological parameter va ri-
+ations of the same order could produce larger shifts in the ef -
+fect of galaxy formation on matter clustering. However, var i-
+ations in cosmology are separable from the eﬀects of galaxy
+formation for at least some parameters, within current un-
+certainties, as Staﬀord et al. (2019) have recently shown fo r
+a running scalar spectral index, and Pfeiﬀer et al. (in prep. )
+will demonstrate for dynamical dark energy models.
+In Figure 7 we test the dependence of the eﬀects of
+galaxy formation on another aspect of cosmology, namely
+the neutrino mass. In the left-hand panel we compare the
+WMAP9 bahamas run with diﬀerent neutrino masses, and
+in the right-hand panel we do the same for Planck 2015.
+Both could aﬀect the power spectrum in diﬀerent ways, as
+the cosmology is held ﬁxed with increasing neutrino mass for
+the former but not the latter (see §2.1 and McCarthy et al.
+2018). From blue to red, the total neutrino mass increases
+from Mν = 0. 06 eV to 0 . 12 eV, 0. 24 eV and 0 . 48 eV. The left
+panel additionally shows Mν = 0 in black. We stress that
+we consider the power spectrum in each simulation relative
+to a dark matter only simulation with the same neutrino
+mass, so as to scale out the direct eﬀect of adding neutrinos
+on the clustering of matter.
+As Mummery et al. (2017) previously showed for ba-
+hamas, baryons act nearly independently of the neutrino
+mass – in line with the ﬁndings of Mead et al. (2016) – and
+the results shown here conﬁrm this: the impact of galaxy
+formation on the power spectrum is nearly unchanged in all
+cases. Looking at the left panel in more detail, we see that
+increasing the neutrino mass from zero to 0 . 06 eV has almost
+no eﬀect on the relative power spectrum, but the higher the
+neutrino mass, the stronger the change. 7 The shift in sup-
+pression is largest around k ≈ 2 h Mpc− 1, which, according
+to the results of van Daalen & Schaye (2015), is where the
+power spectrum is dominated by groups and clusters. Addi-
+tionally, the WMAP9 0 . 06 eV simulation shows some unique
+features around k ≈ 0. 1 h Mpc− 1, but these are likely numer-
+ical in origin, e.g. due to small shifts in positions.
+Looking at the right-hand panel, we can draw the same
+conclusions, except that there is very slightly more evolu-
+tion with neutrino mass on the very largest scales probed
+(k ≈ 0. 1 h Mpc− 1). This is likely due to the large change in
+σ 8 between the Planck 2015 simulations with the smallest
+and largest neutrino mass, necessary in order to maintain
+agreement with CMB data.
+3.4 Back-reaction on CDM
+As shown by previous authors (e.g. VD11, see also §3.8),
+galaxy formation and its associated feedback events do not
+only change the clustering of gas and stars but also of
+7 For the power spectrum, what matters most is the mass of the
+most massive neutrino. This is not so diﬀerent for Mν = 0. 06 and
+0. 12 eV (assuming the normal hierarchy), so the neutrino power
+spectra will also be similar, though the normalization of th e total
+power spectrum changes (and for the Planck 2015 cosmology th ere
+are additional parameter changes).
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 11 ---
+Linking the halo baryon fraction with P (k) 11
+Figure 6. The impact of changing the cosmology on the relative
+eﬀect of galaxy formation on the matter power spectrum. From
+blue, to green, to red the relative eﬀect of assuming a WMAP9,
+Planck 2013 or Planck 2015 cosmology are shown. The latter as -
+sumes a non-zero neutrino mass, but as Figure 7 will show, thi s
+has little to no impact on the curve shown here. While the choi ce
+of cosmology – at least in the range probed here – does not af-
+fect the largest or smallest scales probed, there is a small b ut
+signiﬁcant change in the strength of the suppression of powe r on
+scales 1 ≲ k ≲ 10 h Mpc− 1, with WMAP9 predicting a larger
+suppression than Planck.
+the cold dark matter, an eﬀect dubbed simply the back-
+reaction. To consider this back-reaction we compare the
+CDM-only power spectrum of hydrodynamical simulations
+to the matter power spectrum in the DMONLY simula-
+tion, multiplying the former by a factor [(Ω c + Ω b)/ Ω c]2 =
+[(Ω m−Ω ν)/ (Ω m−Ω b−Ω ν )]2 to compensate for the diﬀerence
+in normalization.
+We ﬁrst compare the back-reaction for the most real-
+istic simulation in the current set to that of VD11, in Fig-
+ure 8. The results of VD11, shown in grey, predicted that
+the CDM power spectrum around k = 10 h Mpc− 1 is sup-
+pressed by several percent, in line with halo expansion, whi le
+being enhanced on the smallest scales probed, in line with
+halo contraction. They also saw a corresponding increase
+in power of up to 1% for k ≈ 1 h Mpc− 1. The results for
+bahamas, in red, are diﬀerent: the power in cold dark mat-
+ter is increased on all scales, relative to a dark matter only
+simulation, monotonically increasing towards smaller sca les.
+Interestingly, agreement is found only for k ≈ 1 h Mpc− 1,
+just as for the total matter power spectrum, which happens
+to correspond to scales where the relative contribution of
+groups and clusters is maximized. 8
+In part, the diﬀerences are due to a change in resol-
+ution: by lowering the mass resolution, the eﬀectiveness of
+AGN feedback is decreased and the cross-over scale (if there
+is one) moves to ∼ 2× larger scales, leaving less room for
+8 Here, too, we note that compensating for the large-scale ∼ 0. 1%
+oﬀset in power seen for OWLS would bring the simulation into
+slightly better agreement with bahamas on the largest scales. For
+more information we again refer to Appendix B.
+suppression. At the same time, two physical changes can
+play a signiﬁcant role as well: the larger box size provides
+more massive objects (and lowers the eﬀect of cosmic vari-
+ance, see §3.7), and the lower AGN heating temperature in
+bahamas allows for more halo contraction. By comparing
+with other power spectra in our library (not shown), we
+can isolate the eﬀect of running the same simulation with
+a diﬀerent minimum BH seed mass, a diﬀerent particle res-
+olution and/or a diﬀerent box size. We ﬁnd that, at the
+ﬁducial heating temperature, increasing the minimum seed
+mass has a very minor eﬀect, while decreasing the particle
+resolution at ﬁxed box size leads to a positive back-reactio n
+(i.e. contraction) on all scales, though generally weaker t han
+that seen in bahamas. Increasing the box size from 100 to
+400 h− 1 Mpc as well further increases the CDM clustering
+on scales k ≲ 8 h Mpc− 1, but by at most 1%. From there,
+switching to the bahamas model adds another ⩽ 2% to the
+back-reaction on scales 2 ≲ k ≲ 10 h Mpc− 1. Therefore, go-
+ing from OWLS to bahamas the particle resolution at ﬁxed
+box size has the largest eﬀect on the back-reaction, at least
+for k /greaterorsimilar3 h Mpc− 1. For the total signal, this is only the case
+for k /greaterorsimilar10 h Mpc− 1, meaning the back-reaction has a rel-
+atively strong dependence of the back-reaction on box size
+and resolution.
+In Figure 9 we show the dependence of the back-reaction
+on the AGN heating temperature for cosmo-OWLS (left)
+and bahamas (right). Focussing ﬁrst on the left-hand panel,
+we see that the simulation with the ﬁducial heating temper-
+ature of ∆ Theat = 10 8 K shows only enhancement, similar
+to bahamas in Figure 8, in line with our ﬁndings above.
+Increasing the heating temperature (cyan, yellow and red)
+suppresses the CDM power spectrum on increasingly large
+scales, as more and more material is blown to large scales
+by feedback, causing the outer halo to expand (or contract
+less) relative to the dark matter only counterparts.
+Looking at the panel on the right, we see that increas-
+ing the heating temperature of bahamas from the ﬁducial
+value of 10 7.8 K (green) to 10 8 K (red) is enough to cause
+a small but signiﬁcant suppression of the CDM power for
+all scales k ≲ 8 h Mpc− 1 (not shown). Lowering the heating
+temperature by the same factor (blue) instead allows the
+CDM power spectrum to be enhanced on all scales.
+We have checked that the impact of changing the cos-
+mology or neutrino mass of the simulations on the back-
+reaction is comparable to that on the total power, and we
+do not show it here.
+3.5 Evolution
+In this section we examine how the eﬀects of galaxy forma-
+tion on the total and CDM power spectra evolve in the most
+realistic simulation of the current set. We ﬁrst consider th e
+total matter, in Figure 10. From blue to red, we show the
+relative power spectrum for z = 3 down to z = 0. Note
+that below z = 0 . 5 the output frequency is doubled. The
+evolution of the impact of galaxy formation on the power
+spectrum is largely monotonic with time, with the large-
+scale suppression increasing down to redshift zero while th e
+cross-over scale moves to smaller (co-moving) scales (the
+down-turn for k > 20 h Mpc− 1 is numerical and should be
+ignored). The exception is that below z = 0. 5, the suppres-
+sion on scales 0 . 8 ≲ k ≲ 8 h Mpc− 1 diminishes somewhat,
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 12 ---
+12 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 7. The role of the neutrino mass in changing the relative eﬀect o f galaxy formation on the matter power spectrum. Each
+line corresponds to the absolute relative diﬀerence in powe r for a set of simulations with a diﬀerent neutrino mass. From blue to red:
+Mν = 0 . 06 eV, 0 . 12 eV, 0 . 24 eV and 0 . 48 eV. The left panel additionally shows Mν = 0 in black. Left: For the WMAP9 cosmology, the
+neutrino mass is increased at ﬁxed cosmology, so eﬀectively more dark matter is replaced by neutrinos as the neutrino mas s increases.
+The eﬀects of neutrinos and galaxy formation are almost comp letely independent, in particular for low neutrino masses, and so can be
+modelled separately. Note that in the 0 . 06 eV simulation, some event between z = 2 and z = 1 . 75 causes the AGN simulation to go out
+of sync, which produces larger than expected diﬀerences eve n at z = 0 (large-scale ﬂuctuations). Right: For a Planck 2015 cosmology,
+the neutrino mass is increased while allowing the other cosm ological parameters to vary in such a way as to provide the bes t ﬁt to CMB
+data. Evidently, this does not aﬀect the relative eﬀect of ga laxy formation on the matter power spectrum, except perhaps at the very
+largest scales probed ( k ≈ 0. 1 h Mpc− 1).
+due to the growth of the most massive haloes. In simu-
+lations with weaker AGN feedback (not shown here), the
+late-time decrease in suppression happens at the same red-
+shifts and scales as shown in Figure 10, but is more sub-
+stantial. Conversely, when the feedback is stronger than in
+BAHAMAS nu0.06 Planck2015, it is able to counter the in-
+creased dark matter clustering somewhat and the suppres-
+sion of power diminishes less or not at all, although even
+for the highest heating temperatures in our simulation set
+(108.7 K), for z < 0. 5 the suppression does not proceed to
+grow on these scales either.
+Comparing our result to those of VD11 for OWLS AGN
+(their Figure 8), we see that they are very similar, even down
+to the slight decrease in suppression for z < 0. 5. The same
+is true for the evolution of the matter power spectrum of
+other simulations in our set containing AGN. 9
+In Figure 11 we consider the evolution of the back-
+reaction. The eﬀect of galaxy formation on the CDM clus-
+tering is roughly constant for k ≈ 10 h Mpc− 1. On smaller
+scales, the enhancement relative to dark matter only dimin-
+ishes somewhat, but this may be an eﬀect of resolution, like
+the downturn seen on these scales (which should be disreg-
+arded for that reason). The evolution is particularly stron g
+on scales k ≈ 2 h Mpc− 1, again corresponding to the scales
+dominated by groups and clusters.
+9 W e note here that other authors ﬁnd very diﬀerent results for
+the redshift evolution of the relative matter power spectru m. W e
+plan to explore these diﬀerences in future work.
+3.6 Interplay between stellar and AGN feedback
+Interesting diﬀerences between the OWLS/cosmo-OWLS
+and bahamas simulations arise because of the interplay
+between stellar and AGN feedback. With the set of simu-
+lations presented in this work, we can examine the impact
+that changes in stellar feedback have on the eﬀectiveness of
+AGN feedback.
+We ﬁrst consider the OWLS AGN model in addition
+to two variations that were not included in VD11, in Fig-
+ure 12. In the model shown in green, the accretion model’s
+dependence on gas density is changed. Comparing the results
+for this model to the ﬁducial one, in blue, we see that this
+has almost no impact on the eﬀectiveness of AGN feedback.
+However, if we now also disable stellar feedback (in red), th e
+power spectra change drastically. Without winds driven by
+stellar feedback, the (self-regulated) AGN has a larger res er-
+voir of cold gas at its disposal, and both accretes and heats
+far more gas (leading to much more massive supermassive
+black holes as well). Consequently, it is able to suppress th e
+matter clustering to a much larger degree, largely compens-
+ating for the strong increase in star formation in low-mass
+galaxies. This agrees with Booth & Schaye (2013), who used
+OWLS to demonstrate that stellar feedback diminishes the
+eﬀectiveness of AGN feedback. This result also shows why
+the bahamas heating temperature needed to go down to
+match observations after reducing the stellar feedback: le ss
+gas ejected by stars means more gas is available to the AGN,
+making it more eﬀective at a ﬁxed heating temperature.
+Stellar feedback primarily quenches star formation in
+low-mass galaxies (above the knee of the SMF), and AGN
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 13 ---
+Linking the halo baryon fraction with P (k) 13
+Figure 8. The back-reaction of galaxy formation on the power
+spectrum of cold dark matter. The back-reaction of OWLS AGN
+presented in VD11 is shown in grey while the back-reaction of
+the current most realistic simulation is shown in red. The ge n-
+erally less eﬀective AGN feedback in bahamas means that the
+reduction in CDM power relative to dark matter only around
+k ∼ 10 h Mpc− 1 is no longer seen here. This makes the back-
+reaction somewhat easier to model as the increase in CDM powe r
+towards smaller scales is associated with halo contraction .
+primarily in high-mass galaxies (below the knee). It theref ore
+seems reasonable to assume that if the strength of the AGN
+feedback is such that it quenches high-mass galaxies in such
+a way as to agree with observations, then the predictions
+for its eﬀects on the matter power spectrum are realistic
+as well. These results show that this is not the case: stellar
+feedback determines what gas remains in a galaxy, to be
+heated by an AGN once the galaxy is suﬃciently massive to
+host it (e.g. Bower et al. 2017). It is important, in order to
+predict the right amount of power suppression due to AGN,
+that the strength of stellar feedback is correctly calibrat ed to
+observations as well. Calibrating only AGN feedback using
+hot gas fractions in addition to the high-mass SMF may or
+may not be enough; further research is needed for this.
+3.7 Eﬀects of cosmic variance
+The eﬀects of galaxy formation on the matter power spec-
+trum depend on mass and environment, with the large-
+scale suppression of power being dominated by the strongest
+AGN. Not only are these AGN only found in very over-
+dense environments, but the descendants of the haloes
+that host them are themselves the dominant contributor
+to the power on all scales k ≲ 10 h Mpc− 1, as shown by
+van Daalen & Schaye (2015). Since high-mass haloes are
+rare, the predicted suppression of power due to galaxy form-
+ation could be susceptible to cosmic variance and may de-
+pend on the size of the volume probed.
+Several approaches can be taken to assess the import-
+ance of cosmic variance. Ideally, one would simulate a large r
+volume at ﬁxed resolution and check for convergence, but
+this is often computationally prohibitive. Instead, one co uld
+take the reverse approach and compare the results of the
+ﬁducial simulations to that of smaller volumes, although
+drawing conclusions from this about the larger volume is
+diﬃcult, even more so if the smaller volumes do not probe
+linear scales and/or do not contain highly overdense or
+underdense regions. Recently, Chisari et al. (2018) avoide d
+the latter issue by considering instead eight sub-volumes
+drawn from their ﬁducial 100 h− 1 Mpc simulation, ﬁnding
+signiﬁcant variation between them, depending on whether a
+massive object was present in a sub-volume. A similar study
+was performed by Peters et al. (2018), who performed 60
+zoom-in simulations of randomly selected sub-volumes from
+a (3 . 2 Gpc)3 parent volume, each 40 . 16 h− 1 Mpc on a side
+and resimulated using the hydrodynamical code and resol-
+ution of bahamas. They found large variation between the
+predicted relative power in each sub-volume, although the
+median eﬀect of galaxy formation on the power spectrum
+provides an excellent match to that of the full 400 h− 1 Mpc
+bahamas simulations.
+Here, we avoid some of the issues mentioned above by
+taking a diﬀerent approach, instead performing two addi-
+tional runs of a calibrated WMAP9 bahamas simulation at
+ﬁxed box size and resolution, but with diﬀerent initial con-
+ditions. All resimulations use the same subgrid parameters
+and diﬀer only in the random phases of their initial condi-
+tions. Matching dark matter only runs were also performed.
+The results are shown in Figure 13: all three simulations pre -
+dict a nearly identical eﬀect of galaxy formation on the tota l
+matter power spectrum, suggesting that the eﬀects of cos-
+mic variance can be ignored for these simulations. We note
+that this does not apply to the power spectra themselves:
+while not shown here, the matter power spectra of each res-
+imulated volume show random variations which can reach
+∼ 10% even on large scales – however, the ratio of power
+spectra with and without baryons in the same volume is
+converged to high precision.
+The 400 h− 1 Mpc simulations shown here probe well
+into the linear regime. Still, one might wonder whether the
+power (and the eﬀect of galaxy formation) is not suppressed
+on the largest scales probed due to additional linear modes
+that cannot be included. While it is computationally prohib -
+itive to perform a much larger volume simulation at the same
+resolution to check this, we believe this is unlikely to make a
+signiﬁcant diﬀerence, at least for the relative eﬀect of gal axy
+formation. The diﬀerence in power is ≲ 0. 1% on scales lar-
+ger than k = 0 . 1 h Mpc− 1, where the power is probed by
+hundreds of statistically independent modes already for a
+400 h− 1 Mpc volume. Any changes in the eﬀects of galaxy
+formation due to including additional modes are therefore
+expected to be ≲ 0. 1% as well. Extremely rare overdensities
+may still be missed and could play a role for the power –
+though, given that the eﬀectiveness of AGN feedback drops
+oﬀ for the most massive haloes in the current volume, and
+since the fraction of the total mass in these haloes is very
+small, we don’t expect these to play a signiﬁcant role for the
+relative power spectrum.
+Given this convergence, the ratio of hydrodynamical
+and dark matter only bahamas simulations may be used to
+accurately correct matter power spectra from large-volume
+dark matter only runs, emulator predictions or analytical
+power spectra up to k ≈ 10 h Mpc− 1, at least for matching
+cosmologies, leaving only the uncertainty in galaxy forma-
+tion to be accounted for.
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 14 ---
+14 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 9. The eﬀect of the strength of AGN feedback on the back-reactio n on the CDM power spectrum. Left: As in the left panel of
+Figure 5, we consider a set of four cosmo-OWLS simulations th at diﬀer only in their AGN heating temperature. From blue to r ed, the
+values are ∆ Theat = 10 8.0 K (ﬁducial), 10 8.3 K, 10 8.5 K and 10 8.7 K. At higher temperatures (i.e. more eﬀective feedback, tow ards red),
+an increasingly strong reduction in CDM power on scales k ≲ 10 h Mpc− 1 can be seen, due to gas ejection causing the halo to expand
+relative to a dark matter only scenario. Right: The dependence of the back-reaction on the AGN heating tempe rature in bahamas. From
+blue to red, the values are ∆ Theat = 10 7.6 K, 10 7.8 K (ﬁducial) and 10 8.0 K. As the strength of feedback increases, the enhancement of
+power on large scales diminishes. Because of the lower eﬀect iveness of stellar feedback in bahamas versus cosmo-OWLS, a suppression
+in the CDM power spectrum is seen already for ∆ Theat = 10 8 K.
+Figure 10. The redshift evolution of the eﬀect of galaxy form-
+ation on the power spectrum for the most realistic simulatio n in
+the current set, BAHAMAS nu0.06 Planck2015. The large-scale
+reduction in power due to AGN feedback steadily increases fr om
+high redshift down to z ≈ 0. 5, while the shift from a power re-
+duction to a power increase (relative to dark matter only) ke eps
+moving to smaller (co-moving) scales all the way down to reds hift
+zero. The downturn seen on the smallest scales ( k /greaterorsimilar40 h Mpc− 1)
+for the highest redshifts is due to a lack of resolution.
+Figure 11. As Figure 10, but showing the redshift evolution of
+the back-reaction on the CDM power spectrum. Down to z ≈ 1,
+the cold dark matter shows increased clustering for k /greaterorsimilar5 h Mpc− 1
+and slightly decreased clustering on larger scales. Howeve r, at
+lower redshifts the dark matter is able to contract on larger scales
+as well, increasing clustering on all scales k ≲ 8 h Mpc− 1.
+3.8 Comparison to power spectra from the
+literature
+In Figure 14 we compare the relative eﬀect of galaxy form-
+ation on the total matter (left) and CDM power spectrum
+(right) of the most realistic bahamas simulation (red) and
+power spectra from the literature. Included in the com-
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 15 ---
+Linking the halo baryon fraction with P (k) 15
+Figure 12. Here we show the eﬀect of changing the AGN accre-
+tion model and removing stellar feedback on the matter power
+spectrum, providing insight into the interplay between the two
+forms of feedback. The ﬁducial WMAP3 AGN model is shown
+in blue. In the “LOBETA” model, shown in green, the density
+dependence of gas accretion by the black holes is shallower ( see
+§2.1.1), but this has almost no eﬀect on the power spectra. How -
+ever, removing stellar feedback (red lines) has a tremendou s im-
+pact on the power, greatly increasing the suppression of pow er
+due to AGN on large scales.
+parison are OWLS AGN (grey, VD11), EAGLE (purple,
+Hellwing et al. 2016), Illustris (blue, Vogelsberger et al.
+2014a), IllustrisTNG (cyan and green, Springel et al. 2018)
+and Horizon-AGN (orange, Chisari et al. 2018). All simula-
+tions considered here contain both stellar and AGN feed-
+back, but employ diﬀerent subgrid implementations, box
+sizes, resolutions and hydrodynamics solvers. We note that
+to reduce visual noise, we applied the re-binning mentioned
+in §2.3 to these power spectra as well where necessary, im-
+posing a minimum bin size of 0 . 05 dex in k. For Horizon-
+AGN, data was not available on scales smaller than k =
+32 h Mpc− 1.
+As the left-hand panel of Figure 14 shows, not all sim-
+ulations are in quantitative agreement, and they certainly
+do not agree at the level required for Stage IV weak lens-
+ing surveys (e.g. Euclid, LSST and WFIRST) – however,
+there is qualitative agreement. All simulations shown here
+agree that the total matter power spectrum is suppressed
+on all scales 1 < k < 20 h Mpc− 1 relative to dark matter
+only, with a 10 − 30% suppression at k = 10 h Mpc− 1. If
+we assume that the large-scale ≈ 0. 7% oﬀset in power in
+Horizon-AGN is due to diﬀerences in the initial conditions
+as explored in Appendix B, then compensating for these dif-
+ferences (not shown) results in a prediction that is close to
+that of Illustris TNG100, and therefore qualitative agree-
+ment on all scales k ≲ 10 h Mpc− 1. We note, however, that
+Huang et al. (2018) showed that the MassiveBlack-II simu-
+lation (Khandai et al. 2015, Tenneti et al. 2015, not shown
+here), which also contains both stellar and AGN feedback,
+predicts suppression only for k ≲ 2 h Mpc− 1.
+The right-hand panel compares the predictions for the
+back-reaction of galaxy formation on dark matter cluster-
+Figure 13. Here we show the impact of cosmic variance on our
+results, by comparing three pairs of simulations with ident ical
+box size, resolution and physics, but diﬀerent initial cond itions.
+The relative total matter power spectra are virtually ident ical in
+all three cases on all scales probed here, suggesting that co smic
+variance can safely be ignored for these volumes.
+ing. With the exception of Illustris, all simulations pre-
+dict an enhancement of power on scales k ≲ 1 h Mpc− 1, or
+k ≲ 5 h Mpc− 1 when additionally excluding OWLS AGN.
+With the exception of bahamas, all simulations predict a
+∼ 1% suppression of power for k > 10 h Mpc− 1 with a cross-
+over scale at k ≈ 40 − 80 h Mpc− 1. This is likely connected
+to the fact that the bahamas simulations predict a relat-
+ively large cross-over scale for the total matter power spec -
+trum, k ≈ 20 h Mpc− 1, while all other simulations shown
+here still show suppression of power on this scale (see left-
+hand panel). As shown in §3.4, the amount of suppression
+predicted for the dark matter power depends on the strength
+of the AGN feedback, which would explain the large suppres-
+sion seen here for Illustris and the relatively large suppre s-
+sion for k ≈ 10 h Mpc− 1 seen for OWLS AGN. Tenneti et al.
+(2015) showed that the back-reaction in the MassiveBlack-
+II simulation is in qualitative agreement with the results
+for bahamas shown here, although they ﬁnd a stronger en-
+hancement, which implies that feedback is less eﬀective.
+However, a closer look at both panels reveals that not
+all diﬀerences can be as easily explained, even qualitative ly.
+For example, the bahamas simulation predicts a larger total
+matter suppression on large scales than e.g. IllustrisTNG,
+implying stronger feedback, yet bahamas is the only simu-
+lation shown to not predict any dark matter suppression at
+all, implying weaker feedback. We will now compare these
+predictions in more detail, taking into account observatio nal
+constraints, box size, and resolution.
+3.8.1 Understanding the range of predicted eﬀects: total
+matter
+It is interesting to consider what causes the quantitativel y
+diﬀerent predictions for the eﬀects of galaxy formation on
+the matter power spectrum seen in Figure 14. The predicted
+suppression is highly dependent on the eﬀectiveness of AGN,
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 16 ---
+16 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 14. A comparison of the relative eﬀect of galaxy formation on the matter power spectrum between the most realistic simulatio n
+in the current set (red, bahamas) and power spectra from the literature. W e again show the rel ative eﬀect for the most realistic simulation
+from VD11 (grey), and compare to that of EAGLE (purple, Hellw ing et al. 2016), Illustris (blue, Vogelsberger et al. 2014a ), IllustrisTNG
+(cyan and green, Springel et al. 2018) and Horizon-AGN (oran ge, Chisari et al. 2018). All simulations include stellar an d AGN feedback.
+Left: A comparison of the total matter power spectra. There is curr ently no complete consensus on the exact eﬀect of galaxy form ation,
+though all simulations shown here agree that the total matte r power spectrum is suppressed for 1 < k < 20 h Mpc− 1 relative to dark
+matter only, with a 10 − 30% suppression at k = 10 h Mpc− 1. All simulations predict a cross-over scale between 20 and 1 00 h Mpc− 1.
+Right: A comparison of the predictions for the back-reaction of gal axy formation on the CDM power spectrum. All models predict
+enhancement on the smallest scales (except Horizon-AGN, wh ose power spectrum does not probe small enough scales to tell ) and, with
+the exception of the original Illustris simulation, predic t some enhancement for k ≈ 2 h Mpc− 1 as well. All simulations except bahamas
+additionally predict a suppression of several percent on sc ales k ≈ 20 h Mpc− 1.
+and to a lesser extent, stellar feedback. The strength of the se
+processes is a priori unknown and must be constrained us-
+ing observables. A reasonable approach to understanding
+the amount of power suppression predicted by a simulation
+would therefore be to look at which observables are used
+and how they compare to the numerical results. We start by
+considering the eﬀect of galaxy formation on the total mat-
+ter power spectrum (left-hand panel of Figure 14) on large
+scales, k < 10 h Mpc− 1.
+We ﬁrst consider the simulation predicting the largest
+suppression on scales 0 . 1 < k < 10 h Mpc− 1: Illustris
+(blue). The Illustris simulation was constrained using the
+observed global star formation eﬃciency (Vogelsberger et a l.
+2014b), but had several issues which were summarized by
+Nelson et al. (2015). Among these is an underestimated gas
+fraction within R500c in group-size haloes due to too-violent
+radio-mode AGN feedback, which explains the large sup-
+pression predicted by this simulation. Nelson et al. (2015)
+also mention that galaxies below the knee of the stellar
+mass function are insuﬃciently quenched, which implies tha t
+stellar feedback is not eﬃcient enough – this, in turn, may
+provide the AGN with too much gas to heat and eject to
+large scales (see §3.6).
+These shortcomings were addressed with the Illus-
+trisTNG simulations (e.g. Springel et al. 2018), one with a
+75 h− 1 Mpc box (TNG100, matching Illustris; cyan) and an-
+other with a 205 h− 1 Mpc box (TNG300; green). TNG in-
+deed predicts a much lower large-scale suppression of power
+than Illustris. While the two simulations diﬀer in box size
+and resolution, their predictions for the relative power ag ree
+for k < 10 h Mpc− 1, with only a slight deviation around
+k ≈ 1 h Mpc− 1. The Horizon-AGN simulation, described in
+Chisari et al. (2018), agrees with these results as well (aft er
+a renormalization of the dark matter only power spectrum
+as mentioned above).
+As mentioned above, one of the shortcomings of Il-
+lustris addressed with IllustrisTNG was the underestim-
+ated gas fraction in groups. Weinberger et al. (2017) and
+Pillepich et al. (2018) show that the IllustrisTNG model in-
+deed produces gas fractions that are in better agreement
+with observations – however, these studies used simula-
+tion volumes (30 h− 1 Mpc)3 and (25 h− 1 Mpc)3) in size, re-
+spectively, and were not able to probe haloes beyond M ≈
+1013.5 h− 1 M⊙. As van Daalen & Schaye (2015) showed, ha-
+loes above this mass limit provide the dominant contributio n
+to the matter power spectrum on scales k ≲ 20 h Mpc− 1,
+supplying nearly all signal for k ≈ 1 h Mpc− 1 – additionally,
+(the progenitors of) these haloes are where AGN feedback
+has the largest eﬀect on the matter distribution.
+Barnes et al. (2018) show that, unlike the smaller boxes
+using the same model, the full large-volume IllustrisTNG
+simulations over-predict the gas fractions of massive ha-
+loes at redshift zero with respect to observations. Like-
+wise, Chisari et al. (2018, their Figure 13) show that in
+Horizon-AGN the fraction of bound gas at z = 0 is over-
+predicted for M500 > 1013 h− 1 M⊙, relative to observa-
+tions. This implies too-weak AGN feedback in these ha-
+loes, which could well explain the discrepancies between
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 17 ---
+Linking the halo baryon fraction with P (k) 17
+the predicted large-scale suppression in the matter power
+spectrum for IllustrisTNG/Horizon-AGN on the one hand
+and OWLS/ bahamas on the other as seen in Figure 14
+(k ≲ 10 h Mpc− 1).
+AGN feedback in Horizon-AGN is implemented follow-
+ing Dubois et al. (2012), with a kinetic jet mode at low
+accretion rates and a thermal quasar mode at high accre-
+tion. For the latter mode the Booth & Schaye (2009) model
+is used, as in (cosmo)OWLS and bahamas. However, the
+minimum heating temperature, which in e.g. Le Brun et al.
+(2014) was found to be of large inﬂuence to the eﬀectiveness
+of AGN feedback and needed to be suﬃciently high for the
+feedback energy not to be immediately radiated away (see
+also §3.2), is set to zero in Horizon-AGN. While the jet mode
+feedback dominates in Horizon-AGN for z ≲ 2, Figure 13 of
+Chisari et al. (2018) shows that the gas fractions in massive
+haloes are already quite high at z = 2, and either mode
+of feedback might therefore be responsible for the too-high
+gas fractions at z = 0. A minimum heating temperature
+of zero could certainly account for ineﬀective quasar mode
+feedback in a particle-based simulation, but since Horizon -
+AGN is mesh-based, more work is needed before one can
+tell whether this parameter choice has the same eﬀect there.
+IllustrisTNG also implements feedback from supermassive
+black holes in two diﬀerent modes in a mesh-based code, and
+may therefore show some similarities with Horizon-AGN in
+the behaviour of its AGN feedback.
+Finally, we consider the predictions of EAGLE for
+the large-scale matter power spectrum, presented in
+Hellwing et al. (2016) and reproduced in Figure 14 in purple.
+EAGLE predicts a suppression close to that of IllustrisTNG,
+though it is typically smaller, particularly around k =
+3 h Mpc− 1. Given that EAGLE’s simulation volume is the
+smallest presented here, this may well be due to it not
+probing suﬃciently massive haloes. While the original Il-
+lustris simulation has the second-smallest volume of those
+considered, its extreme feedback compensated for the eﬀect
+of its lack of massive haloes. Schaye et al. (2015) shows that
+EAGLE also over-predicts gas fractions at the massive end,
+M /greaterorsimilar1014 h− 1 M⊙, similar to Horizon-AGN. Hellwing et al.
+(2016) point to this as the main reason for the smaller sup-
+pression in power predicted for this simulation, compared t o
+OWLS AGN. This, in addition to its small volume, may well
+explain why EAGLE generally predicts the smallest large-
+scale eﬀect on the total matter power spectrum of the sim-
+ulations considered in Figure 14.
+In short, we ﬁnd that diﬀerences in the predicted sup-
+pression of power on scales k ≲ 10 h Mpc− 1 may in large part
+be explained by diﬀerences in the gas fractions of groups and
+clusters, with possibly a minor contribution from box size.
+Of the simulations considered here, the gas fractions in ba-
+hamas are closest to observations, which is expected given
+that these were used as a constraint in choosing its sub-
+grid parameters. It has the largest volume as well, which as
+shown in §3.7 is expected to be suﬃcient for cosmic vari-
+ance to be small. We therefore expect the power spectrum
+of the bahamas simulation shown in Figure 14 to be closest
+to that of the real Universe on scales k ≲ 10 h Mpc− 1.
+However, the large volume of bahamas comes at the ex-
+pense of resolution. Indeed, all other simulations shown he re
+are able to resolve 2 − 8× smaller scales. In Appendix A we
+demonstrate that an increase in resolution yields signiﬁc-
+antly diﬀerent predictions for the power spectrum on scales
+k ≈ 10 h Mpc− 1 and smaller, which recalibration can only
+slightly compensate for. The cross-over scale predicted by
+bahamas is too large, and the relative suppression of the
+total matter spectrum is expected to be ∼ 10% to smal-
+ler scales than shown here. Besides resolution, the relativ e
+power spectrum on small scales is also set by the stellar frac -
+tion, as stars dominate the power spectrum on suﬃciently
+small scales. Discrepancies in resolution and stellar frac tions
+are therefore expected to explain the diﬀerences in the re-
+lative small-scale clustering seen in the left-hand panel o f
+Figure 14. However, as our primary interest is in predict-
+ing the power spectrum observed by Stage IV experiments,
+we leave a more detailed exploration of clustering on scales
+k > 10 h Mpc− 1 to future work.
+3.8.2 Understanding the range of predicted eﬀects:
+back-reaction
+Even though on large scales ( k ≲ 2 h Mpc− 1) the bahamas
+simulation shown here predicts a much larger suppression of
+the total power than EAGLE and both IllustrisTNG sim-
+ulations, these simulations are in close agreement for the
+back-reaction on these scales (the same applying to Horizon -
+AGN assuming again a large-scale correction for initial con -
+ditions). Only the original Illustris simulation disagree s, pre-
+dicting suppression instead of enhancement, but this can be
+explained by its extremely strong feedback and the results
+of §3.2. The agreement of the other simulations implies that
+the clustering of dark matter is rather insensitive to chang es
+in the baryonic matter distribution on large scales, which
+are mainly driven by the expulsion of gas. Diﬀerences in
+clustering on galactic scales ( k /greaterorsimilar10 h Mpc− 1), however, do
+seem to correlate with changes in the gas distribution, and
+here resolution plays a more signiﬁcant role than for large-
+scale eﬀects, in addition to the role played by the strength
+of feedback itself. These conclusions are supported by the
+results of Appendix A, where we show that a recalibrated
+bahamas run with a higher resolution predicts that the sup-
+pression of the total power extends to 1 . 4× smaller scales
+and thereby signiﬁcantly reduces the dark matter clusterin g
+around k ≈ 10 h Mpc− 1. Since these scales are quite small
+compared to those probed by Stage IV weak lensing surveys,
+we refrain from exploring the diﬀerences in the back-reacti on
+for k /greaterorsimilar10 h Mpc− 1 in more detail here.
+3.9 The baryon fraction as a predictor of power
+suppression
+Given that changes to the total power due to galaxy forma-
+tion on suﬃciently large scales seem to correlate with even
+small shifts in the amount of gas in groups and clusters, it is
+interesting to consider whether the gas fraction of massive
+haloes can be used to predict the amount of power sup-
+pression seen in these simulations. If so, then the large-sc ale
+power spectrum might be ﬁxed by cosmology and just one
+other (importantly, measurable) quantity, independently of
+how feedback was implemented in a hydrodynamical simu-
+lation.
+Since most of the large-scale suppression of power is
+brought about by AGN removing gas from primarily groups
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 18 ---
+18 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 15. The eﬀect of galaxy formation on cosmo-OWLS and bahamas simulations with 400 h− 1 Mpc boxes. Each simulation is
+colour-coded by its mean baryon fraction within R500c for M500c ≈ 1014 h− 1 M⊙ haloes, rescaled by the cosmic baryon fraction. The
+power in the cosmo-OWLS simulations has been renormalized t o remove the large-scale oﬀset where applicable (see §2.2). The eﬀect of
+galaxy formation is strongly correlated with the group bary on fraction, a lower fraction corresponding to a stronger su ppression of power.
+of galaxies, a natural measure to correlate with would be the
+gas fraction within the virial radius of M ∼ 1014 h− 1 M⊙
+haloes. The lower the gas fraction, the more gas has been
+evacuated and the larger the expected suppression of power.
+However, the problem with this is that in the absence of
+strong feedback, the galaxies overcool and convert the gas
+into stars instead, leading to a low gas fraction but no
+suppression of power on large scales. We therefore instead
+use the baryon fraction within the virial radius, which is
+lowered only through the removal of gas from the halo. To
+compensate for diﬀerences in cosmology, we normalize these
+fractions for each simulation by the cosmic baryon fraction ,
+Ω b/ Ω m. In what follows, we will focus on the mean renor-
+malized baryon fractions within R500c ≡ R500,crit for haloes
+with masses M500c in the range [6 ×1013, 2×1014] M⊙, which
+we refer to as:
+˜fbar,500c(1014 M⊙) ≡ ¯fbar,500c(1014 M⊙)/ (Ω b/ Ω m). (4)
+In Figure 15, we show the eﬀect of galaxy forma-
+tion on those cosmo-OWLS and bahamas simulations that
+have 400 h− 1 Mpc boxes and for which baryon fractions
+are available. This includes most simulations from this set ,
+but not those with non-zero neutrino masses save BA-
+HAMAS nu0.06 Planck2015. The cosmo-OWLS simulations
+shown here have had their DMONLY counterparts renor-
+malized where applicable to account for any large-scale oﬀ-
+set (see §2.2). The relative power spectra have been colour-
+coded by ˜fbar,500c(1014 M⊙). It is clear immediately that, at
+least for k ≲ 3 h Mpc− 1, the suppression of power is mono-
+tonic with the baryon fraction, with higher suppression cor -
+responding to a lower baryon fraction in group-sized haloes .
+This is expected: the lower the baryon fraction, the more
+mass was ejected from the halo by feedback, and hence the
+stronger the eﬀect on the power spectrum.
+We note again that the suppression on scales larger than
+the size of haloes comes about through feedback lowering the
+mass of haloes, thereby lowering the 2-halo term contribu-
+tion of these haloes. Where this gas is distributed to should
+not be relevant at the 1% level on large scales, just that it
+is removed from clustered regions – after all, unless feed-
+back moves matter over distances ∼ 10 h− 1 Mpc, changing
+the mass of clustered regions is the only way to signiﬁcantly
+change the power for k ≲ 1 h Mpc− 1. Because of this, we
+might expect to be able to model the power suppression
+on large scales as a function of only the baryon fraction in
+group-sized haloes, which dominate the change in clusterin g.
+In Figure 16 we show the change in the matter
+power spectrum due to feedback relative to the dark
+matter only power spectrum at k = 0 . 5 h Mpc− 1, as a
+function of the renormalized mean group baryon fraction
+˜fbar,500c(1014 M⊙). Besides the simulations shown in Fig-
+ure 15, shown here as upward grey and red triangles,
+we also show results for several simulations with smaller
+volumes, namely the uncalibrated bahamas re-run BA-
+HAMAS nu0 WMAP9 L100N512 (red downward triangle,
+see Appendix A), EAGLE (purple), Illustris (blue), TNG100
+and TNG300 (cyan and green), and Horizon-AGN (or-
+ange). The dashed line is given by a simple exponential,
+− exp(−5. 990 ˜fbar,500c − 0. 5107), the grey band around it
+denoting a deviation of 1%. For all simulations, the res-
+ults fall within this band. The vertical green band shows
+a range of renormalized mean group-scale baryon frac-
+tions roughly consistent with observations 10. The calibrated
+bahamas simulations all lie within this band, and BA-
+HAMAS nu0.06 Planck2015 is outlined in black.
+While they are too small to see for many of these
+10 The observation range for the mean is based on
+the combined data sets of Vikhlinin et al. (2006),
+Maughan et al. (2008), Sun et al. (2009), Pratt et al. (2009),
+Rasmussen & Ponman (2009), Lin et al. (2012), Sanderson et al .
+(2013), Gonzalez et al. (2013), Budzynski et al. (2014),
+Lovisari, Reiprich & Schellenberger (2015), Pearson et al.
+(2017) and Kravtsov, Vikhlinin & Meshcheryakov (2018).
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 19 ---
+Linking the halo baryon fraction with P (k) 19
+Figure 16. The eﬀect of galaxy formation on the matter power
+spectrum at the scale k = 0. 5 h Mpc− 1 as a function of the (renor-
+malized) mean baryon fraction in ∼ 1014 M⊙ haloes. Shown are
+simulations from cosmo-OWLS and bahamas (grey and red),
+EAGLE (purple), Illustris (blue), TNG100 and TNG300 (cyan
+and green) and Horizon-AGN (orange). Where necessary, dark
+matter only power spectra were corrected to agree with their
+hydrodynamical counterparts on the largest scale availabl e (see
+§2.2). Baryon fractions were calculated within R500c for haloes
+in the mass range M500c = [6 × 1013, 2 × 1014] M⊙. The dashed
+curve shows that at this k, a simple exponential function of the
+renormalized baryon fraction, − exp(−5. 990 ˜fbar,500c − 0. 5107),
+ﬁts the predictions for the suppression of power of all simul a-
+tions to within 1% (grey band). The vertical green band shows a
+range of renormalized mean group-scale baryon fractions ro ughly
+consistent with observations. BAHAMAS nu0.06 Planck2015 is
+outlined in black.
+points, both horizontal and vertical error bars were calcu-
+lated. The statistical uncertainty in the individual power
+spectra largely drops out when taking the ratio of power
+spectra with identical initial conditions, though systema tic
+uncertainties like cosmic variance remain. Since all resid ual
+uncertainties in the power ratio are diﬃcult to estimate, we
+take a conservative stance and only use 400 h− 1 Mpc boxes
+(for which cosmic variance is assumed to play a negligible
+role) in ﬁtting our model, with an uncertainty of 10 − 3 at any
+k. For (cosmo)OWLS boxes, for which no 2-ﬂuid dark mat-
+ter runs were performed, we apply a correction factor to the
+DMONLY power spectra on all scales such that the power
+measured on the largest scales is approximately identical t o
+that of the hydrodynamical runs. Since this correction is
+approximate, we use the maximum of 10 − 3 and the original
+large-scale oﬀset (typically 2 × 10− 3) as the uncertainty on
+the relative power. The same was done for the other sim-
+ulations shown, though the only signiﬁcant correction was
+for Horizon-AGN. Note the vertical error bars shown in Fig-
+ure 16 do not include systematics due to small box size even
+for simulations where they would be signiﬁcant (i.e. most
+simulations not included in the ﬁt). The uncertainties in th e
+baryon fractions are calculated directly as the standard er ror
+on the mean.
+At every individual value of k, the power decrement as
+a function of the baryon fraction of ∼ 1014 M⊙ haloes is
+ﬁt surprisingly well by a simple two-parameter exponential ,
+T able 3. The best-ﬁt parameter values of the model in equa-
+tion (5), which gives the total matter power spectrum relati ve to
+a dark matter only power spectrum for k ⩽ 1 h Mpc− 1. ˜fbar is
+the mean baryon fraction relative to the cosmic value, i.e. ˜fbar ≡
+¯fbar/ (Ω b/ Ω m). The baryon fractions used in ﬁtting the model
+are measured within either R500c or R200c for haloes with masses
+(either M500c or M200c) in the range [6 × 1013, 2 × 1014] M⊙.
+Deﬁnition a b c d e
+˜fbar,500c 2.215 0.1276 1.309 -5.990 -0.5107
+˜fbar,200c 2.111 0.0038 1.371 -5.816 -0.4005
+as seen in Figure 16. 11 This is also the basis of our full
+(empirical) ﬁtting function, given by:
+Pbar
+PDMO
+= 1 − 2a + 2b(c ˜fbar)b− a
+k− a + (c ˜fbar)b− ak− b
+exp
+(
+d ˜fbar + e
+)
+. (5)
+Here the additional parameters a, b and c facilitate a ﬁt
+to the relative power spectra at ﬁxed baryon fraction. The
+eﬀect of galaxy formation on the power spectrum up to
+k = 1 h Mpc− 1 is approximated as two power laws in k with
+a smooth transition between them at a scale that depends
+linearly on the baryon fraction, which was empirically de-
+termined to give accurate results. Beyond k = 1 h Mpc− 1,
+however, this approximation fails. This is because on these
+scales the power spectrum is sensitive to the changes in the
+internal structure of group-sized haloes, which requires a ddi-
+tional modelling. In halo model terms, for k > 1 h Mpc− 1 the
+power spectrum is sensitive to the 1-halo term of ∼ 1014 M⊙
+haloes, while its contribution is constant for k < 1 h Mpc− 1
+(e.g. Debackere, Schaye & Hoekstra 2019). We therefore do
+not attempt to apply our current model to these scales.
+The best-ﬁt parameter values depend on the deﬁnition
+used for the rescaled baryon fraction, ˜fbar ≡ fbar/ (Ω b/ Ω m).
+In Table 3, we provide best-ﬁt parameters for both ba-
+ryon fractions measured within R500c of haloes in the range
+M500c = [6 × 1013, 2 × 1014] M⊙ and within R200c of haloes
+in the range M200c = [6 × 1013, 2 × 1014] M⊙. We ﬁnd that
+the mean baryon fraction of these haloes is more strongly
+correlated with the suppression of power than that of ha-
+loes with masses around 10 13 M⊙ or 10 15 M⊙. Only power
+spectra of 400 h− 1 Mpc cosmo-OWLS and bahamas simu-
+lations for k < 1. 1 h Mpc− 1 were included in the ﬁt, but
+the best-ﬁt model yields an excellent ﬁt to the power ra-
+tio of other simulations as well, as seen in Figure 17. Us-
+ing only the baryon fraction for ∼ 1014 M⊙ haloes as a
+parameter, our best-ﬁt model is accurate to within 1% (ab-
+solute) for all simulations save the original Illustris run ,
+C-OWLS AGN Theat8.7 WMAP7 (which deviates up to
+1. 5%) and BAHAMAS nu0 WMAP9 L100N512 (red down-
+ward triangle) though shifting to a baryon fraction ≈ 0. 7σ
+lower brings the latter into excellent agreement. Addition -
+ally, small boxes are signiﬁcantly aﬀected by cosmic varian ce
+and missing modes, which are not included in the vertical
+error bars.
+11 Note that for k = 0 . 5 h Mpc− 1, our model, by construction,
+reduces to exactly such an exponential. The model shown in th is
+ﬁgure is the full model with parameters as given in Table 3, bu t
+is virtually identical to the best-ﬁt two-parameter expone ntial.
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 20 ---
+20 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure 17. As Figure 16, but with a logarithmic vertical axis. Each pane l shows the relative change in total matter power due to
+galaxy formation on a diﬀerent scale, from k = 0. 2 h Mpc− 1 in the top left panel through k = 1 h Mpc− 1 in the bottom right panel. The
+dashed line shows the best-ﬁt model, ﬁt to the simulations wi th 400 h− 1 Mpc boxes on all scales k < 1. 1 h Mpc− 1 simultaneously (see
+equation (5) and Table 3), with the grey region showing where the absolute deviation from the ﬁt is ⩽ 1%.
+For most simulations, the ﬁt is accurate to within 0 . 5%
+for k ⩽ 1 h Mpc− 1, the outliers being simulations that, like
+Illustris, have unrealistically strong feedback. We expec t
+that in these simulations AGN feedback is strong enough to
+signiﬁcantly alter the density proﬁles of clusters, which w ill
+contribute to scales k < 1 h Mpc− 1. While both sets of para-
+meter values shown in Table 3 provide an excellent ﬁt, the
+parameters for ˜fbar,200c provide a marginally better ﬁt for
+low baryon fractions. We note that the most realistic simula -
+tions in the current set have baryon fractions ˜fbar,500c ≈ 0. 59
+and ˜fbar,200c ≈ 0. 62. Figure 18 shows the power suppression
+due to galaxy formation predicted by our best-ﬁt model as
+a function of both scale and baryon fraction.
+Since the predictions of our model depend only on the
+baryon fraction for groups of galaxies, this allows for accu r-
+ate corrections of theoretical dark matter only power spect ra
+up to k = 1 h Mpc− 1 using a single observable quantity. In a
+follow-up work, we attempt to extend this model to higher
+redshifts and smaller scales, which involves the changes fe ed-
+back makes to the internal structure of group-sized haloes.
+4 SUMMAR Y AND DISCUSSION
+The goal of this paper was two-fold: to greatly increase
+the number of matter power spectra from cosmological, hy-
+drodynamical simulations available to the modelling com-
+munity, and to increase our understanding of how both
+galaxy formation (particularly AGN feedback) and numer-
+ical choices inﬂuence these power spectra. To this end, we
+combined power spectra from the OWLS, cosmo-OWLS and
+bahamas simulation suites. Relative to the other two sets,
+bahamas best matches observational constraints, and is
+therefore expected to provide the most accurate prediction s.
+Additionally, for bahamas we have made improvements to
+the dark matter only counterpart simulations to ensure they
+agree with the hydrodynamical simulations on large scales
+(i.e. running them with two dark matter ﬂuids, see §2.2).
+Based on this large set of simulations, we were able to ﬁnd a
+tight relation between the baryon fraction at the group scal e
+and the suppression of power for k < 1 h Mpc− 1.
+Our main ﬁndings can be summarized as follows:
+• Increasing or decreasing the eﬀectiveness of AGN feed-
+back changes the matter power spectrum signiﬁcantly on
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 21 ---
+Linking the halo baryon fraction with P (k) 21
+Figure 18. The relative change in the matter power spectrum due to galax y formation prediction by our model, equation (5), as a
+function of the rescaled mean baryon fraction in groups for d iﬀerent wavenumbers (left panel) and as a function of wavenu mber for
+diﬀerent rescaled mean baryon fractions in groups (right pa nel).
+scales k /greaterorsimilar0. 1 h Mpc− 1 (§3.2, Fig. 5). More eﬀective feed-
+back causes a larger suppression of power.
+• Changes in cosmology at the level of the diﬀerence
+between WMAP and Planck have a small but signiﬁcant
+impact on the relative change in the matter power spectrum
+due to baryonic eﬀects, ∆ P/P , on scales 1 ≲ k ≲ 10 h Mpc− 1
+(relative shifts up to 30%, see §3.3, Fig. 6). The relatives
+change in the matter power spectrum is less sensitive to
+changes in the total neutrino mass (Fig. 7).
+• The back-reaction of the redistribution of baryons by
+cooling and feedback processes on the distribution of cold
+dark matter causes a mild relative enhancement of power
+on large scales ( k ≲ 3 h Mpc− 1), but only if AGN feedback
+is not unrealistically strong ( §3.4, Fig. 9). On smaller scales,
+numerical resolution may play a larger role for the back-
+reaction than for the total matter power spectrum.
+• The suppression of the total matter power spectrum
+due to feedback generally increases down to redshift zero,
+the exception being scales 0 . 8 ≲ k ≲ 8 h Mpc− 1 at late
+times ( z ⩽ 0. 5), where the suppression may slightly dimin-
+ish, likely due to re-accretion of ejected gas ( §3.5, Fig. 10).
+• Having no or ineﬀective stellar feedback in the presence
+of AGN feedback greatly increases the suppression of the
+matter power spectrum on large scales ( §3.6, Fig. 12). This
+is because more gas is available to accrete onto the super-
+massive black holes.
+• Comparison of diﬀerent realizations of the 400 h− 1 Mpc
+box of bahamas suggests that it is large enough for cosmic
+variance to be negligible for the relative total matter powe r
+spectrum ( §3.7, Fig. 13). This would mean that the ratio
+of the power spectra from hydrodynamical and dark matter
+only bahamas simulations can be used to accurately correct
+matter power spectra from large-volume dark matter only
+runs, emulator predictions or analytical power spectra up
+to k ≈ 10 h Mpc− 1, leaving only the uncertainty in galaxy
+formation to be accounted for. However, conﬁrmation using
+larger volumes is required to rule out eﬀects due to large-
+scale modes missing from all realizations.
+• We compared the predictions for the eﬀects of galaxy
+formation on the matter power spectrum of simulations in
+our set with those of EAGLE, Illustris, IllustrisTNG and
+Horizon-AGN ( §3.8, Fig. 14). While there is currently no
+consensus between diﬀerent groups’ simulations, all those
+with eﬀective (AGN) feedback agree that the power is signi-
+ﬁcantly suppressed relative to dark matter only simulation s
+on all scales k < 10 h Mpc− 1, with a maximum suppression
+> 10%. The diﬀerences in predictions for large scales can be
+explained by diﬀerences in the eﬀectiveness of feedback as
+probed by the predicted baryon fractions in massive haloes.
+• We used our large set of matter power spectra presen-
+ted to show that the suppression of power on large scales
+is strongly correlated with the mean baryon fraction of
+∼ 1014 M⊙ haloes. We presented an empirical model cap-
+able of predicting the eﬀect of galaxy formation on the mat-
+ter power spectrum to within 1% for all k < 1 h Mpc− 1
+given only this baryon fraction ( §3.9, Fig. 17). This model
+also ﬁts the results from the EAGLE, Illustris, IllustrisTN G
+and Horizon-AGN simulations, albeit with slightly poorer
+accuracy – though we note that the uncertainties for these
+simulations are larger as well, due to their smaller volumes .
+• To avoid large-scale numerical artefacts in the relative
+diﬀerence between the matter power spectra of hydrodynam-
+ical and N-body simulations, it is important to consider dif -
+ferences in the initial conditions of the simulations being
+compared. These include diﬀerences in the transfer functio ns
+used and/or the number of particles (Appendix B).
+In line with our own ﬁndings ( §3.8.1 and §3.9),
+Semboloni, Hoekstra & Schaye (2013) and recently
+Schneider et al. (2019) have demonstrated that it is
+possible to predict the ratio of hydrodynamical to N-body
+matter power spectra quite well given the stellar and gas
+fractions of the hydrodynamical simulation as a function
+of halo mass. The gas fraction of groups and clusters
+correlates strongly with the suppression of power on scales
+k ≲ 10 h Mpc− 1, as expected given that the primary way
+in which the distribution of matter is altered on these
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 22 ---
+22 M. P. van Daalen, I. G. McCarthy and J. Schaye
+scales is through ejection of gas by feedback. At the same
+time, stellar and AGN feedback also set the stellar fraction
+in haloes by heating/ejecting gas and quenching star
+formation. While the stellar fractions or galaxy stellar ma ss
+function are often used as a constraint for subgrid recipes i n
+simulations, cluster gas fractions are not ( bahamas being
+one exception, fable (Henden et al. 2018) being another).
+Based on the results presented here, we argue that to
+accurately predict the clustering of matter, it is importan t
+to consider both.
+In §3.9, we demonstrated that the mean group-scale
+baryon fraction and the large-scale power suppression due
+to galaxy formation are strongly correlated. A comparison
+of cosmo-OWLS and bahamas with simulations from the
+literature showed that Illustris predicts an unrealistica lly
+strong eﬀect of feedback on the matter power spectrum
+for k < 1 h Mpc− 1 due to its too-low baryon fraction in
+∼ 1014 M⊙ haloes compared to observations, while EAGLE,
+IllustrisTNG and Horizon-AGN predict an unrealistically
+weak eﬀect due to their too-high baryon fraction at the same
+mass scale. We conclude that to study the eﬀect of baryonic
+processes on large scales, only simulations that reproduce
+the observed baryon fraction of large groups of galaxies are
+suitable. Of the simulations we compared to here, only the
+(ﬁducial) bahamas simulations satisfy that requirement.
+Improving observational constraints on gas fractions
+and proﬁles in massive haloes will be of tremendous im-
+portance in the near future. Based on the results of §3.9,
+we argue that constraining the baryon fractions of group-
+scale haloes will be especially vital in the short term,
+as the model presented there may allow us to accurately
+correct dark matter only power spectra used to interpret
+weak lensing surveys (e.g. Potter, Stadel & Teyssier 2017,
+Knabenhans et al. 2019) for the eﬀects of galaxy formation
+to the required 1% precision down to k = 1 h Mpc− 1 at z = 0
+and possibly beyond.
+While outside the scope of the current paper, a closer
+look at the predicted redshift evolution of the relative pow er
+spectrum would be of interest and provide a more detailed
+look into the origin of the diﬀerences seen between diﬀer-
+ent simulations, e.g. whether gas is still being ejected at
+z = 0 or whether this happened at early times and is now
+re-accreting. Ideally, measurements of the baryon fractio n
+could be used to predict the large-scale suppression of powe r
+at any redshift.
+Total and dark matter power spectra for the 92 sim-
+ulations listed in Table 1, which includes 35 simulations
+with AGN feedback, will be made publicly available at
+powerlib.strw.leidenuniv.nl. As stated in §1, the under-
+lying model in simulations with AGN is the same in each of
+the simulations presented here, though the parameter value s
+diﬀer.
+ACKNOWLEDGEMENTS
+The authors thank Volker Springel for providing power spec-
+tra for Illustris and IllustrisTNG, and Chisari et al. (2018 )
+for making those of Horizon-AGN publicly available. The
+authors additionally thank the Illustris and Illustris TNG
+teams for their publicly available group catalogues, and
+Volker Springel for providing data on the baryon content of
+massive haloes in Illustris TNG. MvD thanks Simeon Bird
+for useful discussions on the neutrino power spectrum.
+MvD gratefully acknowledges support from the
+Netherlands Research Council NWO (VENI grant Nr.
+639.041.748).
+This project has received funding from the European
+Research Council (ERC) under the European Union’s Hori-
+zon 2020 research and innovation programme (grant agree-
+ment No 769130).
+This work used the DiRAC@Durham facility managed
+by the Institute for Computational Cosmology on behalf
+of the STFC DiRAC HPC Facility ( www.dirac.ac.uk).
+The equipment was funded by BEIS capital funding
+via STFC capital grants ST/K00042X/1, ST/P002293/1,
+ST/R002371/1 and ST/S002502/1, Durham University and
+STFC operations grant ST/R000832/1. DiRAC is part of
+the National e-Infrastructure.
+References
+Ali-Ha ¨ ımoud Y., Bird S., 2013, MNRAS, 428, 3375
+Angulo R. E., Hahn O., Abel T., 2013, MNRAS, 434, 1756
+Barnes D. J. et al., 2018, MNRAS, 481, 1809
+Booth C. M., Schaye J., 2009, MNRAS, 398, 53
+—, 2013, Scientiﬁc Reports, 1738
+Bourne M. A., Zubovas K., Nayakshin S., 2015, MNRAS,
+453, 1829
+Bower R. G., Schaye J., Frenk C. S., Theuns T., Schaller
+M., Crain R. A., McAlpine S., 2017, MNRAS, 465, 32
+Budzynski J. M., Koposov S. E., McCarthy I. G., Belokurov
+V., 2014, MNRAS, 437, 1362
+Chabrier G., 2003, PASP, 115, 763
+Chisari N. E. et al., 2018, MNRAS, 480, 3962
+Colombi S., Jaﬀe A., Novikov D., Pichon C., 2009, MNRAS,
+393, 511
+Copeland D., Taylor A., Hall A., 2018, MNRAS, 480, 2247
+Dalla Vecchia C., Schaye J., 2012, MNRAS, 426, 140
+Debackere S. N. B., Schaye J., Hoekstra H., 2019, preprint
+(arXiv:1908.05765)
+Dubois Y., Devriendt J., Slyz A., Teyssier R., 2012,
+MNRAS, 420, 2662
+Eiﬂer T., Krause E., Dodelson S., Zentner A. R., Hearin
+A. P., Gnedin N. Y., 2015, MNRAS, 454, 2451
+Foreman S., Becker M. R., Wechsler R. H., 2016, MNRAS,
+463, 3326
+Gonzalez A. H., Sivanandam S., Zabludoﬀ A. I., Zaritsky
+D., 2013, ApJ, 778, 14
+Hahn O., Martizzi D., Wu H.-Y., Evrard A. E., Teyssier R.,
+Wechsler R. H., 2017, MNRAS, 470, 166
+Harnois-D´ eraps J., van Waerbeke L., Viola M., Heymans C.,
+2015, MNRAS, 450, 1212
+Hellwing W. A., Schaller M., Frenk C. S., Theuns T., Schaye
+J., Bower R. G., Crain R. A., 2016, MNRAS, 461, L11
+Henden N. A., Puchwein E., Shen S., Sijacki D., 2018,
+MNRAS, 479, 5385
+Hildebrandt H. et al., 2017, MNRAS, 465, 1454
+Hinshaw G. et al., 2013, ApJS, 208, 19
+Huang H.-J., Eiﬂer T., Mandelbaum R., Dodelson S., 2018,
+ArXiv e-prints
+Huterer D., Takada M., 2005, Astroparticle Physics, 23, 369
+Ivezi´ cˇZ. et al., 2008, preprint (arXiv:0805.2366)
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 23 ---
+Linking the halo baryon fraction with P (k) 23
+Joudaki S. et al., 2017, MNRAS, 465, 2033
+Khandai N., Di Matteo T., Croft R., Wilkins S., Feng Y.,
+Tucker E., DeGraf C., Liu M.-S., 2015, MNRAS, 450,
+1349
+Knabenhans M. et al., 2019, MNRAS, 484, 5509
+Komatsu E. et al., 2009, ApJS, 180, 330
+—, 2011, ApJS, 192, 18
+Kravtsov A. V., Vikhlinin A. A., Meshcheryakov A. V., 2018,
+Astronomy Letters, 44, 8
+Laureijs R., 2009, preprint (arXiv:0912.0914)
+Le Brun A. M. C., McCarthy I. G., Schaye J., Ponman T. J.,
+2014, MNRAS, 441, 1270
+Lin Y.-T., Stanford S. A., Eisenhardt P. R. M., Vikhlinin
+A., Maughan B. J., Kravtsov A., 2012, ApJ, 745, L3
+Lovisari L., Reiprich T. H., Schellenberger G., 2015, A&A,
+573, A118
+Maughan B. J., Jones C., Forman W., Van Speybroeck L.,
+2008, ApJS, 174, 117
+McCarthy I. G., Bird S., Schaye J., Harnois-Deraps J., Font
+A. S., van Waerbeke L., 2018, MNRAS, 476, 2999
+McCarthy I. G., Schaye J., Bird S., Le Brun A. M. C., 2017,
+MNRAS, 465, 2936
+McCarthy I. G., Schaye J., Bower R. G., Ponman T. J.,
+Booth C. M., Dalla Vecchia C., Springel V., 2011,
+MNRAS, 412, 1965
+McCarthy I. G. et al., 2010, MNRAS, 406, 822
+Mead A. J., Heymans C., Lombriser L., Peacock J. A., Steele
+O. I., Winther H. A., 2016, MNRAS, 459, 1468
+Mead A. J., Peacock J. A., Heymans C., Joudaki S., Heavens
+A. F., 2015, MNRAS, 454, 1958
+Mohammed I., Gnedin N. Y., 2018, ApJ, 863, 173
+Mohammed I., Seljak U., 2014, MNRAS, 445, 3382
+Mummery B. O., McCarthy I. G., Bird S., Schaye J., 2017,
+MNRAS, 471, 227
+Nelson D. et al., 2015, Astronomy and Computing, 13, 12
+O’Leary R. M., McQuinn M., 2012, ApJ, 760, 4
+Oppenheimer B. D., Dav´ e R., 2006, MNRAS, 373, 1265
+Pearson R. J. et al., 2017, MNRAS, 469, 3489
+Peters A., Brown M. L., Kay S. T., Barnes D. J., 2018,
+MNRAS, 474, 3173
+Pike S. R., Kay S. T., Newton R. D. A., Thomas P. A.,
+Jenkins A., 2014, MNRAS, 445, 1774
+Pillepich A. et al., 2018, MNRAS, 473, 4077
+Planck Collaboration et al., 2014, A&A, 571, A16
+—, 2016, A&A, 594, A13
+—, 2018, preprint (arXiv:1807.06209)
+Potter D., Stadel J., Teyssier R., 2017, Computational As-
+trophysics and Cosmology, 4, 2
+Pratt G. W., Croston J. H., Arnaud M., B¨ ohringer H., 2009,
+A&A, 498, 361
+Rasmussen J., Ponman T. J., 2009, MNRAS, 399, 239
+Salpeter E. E., 1955, ApJ, 121, 161
+Sanderson A. J. R., O’Sullivan E., Ponman T. J., Gonza-
+lez A. H., Sivanandam S., Zabludoﬀ A. I., Zaritsky D.,
+2013, MNRAS, 429, 3288
+Schaye J. et al., 2015, MNRAS, 446, 521
+—, 2010, MNRAS, 402, 1536
+Schneider A., Teyssier R., 2015, J. Cosmology Astropart.
+Phys., 12, 049
+Schneider A. et al., 2016, J. Cosmology Astropart. Phys., 4,
+047
+Schneider A., Teyssier R., Stadel J., Chisari N. E., Le Brun
+A. M. C., Amara A., Refregier A., 2019, J. Cosmology
+Astropart. Phys., 3, 020
+Semboloni E., Hoekstra H., Schaye J., 2013, MNRAS, 434,
+148
+Semboloni E., Hoekstra H., Schaye J., van Daalen M. P.,
+McCarthy I. G., 2011, MNRAS, 417, 2020
+Spergel D. N. et al., 2007, ApJS, 170, 377
+Springel V., Di Matteo T., Hernquist L., 2005, MNRAS, 361,
+776
+Springel V. et al., 2018, MNRAS, 475, 676
+Staﬀord S. G., McCarthy I. G., Crain R. A., Salcido J.,
+Schaye J., Font A. S., Kwan J., Pfeifer S., 2019, arXiv
+e-prints, arXiv:1907.09497
+Sun M., Voit G. M., Donahue M., Jones C., Forman W.,
+Vikhlinin A., 2009, ApJ, 693, 1142
+Tenneti A., Mandelbaum R., Di Matteo T., Kiessling A.,
+Khandai N., 2015, MNRAS, 453, 469
+Valkenburg W., Villaescusa-Navarro F., 2017, MNRAS, 467,
+4401
+van Daalen M. P., Schaye J., 2015, MNRAS, 452, 2247
+van Daalen M. P., Schaye J., Booth C. M., Dalla Vecchia
+C., 2011, MNRAS, 415, 3649
+van Daalen M. P., Schaye J., McCarthy I. G., Booth C. M.,
+Dalla Vecchia C., 2014, MNRAS, 440, 2997
+van Uitert E. et al., 2018, MNRAS, 476, 4662
+Vikhlinin A., Kravtsov A., Forman W., Jones C., Markevitch
+M., Murray S. S., Van Speybroeck L., 2006, ApJ, 640,
+691
+Vogelsberger M. et al., 2014a, Nature, 509, 177
+—, 2014b, MNRAS, 444, 1518
+Weinberger R. et al., 2017, MNRAS, 465, 3291
+Wiersma R. P. C., Schaye J., Theuns T., Dalla Vecchia C.,
+Tornatore L., 2009, MNRAS, 399, 574
+Yoon M., Jee M. J., Tyson J. A., Schmidt S., Wittman D.,
+Choi A., 2019, ApJ, 870, 111
+Zentner A. R., Semboloni E., Dodelson S., Eiﬂer T., Krause
+E., Hearin A. P., 2013, Phys. Rev. D, 87, 043509
+APPENDIX A: THE ROLE OF BOX SIZE AND
+RESOLUTION, OR THE IMPOR TANCE OF
+CALIBRATION
+The results of cosmological, hydrodynamical simulations o f-
+ten depend on the resolution at which they were run, partic-
+ularly when subgrid recipes are involved. As subgrid recipe s
+aim to model processes happening on unresolved scales,
+based on the information available on scales that are re-
+solved, their outcomes are inherently dependent on the res-
+olution. The prescription may give a very similar outcome in
+some range of resolved scales, but if the resolution changes
+signiﬁcantly then its parameters will have to be adapted, or
+the prescription itself modiﬁed or removed.
+Here, we test the eﬀect of changing the resolution
+and/or the box size of the simulations on the relative eﬀect
+that galaxy formation has on the matter power spectrum.
+We focus here on the cosmo-OWLS AGN model, for which
+appropriate simulations were available, but since the unde r-
+lying subgrid prescriptions and resolutions are the same in
+OWLS and bahamas, the results can conﬁdently be exten-
+ded to those AGN simulations as well.
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 24 ---
+24 M. P. van Daalen, I. G. McCarthy and J. Schaye
+Figure A1. The dependence of the eﬀect of galaxy formation
+on box size and resolution. In blue we show the relative eﬀect on
+the matter power spectrum for a WMAP7 cosmo-OWLS AGN
+simulation with a 100 h− 1 Mpc box and 2 × 5123 particles and
+a relatively high heating temperature of 10 8.5 K. The green line
+shows the eﬀects of increasing the minimum halo mass for blac k
+hole seeding, matching that of a simulation with an 8 × worse
+mass resolution. In this case, the eﬀect AGN feedback has on
+large scales is diminished signiﬁcantly. If we decrease the res-
+olution at ﬁxed box size, by reducing the particle number to
+2 × 2563 (in yellow), we ﬁnd an almost identical result as for
+the higher-resolution simulations with the same minimum se ed
+mass on scales k < 10 h Mpc− 1, but on smaller scales the cross-
+over scale shifts by a factor of a few (see main text). A simula tion
+with the same resolution but with a 64 × larger volume (in red)
+yields almost the same result, implying that the relative eﬀ ect of
+galaxy formation on the power spectrum is insensitive to cos mic
+variance.
+Figure A1 shows the relative resolution- and box size-
+dependence of a simulation including AGN feedback with
+a relatively high heating temperature of 10 8.5 K. In blue
+the eﬀect on the power spectrum relative to dark mat-
+ter only is shown for a simulation with 2 × 5123 particles
+in a (100 h− 1 Mpc)3 volume, making it a relatively high-
+resolution simulation for the set presented here. The AGN
+suppress the power spectrum by 1% at k ≈ 0. 1 h Mpc− 1,
+with the magnitude of the eﬀect increasing to k ≈
+20 h Mpc− 1 before rapidly dropping when nearing the cross-
+over scale of the AGN and dark matter only power spectra
+around k ≈ 85 h Mpc− 1. This cross-over scale is most sens-
+itive to changes in resolution, ﬁrstly because of changes in
+behaviour of subgrid recipes with resolution, which aﬀect a ll
+scales, and secondly because it is small enough for the dimin -
+ished particle clustering due to limited spatial resolutio n to
+become noticeable.12 The latter primarily aﬀects the (single-
+ﬂuid) dark matter only simulations. Though not shown here,
+12 Note that the cross over itself is not a sign of having run into
+the unresolved regime: hot gas outﬂows suppress the power on
+large scales, relative to dark matter only, but baryons accr eting
+onto galaxies increase the power on small scales. A physical cross-
+over scale of ∼ 0. 1 h− 1 Mpc is therefore expected to occur even
+at inﬁnite resolution.
+we ﬁnd that for our medium-resolution dark matter only
+simulations (e.g. L100N256 or L400N1024) the matter clus-
+tering is signiﬁcantly under-predicted for k /greaterorsimilar10 h Mpc− 1.
+Before directly comparing to a simulation with a dif-
+ferent resolution, we ﬁrst show the eﬀect of changing the
+AGN parameter most directly related to it: the minimum
+halo mass for black hole seeding, equal to 100 dark matter
+particles in the ﬁducial model. By changing the minimum
+mass to 800, we seed only those haloes that would be suﬃ-
+ciently resolved in a simulation with an 8 × lower mass resol-
+ution. Changing only this single parameter has an immediate
+eﬀect on the power spectrum, shown in green in Figure A1.
+The large-scale power decrement seen for the simulation in
+blue, for which only the minimum halo mass for BH seeding
+is diﬀerent, goes down signiﬁcantly on large scales, and the
+cross-over scale moves to slightly larger scales as well.
+When the resolution is now reduced to 2 ×2563 particles
+while keeping all other variables ﬁxed (from green to yel-
+low), the relative eﬀect of galaxy formation on scales k ≲
+3 h Mpc− 1 is virtually unchanged. On smaller scales, par-
+ticularly for k /greaterorsimilar10 h Mpc− 1 the sensitivity to resolution is
+large, and the cross-over scale increases by a factor of a few .
+This should be kept in mind when trying to draw conclusions
+from our results at any scale k > 10 h Mpc− 1.
+Finally, increasing the simulated volume by a factor 64
+at ﬁxed resolution, shown in red, barely aﬀects the results
+on any scale, indicating that the eﬀect of cosmic variance on
+the relative power spectrum is quite low.
+At this point, one may well wonder which simulations
+make more accurate predictions for the eﬀect of galaxy
+formation on the matter power spectrum. The naive an-
+swer is the simulation with the highest resolution (given a
+volume at least ∼ (100 h− 1 Mpc)3 in size), and on scales
+k /greaterorsimilar10 h Mpc− 1 this will likely be correct for resolutions
+similar to the ones considered here – as long as the sub-
+grid parameters match the resolution. However, on larger
+scales, which are the main interest for weak lensing and othe r
+cosmological probes, the answer is not as straightforward.
+Given the uncertainties that currently exist in galaxy form a-
+tion, both the medium- and high-resolution simulations giv e
+valid answers for k < 10 h Mpc− 1. What matters far more
+than the numerical resolution, is how these simulations com -
+pare with relevant observables, such as the stellar mass fun c-
+tion and the hot gas fractions in groups and clusters. On
+well-resolved scales, a simulation calibrated to observab les,
+like the bahamas simulations are, is therefore expected to
+produce more accurate predictions than a higher-resolutio n
+model that does not reproduce these observables. Still, de-
+generacies may exist, and so it remains useful to cover a
+wide array of possible predictions when aiming to mitigate
+the eﬀects of galaxy formation on weak lensing observables
+(as argued by e.g. Mohammed & Gnedin 2018).
+To show that calibration is indeed more important than
+resolution, we compare independently calibrated bahamas
+simulations with diﬀerent box sizes and resolutions in Fig-
+ure A2. We show the eﬀect of galaxy formation on the
+matter power spectrum for three simulations: a standard
+400 h− 1 Mpc WMAP9 bahamas simulation with 2 × 10243
+particles in blue, a higher-resolution 100 h− 1 Mpc run with
+the same physical parameters (see §2.1.1) in green, and an-
+other high-resolution 100 h− 1 Mpc run in which stellar and
+AGN feedback were recalibrated to the same observables
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 25 ---
+Linking the halo baryon fraction with P (k) 25
+Figure A2. Convergence of the eﬀect of galaxy formation on the
+matter power spectrum with respect to resolution in bahamas.
+Here we compare a ﬁducial bahamas simulation (400 h− 1 Mpc
+box with 2 × 10243 particles) to two higher-resolution runs
+(100 h− 1 Mpc box with 2 × 5123 particles), one using the same
+physical subgrid parameters while the other uses parameter s
+that were recalibrated to observations. Note that we compar e at
+z = 0 . 125. Without recalibration, a higher-resolution simulati on
+predicts increased suppression of power on all scales, and a signi-
+ﬁcantly smaller cross-over scale. However, when the simula tion is
+recalibrated to observations (i.e. its feedback parameter s are ad-
+justed to restore agreement with the galaxy stellar mass fun ction
+and the gas fractions of groups and clusters), the predicted relat-
+ive power spectrum is in excellent agreement for k ≲ 6 h Mpc− 1.
+as the standard bahamas runs, in red. For more inform-
+ation on the latter two runs we refer to Appendix C of
+McCarthy et al. (2017). Note that since the recalibrated
+simulation did not run down to z = 0, we here compare
+at z = 0. 125 instead.
+When the standard bahamas run (blue) is repeated in
+a smaller volume at a higher resolution (green), the sup-
+pression of power due to feedback increases on all scales.
+Additionally, the cross-over point of the hydrodynamic and
+dark matter only power spectra shifts towards smaller scale s.
+However, when feedback in the higher-resolution run is re-
+calibrated to the same observables (red), these diﬀerences
+diminish, and almost identical results are found for k ≲
+10 h Mpc− 1, with diﬀerences < 1%.
+APPENDIX B: 2-FLUID DMONLY
+RESIMULATIONS AND LARGE-SCALE
+OFFSETS IN RELATIVE POWER
+As mentioned in §2.2, most hydrodynamical and dark mat-
+ter only simulations run with the same code will not show
+identical clustering on large scales at redshift zero, even
+when seeded with identical phases. This is due to diﬀer-
+ences in how these simulations are typically performed –
+speciﬁcally, the transfer functions and number of particle s
+often diﬀer. Since the combined eﬀects can lead to signi-
+ﬁcant large-scale oﬀsets, we have re-run some of our dark
+matter only simulations in an attempt to mitigate this. For
+Figure B1. Relative diﬀerence in the matter power spectra of
+dark matter only simulations using two CDM particle ﬂuids (“ 2-
+ﬂuid”) and a ﬁducial run using one particle ﬂuid (“1-ﬂuid”). In
+one of the 2-ﬂuid runs, shown in red, we initialize each ﬂuid w ith
+a separate transfer function (assuming CDM or baryons), as i s
+done in bahamas simulations containing baryons. Doing so in-
+creases the power by > 1% on all scales, and explains why such
+large-scale oﬀsets in the relative matter power spectrum ca n be
+seen when dark matter only simulations use a single ﬂuid ini-
+tialized with a total matter transfer function. The other 2- ﬂuid
+run, shown in gray, still uses the same transfer function for both
+ﬂuids, and therefore shows only the eﬀect of adding a second
+particle species. Here, the increase in clustering is sub-p ercent for
+k < 10 h Mpc− 1. This explains the ∼ 0. 1% large-scale oﬀsets seen
+for some (cosmo)OWLS simulations.
+bahamas, we performed 2-ﬂuid DMONLY runs that have
+two CDM particle types, each represented by 1024 3 particles
+(instead of the ﬁducial 1024 3 particles of a single species).
+Each set of particles has a diﬀerent mass and is initialized
+with a diﬀerent matter transfer function in such a way as to
+exactly mimic the initial conditions of the hydrodynamical
+simulations. In Figure B1 we show the change in the z = 0
+matter power spectrum for such a simulation relative to a
+ﬁducial dark matter only run that is otherwise identical, in
+red. Due mainly to initializing the particles with two diﬀer -
+ent transfer functions instead of the ﬁducial combined tran s-
+fer function, the clustering changes by > 1% on all relevant
+scales, k ≲ 10 h Mpc− 1. This eﬀect was previously explored
+by Valkenburg & Villaescusa-Navarro (2017). As this oﬀset
+is signiﬁcant compared to the eﬀects we are interested in, we
+therefore compare hydrodynamical bahamas simulations to
+2-ﬂuid DMONLY runs initialized in this way throughout
+this paper. On smaller scales, the diﬀerence is much larger,
+due to spurious clustering between the two diﬀerent particl e
+types in the 2-ﬂuid run. This would likely be mitigated by
+including a phase shift in one of the particle species when
+splitting the original 1024 3 particle distribution in two, as
+described in Angulo, Hahn & Abel (2013) – however, as this
+has not been done for the baryons either, we choose not to
+do so here.
+To better consider the eﬀect of adding another particle
+species, separate from changing the transfer functions, we
+c© 2019 RAS, MNRAS 000, 1–26
+
+--- Page 26 ---
+26 M. P. van Daalen, I. G. McCarthy and J. Schaye
+also ran a 2-ﬂuid DMONLY simulation that uses the total
+transfer function for both species, in that way mimicking th e
+initial conditions of OWLS and cosmo-OWLS. The cluster-
+ing results relative to the ﬁducial 1-ﬂuid dark matter only
+simulation are shown in Figure B1 as well, in grey. Here,
+too, the 2-ﬂuid run shows increased clustering on all scales ,
+though the eﬀect is sub-percent on the scales most relev-
+ant for our study, k < 10 h Mpc− 1. We have therefore not
+performed additional runs of this kind to replace the ﬁdu-
+cial OWLS and cosmo-OWLS DMONLY simulations, and
+∼ 0. 1% large-scale oﬀsets can therefore still be seen for
+some relative power spectra. If compensated for, the rel-
+ative power would be suppressed by roughly 0 . 2% on large
+scales for WMAP7 cosmo-OWLS simulations (see e.g. the
+left-hand panels of Figures 5 and 9).
+We note that simulations from the literature show sim-
+ilar oﬀsets between the very large-scale power predicted by
+hydrodynamical and dark matter only runs. In particular,
+the power spectra from Horizon-AGN (Chisari et al. 2018)
+show a large-scale oﬀset of 0 . 5 − 0. 7% (see Figure 14), which
+is likely due to the eﬀects described above. Given that Fig-
+ure B1 shows that this oﬀset is expected to be roughly con-
+stant on large scales, we expect that compensating for this
+oﬀset would increase the agreement between diﬀerent mod-
+els on large scales.
+Finally, we have checked that when the CDM power of a
+hydrodynamical bahamas simulation is compared to that of
+only one component of the 2-ﬂuid DMONLY simulation (i.e.
+comparing the power in components with the same number
+of particles and the same mass), rather than to the total
+power of dark matter (scaled by the mass ratio as described
+in §3.4), the back-reactions are virtually identical.
+This paper has been typeset from a T EX/ LATEX ﬁle prepared
+by the author.
+c© 2019 RAS, MNRAS 000, 1–26
