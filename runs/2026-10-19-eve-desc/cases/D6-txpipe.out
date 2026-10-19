@@ -1,0 +1,124 @@
+I'll start by listing the two-point stages and describing TXTwoPoint at the same time.
+Next I'll generate the pipeline from the metadetect example settings.
+I listed the nine two-point stages, described TXTwoPoint, and generated a 27-stage `3x2pt_real` pipeline from the metadetect example. It passes validation, but it can't run yet: three of the example's input files are not on this machine.
+
+## 1. TXPipe two-point stages
+
+Taken from an index of the local TXPipe source (commit `dbd906c2f`):
+
+| Stage | Purpose | Inputs / outputs | MPI | Used in N examples |
+|---|---|---|---|---|
+| TXTwoPoint | Real-space 2pt with TreeCorr | 8 / 2 | yes | 25 |
+| TXTwoPointPixel | TXTwoPoint variant that works from maps | 10 / 2 | yes | 4 |
+| TXTwoPointPixelExtCross | Pixel version, cross-correlation with an external field | 10 / 1 | yes | 1 |
+| TXTwoPointFourier | Fourier-space 3x2pt with NaMaster (from maps) | 10 / 1 | yes | 15 |
+| TXTwoPointFourierCatalog | NaMaster directly from catalogues | 10 / 1 | yes | 1 |
+| TXTwoPointTheoryReal | Theory predictions, real space | 2 / 1 | no | 20 |
+| TXTwoPointTheoryFourier | Theory predictions, Fourier space | 2 / 1 | no | 10 |
+| TXDeltaSigma | Excess surface density (ΔΣ) around lenses | 7 / 1 | yes | 3 |
+| TXDeltaSigmaTheory | ΔΣ theory | 2 / 1 | yes | 3 |
+
+## 2. TXTwoPoint (`txpipe/twopoint.py`)
+
+**Inputs:**
+- `binned_shear_catalog`, `binned_lens_catalog`, `binned_random_catalog`, `binned_random_catalog_sub` (BinnedCatalog)
+- `shear_photoz_stack`, `lens_photoz_stack` (QPNOfZFile)
+- `patch_centers` (TextFile)
+- `tracer_metadata` (HDFFile)
+
+**Outputs:**
+- `twopoint_data_real_raw.sacc`
+- `twopoint_gamma_x.sacc` (the cross-shear null test)
+
+**Config defaults** (26 options, none required). These are the stage's own defaults; the generated `config.yml` may override some of them (I did not open it):
+
+| Group | Options |
+|---|---|
+| Binning | `min_sep` 0.5, `max_sep` 300.0, `nbins` 9, `sep_units` "arcmin", `bin_slop` 0.0, `metric` "Euclidean" |
+| Shear sign | `flip_g1` False, `flip_g2` True |
+| What to compute | `calcs` [0,1,2] (0 = shear-shear, 1 = shear-position, 2 = position-position), `do_shear_shear` / `do_shear_pos` / `do_pos_pos` True, `auto_only` False, `source_bins` [-1], `lens_bins` [-1] (-1 = all bins) |
+| Randoms | `use_randoms` True, `use_subsampled_randoms` True, `reduce_randoms_size` 1.0, `gaussian_sims_factor` [1.0] |
+| Variance | `var_method` "jackknife" |
+| Performance | `cores_per_task` 20, `low_mem` False, `patch_dir` "./cache/patches", `chunk_rows` 100000, `share_patch_files` False, `verbose` 1 |
+
+## 3. Generated pipeline
+
+Run directory: `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172459/txpipe_3x2pt_real_metadetect_94ab52/`, containing `pipeline.yml`, `config.yml` and `dependency_report.json`.
+
+- **Settings:** local site, mini launcher, 2 threads, `TXNullBlinding`. Null blinding is right for simulations; use `blinding='muir'` for real data.
+- **Stage order:**
+  - Photo-z and selection: FlowCreator, GridSelection, TXParqetToHDF, BPZ lite, NZDir, source/lens selectors
+  - Calibration and weights: TXShearCalibration, TXLensCatalogSplitter, TXLSSWeightsUnit
+  - Maps and randoms: depth, bright-object and mask maps, TXTracerMetadata, TXRandomCat, TXJackknifeCenters
+  - Two-point and products: **TXTwoPoint**, TXNullBlinding, TXTwoPointPlots, TXTwoPointTheoryReal, n(z) plots
+- **Main products** (in `outputs/`):
+  - `twopoint_data_real.sacc`
+  - `twopoint_theory_real.sacc`
+  - Plots: ξ+, ξ−, γt, w(θ) and γ×
+
+## 4. Validation
+
+- **Structure checks passed:** the stage graph has no cycles, every stage is known, every input is resolved, and no outputs are duplicated.
+- **Missing input files.** These live in the example data under `TXPipe/data/example/inputs/`:
+  - `metadetect_shear_catalog.hdf5`
+  - `photometry_catalog.hdf5`
+  - `example_flow.pkl`
+  
+  The fourth input, `fiducial_cosmology.yml`, is present.
+- **Only a partial check.** These checks come from the stage index. ceci's own `--dry-run` was skipped because `DESC_TXPIPE_ENV` is not set.
+
+## 5. Dry-run commands
+
+The validator generated 27 per-stage commands, but its response was cut off after the first few. Every command starts with the same prefix:
+```
+OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=<TXPipe>/submodules/WLMassMap/python/desc:<TXPipe>/submodules/pyfsb:$PYTHONPATH
+```
+Below, `RUN = .../runs/261019_172459/txpipe_3x2pt_real_metadetect_94ab52` and `IN = /Users/nramachandra/github-integration/TXPipe/data/example/inputs`. These are the commands that came back in full:
+
+```
+python3 -m ceci rail.creation.engines.flowEngine.FlowCreator --model=$IN/example_flow.pkl --config=$RUN/config.yml --output=$RUN/outputs/ideal_specz_catalog.pq
+python3 -m txpipe TXBrightObjectMaps --photometry_catalog=$IN/photometry_catalog.hdf5 --config=$RUN/config.yml --bright_object_map=$RUN/outputs/bright_object_map.hdf5
+python3 -m txpipe TXDepthMaps --photometry_catalog=$IN/photometry_catalog.hdf5 --config=$RUN/config.yml --depth_map=$RUN/outputs/depth_map.hdf5
+python3 -m ceci rail.creation.degraders.grid_selection.GridSelection --input=$RUN/outputs/ideal_specz_catalog.pq --config=$RUN/config.yml --output=$RUN/outputs/specz_catalog_pq.pq
+python3 -m txpipe TXSimpleMaskFrac --depth_map=$RUN/outputs/depth_map.hdf5 --bright_object_map=$RUN/outputs/bright_object_map.hdf5 --config=$RUN/config.yml --mask=$RUN/outputs/mask.hdf5
+python3 -m txpipe TXParqetToHDF --input=$RUN/outputs/specz_catalog_pq.pq --config=$RUN/config.yml --output=$RUN/outputs/spectroscopic_catalog.hdf5
+python3 -m ceci rail.estimation.algos.nz_dir.NZDirInformer --input=$RUN/outputs/spectroscopic_catalog.hdf5 --name=NZDirInformerLens --config=$RUN/config.yml --model=$RUN/outputs/lens_direct_calibration_model.pkl
+```
+
+The generator also returned this one in full:
+```
+python3 -m txpipe TXShearCalibration --shear_catalog=$IN/metadetect_shear_catalog.hdf5 --shear_tomography_catalog=$RUN/outputs/shear_tomography_catalog.hdf5 --fiducial_cosmology=<TXPipe>/data/fiducial_cosmology.yml --config=$RUN/config.yml --binned_shear_catalog=$RUN/outputs/binned_shear_catalog.hdf5
+```
+
+The TXTwoPoint command was in the cut-off part. I put it together from the stage's command template and the output paths the validator resolved; it was not returned verbatim:
+```
+python3 -m txpipe TXTwoPoint --binned_shear_catalog=$RUN/outputs/binned_shear_catalog.hdf5 --binned_lens_catalog=$RUN/outputs/binned_lens_catalog.hdf5 --binned_random_catalog=$RUN/outputs/binned_random_catalog.hdf5 --binned_random_catalog_sub=$RUN/outputs/binned_random_catalog_sub.hdf5 --shear_photoz_stack=$RUN/outputs/shear_photoz_stack.hdf5 --lens_photoz_stack=$RUN/outputs/lens_photoz_stack.hdf5 --patch_centers=$RUN/outputs/patch_centers.txt --tracer_metadata=$RUN/outputs/tracer_metadata.hdf5 --config=$RUN/config.yml --twopoint_data_real_raw=$RUN/outputs/twopoint_data_real_raw.sacc --twopoint_gamma_x=$RUN/outputs/twopoint_gamma_x.sacc
+```
+
+## Next steps
+1. **Get the inputs:** download the example data (347 MB) with `txpipe_fetch_example_data`.
+2. **Full dry-run:** set `DESC_TXPIPE_ENV` so ceci's own `--dry-run` runs and gives the full set of commands.
+3. **Run it:** `txpipe_run_pipeline` (expect roughly 10–30 min on the 1 deg² example), then `sacc_inspect` on `twopoint_data_real.sacc`.
+Loading MCP servers…
+[10/19/26 17:25:01] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] txpipe_list_stages {"group": "two-point"}
+[10/19/26 17:25:07] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] txpipe_list_stages -> ok: {   "status": "success",   "files": [],   "message": "9 TXPipe stages in group 'two-point' (clone dbd906c2f, 58 example pipelines indexed).",   "metadata": {   
+[tool] txpipe_describe_stage {"name": "TXTwoPoint"}
+[10/19/26 17:25:08] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] txpipe_describe_stage -> ok: {   "status": "success",   "files": [],   "message": "TXTwoPoint (two-point): Make 2pt measurements using TreeCorr. 8 inputs, 2 outputs, 26 config options (0 re
+[tool] txpipe_generate_pipeline {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172459", "preset": "3x2pt_real", "catalog_type": "metadetect"}
+[10/19/26 17:25:11] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] txpipe_generate_pipeline -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172459/txpipe_3x2pt_real_metadetect_94ab52/pip
+[tool] txpipe_validate_pipeline {"pipeline_yml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172459/txpipe_3x2pt_real_metadetect_94ab52/pipeline.yml"}
+[10/19/26 17:25:14] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] txpipe_validate_pipeline -> ok: {   "status": "success",   "files": [],   "message": "27 stages, DAG OK; 3 overall input file(s) missing locally; 27 dry-run commands. (set DESC_TXPIPE_ENV to a
+Tokens: 261K in (185K cached) · 4.4K out · 4 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/txp.json

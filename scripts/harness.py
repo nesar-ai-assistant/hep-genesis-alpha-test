@@ -583,7 +583,7 @@ def append_issues(run_id, metas):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--profile", default="core",
-                    choices=["smoke", "core", "research", "combo", "features"])
+                    choices=["smoke", "core", "research", "combo", "features", "desc"])
     ap.add_argument("--date-suffix", default=None,
                     help="e.g. 'am' to make runs/2026-10-16-am-core/")
     args = ap.parse_args()

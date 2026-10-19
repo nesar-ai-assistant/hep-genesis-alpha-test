@@ -1,0 +1,75 @@
+I simulated correlated shear and density maps at nside 64 with f_sky 0.3, measured all three 3x2pt spectra with NaMaster in linear bins of width 20, and plotted them against the input theory (Figure 15). The bin-averaged measurements land within about 10% of the theory. Nothing here has error bars yet, so this is a visual check rather than a goodness-of-fit test.
+
+**Setup**
+- **Cosmology:** Ω_m = 0.30, σ8 = 0.81, h = 0.67, halofit.
+- **Source bin (src0):** Gaussian n(z) with mean z 0.9 and width 0.25. Density 8 galaxies/arcmin², shape noise σ_e = 0.26.
+- **Lens bin (lens0):** Gaussian n(z) with mean z 0.5 and width 0.1. Bias 1.6, density 4 galaxies/arcmin².
+- **Maps:** a binary polar-cap mask with f_sky = 0.2995 and no apodization, white noise added, seed 0. The maps are in Figure 9.
+- **Bins:** edges at ℓ = 2, 22, 42, 62, 82, 102, 129, giving six bandpowers with effective ℓ of 11.5, 31.5, 51.5, 71.5, 91.5 and 115. The upper limit defaulted to 2·nside = 128, so the last bin is 27 wide instead of 20. I kept that cut because bandpowers above it are biased by pixelization.
+- **Noise:** the analytic noise was subtracted from the two auto-spectra.
+
+**Measured vs. input theory, averaged over the six bins**
+
+| Spectrum | Measured | Theory | Ratio |
+|---|---|---|---|
+| Shear EE (src0 × src0) | 1.45e-8 | 1.42e-8 | 1.02 |
+| Shear × density (lens0 × src0) | 2.76e-7 | 3.03e-7 | 0.91 |
+| Density (lens0 × lens0) | 1.56e-5 | 1.69e-5 | 0.93 |
+
+All values are dimensionless C_ℓ. The per-bin binned theory is in `namaster_cls_32676c.json`.
+
+**What to keep in mind**
+- **Scatter:** at these low multipoles with f_sky 0.3, cosmic variance per bin is roughly 5–15%. Differences of 7–9% in the averages are what one realization should show, but that can't be quantified until there is a covariance.
+- **Mask:** because the mask has sharp edges, some power leaks between multipoles and from E- into B-modes. I didn't check whether the EB/BE/BB pieces are consistent with zero. Apodizing the mask by a few degrees (`apodize_deg`) would reduce the leakage.
+- **Data types:** the sacc file has 7 data types, including the B-mode pieces. These need to be removed before using it in a likelihood.
+
+**Files** (in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172546/`)
+- `namaster_32676c.sacc` – bandpowers with windows and noise metadata, ready for a covariance and likelihood
+- `namaster_src0_src0.csv`, `namaster_lens0_src0.csv`, `namaster_lens0_lens0.csv` – per-pair bandpowers
+- `namaster_cls_32676c.npz` – bandpower windows
+- `sim_theory_cls.csv` – input theory spectra
+- `sim_fields.json` – map and mask setup used for the measurement
+
+To get a proper χ² against the input theory, the next steps would be: compute a covariance for the sacc file (TJPCov), remove the B-modes, then evaluate the fit with firecrown at the input cosmology.
+Loading MCP servers…
+[10/19/26 17:25:48] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] namaster_simulate_maps {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172546", "tracers": [{"name": "src0", "kind": "shear", "z_mean": 0.9, "z_sigma": 0.25, "n_gal_arcmin2": 8, "sigma
+[10/19/26 17:25:57] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/19/26 17:26:00] INFO     Sigma is 0.000000 arcmin (0.000000 sphtfunc.py:1743
+                             rad)                                               
+                    INFO     -> fwhm is 0.000000 arcmin         sphtfunc.py:1744
+                    INFO     0.0 180.0 -180.0 180.0              projaxes.py:558
+                    INFO     The interval between parallels is   projaxes.py:668
+                             30 deg -0.00'.                                     
+                    INFO     The interval between meridians is   projaxes.py:671
+                             60 deg -0.00'.                                     
+[10/19/26 17:26:01] INFO     Warning: UserWarning: Ignoring        server.py:723
+                             specified arguments in this call                   
+                             because figure with num: 1 already                 
+                             exists                                             
+[tool] namaster_simulate_maps -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172546/sim_theory_cls.csv",     "/Users/nramac
+[tool] namaster_compute_cls {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172546", "fields_json": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172546/sim_fields
+[10/19/26 17:26:04] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+                    INFO     NSIDE = 64                          fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 64                          fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 64                          fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 64                          fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 64                          fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+[tool] namaster_compute_cls -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172546/namaster_cls_32676c.npz",     "/Users/n
+Tokens: 174K in (114K cached) · 2.3K out · 3 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/nm.json

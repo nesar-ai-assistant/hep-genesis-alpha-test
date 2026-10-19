@@ -255,6 +255,39 @@ time.
 - Flagged for the sterile-nu-bbn server repo; report has full details
   (research-results/2026-10-19/ramp-combo-lyman-wdm/).
 
+### 24. DESC MCP server: `tools.ccl` module listed in pyproject.toml but never created **[local, Nesar's server]** — open
+
+- Found 2026-10-19-eve-desc. `pyproject.toml [tool.mcp-server].tool_modules`
+  lists `"tools.ccl"` and `tools/meta/registry.py` FAMILIES maps
+  `ccl → tools.ccl`, but no `tools/ccl/` package exists in the repo
+  (git history: never committed). Server crashes on startup with
+  `ModuleNotFoundError: No module named 'tools.ccl'`.
+- Workaround: commented out `tools.ccl` in pyproject.toml; server starts
+  with 48 of 54 tools (6 CCL-family tools absent). `describe_desc_tool_family("ccl")`
+  returns "not importable" but doesn't crash.
+- Impact: the CCL-family tools (background distances, P(k), angular C_ell,
+  correlation functions, halo model, SRD n(z)) are the foundation for most
+  cross-family chains. Without them, agents use augur/firecrown tools as
+  workarounds (which internally call pyccl but don't expose raw CCL).
+- Action: create `tools/ccl/__init__.py` implementing the 6 tools
+  referenced by the registry (ccl_* prefix). The pyccl import path works
+  fine in the env (pyccl 3.3.6 installed).
+
+### 25. DESC MCP server env: osx-64 conda-lock not shipped; classic conda solver hangs **[local, setup]** — fixed
+
+- Found 2026-10-19. The repo's `conda-lock.yml` ships only linux-64 and
+  osx-arm64 platforms. This host (macOS x86_64 / osx-64) requires a platform-
+  specific re-solve. The prior attempt used `uvx conda-lock lock --conda conda`
+  where `conda` was version 4.7.12 (pre-libmamba) — the solver ran for 2.5h
+  at 100% CPU / 8.4 GB RSS without converging.
+- Fix applied: killed the stuck solver; used the repo's embedded micromamba
+  2.9.0 to solve directly from `environment.yml` (libmamba solver, ~2 min),
+  then `pip install --no-deps -e .` for the server + pip-only deps. The
+  repo's `scripts/env.sh` was not used because it requires `uvx` for
+  `--relock` (available via `~/.hermes/bin/uv`) and its default path uses
+  the shipped lock (which lacks osx-64).
+- Also fixed: `serve-desc.sh` lacked the executable bit (chmod +x applied).
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -327,4 +360,13 @@ Clean run — no flags.
 ## 2026-10-19-pm-combo — 3 pass / 0 flagged
 
 Clean run — no flags.
+
+
+## 2026-10-19-eve-desc — 10 pass / 0 flagged
+
+Clean run (after fixing two setup issues; see #24, #25).
+First DESC battery: all 10 cases passed, including multi-family chains
+D3 (CCL→sacc→augur→sacc_inspect), D4 (augur→sacc→firecrown, χ²=0.00),
+D7 (namaster simulate→compute_cls→sacc), D10 (meta→firecrown→convert_cosmology).
+v0.3.18 on claude-opus-5-5. 48 of 54 tools loaded (6 CCL tools absent, see #24).
 

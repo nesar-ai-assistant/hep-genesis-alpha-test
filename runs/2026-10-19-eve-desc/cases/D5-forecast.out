@@ -1,0 +1,66 @@
+I ran the LSST Y1 cosmic-shear Fisher forecast locally, varying Ω_c, σ8 and w0. The marginalised results are **σ(σ8) = 0.0062** and **σ(w0) = 0.0165**. Both are far more optimistic than a real analysis would give, because almost everything else is held fixed (see the caveats below).
+
+**Setup**
+- **Survey:** LSST Y1 SRD layout, shear only. There are 5 source bins with a total of 10 galaxies/arcmin², shape noise σ_e = 0.26 per component and f_sky = 0.3.
+- **Data vector:** 20 log-spaced ℓ bands from 20 to 15000, giving 15 tracer pairs × 20 = 300 points. No scale cut was applied to shear.
+- **Covariance:** augur's mode-counting Gaussian covariance (`gaus_internal`). It has no super-sample or non-Gaussian terms.
+- **Fiducial cosmology (DESC SRD):** Ω_c = 0.2664, Ω_b = 0.0492, h = 0.6727, n_s = 0.9645, σ8 = 0.831, w0 = −1, wa = 0. Power spectrum from Eisenstein–Hu plus halofit.
+- **Derivatives:** numdifftools with an absolute step of 0.01, using 7 evaluations (about 5 s locally).
+- **Validation:** the config passed with 0 errors and 0 warnings. The Fisher matrix is symmetric and positive-definite, with a condition number of about 1.2×10³.
+
+**Marginalised 1σ (no priors)**
+
+| Parameter | Fiducial | σ |
+|---|---|---|
+| σ8 | 0.831 | **0.00622** |
+| w0 | −1.0 | **0.0165** |
+| Ω_c | 0.2664 | 0.00364 |
+| S8 (derived) | 0.852 | 0.00173 |
+| Ω_m (derived) | 0.3156 | 0.00364 |
+
+Figure 8 shows the 68% and 95% Fisher ellipses for Ω_c, σ8 and w0.
+
+**Why these numbers are too optimistic**
+- **Nuisance parameters fixed:** intrinsic alignment, photo-z shifts and multiplicative shear bias are all held at their fiducial values. Marginalising over them, especially intrinsic alignment and Δz, would loosen σ8 and w0 a lot.
+- **Other cosmology fixed:** Ω_b, h, n_s and wa are also held fixed. Freeing wa in particular would make w0 several times worse. With wa fixed, no DETF figure of merit can be computed.
+- **No priors:** no Gaussian priors were applied.
+- **Small scales included:** shear is used up to ℓ = 15000 with no baryonic modelling.
+
+**Files** (in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/`)
+- Config: `augur_y1_shear_c7bb5d/forecast_config.yml`
+- Fisher matrix: `fisher_35ef5e.csv`
+- Marginalised sigmas: `marginalized_sigmas_35ef5e.csv`
+- Contour plot: `fisher_contours_7fb6da.png`
+
+If you want a more realistic forecast, I can rerun it with intrinsic alignment and photo-z nuisances freed, the full SRD parameter set and SRD priors.
+Loading MCP servers…
+[10/19/26 17:24:13] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] augur_generate_forecast_config {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411", "survey_year": "Y1", "probes": "shear", "var_pars": ["Omega_c", "sigma8", "w0"], "label": "y1_shear"}
+[10/19/26 17:24:20] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/19/26 17:24:24] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] augur_generate_forecast_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/augur_y1_shear_c7bb5d/forecast_config.y
+[tool] augur_validate_forecast_config {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/augur_y1_shear_c7bb5d/forecast_config.yml"}
+[10/19/26 17:24:28] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] augur_validate_forecast_config -> ok: {   "status": "success",   "files": [],   "message": "go: 0 errors, 0 warnings for /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411
+[tool] get_dispatch {}
+[10/19/26 17:24:30] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] get_dispatch -> ok: Dispatch: local execution.
+[tool] augur_compute_fisher {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/augur_y1_shear_c7bb5d/forecast_config.yml", "output_dir": "/Users/nramachandra/hep-genesis-testing/projec
+[10/19/26 17:24:32] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/19/26 17:24:35] INFO     loading filters                     generate.py:823
+[10/19/26 17:24:41] INFO     Warning: UserWarning: No bandpower    server.py:723
+                             windows associated with these data                 
+[tool] augur_compute_fisher -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/fisher_35ef5e.csv",     "/Users/nramach
+[tool] augur_plot_fisher_contours {"fisher_csvs": ["/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/fisher_35ef5e.csv"], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/2610
+[10/19/26 17:24:44] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] augur_plot_fisher_contours -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172411/fisher_contours_7fb6da.png"   ],   "mes
+Tokens: 355K in (294K cached) · 2.1K out · 6 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/fisher.json

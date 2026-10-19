@@ -1,0 +1,66 @@
+I built the sacc file, but not with `ccl_lsst_srd_nz`. The CCL tool family isn't installed on this server (`No module named 'tools.ccl'`), so that tool wasn't available. Instead I used augur, which loads the same LSST Y1 SRD n(z) tables and computes the C_ell with pyccl 3.3.6. Unlike what you asked for, augur also attaches a Gaussian covariance to the file.
+
+**What ran (all locally)**
+1. `augur_generate_forecast_config`: Y1 3x2pt, 20 log-spaced ell bands with edges from 20 to 2000. The cosmology is the DESC SRD fiducial (Omega_c 0.2664, Omega_b 0.0492, h 0.6727, n_s 0.9645, sigma8 0.831), using the Eisenstein-Hu transfer function and halofit. Sources total 10 galaxies/arcmin², lenses 18/arcmin², sigma_e = 0.26, f_sky = 0.3.
+2. `augur_generate_synthetic_datavector`: computed the noiseless theory C_ell and wrote them to
+   `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/augur_y1_3x2pt_l20_2000_14dd28/fiducial_datavector.sacc`
+   Figure 7 shows all the spectra with error bars. The total S/N is about 1574.
+3. `sacc_inspect` on that file. The correlation matrix is in Figure 21.
+
+**Tracers (10, all NZ type, 500 z samples each over 0 to 3.5)**
+| Tracer | Quantity | Mean z |
+|---|---|---|
+| src0 to src4 | galaxy_shear | 0.25, 0.46, 0.65, 0.92, 1.53 |
+| lens0 to lens4 | galaxy_density | 0.32, 0.51, 0.70, 0.90, 1.09 |
+
+The names and quantities already follow the firecrown/augur conventions.
+
+**Data types (540 points, harmonic space)**
+The ell values are the band centres, from 22.4 to 1782.5. The file has no bandpower window functions.
+
+| Data type | Pairs | Points |
+|---|---|---|
+| galaxy_shear_cl_ee | 15 (every src_i–src_j pair) | 300 |
+| galaxy_shearDensity_cl_e | 7 SRD pairs (e.g. src2–lens0 through src4–lens3) | 140 |
+| galaxy_density_cl | 5 (lens auto-spectra only) | 100 |
+
+**Covariance: present**
+- It's a full 540×540 matrix, positive definite.
+- Smallest eigenvalue is 1.9e-23, condition number about 1.0e13.
+- The largest off-diagonal correlation is 0.88.
+- It's augur's simple Gaussian estimate (`gaus_internal`), with no super-sample or non-Gaussian terms. That's fine for forecasts and sanity checks, but not for a publication result; TJPCov would be needed for that.
+
+**Scale cuts**
+The file keeps all 540 points. The SRD lens-side cut (kmax = 0.202 Mpc⁻¹) only applies inside the likelihood and keeps 457 points:
+- Cosmic shear keeps all 300.
+- Galaxy-galaxy lensing keeps 88; the maximum ell ranges from about 224 to 564, depending on the lens bin.
+- Clustering keeps 69, with a maximum ell of about 224 to 710.
+
+Other outputs, including the n(z) and data-vector CSVs, are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/`.
+Loading MCP servers…
+[10/19/26 17:21:24] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/19/26 17:21:31] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+[tool] augur_generate_forecast_config {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123", "survey_year": "Y1", "probes": "3x2pt", "ell_min": 20, "ell_max": 2000, "nz_mode": "file", "label": "y1_
+[10/19/26 17:21:37] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/19/26 17:21:44] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] augur_generate_forecast_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/augur_y1_3x2pt_l20_2000_14dd28/forecast
+[tool] augur_generate_synthetic_datavector {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/augur_y1_3x2pt_l20_2000_14dd28/forecast_config.yml", "output_dir": "/Users/nramachandra/hep-genesis-testi
+[10/19/26 17:21:47] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/19/26 17:21:57] INFO     loading filters                     generate.py:823
+[10/19/26 17:22:00] INFO     Warning: UserWarning: No bandpower    server.py:723
+                             windows associated with these data                 
+[tool] augur_generate_synthetic_datavector -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/datavector_66b036.csv",     "/Users/nra
+[tool] sacc_inspect {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/augur_y1_3x2
+[10/19/26 17:22:03] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_inspect -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/fiducial_datavector_tracers.csv",     "
+Tokens: 300K in (234K cached) · 2.4K out · 5 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/dv.json
