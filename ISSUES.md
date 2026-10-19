@@ -213,6 +213,48 @@ time.
   closed direction is silent. One occurrence so far — monitoring; will file
   upstream if it recurs.
 
+### 22. Plan-phase brief falsely claims MCP server tools are unavailable **[GH#9]** — open
+
+- v0.3.16 (found 2026-10-17-pm-combo, reproduced 2026-10-19-pm-combo; 4-server
+  research mode, 2/2 occurrences). The `[brief]` produced after the survey phase
+  warns that domain-server tools "are not among the available tools" / "Only
+  arXiv and web search tools were provided" — even though the same transcript
+  shows the survey agent successfully probing those very tools seconds earlier,
+  and the brief's own next line says "52 tools on 5 servers".
+- 2026-10-17: brief said "none of my tools is a hydrodynamics or
+  baryonic-emulator tool"; workers then called `predict_observable` /
+  `describe_parameters` 10×.
+- 2026-10-19: brief said sterile-nu tools are absent; workers then made ~19
+  sterile-nu tool calls (predict_sterile_nu_grid, predict_sterile_nu_xray_line,
+  scan_sterile_nu_parameters, …). The final report had to issue a correction:
+  "The brief stated that no sterile-neutrino production tools were available.
+  In fact a sterile-neutrino server was reachable and was used."
+- Self-healing but costly: in both runs the plan critic caught the false claim
+  and redirected ("The survey wrongly said these tools are absent"), wasting
+  critic revisions; and in the 10-17 run the survey's claimed tool absence
+  shaped the initial direction set.
+- Likely cause: the brief/survey summarizer sees only arXiv/web tool results in
+  its context (survey probes of domain tools may not be passed to it, or the
+  summarizer prompt asks only about literature tools). Survey inventory should
+  be grounded in the ListTools output it already collects.
+
+### 23. sterile-nu server DW yield normalization 10–16× low vs literature **[Nesar's server, not the app]**
+
+- Found 2026-10-19-pm-combo (ramp-combo-lyman-wdm). Against the Abazajian 2005
+  DW fit (Ω_s h² ∝ (sin²2θ)^1.23 m_s², valid 135 < T_QCD < 300 MeV), the
+  server's DW relic curve sits 10–16× too low in mixing angle at fixed mass:
+  server scaling is linear in sin²2θ and ~m^1.8, literature is (sin²2θ)^1.23
+  and ~m². Consequence: server production fractions f = Ω_s h²/0.12 are
+  overstated by 1.5–2 orders of magnitude at the X-ray-allowed mixings.
+- Secondary: at the server's own relic curve (Ω_s h² = 0.12) the tool labels
+  3 of 5 points "overcloses" despite Ω_s h² = 0.12 exactly — strict/rounded
+  inequality in the threshold check.
+- Also noted by the agent: tool's built-in X-ray limits have no coverage at
+  29–46 keV (gap reads as "allowed" in plot_sterile_nu_exclusion), and
+  exclusion verdicts return no limit values.
+- Flagged for the sterile-nu-bbn server repo; report has full details
+  (research-results/2026-10-19/ramp-combo-lyman-wdm/).
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -278,6 +320,11 @@ Clean run — no flags.
 
 
 ## 2026-10-19-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-19-pm-combo — 3 pass / 0 flagged
 
 Clean run — no flags.
 

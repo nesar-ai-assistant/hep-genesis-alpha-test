@@ -378,6 +378,69 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
         add("C3-skills", "cli", "--list-skills", "List workspace skills", 60)
         return cases
 
+    if profile == "desc":
+        DESC = f"command:{SCRIPTS}/serve-desc.sh"
+        cases.append(dict(id="D1-meta", mode="quick",
+            args=('--quick "Use list_desc_packages, then describe the ccl family. Report installed versions '
+                  'of pyccl, sacc, firecrown, augur in one line." '
+                  f'--servers {DESC} --project ramp-desc --chat meta'),
+            desc="DESC meta: package list + family description", timeout=300))
+        cases.append(dict(id="D2-ccl-theory", mode="quick",
+            args=('--quick "Using CCL with the vanilla cosmology: compute chi(z=1) [expect ~3300 Mpc] and '
+                  'the nonlinear matter power spectrum at z=0.5 with halofit; report P(k=1 h/Mpc) '
+                  '[expect 800-900 (Mpc/h)^3]. State both numbers explicitly." '
+                  f'--servers {DESC} --project ramp-desc --chat ccl'),
+            desc="DESC ccl: background + Pk with physics checks", timeout=600))
+        cases.append(dict(id="D3-datavector", mode="quick",
+            args=('--quick "Generate LSST Y1 SRD source and lens n(z) bins with ccl_lsst_srd_nz, compute '
+                  '3x2pt angular C_ell for ell 20-2000, write to a sacc file. Then inspect it with sacc_inspect: '
+                  'tracers, data types, whether covariance is present." '
+                  f'--servers {DESC} --project ramp-desc --chat dv'),
+            desc="DESC: SRD n(z) -> C_ell -> sacc -> inspect chain", timeout=900))
+        cases.append(dict(id="D4-likelihood", mode="quick",
+            args=('--quick "Attach a Gaussian covariance to a sacc you generate (f_sky=0.4, sigma_e=0.26, '
+                  'n_gal=10/arcmin2), build a firecrown likelihood (harmonic, PhotoZShift+MultiplicativeShearBias '
+                  'per bin, LinearAlignment global), compute loglike at the generation cosmology. chi2 should be '
+                  '~0; explain why." '
+                  f'--servers {DESC} --project ramp-desc --chat like'),
+            desc="DESC firecrown: cov + likelihood + chi2~0 check", timeout=1200))
+        cases.append(dict(id="D5-forecast", mode="quick",
+            args=('--quick "Generate an LSST Y1 shear-only Fisher forecast with augur (3 var_pars), validate it, '
+                  'compute the Fisher matrix locally, and plot contours. Report the marginalised sigma(sigma8) '
+                  'and sigma(w0)." '
+                  f'--servers {DESC} --project ramp-desc --chat fisher'),
+            desc="DESC augur: Y1 Fisher forecast + contours", timeout=1500))
+        cases.append(dict(id="D6-txpipe", mode="quick",
+            args=('--quick "List TXPipe two-point stages, describe TXTwoPoint (inputs, outputs, config defaults), '
+                  'generate a 3x2pt_real pipeline for the metadetect example, validate it, and show the dry-run '
+                  'commands." '
+                  f'--servers {DESC} --project ramp-desc --chat txp'),
+            desc="DESC txpipe: stage docs + pipeline compose/validate", timeout=600))
+        cases.append(dict(id="D7-namaster", mode="quick",
+            args=('--quick "Simulate shear+density maps (nside 64, f_sky 0.3), measure 3x2pt bandpowers with '
+                  'NaMaster in linear bins of width 20, show measured spectra against input theory." '
+                  f'--servers {DESC} --project ramp-desc --chat nm'),
+            desc="DESC namaster: simulate maps -> bandpowers chain", timeout=900))
+        cases.append(dict(id="D8-covariance", mode="quick",
+            args=('--quick "For the sacc you measured with NaMaster: generate a TJPCov FourierGaussianFsky '
+                  'covariance config (f_sky from the mask, n_gal, galaxy bias), compute the covariance, compare '
+                  'with plain Knox, report chi2 at input cosmology and whether positive definite." '
+                  f'--servers {DESC} --project ramp-desc --chat cov'),
+            desc="DESC tjpcov: covariance + Knox comparison + chi2", timeout=900))
+        cases.append(dict(id="D9-skills-dispatch", mode="quick",
+            args=('--quick "List the server-side skills (list_desc_skills), load the desc-tour skill and follow '
+                  'its first two steps only. Then call auth_status and report the dispatch state." '
+                  f'--servers {DESC} --project ramp-desc --chat skill'),
+            desc="DESC skills + dispatch: tour + auth status", timeout=600))
+        cases.append(dict(id="D10-multi-desc", mode="quick",
+            args=('--quick "Chain families: use CCL to compute the nonlinear P(k) at z=0.5 (halofit), then use '
+                  'the pk-ccl-vs-emulators skill approach to note what a companion emulator comparison would do, '
+                  'then compute the firecrown loglike of the DES Y1 3x2pt test vector at fiducial params. Report '
+                  'the three outputs in order." '
+                  f'--servers {DESC} --project ramp-desc --chat chain'),
+            desc="DESC multi-family chain in one conversation", timeout=1500))
+        return cases
+
     if profile == "features":
         # find an existing research project for board/run listing (created by
         # the research/combo batteries on previous runs)
