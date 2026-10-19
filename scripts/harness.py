@@ -503,6 +503,16 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
             'published in 2025." --project ramp-features --servers none '
             '--max-waves 1 --workers 1 --max-tool-calls 15 --wall-clock 10',
             "Research mode with no servers (pure LLM multi-step)", 900)
+        # v0.3.18 dispatch-collect (R10): local no-wait machinery probes.
+        # Without HPC credentials we exercise the record-handling layer:
+        # graceful errors for missing/invalid dispatch records, and
+        # find_dispatched_jobs over a folder with no records.
+        add("F10-collect-missing-record", "quick",
+            '"Use the find_dispatched_jobs tool to search /Users/nramachandra/hep-genesis-testing/projects/ '
+            'for dispatched compute jobs. Then try collect_dispatched_job on the result (or explain exactly '
+            'why it cannot proceed). Report the exact error messages." '
+            '--servers none --project ramp-features --chat collect1',
+            "v0.3.18 collect: find_dispatched_jobs + collect on missing records", 300)
         return cases
 
     raise ValueError(f"unknown profile {profile}")
