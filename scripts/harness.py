@@ -167,23 +167,37 @@ def check_storage(run_dir: Path) -> dict:
 # --------------------------------------------------------- research archival
 
 def archive_research_results(run_dir: Path, env, project: str) -> Path:
-    """Copy board.json + report PDFs + findings digest into research-results/<date>/<project>."""
-    date = datetime.now().strftime("%Y-%m-%d")
-    dest = RESEARCH_RESULTS / date / project
-    dest.mkdir(parents=True, exist_ok=True)
+    """Copy board.json + report PDFs + findings digest into research-results/<date>/<project>.
+
+    Archives ALL report dirs for the project (each as report-<timestamp>/),
+    deriving the date from the latest report's YYMMDD_HHMMSS name so late
+    backfills land on the right day."""
     proj = Path(env["HEP_PROJECTS_DIR"]) / project
-    copied = []
-    for b in proj.glob("research/*/board.json"):
-        shutil.copy2(b, dest / f"board-{b.parent.name}.json")
-        copied.append(str(b))
     reports = sorted(proj.glob("reports/*"))
-    if reports:
-        latest = reports[-1]
-        rdest = dest / "report"
+
+    def date_of(name: str, fallback: str) -> str:
+        m = re.match(r"(\d{2})(\d{2})(\d{2})_", name)
+        return f"20{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else fallback
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    copied = []
+    boards = list(proj.glob("research/*/board.json"))
+    for b in boards:
+        # boards live under the latest report's date bucket
+        d = RESEARCH_RESULTS / date_of(reports[-1].name if reports else "", today) / project
+        d.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(b, d / f"board-{b.parent.name}.json")
+        copied.append(str(b))
+    for r in reports:
+        d = RESEARCH_RESULTS / date_of(r.name, today) / project
+        d.mkdir(parents=True, exist_ok=True)
+        rdest = d / f"report-{r.name}"
         if rdest.exists():
             shutil.rmtree(rdest)
-        shutil.copytree(latest, rdest)
-        copied.append(f"report/ ({latest.name})")
+        shutil.copytree(r, rdest)
+        copied.append(f"{d.name}/{project}/report-{r.name}/")
+    dest = RESEARCH_RESULTS / date_of(reports[-1].name if reports else "", today) / project
+    dest.mkdir(parents=True, exist_ok=True)
     boards = list(proj.glob("research/*/board.json"))
     digest = []
     for b in boards:
@@ -557,12 +571,17 @@ def main():
                 "timestamp": datetime.now().isoformat(),
             })
 
-    if args.profile in ("research", "combo"):
-        for proj in sorted(set(re.findall(r"--project (\S+)",
-                                          " ".join(c["args"] for c in cases)))):
+    # Archive research results for ANY case that produced a report dir,
+    # regardless of profile (features battery also runs research cases).
+    archived_projects = set()
+    for case in cases:
+        for proj in re.findall(r"--project (\S+)", case["args"]):
+            if proj in archived_projects:
+                continue
             try:
-                dest = archive_research_results(run_dir, env, proj)
-                print(f"[archive] {proj} -> {dest}")
+                archive_research_results(run_dir, env, proj)
+                archived_projects.add(proj)
+                print(f"[archive] {proj} -> research-results/")
             except Exception as e:
                 print(f"[archive] FAILED for {proj}: {e}")
 
