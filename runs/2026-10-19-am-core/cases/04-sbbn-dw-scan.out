@@ -1,0 +1,60 @@
+This is the third time you've asked this, so I'll check it with a single grid call this time, covering both masses, instead of two separate calls.
+# Dodelson-Widrow production at 5 keV and 10 keV, sin²2θ = 3×10⁻⁹
+
+**Short answer:** going from 5 to 10 keV raises the production fraction by a factor of **1.741**, so f ∝ m_s^0.8. The relic density rises by **3.482**, so Ω_s h² ∝ m_s^1.8.
+
+This turn I ran both masses in one `predict_sterile_nu_grid` call (mechanism DW, with Ω_b h² = 0.02237 and τ_n = 878.4 s). The results match the earlier turns exactly.
+
+The tool has no field called "production fraction." I use its ΔN_eff instead: the sterile-neutrino number density relative to one fully thermalised neutrino species, while the sterile neutrino is still relativistic. As a check, my own estimate f · m_s / 94 eV gives 0.745 and 2.60. Both are within about 1% of the tool's Ω_s h² values.
+
+## Tool results
+
+| Quantity | m_s = 5 keV | m_s = 10 keV | Ratio (10/5) |
+|---|---|---|---|
+| ΔN_eff (production fraction f) | 0.01402 | 0.02440 | 1.741 |
+| Ω_s h² | 0.7524 | 2.620 | 3.482 |
+| Overcloses (observed Ω_DM h² = 0.120) | yes | yes | – |
+| BBN Δχ² vs the Standard Model | −0.175 (allowed) | −0.296 (allowed) | – |
+| Radiative lifetime | 7.837×10²⁶ s | 2.449×10²⁵ s | 1/32.0 |
+| Regime | keV (warm dark matter) | keV (warm dark matter) | – |
+
+Neither point falls outside the model's validity range. The full columns (N_eff, Y_p, D/H, Li-7, free-streaming length) are in the CSV.
+
+## Mass scaling observed
+
+- **Production fraction:** 1.741 = 2^0.80, so f ∝ m_s^0.8.
+- **Relic density:** 3.482 = 2^1.80, so Ω_s h² ∝ m_s^1.8. One power of m_s is the rest mass per particle; the other 0.8 comes from the abundance.
+
+## Why heavier sterile neutrinos are produced more
+
+1. **How production works.** Active neutrinos oscillate into sterile states, and collisions in the plasma turn part of each oscillating state into a sterile neutrino. The rate is roughly Γ_s ≈ ½ sin²2θ_eff · Γ_ν, with Γ_ν ∝ G_F² T⁵.
+2. **The hot plasma suppresses mixing.** The plasma's thermal potential, V_T ∝ G_F T⁵/M_W², grows with temperature relative to the vacuum term m_s²/2E ∝ m_s²/T. The effective mixing is roughly sin²2θ_eff ≈ sin²2θ / [1 + c·T⁶/m_s²]², so production stays off at high temperature.
+3. **Heavier masses peak at higher temperature.** Balancing Γ_s against the Hubble rate H ∝ g*^½ T²/M_Pl puts the production peak at T_peak ∝ m_s^(1/3), about 100–300 MeV for keV masses. A heavier sterile neutrino keeps its mixing into a hotter epoch, where collisions are faster.
+4. **The simple estimate is linear.** Evaluating Γ_s/H at the peak gives f ∝ sin²2θ · m_s, and therefore Ω ∝ sin²2θ · m_s². The yield is linear in sin²2θ because production stays far from equilibrium (f ≈ 0.01–0.02, much less than 1).
+5. **Why the exponent is 0.8 instead of 1.** T_peak sits near the QCD transition, where the number of relativistic degrees of freedom g* changes quickly. Raising T_peak by 2^(1/3) ≈ 1.26 moves production into an epoch with more degrees of freedom. That speeds up the expansion during production and dilutes the population more afterwards. Together these give f ∝ m_s^0.8, matching the standard fits:
+   - Abazajian, astro-ph/0511630
+   - Asaka, Laine & Shaposhnikov, hep-ph/0612182
+   - The original mechanism is Dodelson & Widrow, hep-ph/9303287.
+
+## Checks and caveats
+
+- **Lifetime:** the lifetime ratio is 1/32.0 = 2⁻⁵, as expected from Γ_γ ∝ sin²2θ · m_s⁵. Because the decay rate rises so steeply with mass, X-ray limits tighten quickly at higher masses.
+- **Both points overclose the universe.** My own linear rescaling in sin²2θ (not a tool output) gives the mixing that would match the observed dark-matter density: about 4.8×10⁻¹⁰ at 5 keV and about 1.4×10⁻¹⁰ at 10 keV.
+- **BBN doesn't constrain these points.** ΔN_eff of 0.014–0.024 is well below the BBN-only 95% limit of ΔN_eff < 0.548 reported earlier.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261019_083116/`:
+- `sterile_nu_grid_DW_e35157.csv`
+
+[Tool ledger — exact record of this turn]
+- predict_sterile_nu_grid (serve-sbbn.sh) ok — args {"masses_eV": [5000, 10000], "sin2_2thetas": [3e-09], "mechanism": "DW", "combine": "product", "output_dir": ".../runs/261019_083116"}; file .../runs/261019_083116/sterile_nu_grid_DW_e35157.csv; 5 keV: ΔN_eff 0.01402, Ω_s h² 0.7524, Δχ² −0.175, lifetime 7.837e26 s, overcloses; 10 keV: ΔN_eff 0.0244, Ω_s h² 2.62, Δχ² −0.296, lifetime 2.449e25 s, overcloses; regime keV (WDM), none outside validity
+Loading MCP servers…
+[10/19/26 08:31:17] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+[tool] predict_sterile_nu_grid {"masses_eV": [5000, 10000], "sin2_2thetas": [3e-09], "mechanism": "DW", "combine": "product", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261019_083116"}
+[10/19/26 08:31:27] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu_grid -> ok: {   "status": "ok",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261019_083116/sterile_nu_grid_DW_e35157.csv"   ],   "messa
+Tokens: 44K in (21K cached) · 2.8K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json

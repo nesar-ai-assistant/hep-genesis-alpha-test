@@ -1,0 +1,33 @@
+This is the fourth time you've sent this exact question. The tools give the same output for the same inputs, so I've reused the first run's results again. If you want them recomputed, or if something in the earlier answers didn't address what you need, tell me and I'll change the approach.
+
+## The two numbers
+
+| Server | Quantity | Result | Compared with |
+|---|---|---|---|
+| sterile-nu | D/H at N_eff = 3.044 | **2.443 × 10⁻⁵** | Observed (2.547 ± 0.025) × 10⁻⁵, so the prediction is about 4σ low |
+| inelastic-dm | Ωh² for a 1 TeV higgsino | **0.0898** | Planck 0.120 ± 0.0012, so it is 25.1σ low |
+
+- **D/H:** the server has no direct N_eff input. I got N_eff = 3.0440 from a sterile neutrino with almost no mixing (1 keV mass, sin²2θ = 10⁻¹⁵, Dodelson–Widrow production; ΔN_eff = 1.3 × 10⁻⁹). The calculation uses a fit to the PRyMordial BBN code with Ω_b h² = 0.02237 and a neutron lifetime of 878.4 s. The keV regime is flagged as valid for BBN.
+- **Higgsino:** the cross-section ⟨σv⟩ was set automatically to 3.03 × 10⁻²⁶ cm³/s, with freeze-out at x_f = 24.7.
+- **Warning:** the tool labels the higgsino result `consistent_planck: True` while also reporting a 25σ tension. That label is wrong.
+
+## Which model does Planck favor?
+
+Neither result is favored as all of the dark matter, and the two numbers can't rank the models:
+
+- **The 1 TeV higgsino** makes only about 75% of the dark matter Planck measures. It still works as part of the dark matter, or as all of it at about 1.1 TeV.
+- **The D/H value** only checks Standard Model BBN, and Planck's N_eff agrees with it. It says nothing for or against sterile-neutrino dark matter. At the mixing I used, the sterile neutrino makes almost no dark matter (Ωh² ≈ 1.4 × 10⁻⁸).
+
+From these results, the higgsino near 1.1 TeV is closer to a working model. A fair comparison would test both models against Ωh² = 0.120: run the higgsino at 1.1 TeV, and scan sterile-neutrino masses and mixings for points that give the full abundance, then check them against X-ray and Lyman-α limits. I can run those whenever you'd like.
+
+[Tool ledger — exact record of this turn]
+- No new tool calls; values reused from the first turn's ledger:
+  - predict_sterile_nu (serve-sbbn.sh), args {"m_s_eV": 1000, "sin2_2theta": 1e-15}: ΔN_eff = 1.289e-09, N_eff = 3.0440, D/H = 2.4433e-5, Yp = 0.24682, Li7/H = 5.46e-10, Δχ² = 0.00, Ω_s h² ≈ 1.4e-8.
+  - compute_relic_density (serve-idm.sh), args {"m_chi_GeV": 1000, "is_higgsino": true}: omega_h2 = 0.0898, planck 0.12 ± 0.0012, tension_sigma = 25.1, consistent_planck = "True" (contradictory), sigma_v = 3.025e-26 cm³/s.
+Loading MCP servers…
+[10/19/26 08:34:09] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 18 tools
+Tokens: 12K in · 1.3K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/multi.json
