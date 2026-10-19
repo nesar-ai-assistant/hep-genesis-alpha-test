@@ -1,0 +1,800 @@
+Created project 'ramp-research-lyman-wdm' at /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm
+
+Run 261019_110120-923e: done (stop:budget: 2/2 waves used)
+
+# Lyman-alpha forest constraints on warm dark matter compared with non-resonant (Dodelson-Widrow) sterile-neutrino production
+
+## Abstract
+
+We checked the recent high-redshift Lyman-alpha forest lower limits on the thermal-relic warm dark matter (WDM) mass against the papers. The values are 3.1, 3.3 and 5.7 keV (95% CL), and 4.1 keV for the scale-restricted variant of the strongest analysis. We converted them to non-resonant (Dodelson-Widrow, DW) sterile-neutrino mass floors with the Viel et al. 2005 relation, now verified against its full text. The floors are about 20, 22, 29 and 45 keV.
+
+A sterile-neutrino tool server computed the DW relic abundance Omega_s h^2 as a function of (m_s, sin^2 2theta). From this we obtained the mixing at which DW sterile neutrinos make up all of the dark matter (f_s = 1) at each floor:
+
+| m_s | sin^2 2theta at f_s = 1 |
+|---|---|
+| 20 keV | 3.95e-11 |
+| 22 keV | 3.32e-11 |
+| 29 keV | 2.02e-11 |
+| 45 keV | 9.17e-12 |
+
+The tool's normalisation produces 3 to 16 times more DW dark matter per unit mixing than two published yield fits. This makes the production fraction uncertain by that factor. At the 3.5 keV line point the fraction is f_s = 0.275 (tool), 0.089 or 0.023 (published fits).
+
+The tool's coarse X-ray check excludes f_s = 1 at 20 keV. At 29 and 45 keV it has no coverage and cannot decide. Numerical X-ray limits on sin^2 2theta were not obtained, so the central comparison is incomplete: the maximum DW fraction allowed by X-rays at each Lyman-alpha floor could not be computed. On the evidence gathered here, we cannot show that 100% DW dark matter is excluded once Lyman-alpha and X-ray constraints are combined.
+
+## Background
+
+The Lyman-alpha flux power spectrum at z ~ 4-5 probes the small-scale suppression caused by WDM free-streaming. The limits have tightened over time:
+
+- **Narayanan et al. 2000 (arXiv:astro-ph/0005095):** m_WDM > 750 eV, the historical baseline.
+- **Viel et al. 2013 (arXiv:1306.2314):** benchmark limit of m_WDM > 3.3 keV (2 sigma) from 25 HIRES/MIKE quasars at z > 4.
+- **Irsic et al. 2017 (arXiv:1702.01764):** combined XQ-100 with HIRES/MIKE.
+- **Villasenor et al. 2022 (arXiv:2209.14220):** independent analysis using 1080 Cholla simulations.
+- **Irsic et al. 2023 (arXiv:2309.04533):** the current strongest bound. It names IGM peculiar velocities and inhomogeneous reionization as the leading small-scale systematics.
+
+These are thermal-relic limits. Applying them to DW sterile neutrinos needs a mass mapping. The standard one is from Viel et al. 2005 (arXiv:astro-ph/0501562). Emulator frameworks for general non-cold spectra exist (arXiv:2007.13751) but do not supply a DW-specific relation.
+
+Mixed cold-plus-warm models are constrained as a function of the warm fraction:
+
+- Boyarsky et al. 2008 (arXiv:0812.0010), stated in the DW mass itself.
+- Garcia-Gallego et al. 2025 (arXiv:2504.06367), stated in thermal-relic mass.
+
+On the particle side, Merle's 2017 review (arXiv:1702.08430) describes DW production as excluded by observations. arXiv:1512.05369 treats DW on top of other production channels. NuSTAR line searches set the leading X-ray limits over roughly 10-50 keV:
+
+- Perez et al., arXiv:1609.00667.
+- Roach et al. 2020, arXiv:1908.09037.
+- Roach et al. 2022, arXiv:2207.04572.
+
+## Results
+
+### Thermal-relic Lyman-alpha limits
+
+The limits were checked against the full text for arXiv:2309.04533 and against the abstracts for the others.
+
+- **Irsic et al. 2023 (arXiv:2309.04533):** m_WDM > 5.7 keV (95% CL). It uses HIRES+UVES data at z = 4.2-5.0 with k_max = 0.2 s/km. Restricting to k_max < 0.1 s/km with earlier thermal-history priors gives 4.1 keV. The main small-scale modelling systematics are IGM peculiar velocities and inhomogeneous reionization. The paper says the thermal-history uncertainty now matters less.
+- **Villasenor et al. 2022 (arXiv:2209.14220):** m_WDM > 3.1 keV, with a likelihood peak at 4.5 keV. It uses Boera et al. 2019 data at 4.0 < z < 5.2. The suppression saturates at k > 0.1 s/km because of peculiar-velocity smearing.
+- **Viel et al. 2013 (arXiv:1306.2314):** m_WDM > 3.3 keV from 25 HIRES/MIKE quasars at z > 4.
+- **Irsic et al. 2017 (arXiv:1702.01764):**
+  - XQ-100 alone (z = 3-4.2) gives 1.4 keV.
+  - Re-analysed HIRES/MIKE gives 4.1 keV.
+  - The combination gives 5.3 keV, assuming a power-law T(z).
+  - Allowing sudden temperature jumps of up to 5000 K lowers the combined limit to 3.5 keV.
+
+The k_max and prior details of the three abstract-only papers were not checked against their full texts.
+
+### Mapping thermal-relic limits to DW mass
+
+Eq. (5) of Viel et al. 2005 was verified in the full text:
+
+m_sterile = 4.43 keV (m_thermal / 1 keV)^{4/3} (0.25 (0.7)^2 / omega_x)^{1/3}
+
+The normalisation 0.25 x 0.49 = 0.1225 matches the brief. The relation follows from equating omega_x and m_x/T_x for a thermal relic and a sterile neutrino "which share the same phase-space distribution but with an overall suppression factor chi". The DW spectrum is therefore treated as a rescaled Fermi-Dirac distribution, and the thermal and DW transfer functions are identical by construction.
+
+DW floors from our own arithmetic:
+
+| Thermal-relic limit | DW floor, omega_dm = 0.12 | DW floor, omega_dm = 0.1225 |
+|---|---|---|
+| 3.1 keV | 20.2 keV | 20.0 keV |
+| 3.3 keV | 21.9 keV | 21.8 keV |
+| 4.1 keV | 29.3 keV | 29.1 keV |
+| 5.7 keV | 45.4 keV | 45.1 keV |
+
+These confirm the brief's rough values to within 1%. Using the 4.1 keV variant instead of 5.7 keV lowers the DW floor from about 45 keV to about 29 keV. This is the size of the effect of restricting scales and priors.
+
+**Transfer-function fit.** Viel 2005 fits T(k) = [1 + (alpha k)^{2nu}]^{-5/nu}, with nu = 1.12, for k < 5 h/Mpc. For thermal relics, alpha = 0.049 (m_x/keV)^{-1.11} (Omega_x/0.25)^{0.11} (h/0.7)^{1.22} h^-1 Mpc. Setting T^2 = 1/2 gives k_hm = 0.325/alpha (our arithmetic). For 3.1, 3.3, 4.1 and 5.7 keV this gives:
+
+| Thermal-relic limit | alpha (h^-1 Mpc) | k_hm (h/Mpc) |
+|---|---|---|
+| 3.1 keV | 0.01396 | about 23.3 |
+| 3.3 keV | 0.01302 | about 25.0 |
+| 4.1 keV | 0.01024 | about 31.8 |
+| 5.7 keV | 0.00710 | about 45.8 |
+
+These lie far outside the k < 5 h/Mpc range on which the fit was calibrated. The critic did not consider the k_hm values settled, because they are an extrapolation and were not recomputed against the half-mode mass of about 2x10^8 Msun/h quoted in arXiv:1306.2314. Under Viel's mapping the DW k_hm is identical by construction, so this calculation does not test the mapping itself.
+
+**The arXiv:2007.13751 framework.** It uses T(k) = [1 + (alpha k)^beta]^gamma. This reduces to the Viel form for beta = 2nu and gamma = -5/nu. A 2 keV WDM is fitted by [alpha, beta, gamma] = [0.02, 2.2, -4.5]. In the sections read, it gives no DW relation. Using it for DW would require fitting these parameters to a Boltzmann-code DW transfer function, which was not possible without CLASS/CAMB.
+
+No second, independent mapping was verified, so the spread between mappings is unknown.
+
+### DW abundance from the sterile-neutrino tool
+
+The server models pure DW production, with Shi-Fuller resonant production available as a separate option. It returns:
+
+- Omega_s h^2
+- Delta N_eff
+- BBN observables
+- lifetime
+- free-streaming length
+
+It does not return k_hm. Contrary to the brief's warning, the tool does return relic abundances, so f_s = Omega_s h^2 / 0.12 is tool-derived. The rescaling to f_s = 1 below is our own arithmetic.
+
+Omega_s h^2 scales linearly with sin^2 2theta; a 374-point grid confirmed this. At sin^2 2theta = 1e-12 the tool gives the values below, and linear scaling gives the f_s = 1 mixings:
+
+| m_s | Omega_s h^2 at sin^2 2theta = 1e-12 | sin^2 2theta at f_s = 1 |
+|---|---|---|
+| 7.1 keV | 0.000471462 | 2.55e-10 |
+| 20 keV | 0.00304114 | 3.95e-11 |
+| 22 keV | 0.00361029 | 3.32e-11 |
+| 29 keV | 0.00593606 | 2.02e-11 |
+| 45 keV | 0.0130907 | 9.17e-12 |
+
+As a direct check at the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11), the tool returns Omega_s h^2 = 0.033, so f_s = 0.275.
+
+### Cross-check of the DW normalisation
+
+Two published DW yield fits were read in full text. They are quoted in the findings, but the citation step that validates quotes was not run for them.
+
+- **Abazajian 2006 (astro-ph/0511630), Eq. 7:** m_s = 3.40 keV (sin^2 2theta / 1e-8)^-0.615 (Omega_DM / 0.26)^0.5, for T_QCD = 170 MeV and electron flavour.
+- **Asaka-Laine-Shaposhnikov (hep-ph/0612182, Sec. 7.1):** the "most conservative" line, log10 sin^2 2theta = -7.6195 - 1.7428 log10(M/keV). The paper states this fit for M <= 4 keV, so using it here is an extrapolation. It is an overclosure upper line, so its ratio to the tool is a lower limit on the discrepancy.
+
+Inverted to give the f_s = 1 mixing at the five masses:
+
+| m_s | Tool | Abazajian 2006 (ratio to tool) | Asaka-Laine-Shaposhnikov (ratio to tool) |
+|---|---|---|---|
+| 7.1 keV | 2.55e-10 | 3.02e-9 (11.9) | 7.88e-10 (3.10) |
+| 20 keV | 3.95e-11 | 5.61e-10 (14.2) | 1.30e-10 (3.29) |
+| 22 keV | 3.32e-11 | 4.80e-10 (14.4) | 1.10e-10 (3.31) |
+| 29 keV | 2.02e-11 | 3.06e-10 (15.2) | 6.79e-11 (3.36) |
+| 45 keV | 9.17e-12 | 1.50e-10 (16.4) | 3.16e-11 (3.44) |
+
+The tool therefore produces about 3 to 16 times more DW dark matter per unit mixing than these fits. At the 3.5 keV line point, f_s is:
+
+- 0.275 with the tool,
+- 0.089 with the Asaka-Laine-Shaposhnikov line,
+- 0.023 with Abazajian 2006.
+
+The tool is the most generous of the three. Its X-ray exclusion of f_s = 1 at 20 keV can therefore only get stronger under the published normalisations. Both the factor and its consequences were contested by the critic. The critic asks that the factor be settled with a modern DW calculation valid at 10-50 keV, rather than fits extrapolated from lower masses.
+
+### X-ray status of the f_s = 1 points
+
+The tool's X-ray check returns only an excluded/not-excluded flag based on sparse tabulated points. It gives no numerical limit on sin^2 2theta.
+
+- **20 keV, sin^2 2theta = 3.95e-11:** excluded by the tool's tabulated NuSTAR M31 point, which the tool attributes to Roach et al. 2020.
+- **29 keV (2.02e-11) and 45 keV (9.17e-12):** reported "not excluded", but only because no tabulated limit lies within 30% in mass. This means no coverage, not allowed.
+- **22 keV:** not run.
+
+The critic marked this result as needing independent confirmation, because it rests on the tool's coarse tabulation.
+
+From the literature, with quotes verified:
+
+- **Perez et al. (arXiv:1609.00667):** "In most of the mass range 10–50 keV, these are now the strongest limits". The curves are plotted on a sin^2 2theta axis from 1e-15 to 1e-7.
+- **Roach et al. 2020 (arXiv:1908.09037):** find no anomalous lines at 5-20 keV, corresponding to m_s = 10-40 keV. Their limits are given on the decay rate Gamma, plotted on a 1e-29 to 1e-27 s^-1 axis. They are about 2x better than earlier limits at 10-12 keV, and weaker near 16 keV and 30-40 keV, where the background fit shows excesses. This reading was contested by the critic and is not independently verified.
+- **Roach et al. 2022 (arXiv:2207.04572):** use about 7 Ms per detector of blank-sky data plus about 20 Ms per detector of stacked data. They "strongly disfavor a ~7-keV sterile neutrino" and give leading limits at about 15-18 and 25-40 keV, "reaching or extending below the big bang nucleosynthesis limit". They also state that this "does not fully rule out sterile neutrinos as the only DM component", only that "the simple and elegant mixing production mechanism … may be insufficient". Their statement that the parameter space is "mostly covered" includes satellite-counting bounds.
+
+No numerical sin^2 2theta limits were extracted at 7, 20, 22, 29 or 45 keV, because the papers give them only as figure curves. NuSTAR coverage ends at 40 keV, so 45 keV would need INTEGRAL/SPI or Fermi-GBM limits.
+
+### BBN in the DW plane
+
+A 6400-point DW scan covered m_s = 1-100 keV and sin^2 2theta = 1e-14 to 1e-6. It found 3092 overclosing points (Omega_s h^2 > 0.12) and 968 points excluded by BBN at 95%.
+
+[[FIGURE 25]]
+
+Figure 25 shows the resulting exclusion map. The largest BBN-allowed mixing is 3.03e-8 at 26.2 keV and 1.5e-8 at 49.7 keV. This is about three orders of magnitude above the f_s = 1 line and deep in the overclosed region. BBN therefore does not constrain DW dark matter, but only trivially so; the relevant constraints are X-ray and Lyman-alpha. The two maximum-mixing values are not visible in the quoted tool output excerpt.
+
+### Mixed cold-plus-warm bounds and the combined fraction table
+
+**Garcia-Gallego et al. 2025 (arXiv:2504.06367).** This uses Sherwood-Relics simulations with a neural-network emulator and UVES+HIRES data at z = 4.2-5.0. It gives f_WDM < 0.16, 0.35, 0.50 and 0.67 (2 sigma) for thermal-relic masses of 1, 2, 3 and 4 keV.
+
+**Boyarsky et al. 2008 (arXiv:0812.0010).** This is stated directly in the DW mass m_nrp:
+
+- Pure WDM: m_nrp >= 8 keV (frequentist 99.7%) or 12.1 keV (Bayesian 95%).
+- For any m_nrp above 5 keV, the model is allowed if F_wdm < 0.6 (99.7%) or F_wdm < 0.35 (Bayesian 95%).
+
+Mapping the arXiv:2504.06367 masses through Viel's relation gives roughly 4.4, 11, 18 and 28 keV in DW mass. This is our own estimate. It applies a thermal-relic mixed-DM bound to DW spectra, which the critic regards as not justified.
+
+Combined Lyman-alpha picture (low confidence; contested):
+
+- **7.1 keV:** below the 12.1 keV pure-DW floor of arXiv:0812.0010. The mixed-DM bound binds, f_s ≲ 0.2-0.35.
+- **20 and 22 keV:** the mapped bound gives f ≲ 0.5-0.67. These masses are below the 29 and 45 keV floors. The tool's X-ray flag excludes f_s = 1 at 20 keV.
+- **29 keV:** f = 1 is allowed by Lyman-alpha only for the 4.1 keV variant. For the 5.7 keV variant, f ≲ 0.67 or somewhat more.
+- **45 keV:** f = 1 is allowed by Lyman-alpha even for the 5.7 keV variant.
+- **29 and 45 keV, X-ray side:** the X-ray constraint is presumably the binding one, but no numerical value exists, so the X-ray-allowed f_s,max is undetermined. For fractional DW the X-ray limit applies to f_s x Gamma, and f_s is itself proportional to sin^2 2theta. This step was not carried out.
+
+The 0812.0010 figure files were downloaded, but none was analysed or digitised for this report. The extracted 2504.06367 figures are a simulation slice and an emulator schematic, not constraint plots, so they are not shown.
+
+## Discussion
+
+The Lyman-alpha side is now well characterised for thermal relics, and the Viel 2005 conversion to DW mass is confirmed in form and coefficient. The DW floors of roughly 20-45 keV are therefore reproducible under that convention.
+
+The main uncertainty in the DW floor is not the conversion arithmetic. It is the analysis cho
+Loading MCP servers…
+[10/19/26 11:01:18] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 31 tools
+[run] surveying (waves 0, tool calls 0, 0s)
+[phase] survey
+[tool] survey list_agent_files {}
+[tool] tc-261019_1-w0-survey-1 -> ok: []
+[tool] survey list_input_files {}
+[tool] tc-261019_1-w0-survey-2 -> ok: {
+  "status": "success",
+  "files": [],
+  "usage": "Pass any of these filenames to load_table_data()."
+}
+[tool] survey list_datasets {}
+[tool] tc-261019_1-w0-survey-3 -> ok: {'count': 0, 'datasets': []}
+[tool] survey list_files {}
+[tool] tc-261019_1-w0-survey-4 -> ok: Files in .:
+  - .git
+  - .gitignore
+  - ISSUES.md
+  - SCOPE.md
+  - docs
+  - downloads
+  - logs
+  - projects
+  - reports
+  - research-results
+[tool] survey get_dispatch {}
+[tool] tc-261019_1-w0-survey-5 -> ok: Dispatch: local execution.
+[tool] survey list_sterile_nu_skills {}
+[10/19/26 11:01:20] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w0-survey-6 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "2 skills. Load one with load_sterile_nu_skill.",
+  "metadata": {
+    "skills": {
+      "kev
+[usage]
+[tool] survey search_arxiv_abstracts {"query": "Lyman-alpha forest warm dark matter thermal relic mass lower limit", "max_results": 8}
+[tool] tc-261019_1-w0-survey-7 -> ok: [1107.3837v2] The Lyman-alpha forest in a blazar-heated Universe
+Abstract: It has been realised only recently that TeV emission from blazars
+[tool] survey search_arxiv_abstracts {"query": "non-resonant Dodelson-Widrow sterile neutrino Lyman-alpha constraint mapping thermal relic", "max_results": 6}
+[tool] tc-261019_1-w0-survey-8 -> ok: [0507333v2] UHE neutrino damping in a thermal gas of relic neutrinos
+Abstract:   We present a calculation of the damping of an ultra-energet
+[tool] survey search_arxiv_abstracts {"query": "Viel 2013 warm dark matter HIRES MIKE Lyman-alpha", "max_results": 4}
+[tool] tc-261019_1-w0-survey-9 -> ok: [0812.0010v2] Lyman-alpha constraints on warm and on warm-plus-cold dark matter models
+Abstract:   We revisit Lyman-alpha bounds on the dark
+[usage]
+[tool] survey search_arxiv_abstracts {"max_results": 6, "query": "Lyman-alpha forest high-resolution new constraints warm dark matter 2023 Irsic thermal history"}
+[tool] tc-261019_1-w0-survey-10 -> ok: [1107.3837v2] The Lyman-alpha forest in a blazar-heated Universe
+Abstract: It has been realised only recently that TeV emission from blazars
+[tool] survey search_arxiv_abstracts {"max_results": 6, "query": "Villasenor thermal relic dark matter Lyman-alpha inhomogeneous reionization 2022"}
+[tool] tc-261019_1-w0-survey-11 -> ok: [9902180v2] Scattered Lyman-alpha Radiation Around Sources Before Cosmological Reionization
+Abstract:   The spectra of the first galaxies an
+[tool] survey search_arxiv_abstracts {"max_results": 6, "query": "eBOSS Lyman-alpha hints neutrino masses warm dark matter Palanque-Delabrouille"}
+[tool] tc-261019_1-w0-survey-12 -> ok: [1506.05976v3] Neutrino masses and cosmology with Lyman-alpha forest power spectrum
+Abstract: We present constraints on neutrino masses, the
+[usage]
+[tool] survey search_arxiv {"query": "warm dark matter Lyman-alpha forest constraints 5.3 keV thermal relic", "max_results": 6}
+[tool] tc-261019_1-w0-survey-13 -> ok: Found 6 papers matching query: 'warm dark matter Lyman-alpha forest constraints 5.3 keV thermal relic' (source: arXiv API)
+
+Paper 1:
+arXiv I
+[tool] survey search_arxiv {"query": "sterile neutrino dark matter momentum distribution Dodelson-Widrow transfer function structure formation bounds", "max_results": 6}
+[tool] tc-261019_1-w0-survey-14 -> ok: Found 6 papers matching query: 'sterile neutrino dark matter momentum distribution Dodelson-Widrow transfer function structure formation bou
+[tool] survey web_search {"query": "Villasenor 2022 new constraints warm dark matter Lyman-alpha forest inhomogeneous reionization arXiv"}
+[tool] tc-261019_1-w0-survey-15 -> ok: We present new constraints on models of dark matter interacting with neutrino, based on high-resolution Lyman-$α$ forest data. We perform a 
+[usage]
+[tool] survey get_arxiv_metadata {"arxiv_id": "2309.04533"}
+[tool] tc-261019_1-w0-survey-16 -> ok: arXiv ID: 2309.04533
+Title: Unveiling Dark Matter free-streaming at the smallest scales with high redshift Lyman-alpha forest
+Authors: Vid I
+[tool] survey get_arxiv_metadata {"arxiv_id": "1306.2314"}
+[tool] tc-261019_1-w0-survey-17 -> ok: arXiv ID: 1306.2314
+Title: Warm Dark Matter as a solution to the small scale crisis: new constraints from high redshift Lyman-alpha forest d
+[tool] survey get_arxiv_metadata {"arxiv_id": "2209.14220"}
+[tool] tc-261019_1-w0-survey-18 -> ok: arXiv ID: 2209.14220
+Title: New Constraints on Warm Dark Matter from the Lyman-$α$ Forest Power Spectrum
+Authors: Bruno Villasenor, Brant Ro
+[usage]
+[usage]
+[brief] High-redshift Lyman-alpha forest flux power spectra are among the strongest constraints on the free-streaming of warm dark matter (WDM). The 95% CL lower limits on the thermal-relic mass have tightene
+**Survey** — 39 tools on 3 servers, 6 read-only probes, 11 papers found.
+
+High-redshift Lyman-alpha forest flux power spectra are among the strongest constraints on the free-streaming of warm dark matter (WDM). The 95% CL lower limits on the thermal-relic mass have tightened over time: about 0.75 keV (Narayanan et al. 2000), 3.3 keV (Viel et al. 2013, HIRES/MIKE, z>4), 3.1 keV (Villasenor et al. 2022, 1080 Cholla simulations on Boera et al. 2019 data, with a weak likelihood peak near 4.5 keV) and 5.7 keV (Irsic et al. 2023, HIRES/UVES at z=4.2-5.0 with k_max=0.2 s/km). The Irsic et al. limit drops to 4.1 keV when restricted to k_max<0.1 s/km and earlier thermal-history priors. The dominant systematics are now IGM peculiar velocities, inhomogeneous reionization and the thermal history, rather than statistics alone. For non-resonantly produced (Dodelson-Widrow, DW) sterile neutrinos, these limits have to be converted to a sterile-neutrino mass through a transfer-function mapping. The commonly used relation from Viel et al. 2005 (astro-ph/0501562), quoted from memory and not checked against a retrieved full text, is m_s ~ 4.43 keV (m_th/keV)^{4/3} (omega_dm/0.1225)^{-1/3}. It turns 3.1-5.7 keV thermal-relic limits into roughly 20-45 keV DW limits, which are far above the masses that X-ray decay bounds allow for DW sterile neutrinos making up all of the dark matter. Pure DW production is therefore excluded as 100% of the dark matter, so the open questions are mixed cold-plus-warm scenarios (a sterile fraction below 1, constrained in 0812.0010 and 2504.06367), resonant production, and DW contributions on top of other production channels (1512.05369). Warning: no sterile-neutrino production-fraction tool was available in this toolset, so those fractions still need to be computed.
+
+Quantities worth checking: DW sterile mass equivalent to each thermal-relic limit, using m_s ~ 4.43 keV (m_th/keV)^{4/3} (omega_dm/0.1225)^{-1/3}: about 20 keV (3.1), 22 keV (3.3), 29 keV (4.1) and 45 keV (5.7). These are rough figures; they should be checked against the paper and against alternative mappings such as half-mode-matching fits.; Half-mode wavenumber k_hm and half-mode mass for each limit, compared between the thermal-relic and DW transfer functions.; DW relic abundance Omega_s h^2 as a function of (m_s, sin^2 2theta), and the mixing angle needed for Omega_s = Omega_dm, compared with X-ray decay limits.; Production fraction f_s = Omega_s/Omega_dm allowed by cold-plus-warm Lyman-alpha bounds (0812.0010, 2504.06367) along the X-ray-allowed mixing angles.; Average momentum <p/T> of the DW spectrum (about 3.15 times the active-neutrino temperature, with g* corrections), used to check the mapping..
+[run] planning (waves 0, tool calls 0, 89s)
+[phase] plan
+[usage]
+[directions] d-01 [open] Use the sterile-neutrino server to compute non-resonant (Dod; d-02 [open] Verify the recent Lyman-alpha WDM thermal-relic limits and t; d-03 [open] Cross-check the mapping from thermal-relic mass to DW steril
+[phase] critic-plan
+[usage]
+[critique] wave 0 plan: revise
+[directions] d-01 [open] Use the sterile-neutrino server to compute non-resonant (Dod; d-02 [open] Verify the recent Lyman-alpha WDM thermal-relic limits and t; d-03 [open] Cross-check the mapping from thermal-relic mass to DW steril; d-04 [open] Obtain quote-verified X-ray upper limits on sin^2 2theta ver
+**Plan** — 4 lines of investigation:
+1. Use the sterile-neutrino server to compute non-resonant (Dodelson-Widrow) production: the relic abundance Omega_s h^2 and the production fraction f_s = Omega_s/Omega_dm across the (m_s, sin^2 2theta) plane. Find the mixing angle at which f_s = 1, and compare that line with the X-ray decay bounds and the Lyman-alpha DW mass floors (about 20, 22, 29 and 45 keV, from thermal-relic limits of 3.1, 3.3, 4.1 and 5.7 keV). — The task explicitly asks for the sterile-nu tools to supply production fractions. The survey flagged these fractions as not yet computed, and they are the core of the comparison with non-resonant production.
+2. Verify the recent Lyman-alpha WDM thermal-relic limits and their stated systematics against full texts, with citable quotes. Extract the cold-plus-warm bounds on the warm fraction as a function of mass from 0812.0010 and 2504.06367. — The survey's limits were not quote-checked. The bounds on the warm fraction are needed to judge which d-01 production fractions are allowed.
+3. Cross-check the mapping from thermal-relic mass to DW sterile-neutrino mass. Verify the Viel et al. 2005 formula and its coefficient against the full text, gather alternative mappings (half-mode matching, the 2007.13751 framework, Abazajian-style relations), and quantify how much the DW mass floors change between mappings. — Comparing Lyman-alpha limits with DW production depends on this conversion. The relation was quoted from memory, and the choice of mapping can shift the floors by tens of percent.
+4. Obtain quote-verified X-ray upper limits on sin^2 2theta versus m_s for keV sterile neutrinos over roughly 5-50 keV. Use them to define 'X-ray-allowed mixing' for d-01 and to test whether 100% DW dark matter is excluded independently of Lyman-alpha. — No listed tool provides observational X-ray limits, and no key paper is dedicated to them. Without them, the central exclusion claim and the f_s values at the X-ray limit are unverifiable. (added by the critic)
+Critic's view: revise — The server is an SBBN/N_eff tool (serve-sbbn.sh), and the brief says no production-fraction tool was available. Do not assume it returns Omega_s h^2 or f_s for keV DW production. Make step 1 a go/no-go gate. If describe_sterile_nu_tools shows no DW relic-abundance output, or a validity range that excludes 1-100 keV, stop. Report the gap and do not build tables from proxies such as N_eff or BBN shifts. Write tool-derived f_s only when a tool actually returned it.; predict_sterile_nu_xray_line predicts the line energy and flux. It does not give an observational upper limit on sin^2 2theta. 'X-ray-allowed mixing' therefore needs a literature bound (see the added direction) unless describe shows the tool holds X-ray limit data. Otherwise the f_s values at the X-ray limit cannot be verified.; Step 7 is circular. The Lyman-alpha DW floors of about 20-45 keV apply only to f_s = 1. For f_s < 1, the relevant constraint is the mixed cold-plus-warm bound from d-02, converted with the mapping from d-03. Make the f_s table the comparison of tool f_s against the d-02 maximum warm fraction at each mass, and state this dependency. Also, the 7.1 keV, 7e-11 point should give f_s much less than 1 under pure DW. Treat it as a check against the expected small fraction, not as an f_s = 1 check..
+[run] running (waves 0, tool calls 0, 157s)
+[direction] d-01 -> running
+[direction] d-02 -> running
+[direction] d-04 -> running
+[run] running (waves 1, tool calls 0, 157s)
+[phase] wave
+[wave 1] start d-01, d-02, d-04
+**Wave 1** — now exploring, in parallel: Use the sterile-neutrino server to compute non-resonant (Dodelson-Widrow) production: the relic abundance Omega_s h^2 and the production fraction f_s = Omega_s/Omega_dm across the (m_s, sin^2 2theta) plane. Find the mixing angle at which f_s = 1, and compare that line with the X-ray decay bounds and the Lyman-alpha DW mass floors (about 20, 22, 29 and 45 keV, from thermal-relic limits of 3.1, 3.3, 4.1 and 5.7 keV).; Verify the recent Lyman-alpha WDM thermal-relic limits and their stated systematics against full texts, with citable quotes. Extract the cold-plus-warm bounds on the warm fraction as a function of mass from 0812.0010 and 2504.06367.; Obtain quote-verified X-ray upper limits on sin^2 2theta versus m_s for keV sterile neutrinos over roughly 5-50 keV. Use them to define 'X-ray-allowed mixing' for d-01 and to test whether 100% DW dark matter is excluded independently of Lyman-alpha..
+[usage]
+[tool] d-01 describe_sterile_nu_tools {}
+[10/19/26 11:04:00] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-19 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile Neutrino -> BBN / X-ray Bridge Server\n============================================
+[tool] d-01 list_sterile_nu_skills {}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-20 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "2 skills. Load one with load_sterile_nu_skill.",
+  "metadata": {
+    "skills": {
+      "kev
+[usage]
+[tool] d-04 search_arxiv_abstracts {"query": "NuSTAR blank sky sterile neutrino dark matter decay line limits mixing angle", "max_results": 8}
+[usage]
+[tool] d-01 load_sterile_nu_skill {"name": "kev-sterile-dm-xray"}
+[10/19/26 11:04:03] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-22 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Loaded skill 'kev-sterile-dm-xray'. Follow these instructions.",
+  "metadata": {
+    "instr
+[tool] d-01 predict_sterile_nu {"m_s_eV": 7100, "sin2_2theta": 7e-11}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-23 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile neutrino: m_s = 7.1e+03 eV, sin\u00b22\u03b8 = 7e-11\nMechanism: DW\n\n\u2500\u2500
+[usage]
+[tool] d-02 download_arxiv_full_text {"arxiv_id": "2309.04533", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w1-d-04-21 -> ok: [1606.02684v1] Neutrino Oscillations With Two Sterile Neutrinos
+Abstract: This work estimates the probability of $μ$ to $e$ neutrino oscilla
+[tool] d-04 get_arxiv_metadata {"arxiv_id": "1702.08430"}
+[tool] tc-261019_1-w1-d-02-24 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2309.04533.txt
+[tool] d-02 download_arxiv_full_text {"arxiv_id": "2504.06367", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[usage]
+[tool] d-01 predict_sterile_nu_grid {"masses_eV": [1000, 1500, 2000, 3000, 5000, 7100, 10000, 15000, 20000, 22000, 25000, 29000, 35000, 45000, 60000, 80000, 100000], "sin2_2thetas": [1e-13, 2.154e
+[10/19/26 11:04:09] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-27 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/sterile_nu
+[tool] tc-261019_1-w1-d-04-25 -> ok: arXiv ID: 1702.08430
+Title: keV sterile neutrino Dark Matter
+Authors: Alexander Merle
+Year: 2017
+Abstract: We give an overview of the curren
+[usage]
+[tool] d-01 read_text_file {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/sterile_nu_grid_DW_4bbf6a.csv"}
+[tool] tc-261019_1-w1-d-01-28 -> ok: m_s_eV,sin2_2theta,delta_neff,neff,omega_s_h2,Yp,DH_x1e5,Li7H_x1e10,chi2_bbn,delta_chi2_bbn,lifetime_s,free_streaming_kpc,bbn_excluded_95,ov
+[usage]
+[tool] d-04 search_arxiv_abstracts {"max_results": 6, "query": "Roach NuSTAR blank-sky sterile neutrino dark matter constraints 2022"}
+[tool] tc-261019_1-w1-d-02-26 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2504.06367.txt
+[tool] d-02 download_arxiv_full_text {"arxiv_id": "0812.0010", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[usage]
+[tool] d-01 predict_sterile_nu_grid {"masses_eV": [7100, 10000, 15000, 20000, 22000, 25000, 29000, 35000, 45000, 60000, 80000, 100000], "sin2_2thetas": [1e-12], "mechanism": "DW", "output_dir": "/
+[10/19/26 11:04:26] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-31 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/sterile_nu
+[tool] tc-261019_1-w1-d-04-29 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[tool] d-04 download_arxiv_full_text {"arxiv_id": "1609.00667", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w1-d-02-30 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/0812.0010.txt
+[usage]
+[tool] d-01 predict_sterile_nu_xray_line {"m_s_eV": 20000, "sin2_2theta": 3.95e-11}
+[10/19/26 11:04:35] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-33 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 20 
+[tool] d-01 predict_sterile_nu_xray_line {"m_s_eV": 45000, "sin2_2theta": 9.17e-12}
+[10/19/26 11:04:36] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-34 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 45 
+[tool] d-01 predict_sterile_nu_xray_line {"m_s_eV": 29000, "sin2_2theta": 2.02e-11}
+[tool] tc-261019_1-w1-d-04-32 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1609.00667.txt
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-35 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 29 
+[usage]
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2309.04533.txt", "length": 8000}
+[tool] tc-261019_1-w1-d-02-36 -> ok: [chars 0-8000 of 106880] (more available, next start=8000)
+
+Title: Unveiling Dark Matter free-streaming at the smallest scales with high red
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2504.06367.txt", "length": 8000}
+[tool] tc-261019_1-w1-d-02-37 -> ok: [chars 0-8000 of 85046] (more available, next start=8000)
+
+Title: Constraining Mixed Dark Matter models with high redshift Lyman-alpha fores
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/0812.0010.txt", "length": 8000}
+[tool] tc-261019_1-w1-d-02-38 -> ok: [chars 0-8000 of 129559] (more available, next start=8000)
+
+Title: Lyman-alpha constraints on warm and on warm-plus-cold dark matter models
+
+[usage]
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1609.00667.txt", "length": 7000}
+[tool] tc-261019_1-w1-d-04-39 -> ok: [chars 0-7000 of 51891] (more available, next start=7000)
+
+Title: (Almost) Closing the $ν$MSM Sterile Neutrino Dark Matter Window with NuSTA
+[tool] d-04 download_arxiv_full_text {"arxiv_id": "1908.09037", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[usage]
+[tool] d-02 get_paper_figures {"paper_id": "2504.06367", "max_figures": 12, "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w1-d-02-41 -> ok: {"status": "success", "files": ["/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/figures_2504.06
+[tool] d-02 get_paper_figures {"paper_id": "0812.0010", "max_figures": 12, "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w1-d-04-40 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1908.09037.txt
+[usage]
+[tool] d-01 post_finding {"claim": "The sterile-nu server gives DW Omega_s h^2 proportional to sin^2 2theta. At sin^2 2theta = 1e-12 it returns Omega_s h^2 = 0.003041 (20 keV), 0.00361 
+[finding] f-001 The sterile-nu server gives DW Omega_s h^2 proportional to sin^2 2theta. At sin^2 2theta = 1e-12 it returns Omega_s h^2 = 0.003041 (20 keV), 0.00361 (22 keV), 0
+**Finding:** The sterile-nu server gives DW Omega_s h^2 proportional to sin^2 2theta. At sin^2 2theta = 1e-12 it returns Omega_s h^2 = 0.003041 (20 keV), 0.00361 (22 keV), 0.005936 (29 keV), 0.01309 (45 keV) and 0.0004715 (7.1 keV). Linear scaling to f_s = Omega_s h^2/0.12 = 1 then gives sin^2 2theta(f_s=1) of about 3.95e-11, 3.32e-11, 2.02e-11, 9.17e-12 and 2.55e-10 respectively. At the 3.5 keV line point (7.1 keV, 7e-11) the tool gives Omega_s h^2 = 0.033, i.e. f_s = 0.275.
+[tool] tc-261019_1-w1-d-01-43 -> ok: Recorded finding f-001.
+[tool] d-01 post_finding {"claim": "At the DW f_s = 1 mixing, the tool's X-ray check gives: 20 keV with sin^2 2theta = 3.95e-11 is EXCLUDED by NuSTAR M31 (Roach+ 2020); 29 keV (2.02e-11
+[finding] f-002 At the DW f_s = 1 mixing, the tool's X-ray check gives: 20 keV with sin^2 2theta = 3.95e-11 is EXCLUDED by NuSTAR M31 (Roach+ 2020); 29 keV (2.02e-11) and 45 ke
+**Finding:** At the DW f_s = 1 mixing, the tool's X-ray check gives: 20 keV with sin^2 2theta = 3.95e-11 is EXCLUDED by NuSTAR M31 (Roach+ 2020); 29 keV (2.02e-11) and 45 keV (9.17e-12) are 'not excluded', but only because no tabulated limit lies within 30% in mass. Those two masses are uncovered by the tool, not shown to be allowed. The tool also does not return the numerical limit on sin^2 2theta, so f_s at the X-ray limit cannot be read directly from it.
+[tool] tc-261019_1-w1-d-01-44 -> ok: Recorded finding f-002.
+[tool] tc-261019_1-w1-d-02-42 -> ok: {"status": "success", "files": ["/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/figures_0812.00
+[tool] d-02 get_arxiv_metadata {"arxiv_id": "2209.14220"}
+[tool] tc-261019_1-w1-d-02-45 -> ok: arXiv ID: 2209.14220
+Title: New Constraints on Warm Dark Matter from the Lyman-$α$ Forest Power Spectrum
+Authors: Bruno Villasenor, Brant Ro
+[tool] d-02 get_arxiv_metadata {"arxiv_id": "1306.2314"}
+[tool] tc-261019_1-w1-d-02-46 -> ok: arXiv ID: 1306.2314
+Title: Warm Dark Matter as a solution to the small scale crisis: new constraints from high redshift Lyman-alpha forest d
+[tool] d-02 get_arxiv_metadata {"arxiv_id": "1702.01764"}
+[tool] tc-261019_1-w1-d-02-47 -> ok: arXiv ID: 1702.01764
+Title: New Constraints on the free-streaming of warm dark matter from intermediate and small scale Lyman-$α$ forest dat
+[usage]
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1908.09037.txt", "length": 5000}
+[tool] tc-261019_1-w1-d-04-48 -> ok: [chars 0-5000 of 80633] (more available, next start=5000)
+
+Title: NuSTAR Tests of Sterile-Neutrino Dark Matter: New Galactic Bulge Observati
+[tool] d-04 download_arxiv_full_text {"arxiv_id": "1702.08430", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[usage]
+[tool] d-01 scan_sterile_nu_parameters {"m_min_eV": 1000, "m_max_eV": 100000, "theta_min": 1e-14, "theta_max": 1e-06, "n_points": 80, "mechanism": "DW", "output_dir": "/Users/nramachandra/hep-genesis
+[10/19/26 11:04:53] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w1-d-01-50 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/scan_DW_d9
+[tool] tc-261019_1-w1-d-04-49 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1702.08430.txt
+[usage]
+[tool] d-01 plot_sterile_nu_exclusion {"scan_file": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/scan_DW_d94a06.npz", "output_dir": "/Users/nramachand
+[10/19/26 11:04:57] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[usage]
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1702.08430.txt", "start": 0, "length": 4000}
+[tool] tc-261019_1-w1-d-04-52 -> ok: [chars 0-4000 of 21223] (more available, next start=4000)
+
+Title: keV sterile neutrino Dark Matter
+Authors: Alexander Merle
+Year: 2017
+arXiv
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1908.09037.txt", "start": 48000, "length": 9000}
+[tool] tc-261019_1-w1-d-04-53 -> ok: Read failed: 'utf-8' codec can't decode byte 0xbc in position 0: invalid start byte
+[tool] tc-261019_1-w1-d-01-51 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/exclusion_
+[usage]
+[tool] d-01 post_finding {"claim": "A DW scan of 6400 points over m_s = 1-100 keV and sin^2 2theta = 1e-14 to 1e-6 gives 3092 overclosing points (Omega_s h^2 > 0.12) and 968 BBN-exclude
+[finding] f-003 A DW scan of 6400 points over m_s = 1-100 keV and sin^2 2theta = 1e-14 to 1e-6 gives 3092 overclosing points (Omega_s h^2 > 0.12) and 968 BBN-excluded points. B
+**Finding:** A DW scan of 6400 points over m_s = 1-100 keV and sin^2 2theta = 1e-14 to 1e-6 gives 3092 overclosing points (Omega_s h^2 > 0.12) and 968 BBN-excluded points. BBN is weak for keV DW: the largest BBN-allowed mixing is 3.03e-8 at 26.2 keV and 1.5e-8 at 49.7 keV, about 3 orders of magnitude above the f_s = 1 line. BBN therefore does not constrain DW dark matter; only X-ray limits and Lyman-alpha do. The exclusion plot is Figure 25.
+[tool] tc-261019_1-w1-d-01-54 -> ok: Recorded finding f-003.
+[usage]
+[tool] d-04 post_finding {"claim": "NuSTAR X-ray line searches give the leading upper limits on sin^2 2theta for keV sterile neutrinos over 10-50 keV. Perez et al. 2016 (arXiv:1609.0066
+[finding] f-004 NuSTAR X-ray line searches give the leading upper limits on sin^2 2theta for keV sterile neutrinos over 10-50 keV. Perez et al. 2016 (arXiv:1609.00667, Galactic
+**Finding:** NuSTAR X-ray line searches give the leading upper limits on sin^2 2theta for keV sterile neutrinos over 10-50 keV. Perez et al. 2016 (arXiv:1609.00667, Galactic Center 0-bounce) state: "In most of the mass range 10–50 keV, these are now the strongest limits, at some masses improving upon previous limits by a factor of ∼ 10". Roach et al. 2020 (arXiv:1908.09037, Galactic bulge) find "no evidence of anomalous x-ray lines in the energy range 5–20 keV, corresponding to sterile neutrino masses 10–40 keV". In 1609.00667 Fig. 1 the limits are plotted on a sin^2 2theta axis running from 1e-15 to 1e-7; the curve values were not digitised here.
+[tool] tc-261019_1-w1-d-04-55 -> ok: Recorded finding f-004.
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1702.08430.txt", "start": 4000, "length": 8000}
+[tool] tc-261019_1-w1-d-04-56 -> ok: [chars 4000-12000 of 21223] (more available, next start=12000)
+
+rmation and references in
+existence at the moment is the White Paper on keV 
+[usage]
+[tool] d-01 post_question {"text": "The sterile-nu tool reports only an excluded/not-excluded flag from sparse tabulated X-ray points (NuSTAR M31, XMM), with no numerical sin^2 2theta li
+[question] q-06 The sterile-nu tool reports only an excluded/not-excluded flag from sparse tabulated X-ray points (NuSTAR M31, XMM), with no numerical sin^2 2theta limits, and 
+[tool] tc-261019_1-w1-d-01-57 -> ok: Recorded question q-06.
+[usage]
+[tool] d-02 post_finding {"claim": "Quote-checked thermal-relic Lyman-alpha limits (95% CL / 2 sigma). Irsic et al. 2023 (2309.04533): m_WDM > 5.7 keV from HIRES+UVES at z = 4.2-5.0 wit
+[finding] f-005 Quote-checked thermal-relic Lyman-alpha limits (95% CL / 2 sigma). Irsic et al. 2023 (2309.04533): m_WDM > 5.7 keV from HIRES+UVES at z = 4.2-5.0 with k_max = 0
+**Finding:** Quote-checked thermal-relic Lyman-alpha limits (95% CL / 2 sigma). Irsic et al. 2023 (2309.04533): m_WDM > 5.7 keV from HIRES+UVES at z = 4.2-5.0 with k_max = 0.2 s/km. Restricting to k_max < 0.1 s/km with earlier thermal-history priors gives 4.1 keV. The main small-scale modelling systematics are IGM peculiar-velocity structure and inhomogeneous reionization. Villasenor et al. 2022 (2209.14220): m_WDM > 3.1 keV, likelihood peak at 4.5 keV, from 1080 Cholla simulations against Boera+2019 data at 4.0 < z < 5.2; the suppression saturates at k > 0.1 s/km because of peculiar-velocity smearing. Viel et al. 2013 (1306.2314): m_WDM > 3.3 keV from 25 z > 4 HIRES/MIKE quasars. Irsic et al. 2017 (1702.01764): XQ-100 (z = 3-4.2) alone 1.4 keV, HIRES/MIKE (z = 4.2-5.4) re-analysis 4.1 keV, combined 5.3 keV, assuming a power-law T(z); allowing sudden temperature jumps of up to 5000 K lowers the combined limit to 3.5 keV.
+[tool] tc-261019_1-w1-d-02-58 -> ok: Recorded finding f-005.
+[tool] d-02 post_finding {"claim": "Cold-plus-warm bounds. Garcia-Gallego et al. 2025 (2504.06367; Sherwood-Relics with a neural-network emulator; UVES+HIRES at z = 4.2-5.0) give f_WDM 
+[finding] f-006 Cold-plus-warm bounds. Garcia-Gallego et al. 2025 (2504.06367; Sherwood-Relics with a neural-network emulator; UVES+HIRES at z = 4.2-5.0) give f_WDM < 0.16, 0.3
+**Finding:** Cold-plus-warm bounds. Garcia-Gallego et al. 2025 (2504.06367; Sherwood-Relics with a neural-network emulator; UVES+HIRES at z = 4.2-5.0) give f_WDM < 0.16, 0.35, 0.50 and 0.67 (2 sigma) for THERMAL-RELIC masses m_WDM = 1, 2, 3 and 4 keV. Boyarsky et al. 2008 (0812.0010; WMAP5 + SDSS/VHS Lyman-alpha) state their bounds in terms of the NON-RESONANTLY PRODUCED sterile-neutrino mass. In the pure-WDM case they find m_nrp >= 8 keV (frequentist 99.7%) or 12.1 keV (Bayesian 95%). For 5 keV < m_nrp < infinity any mass is allowed when F_wdm < 0.6 (frequentist 99.7%) or F_wdm < 0.35 (Bayesian 95%).
+[tool] tc-261019_1-w1-d-02-59 -> ok: Recorded finding f-006.
+[tool] d-02 post_dead_end {"what": "Digitizing the f_WDM-versus-m_WDM exclusion figure of 2504.06367 with get_paper_figures", "why": "The arXiv HTML rendering only gave two figures (Fig 
+[dead-end] x-01 Digitizing the f_WDM-versus-m_WDM exclusion figure of 2504.06367 with get_paper_figures
+[tool] tc-261019_1-w1-d-02-60 -> ok: Recorded dead end x-01.
+[tool] d-02 cite {"arxiv_id": "2309.04533", "note": "[\"Restricting the analysis to comparable scales and thermal history priors as in prior studies\"]", "bib_path": "/Users/nra
+[tool] tc-261019_1-w1-d-02-61 -> ok: Cited: Unveiling Dark Matter free-streaming at the smallest scales with high redshift Lyman-alpha forest (\cite{arxiv230904533})
+[usage]
+[tool] d-04 cite {"arxiv_id": "1702.08430", "note": "[\"This mechanism nowadays known to be excluded by observations.\", \"the resulting spectrum would feature too many particle
+[tool] tc-261019_1-w1-d-04-62 -> ok: Cited: keV sterile neutrino Dark Matter (\cite{arxiv170208430})
+[tool] d-04 cite {"arxiv_id": "1609.00667", "note": "[\"In most of the mass range 10\u201350 keV, these are now the strongest limits, at some masses improving upon previous limi
+[tool] tc-261019_1-w1-d-04-63 -> ok: Cited: (Almost) Closing the $ν$MSM Sterile Neutrino Dark Matter Window with NuSTAR (\cite{arxiv160900667})
+[tool] d-04 cite {"arxiv_id": "1908.09037", "note": "[\"We find no evidence of anomalous x-ray lines in the energy range 5\u201320 keV, corresponding to sterile neutrino masses 
+[tool] tc-261019_1-w1-d-04-64 -> ok: Cited: NuSTAR Tests of Sterile-Neutrino Dark Matter: New Galactic Bulge Observations and Combined Impact (\cite{arxiv190809037})
+[usage]
+[tool] d-02 cite {"arxiv_id": "2504.06367", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/references.bib", "note": "[\
+[tool] tc-261019_1-w1-d-02-65 -> ok: Cited: Constraining Mixed Dark Matter models with high redshift Lyman-alpha forest data (\cite{arxiv250406367})
+[tool] d-02 cite {"arxiv_id": "0812.0010", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/references.bib", "note": "[\"
+[tool] tc-261019_1-w1-d-02-66 -> ok: Cited: Lyman-alpha constraints on warm and on warm-plus-cold dark matter models (\cite{arxiv08120010})
+[usage]
+[tool] d-04 post_finding {"claim": "Merle 2017 (arXiv:1702.08430, quote verified) says that non-resonant Dodelson-Widrow production is \"nowadays known to be excluded by observations\",
+[finding] f-007 Merle 2017 (arXiv:1702.08430, quote verified) says that non-resonant Dodelson-Widrow production is "nowadays known to be excluded by observations", because "the
+**Finding:** Merle 2017 (arXiv:1702.08430, quote verified) says that non-resonant Dodelson-Widrow production is "nowadays known to be excluded by observations", because "the resulting spectrum would feature too many particles with rather large momenta, making this setting similar to a hot DM case and thus excluded by data". This statement rests on structure formation combined with X-ray bounds; the review does not make an X-ray-only exclusion claim.
+[tool] tc-261019_1-w1-d-04-67 -> ok: Recorded finding f-007.
+[tool] d-04 post_question {"text": "Numerical sin^2 2theta upper limits at m_s = 7, 20, 30 and 45 keV still need to be read from the tables or figures of arXiv:1609.00667 Fig. 1 or 4, 19
+[question] q-07 Numerical sin^2 2theta upper limits at m_s = 7, 20, 30 and 45 keV still need to be read from the tables or figures of arXiv:1609.00667 Fig. 1 or 4, 1908.09037 a
+[tool] tc-261019_1-w1-d-04-68 -> ok: Recorded question q-07.
+[usage]
+[direction] d-01 -> closed
+**Completed — Use the sterile-neutrino server to compute non-resonant (Dodelson-Widrow) production: the relic abundance Omega_s h^2 and the production fraction f_s = Omega_s/Omega_dm across the (m_s, sin^2 2theta) plane. Find the mixing angle at which f_s = 1, and compare that line with the X-ray decay bounds and the Lyman-alpha DW mass floors (about 20, 22, 29 and 45 keV, from thermal-relic limits of 3.1, 3.3, 4.1 and 5.7 keV)..** Pure DW sterile neutrinos at 20 keV cannot be all of the dark matter under this tool's physics: the tool's own X-ray check (NuSTAR M31, Roach+ 2020) excludes the f_s = 1 point. At 29 and 45 keV the tool cannot decide either way, because it has no X-ray limit near those masses; the 'not excluded' flag there means no coverage, not allowed. The success criteria are only partly met. The f_s = 1 mixings and the plot are done, but the X-ray limit on sin^2 2theta and f_s at that limit are missing: the tool returns only an excluded/not-excluded flag from sparse tabulated points, never a numerical limit (finding f-002, question q-06). It assumes pure Dodelson-Widrow (DW) production, with Shi-Fuller resonant production as a separate option (this answers q-01). It reports Omega_s h^2, Delta N_eff, lifetime and free-streaming length, but not f_s directly and not k_hm (finding f-001).
+
+Check at the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11): Omega_s h^2 = 0.033, so f_s = 0.275 (tc-...-23).
+
+Omega_s h^2 scales linearly with sin^2 2theta, which the 374-point grid confirms. At sin^2 2theta = 1e-12 the tool gives Omega_s h^2 = 0.003041 (20 keV), 0.00361 (22 keV), 0.005936 (29 keV) and 0.01309 (45 keV) (tc-...-31). Scaling to Omega_s h^2 = 0.12 gives the mixing for f_s = 1. This rescaling is my own arithmetic, not a direct tool output.
+
+| m_s | sin^2 2theta at f_s = 1 | Tool X-ray check at that mixing |
+|---|---|---|
+| 20 keV | 3.95e-11 | Excluded by NuSTAR M31 (tc-...-33) |
+| 22 keV | 3.32e-11 | Not run |
+| 29 keV | 2.02e-11 | No tabulated limit within 30% in mass, so undecided (tc-...-35) |
+| 45 keV | 9.17e-12 | No tabulated limit within 30% in mass, so undecided (tc-...-34) |
+| 7.1 keV | 2.55e-10 | Not run (scaled from the same grid) |
+
+Because there are no numerical X-ray limits, I cannot give f_s at the maximal X-ray-allowed mixing, or the fraction that remains allowed, at the four Lyman-alpha floors. This needs d-04's numerical limits: f_s,max = sin^2 2theta_X / sin^2 2theta(f_s=1).
+
+BBN does not matter here. A 6400-point DW scan over 1-100 keV and sin^2 2theta = 1e-14 to 1e-6 found 3092 overclosing points and 968 BBN-excluded points. The largest BBN-allowed mixing is about 3e-8 near 26 keV and 1.5e-8 near 50 keV, roughly 3 orders of magnitude above the f_s = 1 line (f-003).
+
+Files are in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/:
+- Exclusion plot (Figure 25): exclusion_scan_DW_d94a06.png and exclusion_scan_DW_d94a06.pdf
+- Scan: scan_DW_d94a06.npz and scan_DW_d94a06.csv
+- Grids: sterile_nu_grid_DW_4bbf6a.csv (374 points) and sterile_nu_grid_DW_a74034.csv (12 masses at sin^2 2theta = 1e-12)
+
+Findings f-001, f-002 and f-003 and question q-06 are posted on the board.
+[usage]
+[direction] d-04 -> blocked (The tool budget ran out before any numerical limits were extracted. The 1908.09037 text failed to decode at offset 48000, so its limit section could not be read. The next steps are to read the results sections of 1609.00667 and 1901.01262, or to use predict_sterile_nu_xray_line at 7, 20, 30 and 45 keV along the f_s = 1 mixing line from d-01.)
+**Blocked — Obtain quote-verified X-ray upper limits on sin^2 2theta versus m_s for keV sterile neutrinos over roughly 5-50 keV. Use them to define 'X-ray-allowed mixing' for d-01 and to test whether 100% DW dark matter is excluded independently of Lyman-alpha..** (The tool budget ran out before any numerical limits were extracted. The 1908.09037 text failed to decode at offset 48000, so its limit section could not be read. The next steps are to read the results sections of 1609.00667 and 1901.01262, or to use predict_sterile_nu_xray_line at 7, 20, 30 and 45 keV along the f_s = 1 mixing line from d-01.) Half the success criteria are met. (1) Literature statement on pure DW, quote verified: Merle 2017 (arXiv:1702.08430) says non-resonant (DW) production is 'nowadays known to be excluded by observations', because its spectrum is 'similar to a hot DM case and thus excluded by data'. That rests on structure formation combined with X-ray bounds, not on X-ray limits alone (finding f-007). (2) X-ray limits, verbal statements only, quote verified: NuSTAR Galactic Center (Perez et al., arXiv:1609.00667) gives 'the strongest limits' over most of 10-50 keV; NuSTAR Galactic bulge (Roach et al., arXiv:1908.09037) finds no lines at 5-20 keV, i.e. m_s = 10-40 keV (finding f-004). Fig. 1 of 1609.00667 plots the limits on a sin^2 2theta axis from 1e-15 to 1e-7, but no curve values were read. All three papers are cited in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/references.bib, with full texts saved in the same directory. Not yet established: the table of sin^2 2theta limits at about 7, 20, 30 and 45 keV, and whether 100% DW dark matter is excluded by X-ray limits alone (question q-07).
+[usage]
+[direction] d-02 -> closed
+**Completed — Verify the recent Lyman-alpha WDM thermal-relic limits and their stated systematics against full texts, with citable quotes. Extract the cold-plus-warm bounds on the warm fraction as a function of mass from 0812.0010 and 2504.06367..** Thermal-relic limits checked (f-005, tc-...-36/45/46/47). 2309.04533 (checked against the full text): m_WDM > 5.7 keV (95% CL) from HIRES+UVES at z = 4.2-5.0 with k_max = 0.2 s/km; restricting to k_max < 0.1 s/km with earlier thermal-history priors gives 4.1 keV. Its main small-scale systematics are IGM peculiar velocities and inhomogeneous reionization, and it says the thermal-history uncertainty now matters less. The other three were checked against their arXiv abstracts only, not the full texts: 2209.14220 gives > 3.1 keV with a likelihood peak at 4.5 keV (4.0 < z < 5.2, Boera+2019 data, suppression saturates at k > 0.1 s/km); 1306.2314 gives > 3.3 keV from 25 z > 4 HIRES/MIKE quasars; 1702.01764 gives XQ-100 1.4 keV, HIRES/MIKE 4.1 keV and combined 5.3 keV assuming a power-law T(z), or 3.5 keV if temperature jumps of 5000 K are allowed. Mixed-DM bounds (f-006): 2504.06367 gives f_WDM < 0.16, 0.35, 0.50, 0.67 (2 sigma) at thermal-relic masses 1, 2, 3, 4 keV (so these are thermal-relic bounds, answering q-02). 0812.0010 is expressed directly in the non-resonant (DW) sterile mass: pure-WDM limits are m_nrp >= 8 keV (99.7%) and 12.1 keV (Bayesian 95%), and any mass above 5 keV is allowed if F_wdm < 0.6 (99.7%) or F_wdm < 0.35 (Bayesian 95%). The 2504.06367 masses mapped to DW masses of about 4.4, 11, 18 and 28 keV are my own estimate from the unverified Viel 2005 formula, not a tool result. Not done: digitized fraction-versus-mass curves (dead end x-01: the HTML for 2504.06367 only gave its Figs 1 and 4, board Figures 7 and 8, which are not constraint plots; the 0812.0010 fraction panels Figs 7, 12, 13 are at /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/figures_0812.0010/ only partly, Figs 12-13 were not downloaded), the 2023-2025 search for newer limits, and full-text k_max and prior details for 2209.14220, 1306.2314 and 1702.01764. Bibliography: references.bib in the run directory holds 2309.04533, 2504.06367 and 0812.0010.
+[wave 1] end d-01, d-02, d-04
+[phase] critic-wave
+[usage]
+[critique] wave 1 wave: continue
+**Critic, wave 1** — continue: 6 findings stand up to the evidence, 1 questioned ('At the DW f_s = 1 mixing, the tool's X-ray check gives: 20 keV with sin^2 2theta = 3.95e-1': None of the quoted excerpts (tc-...-33, -34, -35) contains the central claim. They stop at the per-target flux lines, before any 'EXCLUDED by NuSTAR M31' or 'no tabulated limit within 30% in mass' text. tc-...-22 is only the skill-loading instructions. The exclusion verdict at 20 keV and the no-coverage verdict at 29 and 45 keV are therefore not shown in the evidence. The tool's flux model is also physically doubtful. It treats a 1e12 Msun halo at 8.3 kpc as a point source and returns 116 ph/s/cm^2 for the Milky Way centre, which is many orders of magnitude above any real field-of-view flux. Its M31 exclusion flag should not be trusted without comparison to the published limit.).
+
+Issues: The tool's DW normalisation has not been cross-checked. The common Abazajian-type fit, Omega h^2 ~ 0.1 (sin^2 2theta / 3e-9)(m_s / 3 keV)^1.8, gives sin^2 2theta(f_s=1) of about 7-8e-10 at 7.1 keV. The tool's value is 2.55e-10, roughly a factor of 3 lower. DW abundance predictions differ by factors of a few in the literature (hadronic uncertainties, Asaka-Laine-Shaposhnikov). Any f_s,max derived from this line inherits that factor and must state the source of the normalisation.; The tc-...-31 excerpt shows only the 7.1 keV row. The 20, 22, 29 and 45 keV Omega_s h^2 values are not visible in the quoted evidence, although the arithmetic from them is internally consistent (0.12/0.003041 x 1e-12 = 3.95e-11, and so on). The full rows from sterile_nu_grid_DW_a74034.csv should be quoted.; The counts (968 BBN-excluded, 3092 overclosing) appear in the evidence. The maxima of the BBN-allowed mixing (3.03e-8 at 26.2 keV, 1.5e-8 at 49.7 keV) do not. Those mixings lie deep in the overclosed region, so 'BBN does not constrain DW DM' is correct but trivially so. The claim should say this..
+[phase] replan
+[usage]
+[directions] d-01 [closed] Use the sterile-neutrino server to compute non-resonant (Dod; d-02 [closed] Verify the recent Lyman-alpha WDM thermal-relic limits and t; d-03 [open] Cross-check the mapping from thermal-relic mass to DW steril; d-04 [open] Obtain quote-verified X-ray upper limits on sin^2 2theta ver; d-05 [open] Cross-check the sterile-nu server's Dodelson-Widrow relic-ab
+**Next steps after wave 1** — One wave and 20 tool calls remain. d-03 (the mapping cross-check) has not run yet, so it is carried over and runs first. It is capped at about 6 calls: quote the Viel 2005 coefficient from astro-ph/0501562, quote one mapping with different exponents (for example a half-mode fit from 1702.01764 or Bozek et al.), and map the 1-4 keV thermal-relic masses to DW masses. d-04 is reopened because its blocker, running out of budget, has now been lifted. Its scope is the critic's numerical X-ray step: read the limit sections of 1609.00667 and 1901.01262 (retrying 1908.09037 from another offset if needed), tabulate sin^2 2theta_X at about 7, 20, 22, 29 and 45 keV with source and figure labels, and compute f_s,max from the d-01 f_s=1 mixings. That answers q-03, q-06 and q-07, and it should take about 7 calls. I am not adding a duplicate X-ray direction. The single new direction covers the DW-normalisation cross-check the critic flagged, which is roughly a factor of 3 at 7.1 keV, and it builds the final allowed-fraction table so the run ends with the comparison the task requested. The task did not ask for facility runs and all compute is lightweight local or hosted work, so no facility dispatch is needed (q-05). No directions are closed: d-01 and d-02 are already closed, and the remaining work is all finishing work on the central question.
+
+New lines of investigation: Cross-check the sterile-nu server's Dodelson-Widrow relic-abundance normalisation against at least two quote-verified published DW yield formulas. Propagate the spread to sin^2 2theta(f_s=1) at 7.1, 20, 22, 29 and 45 keV. Then assemble the final comparison table: allowed DW fraction versus sterile mass from Lyman-alpha mixed-DM bounds and from X-ray limits, with the binding constraint marked at each mass..
+[wave 1] end d-01, d-02, d-04 -> continue
+[direction] d-03 -> running
+[direction] d-04 -> running
+[direction] d-05 -> running
+[run] running (waves 2, tool calls 40, 317s)
+[phase] wave
+[wave 2] start d-03, d-04, d-05
+**Wave 2** — now exploring, in parallel: Cross-check the mapping from thermal-relic mass to DW sterile-neutrino mass. Verify the Viel et al. 2005 formula and its coefficient against the full text, gather alternative mappings (half-mode matching, the 2007.13751 framework, Abazajian-style relations), and quantify how much the DW mass floors change between mappings.; Obtain quote-verified X-ray upper limits on sin^2 2theta versus m_s for keV sterile neutrinos over roughly 5-50 keV. Use them to define 'X-ray-allowed mixing' for d-01 and to test whether 100% DW dark matter is excluded independently of Lyman-alpha.; Cross-check the sterile-nu server's Dodelson-Widrow relic-abundance normalisation against at least two quote-verified published DW yield formulas. Propagate the spread to sin^2 2theta(f_s=1) at 7.1, 20, 22, 29 and 45 keV. Then assemble the final comparison table: allowed DW fraction versus sterile mass from Lyman-alpha mixed-DM bounds and from X-ray limits, with the binding constraint marked at each mass..
+[usage]
+[tool] d-03 download_arxiv_full_text {"arxiv_id": "astro-ph/0501562", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w2-d-03-69 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0501562.txt
+[tool] d-03 download_arxiv_full_text {"arxiv_id": "2007.13751", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[usage]
+[tool] d-04 describe_sterile_nu_tools {}
+[10/19/26 11:06:47] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261019_1-w2-d-04-71 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile Neutrino -> BBN / X-ray Bridge Server\n============================================
+[tool] d-04 search_arxiv_abstracts {"query": "NuSTAR sterile neutrino dark matter line search limits mixing angle 2022 2023 Roach", "max_results": 6}
+[usage]
+[tool] d-05 download_arxiv_full_text {"arxiv_id": "astro-ph/0511630", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w2-d-03-70 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2007.13751.txt
+[usage]
+[tool] d-03 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0501562.txt", "start": 5000, "length": 12000}
+[tool] tc-261019_1-w2-d-04-72 -> ok: [1606.02684v1] Neutrino Oscillations With Two Sterile Neutrinos
+Abstract: This work estimates the probability of $μ$ to $e$ neutrino oscilla
+[tool] tc-261019_1-w2-d-05-73 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0511630.txt
+[tool] d-05 download_arxiv_full_text {"arxiv_id": "hep-ph/0612182", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w2-d-03-74 -> ok: [chars 5000-17000 of 50343] (more available, next start=17000)
+
+r from thermal
+equilibrium while still relativistic and may act as warm
+dark
+[usage]
+[tool] d-04 list_files {"directory": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w2-d-04-76 -> ok: Files in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120:
+  - 0812.0010.pdf
+  - 0812.0010.txt
+  
+[tool] d-04 search_arxiv_abstracts {"max_results": 5, "query": "Long-exposure NuSTAR constraints decaying dark matter Galactic halo sterile neutrino"}
+[tool] tc-261019_1-w2-d-05-75 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/hep-ph_0612182.txt
+[tool] d-05 read_text_file {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/sterile_nu_grid_DW_a74034.csv"}
+[tool] tc-261019_1-w2-d-05-78 -> ok: m_s_eV,sin2_2theta,delta_neff,neff,omega_s_h2,Yp,DH_x1e5,Li7H_x1e10,chi2_bbn,delta_chi2_bbn,lifetime_s,free_streaming_kpc,bbn_excluded_95,ov
+[usage]
+[tool] d-03 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2007.13751.txt", "start": 4000, "length": 14000}
+[tool] tc-261019_1-w2-d-04-77 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[tool] tc-261019_1-w2-d-03-79 -> ok: [chars 4000-18000 of 103363] (more available, next start=18000)
+
+, 27–35], to which we will refer in general as “non-
+cold” dark matter, fol
+[usage]
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0511630.txt", "start": 4000, "length": 16000}
+[tool] tc-261019_1-w2-d-05-80 -> ok: [chars 4000-20000 of 33951] (more available, next start=20000)
+
+ore problems in the CDM paradigm may ben-
+eﬁt from the reduction of power on
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/hep-ph_0612182.txt", "start": 0, "length": 6000}
+[tool] tc-261019_1-w2-d-05-81 -> ok: [chars 0-6000 of 82782] (more available, next start=6000)
+
+Title: Lightest sterile neutrino abundance within the nuMSM
+Authors: Takehiko Asa
+[usage]
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/1908.09037.txt", "start": 30000, "length": 14000}
+[tool] tc-261019_1-w2-d-04-82 -> ok: [chars 30000-44000 of 80633] (more available, next start=44000)
+
+ous measurements of the GRXE [108]. Addition-
+ally, freezing the abundance 
+[tool] d-04 download_arxiv_full_text {"arxiv_id": "2207.04572", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[usage]
+[tool] d-03 search_arxiv_abstracts {"query": "Abazajian linear cosmological structure limits warm dark matter sterile neutrino thermal relic mass relation", "max_results": 5}
+[tool] tc-261019_1-w2-d-04-83 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2207.04572.txt
+[usage]
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0511630.txt", "start": 15900, "length": 4200}
+[usage]
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2207.04572.txt", "start": 0, "length": 9000}
+[tool] tc-261019_1-w2-d-03-84 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[tool] d-03 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2007.13751.txt", "length": 8000, "start": 60000}
+[tool] tc-261019_1-w2-d-05-85 -> ok: [chars 15900-20100 of 33951] (more available, next start=20100)
+
+ile to active neutrinos ρ(ǫ) = fs(ǫ)/fα (ǫ)
+for masses in the range 0 .3 < 
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/hep-ph_0612182.txt", "start": 58000, "length": 9000}
+[tool] tc-261019_1-w2-d-04-86 -> ok: [chars 0-9000 of 95394] (more available, next start=9000)
+
+Title: Long-Exposure NuSTAR Constraints on Decaying Dark Matter in the Galactic H
+[tool] tc-261019_1-w2-d-03-87 -> ok: [chars 60000-68000 of 103363] (more available, next start=68000)
+
+how the lower-valued optimization set
+mode for the empirical ratios in the
+[tool] tc-261019_1-w2-d-05-88 -> ok: [chars 58000-67000 of 82782] (more available, next start=67000)
+
+he corresponding eﬀects, i.e., relax the assumption (iv) of Sec. 1.
+Due to 
+[usage]
+[tool] d-04 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2207.04572.txt", "length": 12000, "start": 60000}
+[tool] tc-261019_1-w2-d-04-89 -> ok: [chars 60000-72000 of 95394] (more available, next start=72000)
+
+izing a novel geometric technique to greatly
+suppress the detector backgrou
+[usage]
+[tool] d-03 download_arxiv_full_text {"arxiv_id": "astro-ph/0512631", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120"}
+[tool] tc-261019_1-w2-d-03-90 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0512631.txt
+[tool] d-03 web_search {"query": "\"3.90 keV\" \"1.294\" sterile neutrino thermal relic mass relation Dodelson-Widrow Bozek"}
+[tool] tc-261019_1-w2-d-03-91 -> ok: 
+[usage]
+[tool] d-04 post_finding {"claim": "Roach et al. 2022 (arXiv:2207.04572, NuSTAR Milky Way halo, about 7 Ms/detector blank-sky plus about 20 Ms/detector stacked data) find no anomalous l
+[finding] f-008 Roach et al. 2022 (arXiv:2207.04572, NuSTAR Milky Way halo, about 7 Ms/detector blank-sky plus about 20 Ms/detector stacked data) find no anomalous lines and se
+**Finding:** Roach et al. 2022 (arXiv:2207.04572, NuSTAR Milky Way halo, about 7 Ms/detector blank-sky plus about 20 Ms/detector stacked data) find no anomalous lines and set sin^2(2theta) limits for m_s = 6-40 keV. Quote: "we strongly disfavor a ~7-keV sterile neutrino decaying into a 3.5-keV photon" and "we derive leading limits on sterile neutrinos with masses ~15–18 keV and ~25–40 keV, reaching or extending below the big bang nucleosynthesis limit". The conclusions add that the parameter space "is now mostly covered", but this "does not fully rule out sterile neutrinos as the only DM component"; it shows "the simple and elegant mixing production mechanism [8, 9] may be insufficient". The authors therefore do NOT claim that X-ray data alone exclude 100% DW dark matter. Their "mostly covered" statement relies on adding satellite-counting bounds.
+[tool] tc-261019_1-w2-d-04-92 -> ok: Recorded finding f-008.
+[tool] d-04 post_finding {"claim": "Roach et al. 2020 (arXiv:1908.09037, NuSTAR Galactic bulge, about 190 ks) give 95% one-sided limits on the decay rate Gamma for m_s = 10-40 keV, quot
+[finding] f-009 Roach et al. 2020 (arXiv:1908.09037, NuSTAR Galactic bulge, about 190 ks) give 95% one-sided limits on the decay rate Gamma for m_s = 10-40 keV, quoted in Gamma
+**Finding:** Roach et al. 2020 (arXiv:1908.09037, NuSTAR Galactic bulge, about 190 ks) give 95% one-sided limits on the decay rate Gamma for m_s = 10-40 keV, quoted in Gamma [s^-1] rather than sin^2 2theta. Their Fig. 5 plots these limits on a Gamma axis spanning 1e-29 to 1e-27 s^-1, compared with Neronov+2016, Perez+2017 and Ng+2019. The paper states the limits are "comparable to previous NuSTAR limits" and improve on earlier ones by about 2x at 10-12 keV. They are weakened near m ~ 16 keV and 30-40 keV, where the background fit shows excesses. No numerical values were tabulated, and the curves were not digitised.
+[tool] tc-261019_1-w2-d-04-93 -> ok: Recorded finding f-009.
+[tool] d-04 post_dead_end {"what": "Extracting a numerical table of X-ray sin^2 2theta upper limits at 7, 20, 22, 29 and 45 keV from the NuSTAR papers (1609.00667, 1908.09037, 2207.04572
+[dead-end] x-02 Extracting a numerical table of X-ray sin^2 2theta upper limits at 7, 20, 22, 29 and 45 keV from the NuSTAR papers (1609.00667, 1908.09037, 2207.04572) by readi
+[tool] tc-261019_1-w2-d-04-94 -> ok: Recorded dead end x-02.
+[usage]
+[direction] d-04 -> blocked (The numerical X-ray limits exist only in figures. Digitising them (get_paper_figures plus reading the curves) and adding 2207.04572 to references.bib did not fit in the tool budget, and NuSTAR does not cover 45 keV.)
+**Blocked — Obtain quote-verified X-ray upper limits on sin^2 2theta versus m_s for keV sterile neutrinos over roughly 5-50 keV. Use them to define 'X-ray-allowed mixing' for d-01 and to test whether 100% DW dark matter is excluded independently of Lyman-alpha..** (The numerical X-ray limits exist only in figures. Digitising them (get_paper_figures plus reading the curves) and adding 2207.04572 to references.bib did not fit in the tool budget, and NuSTAR does not cover 45 keV.) Half the success criteria are met: the literature statements on whether pure Dodelson-Widrow (DW) production can be all of the dark matter are quote-verified, but the numerical table of X-ray limits on sin^2 2theta could not be built. (1) Literature statements, all quote-verified. Merle 2017 (arXiv:1702.08430) says DW production is 'nowadays known to be excluded by observations'; that rests on structure formation together with X-ray bounds (f-007). Roach et al. 2022 (arXiv:2207.04572, NuSTAR Milky Way halo, about 7 and 20 Ms per detector) set sin^2 2theta limits for m_s = 6-40 keV. They 'strongly disfavor a ~7-keV sterile neutrino' (the 3.5 keV line candidate) and give leading limits at about 15-18 and 25-40 keV, 'reaching or extending below the big bang nucleosynthesis limit'. They also state that the parameter space is 'mostly covered' (this includes satellite-counting bounds), but that this 'does not fully rule out sterile neutrinos as the only DM component'; only the simple mixing production mechanism 'may be insufficient' (f-008). So no source makes a clean claim that X-ray limits alone exclude 100% DW dark matter. Roach et al. 2020 (arXiv:1908.09037) give 95% limits on the decay rate Gamma (not on sin^2 2theta) for 10-40 keV, plotted in their Fig. 5 on an axis of 1e-29 to 1e-27 s^-1. They are about 2x better at 10-12 keV and weaker near 16 keV and 30-40 keV (f-009). Perez et al. 2017 (arXiv:1609.00667) give the strongest limits over most of 10-50 keV (f-004). (2) Not established: numerical sin^2 2theta limits at 7, 20, 22, 29 and 45 keV, so the X-ray-allowed f_s,max for d-01 cannot be computed yet. The papers give the limits only as figure curves, which were not digitised (dead end x-02). NuSTAR coverage ends at 40 keV, so 45 keV needs INTEGRAL/SPI or Fermi-GBM limits. (3) Files: the 2207.04572 full text is at /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/2207.04572.txt. 2207.04572 has not yet been added to references.bib; the earlier sources 1609.00667, 1908.09037 and 1702.08430 are already cited there. Next step: run get_paper_figures on 2207.04572 (its final sin^2 2theta-versus-m_s figure) or 1908.09037 (Fig. 1, the combined plot), read the limits as approximate values, and add 2207.04572 to references.bib.
+[usage]
+[tool] d-03 post_finding {"claim": "Viel et al. 2005 (astro-ph/0501562) Eq. (5), checked against the full text: m_sterile = 4.43 keV (m_thermal/1 keV)^{4/3} (0.25(0.7)^2/omega_x)^{1/3}.
+[finding] f-010 Viel et al. 2005 (astro-ph/0501562) Eq. (5), checked against the full text: m_sterile = 4.43 keV (m_thermal/1 keV)^{4/3} (0.25(0.7)^2/omega_x)^{1/3}. The coeffi
+**Finding:** Viel et al. 2005 (astro-ph/0501562) Eq. (5), checked against the full text: m_sterile = 4.43 keV (m_thermal/1 keV)^{4/3} (0.25(0.7)^2/omega_x)^{1/3}. The coefficient 4.43 keV and the exponents 4/3 and -1/3 are confirmed, and 0.25*0.49 = 0.1225 matches the board's normalisation. The paper derives it by 'equating omega_x and m_x/T_x' of a thermal relic and a sterile neutrino 'which share the same phase-space distribution but with an overall suppression factor chi'. So it treats the DW spectrum as a rescaled Fermi-Dirac distribution with T_x = T_nu, and the two transfer functions are identical by construction.
+[tool] tc-261019_1-w2-d-03-95 -> ok: Recorded finding f-010.
+[tool] d-03 post_finding {"claim": "The Viel 2005 transfer-function fit, checked against the full text, is T(k) = [1+(alpha k)^{2nu}]^{-5/nu} with nu = 1.12 (best fit for k < 5 h/Mpc). 
+[finding] f-011 The Viel 2005 transfer-function fit, checked against the full text, is T(k) = [1+(alpha k)^{2nu}]^{-5/nu} with nu = 1.12 (best fit for k < 5 h/Mpc). For thermal
+**Finding:** The Viel 2005 transfer-function fit, checked against the full text, is T(k) = [1+(alpha k)^{2nu}]^{-5/nu} with nu = 1.12 (best fit for k < 5 h/Mpc). For thermal relics alpha = 0.049 (m_x/1 keV)^{-1.11} (Omega_x/0.25)^{0.11} (h/0.7)^{1.22} h^-1 Mpc; the general form is alpha = 0.24 ((m_x/T_x)/(1 keV/T_nu))^{-0.83} (omega_x/0.1225)^{-0.16} Mpc. The half-mode condition T^2 = 1/2 gives k_hm = (2^{nu/10}-1)^{1/(2nu)}/alpha = 0.325/alpha (my own arithmetic). Taking Omega_x = 0.25 and h = 0.7, the thermal limits give alpha = 0.01396, 0.01302, 0.01024 and 0.00710 h^-1 Mpc, so k_hm is about 23.3, 25.0, 31.8 and 45.8 h/Mpc for 3.1, 3.3, 4.1 and 5.7 keV. Under Viel's mapping the DW k_hm at the mapped mass is identical by construction.
+[tool] tc-261019_1-w2-d-03-96 -> ok: Recorded finding f-011.
+[tool] d-03 post_finding {"claim": "DW mass floors under the verified Viel 2005 Eq. (5) with omega_dm = 0.12, for which the factor (0.1225/0.12)^{1/3} = 1.0069 (hand arithmetic): 3.1 ke
+[finding] f-012 DW mass floors under the verified Viel 2005 Eq. (5) with omega_dm = 0.12, for which the factor (0.1225/0.12)^{1/3} = 1.0069 (hand arithmetic): 3.1 keV gives 3.1
+**Finding:** DW mass floors under the verified Viel 2005 Eq. (5) with omega_dm = 0.12, for which the factor (0.1225/0.12)^{1/3} = 1.0069 (hand arithmetic): 3.1 keV gives 3.1^{4/3} = 4.520, times 4.43 = 20.02, times 1.0069 = 20.2 keV. 3.3 keV gives 4.913, 21.77 and 21.9 keV. 4.1 keV gives 6.562, 29.07 and 29.3 keV. 5.7 keV gives 10.18, 45.11 and 45.4 keV. With omega = 0.1225 exactly, the values are 20.0, 21.8, 29.1 and 45.1 keV. This confirms the board's rough figures of 20, 22, 29 and 45 keV to within 1%.
+[tool] tc-261019_1-w2-d-03-97 -> ok: Recorded finding f-012.
+[tool] d-03 post_finding {"claim": "The general nCDM framework of 2007.13751 (Murgia et al. form) uses T(k) = [1+(alpha k)^beta]^gamma at z = 99, which reduces to the thermal WDM fit wh
+[finding] f-013 The general nCDM framework of 2007.13751 (Murgia et al. form) uses T(k) = [1+(alpha k)^beta]^gamma at z = 99, which reduces to the thermal WDM fit when beta = 2
+**Finding:** The general nCDM framework of 2007.13751 (Murgia et al. form) uses T(k) = [1+(alpha k)^beta]^gamma at z = 99, which reduces to the thermal WDM fit when beta = 2nu, gamma = -5/nu and nu = 1.12. A 2 keV WDM is fitted by [alpha, beta, gamma] = [0.02, 2.2, -4.5], with priors alpha in [0, 0.1], beta in [1, 10] and gamma in [-10, 0]. In the sections read, the paper gives no DW-specific relation between thermal-relic and sterile mass; it is applied to ultra-light axions. Using it for DW would require fitting (alpha, beta, gamma) to a Boltzmann-code DW transfer function.
+[tool] tc-261019_1-w2-d-03-98 -> ok: Recorded finding f-013.
+[tool] d-03 post_dead_end {"what": "A quote-verified second thermal-to-DW mapping (Abazajian 2006 astro-ph/0512631 or Bozek et al. half-mode matching), used to quantify the spread in the
+[dead-end] x-03 A quote-verified second thermal-to-DW mapping (Abazajian 2006 astro-ph/0512631 or Bozek et al. half-mode matching), used to quantify the spread in the DW floors
+[tool] tc-261019_1-w2-d-03-99 -> ok: Recorded dead end x-03.
+[tool] d-03 post_question {"text": "Can someone read astro-ph/0512631 (already saved as astro-ph_0512631.txt in the run directory) and 1702.08430 to extract a non-Viel thermal-to-DW mass
+[question] q-08 Can someone read astro-ph/0512631 (already saved as astro-ph_0512631.txt in the run directory) and 1702.08430 to extract a non-Viel thermal-to-DW mass relation 
+[tool] tc-261019_1-w2-d-03-100 -> ok: Recorded question q-08.
+[usage]
+[tool] d-05 post_finding {"claim": "The sterile-nu server's DW yield gives a smaller f_s=1 mixing than both published fits I read: sin^2 2theta(f_s=1) is 2.55e-10, 3.95e-11, 3.32e-11, 2
+[finding] f-014 The sterile-nu server's DW yield gives a smaller f_s=1 mixing than both published fits I read: sin^2 2theta(f_s=1) is 2.55e-10, 3.95e-11, 3.32e-11, 2.02e-11 and
+**Finding:** The sterile-nu server's DW yield gives a smaller f_s=1 mixing than both published fits I read: sin^2 2theta(f_s=1) is 2.55e-10, 3.95e-11, 3.32e-11, 2.02e-11 and 9.17e-12 at 7.1, 20, 22, 29 and 45 keV (from the CSV rows at sin^2 2theta = 1e-12: Omega_s h^2 = 0.000471462, 0.00304114, 0.00361029, 0.00593606, 0.0130907). The Abazajian 2006 fit gives 3.02e-10 x10 = 3.02e-9, 5.61e-10, 4.80e-10, 3.06e-10 and 1.50e-10, which is 11.9, 14.2, 14.4, 15.2 and 16.4 times the tool's values. The Asaka-Laine-Shaposhnikov 'most conservative' upper-bound line gives 7.88e-10, 1.30e-10, 1.10e-10, 6.79e-11 and 3.16e-11, which is 3.10, 3.29, 3.31, 3.36 and 3.44 times the tool's values. So the tool produces 3 to 16 times more DW dark matter per unit mixing than these fits.
+[tool] tc-261019_1-w2-d-05-101 -> ok: Recorded finding f-014.
+[tool] d-05 post_finding {"claim": "At the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11), the DW fraction depends on the normalisation: f_s = 0.275 with the tool, 7e-11/7.88e-10 = 
+[finding] f-015 At the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11), the DW fraction depends on the normalisation: f_s = 0.275 with the tool, 7e-11/7.88e-10 = 0.089 with 
+**Finding:** At the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11), the DW fraction depends on the normalisation: f_s = 0.275 with the tool, 7e-11/7.88e-10 = 0.089 with the ALS conservative line, and 7e-11/3.02e-9 = 0.023 with Abazajian 2006. The headline DW production fraction is therefore uncertain by a factor of about 3 to 12. The tool is the most optimistic of the three (largest f_s), so its X-ray exclusion of f_s = 1 at 20 keV (f-002) only gets stronger under the published normalisations.
+[tool] tc-261019_1-w2-d-05-102 -> ok: Recorded finding f-015.
+[tool] d-05 post_finding {"claim": "Combined table of allowed DW fraction versus mass (Lyman-alpha side). At 7.1 keV: 0812.0010 gives F_wdm < 0.35 (quote-verified, d-02), and 2504.06367
+[finding] f-016 Combined table of allowed DW fraction versus mass (Lyman-alpha side). At 7.1 keV: 0812.0010 gives F_wdm < 0.35 (quote-verified, d-02), and 2504.06367 mapped to 
+**Finding (preliminary):** Combined table of allowed DW fraction versus mass (Lyman-alpha side). At 7.1 keV: 0812.0010 gives F_wdm < 0.35 (quote-verified, d-02), and 2504.06367 mapped to DW mass gives f between 0.16 and 0.35 (my estimate; the mapped points are 4.4 and 11 keV). It is also below the 0812.0010 pure-DW floor of 12.1 keV, so the binding constraint is Lyman-alpha mixed-DM, f_s <~ 0.2-0.35. At 20 and 22 keV: 2504.06367 mapped gives f <~ 0.5-0.67 (mapped points 18 and 28 keV), and 20/22 keV are below the 29 keV (4.1 keV variant) and 45 keV (5.7 keV variant) Viel-mapped pure-DW floors. The tool's X-ray check excludes f_s = 1 at 20 keV, so the binding constraint is Lyman-alpha (f <~ 0.5-0.67) unless a numerical X-ray limit is stricter. At 29 keV: f = 1 is allowed by Lyman-alpha only for the 4.1 keV variant (floor ~29 keV, unverified Viel mapping), while for the 5.7 keV variant f <~ 0.67 or more. At 45 keV: f = 1 is allowed by Lyman-alpha even for the 5.7 keV variant (floor ~45 keV). At 29 and 45 keV, X-ray limits are presumably binding, but no numerical X-ray limit is available, so f_s,max(X-ray) stays undetermined.
+[tool] tc-261019_1-w2-d-05-103 -> ok: Recorded finding f-016.
+[tool] d-05 post_dead_end {"what": "Filling the X-ray f_s,max column of the final DW comparison table", "why": "Neither d-04 nor the sterile-nu tool provides numerical sin^2 2theta X-ray
+[dead-end] x-04 Filling the X-ray f_s,max column of the final DW comparison table
+[tool] tc-261019_1-w2-d-05-104 -> ok: Recorded dead end x-04.
+[usage]
+[direction] d-03 -> blocked (The tool budget ran out before an alternative mapping could be read and checked against the full text, so the spread between mappings and the <p/T> check could not be done.)
+**Blocked — Cross-check the mapping from thermal-relic mass to DW sterile-neutrino mass. Verify the Viel et al. 2005 formula and its coefficient against the full text, gather alternative mappings (half-mode matching, the 2007.13751 framework, Abazajian-style relations), and quantify how much the DW mass floors change between mappings..** (The tool budget ran out before an alternative mapping could be read and checked against the full text, so the spread between mappings and the <p/T> check could not be done.) Two of the three success criteria are not met: there is no table under a second mapping, so no spread between mappings, and the DW <p/T> check was not done. What was established: (1) The Viel et al. 2005 relation is checked against the full text (f-010; source text at /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/astro-ph_0501562.txt). Eq. (5) reads m_sterile = 4.43 keV (m_thermal/1 keV)^{4/3} (0.25(0.7)^2/omega_x)^{1/3}, which confirms the coefficient 4.43 keV and the exponents 4/3 and -1/3. The paper gets it by equating omega_x and m_x/T_x, treating the DW spectrum as a rescaled Fermi-Dirac distribution, so the thermal and DW transfer functions are identical by construction. (2) Its fitting form is T(k) = [1+(alpha k)^{2nu}]^{-5/nu} with nu = 1.12, fitted for k < 5 h/Mpc. For thermal relics alpha = 0.049 (m_x/keV)^{-1.11} (Omega_x/0.25)^{0.11} (h/0.7)^{1.22} h^-1 Mpc. By my own arithmetic k_hm = 0.325/alpha, which gives about 23.3, 25.0, 31.8 and 45.8 h/Mpc for 3.1, 3.3, 4.1 and 5.7 keV. These lie outside the k range the fit was calibrated on, and DW k_hm is identical under this mapping (f-011). (3) My own arithmetic gives DW floors, under Viel with omega_dm = 0.12, of 20.2, 21.9, 29.3 and 45.4 keV; with omega = 0.1225 they are 20.0, 21.8, 29.1 and 45.1 keV (f-012). (4) The framework in 2007.13751 is T(k) = [1+(alpha k)^beta]^gamma. It reduces to the Viel form when beta = 2nu and gamma = -5/nu, and a 2 keV WDM is fitted by [0.02, 2.2, -4.5]. In the sections read it gives no DW-specific relation (f-013). Which mapping to use with d-01: Viel Eq. (5), because it is the convention behind the board's floors. This is a provisional recommendation: other mappings may shift the floors, but no second mapping has been checked. Not done: a second mapping (Abazajian astro-ph/0512631 was downloaded to the run directory but not read; the Bozek/Murgia half-mode relations were not found), the spread between mappings, the DW <p/T> of about 3.15 T_nu, the comparison with the tool's free-streaming length, and cite() entries in references.bib. See dead end x-03 and question q-08.
+[usage]
+[direction] d-05 -> blocked (The X-ray f_s,max column cannot be filled because neither d-04 nor the tool gives numerical sin^2 2theta X-ray limits at 7.1-45 keV (dead end x-04). The quotes from both DW papers still need validating with cite(), which was not run because the budget ran out.)
+**Blocked — Cross-check the sterile-nu server's Dodelson-Widrow relic-abundance normalisation against at least two quote-verified published DW yield formulas. Propagate the spread to sin^2 2theta(f_s=1) at 7.1, 20, 22, 29 and 45 keV. Then assemble the final comparison table: allowed DW fraction versus sterile mass from Lyman-alpha mixed-DM bounds and from X-ray limits, with the binding constraint marked at each mass..** (The X-ray f_s,max column cannot be filled because neither d-04 nor the tool gives numerical sin^2 2theta X-ray limits at 7.1-45 keV (dead end x-04). The quotes from both DW papers still need validating with cite(), which was not run because the budget ran out.) Comparison of the DW normalisation (finding f-014). The tool's CSV rows (sterile_nu_grid_DW_a74034.csv, tc-...-78) give Omega_s h^2 at sin^2 2theta = 1e-12 of 0.000471462 (7.1 keV), 0.00304114 (20 keV), 0.00361029 (22 keV), 0.00593606 (29 keV) and 0.0130907 (45 keV). Scaling linearly gives sin^2 2theta(f_s=1) = 2.55e-10, 3.95e-11, 3.32e-11, 2.02e-11 and 9.17e-12.
+
+Two published DW formulas were read in the full texts and quoted verbatim in the findings, but cite() was not run because the budget ran out:
+- Abazajian 2006 (astro-ph/0511630), Eq. 7: m_s = 3.40 keV (sin^2 2theta/1e-8)^-0.615 (Omega_DM/0.26)^0.5, for T_QCD = 170 MeV and electron flavour. Inverted, it gives 3.02e-9, 5.61e-10, 4.80e-10, 3.06e-10 and 1.50e-10 at the five masses. That is 11.9, 14.2, 14.4, 15.2 and 16.4 times the tool's values.
+- Asaka-Laine-Shaposhnikov (hep-ph/0612182, Sec. 7.1), 'most conservative' line: log10 sin^2 2theta = -7.6195 - 1.7428 log10(M/keV). It gives 7.88e-10, 1.30e-10, 1.10e-10, 6.79e-11 and 3.16e-11, which is 3.10 to 3.44 times the tool's values. The paper states this fit for M <= 4 keV, so using it here is an extrapolation. Because it is the overclosure upper line, the factor of about 3 is a lower limit.
+
+So the tool produces about 3 to 16 times more DW dark matter per unit mixing than the published fits. This agrees with the critic's estimate of a factor of about 3, and it is larger when measured against Abazajian. All of this arithmetic is mine.
+
+At the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11), f_s = 0.275 with the tool, 0.089 with ALS and 0.023 with Abazajian (f-015). The tool is the most generous of the three, so its X-ray exclusion of f_s = 1 at 20 keV becomes stronger under the published normalisations.
+
+Combined table (f-016, low confidence). It uses the 0812.0010 bound F_wdm < 0.35 (quote-verified), the 2504.06367 bounds mapped to DW mass with the unverified Viel formula (my estimate), and the Viel-mapped pure-DW floors (unverified).
+- 7.1 keV: Lyman-alpha mixed-DM is binding, f_s <~ 0.2-0.35.
+- 20 and 22 keV: Lyman-alpha gives f <~ 0.5-0.67. The tool's X-ray check excludes f_s = 1 at 20 keV.
+- 29 keV: f = 1 is allowed by Lyman-alpha only for the 4.1 keV variant.
+- 45 keV: f = 1 is allowed by Lyman-alpha for the 5.7 keV variant.
+- 29 and 45 keV: the X-ray limit is presumably binding, but no numerical X-ray value exists.
+
+This answers q-04: the floor drops from about 45 keV (5.7 keV thermal limit) to about 29 keV (4.1 keV thermal limit).
+
+The brief's warning that the tool lacks Omega_s h^2 is out of date: the tool does return Omega_s h^2, so f_s is tool-derived.
+
+Full texts are saved as astro-ph_0511630.txt and hep-ph_0612182.txt in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120/.
+[wave 2] end d-03, d-04, d-05
+[phase] critic-wave
+[usage]
+[usage]
+[critique] wave 2 wave: continue
+**Critic, wave 2** — continue: 4 findings stand up to the evidence, 5 questioned ('Roach et al. 2020 (arXiv:1908.09037, NuSTAR Galactic bulge, about 190 ks) give 95% one-sid': The only excerpt (tc-261019_1-w2-d-04-82, chars 30000-44000) covers GRXE abundance fitting. It contains none of the claimed content: no Gamma limits, no Fig. 5 axis range of 1e-29 to 1e-27 s^-1, no 'about 2x better at 10-12 keV' statement and no weakening near 16 or 30-40 keV. The claim may be true, but the quoted evidence does not show it.; 'The Viel 2005 transfer-function fit, checked against the full text, is T(k) = [1+(alpha k)': The half-mode convention is non-standard. The usual definition (Schneider et al. 2012, used by Viel 2013 and Irsic 2023) places k_hm where T(k) = 1/2, i.e. T^2 = 1/4, not T^2 = 1/2. With nu = 1.12 that gives k_hm = (2^{nu/5}-1)^{1/(2nu)}/alpha, about 0.45/alpha instead of 0.325/alpha, so roughly 32, 35, 44 and 63 h/Mpc rather than 23-46 h/Mpc. The alpha arithmetic checks out, but the excerpt (tc-261019_1-w2-d-03-74) shows neither the fitting formula nor nu = 1.12.; 'The sterile-nu server's DW yield gives a smaller f_s=1 mixing than both published fits I r': The tool-side values are supported: the CSV shows 0.000471462 and 0.00304114, and the rescaling is correct. The published-formula side is not shown. Neither excerpt (tc-261019_1-w2-d-05-85, tc-261019_1-w2-d-05-88) contains Abazajian 2006 Eq. 7 or the ALS coefficients (-7.6195, -1.7428), and cite() was not run. The ALS fit is applied far above its stated M <= 4 keV validity. The 3-16x discrepancy is plausible but unverified.; 'At the 3.5 keV line point (7.1 keV, sin^2 2theta = 7e-11), the DW fraction depends on the ': It depends entirely on the unverified published normalisations in f-014. Its statement that the X-ray exclusion at 20 keV gets stronger rests on f-002, which is itself contested. The arithmetic and the logical direction are correct, but the evidence chain is incomplete.).
+
+Issues: The coefficient and exponents of Eq. (5) agree with the known Viel 2005 form, but the quoted excerpt (introduction text) does not display the equation. Re-quote the exact Eq. (5) line and add a cite() entry. The f-012 arithmetic was checked and is correct.; Recompute k_hm and the half-mode mass with the standard T = 1/2 convention and compare with the roughly 2e8 Msun/h quoted in 1306.2314. Also note that the Viel fit is calibrated only for k < 5 h/Mpc, while k_hm lies at 30-60 h/Mpc.; The [0.02, 2.2, -4.5] fit for 2 keV is consistent with Viel (alpha about 0.023, beta 2.24, gamma -4.46), but the excerpts do not contain these numbers. Re-quote them..
+[phase] replan
+[wave 2] end d-03, d-04, d-05 -> stop:budget: 2/2 waves used
+Stopping after wave 2: budget reached (2/2 waves used). Writing the report from the board.
+[run] reporting (waves 2, tool calls 63, 534s)
+[phase] report
+[usage]
+[phase] honesty
+[usage]
+[critique] wave 2 report: revise
+[usage]
+[run] done (waves 2, tool calls 63, 707s)
+[phase] done
+[done]
+
+Tokens: 1.7M in (1.3M cached) · 91K out · 61 calls — worker 1.4M in (1.2M cached) · 39K out · 46 calls; critic 119K in (27K cached) · 24K out · 5 calls; report 100K in (701 cached) · 16K out · 2 calls; survey 66K in (48K cached) · 5.9K out · 6 calls; plan 22K in · 5.6K out · 2 calls
+
+Board: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/research/default/board.json
+Outputs: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-lyman-wdm/runs/261019_110120

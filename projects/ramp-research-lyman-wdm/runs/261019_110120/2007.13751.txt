@@ -1,0 +1,2261 @@
+Title: General framework for cosmological dark matter bounds using $N$-body simulations
+Authors: Keir K. Rogers, Hiranya V. Peiris
+Year: 2020
+arXiv ID: 2007.13751
+
+============================================================
+
+--- Page 1 ---
+General framework for cosmological dark matter bounds using N -body simulations
+Keir K. Rogers 1,∗ and Hiranya V. Peiris 2, 1,†
+1Oskar Klein Centre for Cosmoparticle Physics, Department of Physics, Stockholm University,
+AlbaNova University Center, Stockholm 10691, Sweden
+2Department of Physics & Astronomy, University College London, Gower Street, London WC1E 6BT, UK
+(Dated: February 2, 2021)
+We present a general framework for obtaining robust bounds on the nature of dark matter us-
+ing cosmological N-body simulations and Lyman-alpha forest data. We construct an emulator of
+hydrodynamical simulations, which is a ﬂexible, accurate and computationally-eﬃcient model for
+predicting the response of the Lyman-alpha forest ﬂux power spectrum to diﬀerent dark matter
+models, the state of the intergalactic medium (IGM) and the primordial power spectrum. The
+emulator combines a ﬂexible parameterization for the small-scale suppression in the matter power
+spectrum arising in “non-cold” dark matter models, with an improved IGM model. We then demon-
+strate how to optimize the emulator for the case of ultra-light axion dark matter, presenting tests
+of convergence. We also carry out cross-validation tests of the accuracy of ﬂux power spectrum pre-
+diction. This framework can be optimized for the analysis of many other dark matter candidates,
+e. g., warm or interacting dark matter. Our work demonstrates that a combination of an optimized
+emulator and cosmological “eﬀective theories,” where many models are described by a single set of
+equations, is a powerful approach for robust and computationally-eﬃcient inference from the cosmic
+large-scale structure.
+I. INTRODUCTION
+Determining the particle physics of the dark matter
+would not only explain an integral part of the standard
+cosmological model but can also point to new physics
+that will deepen and unify our understanding of nature.
+Following recent null results at high-energy colliders [1]
+and by direct detection [e. g., 2], it is timely to consider
+new theoretically well-motivated avenues that do not rely
+exclusively on the “WIMP miracle” [weakly interacting
+massive particles; 3], as well as alternative experimen-
+tal approaches beyond colliders and direct/indirect de-
+tection. Cosmological observations allow constraints on
+dark matter properties in physical regimes otherwise in-
+accessible in the laboratory [e. g., 4, 5].
+There exist many alternative proposals to the tradi-
+tional WIMP, each with their own theoretical motivation.
+What unites a large number of these models are simi-
+lar phenomenological features in cosmological structure
+formation (in particular, suppressed small-scale growth)
+constituting a deviation from the standard paradigm of
+cold, collisionless dark matter [6–9]. These include, e. g.,
+light axions [10–16]; warm dark matter (particles with
+an associated free-streaming scale), e. g., sterile neutri-
+nos resonantly produced [17] or as a decay product in
+the early Universe [e. g., 18]; mixed models, e. g., of cold
+and warm dark matter [19]; light (sub-GeV) particle can-
+didates with non-negligible scattering with baryons [20],
+e. g., those with electric and magnetic dipole moments
+[21] or massive boson exchange [22]; and the wide set of
+models described by the eﬀective theory of structure for-
+∗ keir.rogers@fysik.su.se
+† h.peiris@ucl.ac.uk
+mation [23], e. g., with dark radiative components [24] or
+self-interactions [25].
+The Lyman-alpha forest (as a tracer of the small-scale,
+high-redshift linear matter power spectrum [26]), often
+in combination with larger-scale probes like the cosmic
+microwave background (CMB) and baryon acoustic os-
+cillations, provides competitive bounds on these models
+[19, 20, 27–35], to which we will refer in general as “non-
+cold” dark matter, following Ref. [36]. The challenge
+in getting robust bounds using the Lyman-alpha forest
+and other probes of the cosmic large-scale structure (e. g.,
+galaxies, weak lensing, 21 cm) is the computational cost
+of modeling the data with suﬃcient accuracy. This often
+requiresN-body simulations [37, 38], sometimes with hy-
+drodynamics [39] which adds even further computational
+cost. This makes “brute-force” sampling of the parame-
+ter space (as required by e. g., Markov chain Monte Carlo
+methods; MCMC) computationally infeasible. Further,
+the many diﬀerent dark matter and cosmological models
+that can be tested each require, in principle, a new set of
+simulations for each analysis, which can make ineﬃcient
+use of computational resources. Much eﬀort has gone
+into developing cosmological “eﬀective theories,” where
+many diﬀerent physical models are described by a sin-
+gle set of equations [e. g., 23, 40]. These are designed to
+address the issue of testing many physical theories in an
+eﬃcient way.
+In this work, we present a framework for cosmologi-
+cal dark matter bounds, speciﬁcally using the Lyman-
+alpha forest, which makes the testing of new models ro-
+bust, accurate and computationally eﬃcient. This com-
+bines a general model for the eﬀect of non-cold dark mat-
+ter (nCDM) on the matter power spectrum presented in
+Ref. [36] with the Bayesian emulator optimization we pre-
+sented in Ref. [41, 42]. An “emulator” is a ﬂexible model
+that can characterize the data accurately and is compu-
+arXiv:2007.13751v3  [astro-ph.CO]  1 Feb 2021
+
+--- Page 2 ---
+2
+tationally cheap to evaluate [43]. This means it can be
+easily called within MCMC, making parameter inference
+feasible. It is optimized using a small set of “training”
+simulations, the selection of which is critical (see § III B
+for discussion on Bayesian emulator optimization). Em-
+ulators have found wide use in cosmological studies using
+the large-scale structure [41, 42, 44–52].
+We build an emulator for the Lyman-alpha forest ﬂux
+power spectrum as a function of the nCDM model and
+other nuisance parameters. This initial base emulator
+can then be optimized for the analysis of speciﬁc dark
+matter models. Here, we consider the example of ultra-
+light axion (ULA) dark matter, but the procedure will be
+equivalent for any of the dark matter candidates which
+can be characterized by the nCDM model (see above).
+We optimize the construction of the emulator training
+set using Bayesian optimization, which iteratively adds
+training data in order to determine the peak of the pos-
+terior distribution accurately while exploring the param-
+eter space fully [53]. This allows tests of the robust-
+ness of dark matter bounds with respect to the accu-
+racy of the emulator model. Previous dark matter and
+cosmological bounds from the Lyman-alpha forest [e. g.,
+19, 20, 27–29, 31–35, 54–58] have relied on linear inter-
+polation of simulated ﬂux power spectra around a ﬁdu-
+cial point. Ref. [30] interpolate using “ordinary kriging”,
+which has some similarity to the method we consider
+here, although they do not model full parameter covari-
+ance nor test for convergence using Bayesian optimization
+(see § III B). The emulator model we use makes fewer as-
+sumptions and is more robust in its statistical modeling,
+which can remove bias in power spectrum estimation and
+strengthen parameter constraints [42]. Even for cosmo-
+logical datasets where emulators are already used, the
+combination of convergence tests using Bayesian opti-
+mization and eﬀective theories as described above can
+provide signiﬁcant beneﬁts.
+In § II, we present the general emulator for nCDM
+models and then in § III, we present the example of op-
+timizing the emulator for the study of ULA dark mat-
+ter. We conduct tests of emulator convergence and cross-
+validation in § IV, discuss in § V and conclude in § VI.
+II. NON-COLD DARK MATTER EMULATOR
+In this section, we present a general emulator of hydro-
+dynamical simulations for non-cold dark matter models
+using the Lyman-alpha forest ﬂux power spectrum as the
+constraining data. This initial emulator is not tied to a
+speciﬁc dark matter model, but rather forms the base for
+Bayesian optimization for a particular model (see§ III for
+the example of ultra-light axions). This framework en-
+sures the computational eﬃciency, theoretical accuracy
+and maximum precision for dark matter bounds using
+the cosmic large-scale structure. In § II A, we explain
+the non-cold dark matter model we employ, ﬁrst intro-
+duced by Ref. [36]. We present the details of our cos-
+mological hydrodynamical simulations in § II B and the
+intergalactic medium and background cosmology model
+which must be marginalized in § II C. In § II D, we dis-
+cuss the method of emulation by Gaussian processes and
+how this connects to Bayesian inference.
+A. Non-cold dark matter model
+In order to build an emulator-inference framework
+which is as general and powerful as possible, we employ
+the non-cold dark matter (nCDM) model ﬁrst introduced
+by Ref. [36]. The model is deﬁned by a “transfer func-
+tion”,
+T (k)≡
+√
+PnCDM(k)
+PCDM(k)
+= [1 + (αk)β]γ.
+(1)
+PCDM(k) andPnCDM(k) are the linear matter power spec-
+tra respectively for CDM and nCDM models; k is the
+comoving wavenumber (length-scale) in h Mpc−1; and
+[α,β,γ ] are the free parameters of the model, where α
+is in units of h−1 Mpc. In our analysis, we deﬁne T (k) at
+the initial conditions of our cosmological simulations (see
+§ II B), i. e., atz = 99. It is a generalization of the ﬁtting
+function for a thermal warm dark matter (WDM) trans-
+fer function [59], to which Eq. (1) reduces when β = 2ν,
+γ =− 5
+ν and ν = 1.12. By having two further degrees
+of freedom, the general model in Eq. (1) can character-
+ize the matter power spectra for many models beyond
+the thermal WDM case, e. g., non-thermal WDM, like
+sterile neutrinos resonantly produced or from particle de-
+cays, mixed models of cold and warm dark matter, axion-
+like particles, light (sub-GeV) dark matter coupling to
+baryons, dark matter coupling to dark radiation or self-
+interacting dark matter [17–25]. Many of these models
+are explored in Ref. [36]; we will consider the example of
+ultra-light axions in § III.
+We consider α ∈ [0, 0.1], β ∈ [1, 10], γ ∈ [−10, 0].
+Fig. 1 shows some example nCDM transfer functions.
+In particular, we show the cold dark matter limit with
+α = 0; nCDM model ﬁts for the transfer function of a
+2 keV WDM particle [ α,β,γ ] = [0 .02, 2.2,−4.5] and a
+10−22 eV ULA particle [ α,β,γ ] = [0.1, 5.2,−3.4] (more
+details in § III); and some extremal values of the nCDM
+parameters within our prior volume. In general, the
+nCDM model can characterize dark matter candidates
+which suppress the growth of structure on small scales
+and hence form a cut-oﬀ in the matter power spectrum.
+By spanning the three free parameters of the model, it
+is possible to characterize diﬀerent scales and shapes of
+this cut-oﬀ, which can map to diﬀerent particle models,
+as shown by the WDM and ULA examples in Fig. 1. α
+is the main parameter determining the scale of the sup-
+pression and as it increases, the cut-oﬀ moves to larger
+scales (smaller k). β and γ are the main parameters de-
+termining the shape of the suppression. As β increases,
+
+--- Page 3 ---
+3
+−1.0 −0.5 0.0 0.5 1.0 1.5
+log(k[h Mpc−1])
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+T (k)
+CDM [α = 0]
+WDM (2 keV)
+ULA (10−22 eV)
+[α, β, γ] = [0.1, 1, −1]
+[α, β, γ] = [0.1, 10, −1]
+[α, β, γ] = [0.1, 1, −10]
+FIG. 1. Transfer functions T (k) (as deﬁned in Eq. (1) at
+z = 99) for various conﬁgurations of the non-cold dark
+matter (nCDM) model as a function of comoving distance
+wavenumber k. The colored lines show some extremal val-
+ues of our prior range, while the black lines show nCDM
+ﬁts for cold dark matter ( α = 0), 2 keV warm dark matter
+([α,β,γ ] = [0 .02, 2.2,−4.5]) and 10−22 eV ultra-light axion
+dark matter [α,β,γ ] = [0.1, 5.2,−3.4].
+the cut-oﬀ becomes sharper, in particular ﬂatter before
+T 2 = 0.5; asγ increases, the cut-oﬀ also becomes sharper,
+in particular ﬂatter after T 2 = 0.5.
+B. Cosmological hydrodynamical simulations
+Our observable is the Lyman-alpha forest ﬂux power
+spectrum at z = [4.2, 4.6, 5.0]. In order to model this,
+we run cosmological hydrodynamical simulations of the
+intergalactic medium (IGM; from which the forest is
+sourced) using the publicly-available 1 code MP-Gadget
+[39, 60, 61]. We evolve 512 3 particles each of dark mat-
+ter and gas in a (10 h−1 Mpc)3 box (see tests of conver-
+gence with respect to particle number and box size in
+Appendix A) from z = 99 to z = 4.2, saving snapshots
+of particle data in particular at z = [4.2, 4.6, 5.0]. We
+include the eﬀect of the nCDM models we study by gen-
+erating the initial conditions of each simulation using a
+suppressed matter power spectrum as modiﬁed by the
+transfer function in Eq. (1); we discuss the implications
+for the nCDM models we can characterize in § V. We fo-
+cus computational resources on the low-density gas that
+1 https://github.com/MP-Gadget/MP-Gadget.
+forms the Lyman-alpha forest by enabling thequick-lya
+ﬂag, which converts gas particles at overdensities> 1000
+and with temperatures < 105 K into collisionless parti-
+cles [62]. This yields signiﬁcant computational eﬃciency
+gains with a negligible impact on the accuracy of Lyman-
+alpha forest statistics.
+From each particle snapshot, we generate 32000 mock
+spectra (with pixel widths ∆ v = 1 km s−1) with only
+the Lyman-alpha absorption line and calculate the 1D
+ﬂux power spectrum using fake spectra [63]. The 1D
+Lyman-alpha forest ﬂux power spectrum measures corre-
+lations in Lyman-alpha absorption lines along the line-of-
+sight only (i. e., integrated over transverse directions). It
+is deﬁned as Pf(kf)≡
+∫ dk⊥
+f
+(2π)2 P 3D
+f (kf). Here, kf andk⊥
+f
+are respectively the line-of-sight and transverse compo-
+nents of the full velocity wavevectorkf and have inverse-
+velocity units (e. g., s km −1); P 3D
+f (kf) is the 3D ﬂux
+power spectrum.
+We estimate Pf(kf) ﬁrst in each mock spectrum using
+a fast Fourier transform (FFT):Pi
+f (kf) =|ˆδf(kf)|2, where
+ˆδf(kf) is the 1D FFT of δf(v) = F
+⟨F⟩− 1.F =e−τ is the
+fraction of emitted quasar ﬂux transmitted, ⟨F⟩ is the
+mean ﬂux across all spectra in a given box,τ is the optical
+depth and the eﬀective optical depth τeﬀ =− ln⟨F⟩; v is
+the line-of-sight velocity. In Ref. [64], the ﬂux is normal-
+ized to a “rolling mean ﬂux” (averaged at each pixel using
+a ﬁnite window). This attempts to correct for redshift
+evolution within individual spectra and mis-modeling of
+the quasar emission continuum; we test the impact on
+our results in Appendix C. Finally, we then average the
+ﬂux power spectra over all mock spectra and correct for
+the pixel window function [65]: Pf(kf) =
+⟨
+P i
+f (kf)
+W 2(kf,∆v)
+⟩
+i
+.
+The pixel window function is W (kf, ∆v) = sin(kf∆v/2)
+kf∆v/2 ;
+note that we do not simulate the ﬁnite resolution of the
+spectrograph as this does not commute with the rescaling
+of mean ﬂuxes (see § II C 4) and we compare only to data
+where the spectrographic resolution has been corrected
+(we test the impact of imperfect resolution modeling in
+Appendix B).
+We calculate (and emulate; see § II D) the ﬂux power
+spectrum at the (real-valued) discrete Fourier transform
+sample frequencies of the simulation box with wavenum-
+bers in inverse-distance units (h Mpc−1). This is because
+the conversion to velocity units depends on redshift and
+the energy density by the Hubble law. Since the matter
+energy density will be varied in our base emulator (see
+§ II C 5), this would mean that the velocity wavenumbers
+of each simulation would vary across the emulator and
+the modes would not be consistently distributed. In the
+likelihood function (see § II D), we linearly interpolate to
+velocity wavenumbers.
+
+--- Page 4 ---
+4
+C. Intergalactic medium and cosmological model
+In order to study nCDM models using the ﬂux power
+spectrum, we must marginalize over uncertainty in the
+thermal and ionization history of the IGM (which partly
+derives from the uncertain nature of cosmic reionization),
+as well as relevant aspects of the cosmological model.
+1. Pressure smoothing
+The energy deposited in the IGM by the background
+of ionizing ultra-violet (UV) photons and the ﬁnite tem-
+perature of the IGM (∼ 104 K at z∼ 5) leads to a few
+diﬀerent observable eﬀects in the ﬂux power spectrum.
+The heat in the IGM smoothes the spatial distribution
+of the gas below a characteristic scale, where the gas pres-
+sure balances gravitational clustering. A simple, classical
+interpretation deﬁnes a Jeans pressure smoothing scale,
+which is a function of the instantaneous gas temperature
+[e. g., 66]. However, in an expanding universe with an
+evolving thermal state, the relevant pressure smoothing
+scale depends on the integrated history of the gas heating
+as spatial ﬂuctuations from earlier times expand or fail
+to collapse depending on the temperature at that epoch.
+This “ﬁltering length” in general deviates from the Jeans
+length, being typically greater before reionization and
+less afterwards (∼ 100 comoving kpc at z∼ 5).
+In order to track the heat deposited in our simulations
+and the resulting ﬁltering scale, we use the integrated
+energy deposited into the gas per unit mass at the mean
+density,
+u0(z) =
+∫ zini
+zend
+dz
+H(z)(1 +z)
+∑
+iniϵi
+¯ρ , (2)
+ﬁrst introduced by Ref. [67]. Here, ni are the num-
+ber densities for each species i∈ [HI, HeI, HeII], ¯ρ is
+the mean mass density, H(z) is the Hubble parameter
+and [zend,z ini] sets the redshift range for integration.
+Ref. [64] determined redshift ranges for integration at
+z = [4.2, 4.6, 5.0], such that u0 most strongly correlates
+with the ﬂux power spectrum. We use those redshift
+ranges: at z = 4.2, [zend,z ini] = [4 .2, 12]; at z = 4.6,
+[zend,z ini] = [4.6, 13]; at z = 5.0, [zend,z ini] = [6, 13]. In
+general, a delay between heat injection and a change in
+the gas distribution is expected, but this delay can be
+reduced in the ﬂux power spectrum owing to non-linear
+redshift-space distortions arising from gas peculiar ve-
+locities; Ref. [64] posits this as an explanation for the
+diﬀerent zend. Otherwise, the values of zini are consis-
+tent with the gas gradually losing sensitivity to heating
+at earlier times.
+2. Temperature-density relation
+The small-scale ﬂux power spectrum is sensitive to the
+instantaneous thermal state of the IGM in particular ow-
+ing to the thermal broadening of absorption lines. After
+the gas is heated by the (re-)ionization front, it cools (for
+∆z ∼ 1− 2) towards a thermal asymptote set largely
+by the balance between UV background (UVB) photo-
+heating and adiabatic cooling owing to cosmological ex-
+pansion [e. g., 68]. Further, the overwhelming majority
+of the low-density gas (∆ ≲ 10) to which the forest is
+sensitive follows a tight power-law temperature-density
+relation [69], where gas temperature
+T (z) =T0(z)∆~γ(z)−1. (3)
+This relation has two free parameters: the temperature
+at mean densityT0(z) and a slope~γ(z). The latter is gen-
+erally expected to be∼ 1 (in particular immediately after
+an ionization event) and to asymptote towards 1.6; how-
+ever, ~γ(z) is generally poorly constrained by data with
+sometimes inconsistent measurements [e. g., 70]. We dis-
+cuss in § V where this model breaks down, e. g., a double
+power law during reionization or temperature ﬂuctua-
+tions arising from an inhomogeneous reionization [71, 72],
+and the resulting implications for dark matter bounds.
+3. Ionization state
+The ionization state of each species is determined by
+the balance between the UVB ionization rates and re-
+combination eﬀects. Uncertainty in the ionization rates
+is degenerate in the ﬂux power spectrum with the mean
+amount of absorption in the transmitted ﬂux or the ef-
+fective optical depth τeﬀ. We therefore marginalize over
+the uncertainty in the ionization state by varying τeﬀ;
+we parameterize τeﬀ at each redshift by a multiplicative
+correction τ0(z) to a ﬁducial model [64]:
+τeﬀ(z) =τ0(z)× 1.4× 10−3× (1 +z)4. (4)
+4. Simulation input and output
+The thermal and ionization history in our hydrody-
+namical simulations (see § II B) is determined by a set of
+input spatially-uniform UV ionization and heating rates
+for each primordial species [HI, HeI, HeII] as a function
+of redshift; our default set of rates comes from Ref. [73] 2.
+In order to generate a wide range of IGM histories, we
+vary the default photo-heating ratesϵ0,i by an amplitude
+HA and an overdensity ∆–dependent rescaling HS such
+that heating rates ϵi = HAϵ0,i∆HS are used. This uni-
+formly scales the heating rates with redshift. In order
+to vary the redshift dependence, we employ the reion-
+ization model of Ref. [75]. We vary two free parameters
+2 This assumes the IGM to be optically thin; we discuss in § V
+where this model breaks down, e. g., the impact of radiative
+transfer [e. g., 74], as well as the implications for dark matter
+bounds.
+
+--- Page 5 ---
+5
+of the model: the redshift of hydrogen reionization zrei,
+deﬁned as the redshift at which the volume-averaged ion-
+ization fraction in HII = 0 .5; and, for the ﬁrst time in
+studying nCDM models using the ﬂux power spectrum,
+the total heat injection during hydrogen reionizationTrei.
+The reionization model of Ref. [75] self-consistently gen-
+erates heating and ionization rates for chosen reionization
+parameters, only transitioning to the default rates once
+ionization is complete. The model, in particular, removes
+spurious heating at high redshift before and during reion-
+ization, which has been present in previous work [e. g.,
+73, 76–78].
+We vary HA ∈ [0.05, 3.5], HS ∈ [−1.3, 0.7], zrei ∈
+[6, 15],Trei∈ [1.5× 104, 4× 104] K. In order to be further
+agnostic about the IGM states over which we marginalize
+and to have as robust nCDM bounds as possible, in our
+emulator and likelihood function (see § II D), we allow
+IGM parameters to vary independently with redshift. To
+achieve this, we label each simulation at each redshift
+with the parameter set [ τ0,T 0,~γ,u 0]. This no longer re-
+stricts the redshift evolution of our IGM model to that
+determined by the input model alone, which may be in-
+complete [see, e. g., other estimations of UVB heating
+and ionization rates; 79]. In particular, this allows us to
+account for uncertainty in HeII reionization, which may
+start heating the IGM as early asz∼ 4.5, without explic-
+itly varying helium parameters in the input model. This
+would otherwise further extend the dimensionality of the
+model, which has important implications regarding the
+construction of the emulator (see § II D).
+At each redshift we restrict our sample values of
+[T0,~γ,u 0] to those generated in our simulations; i. e., we
+do not employ the practice of rescaling the temperature-
+density relation after a simulation snapshot has been
+saved [e. g., 64, 80]. This practice may be inaccurate
+when using the smallest scales in the ﬂux power spec-
+trum, e. g., as rescaling the temperatures of simulation
+particles ignores their peculiar velocities. The eﬀect of
+this on the ﬂux power spectrum may not be fully cap-
+tured by other IGM parameters (i. e., u0). Future work
+will assess the impact of this. However, we do employ
+the common practice of rescaling mock spectrum optical
+depths in order to increase our sampling of τeﬀ; Ref. [81]
+tested the accuracy of this procedure. This process is rel-
+atively computationally cheap and means that, for each
+simulation snapshot, we can have an arbitrary number of
+eﬀective optical depth values; we discuss this further in
+§ II D.
+5. Cosmology
+The ﬂux power spectrum at these redshifts ( z ∼ 5)
+and scales (kf∼ 10−2− 10−1 s km−1) is sensitive to as-
+pects of the cosmological model, which must be marginal-
+ized for robust nCDM bounds. In particular, to search
+for a cut-oﬀ in the power spectrum arising from an
+nCDM model, we marginalize over the amplitude As∈
+[1.2× 10−9, 2.5× 10−9] and slope ns∈ [0.9, 0.995] of the
+primordial power spectrum. We note that these diﬀer
+from the standard cosmological parameters [82] as we
+deﬁne them at a pivot scale kp = 2 Mpc−1, which lies
+in the range of scales we are considering. This requires
+translating CMB priors from the larger pivot scale used
+by the Planck Collaboration. In the data analysis we
+present in Ref. [83], we use Planck-derived priors on the
+primordial power spectrum. It follows that during the
+acquisition of training points during Bayesian optimiza-
+tion (see § III B), these are largely drawn from that prior
+distribution (through the exploitation term) and so are
+clustered around a Planck ﬁducial cosmology (see Figs. 4
+and 6). We also vary in the initial set of simulations, the
+fractional matter energy density Ω m ∈ [0.26, 0.33], al-
+though in our initial optimization analysis presented be-
+low, we ﬁx it to a ﬁducial value from Planck [82, 84],
+Ωm = 0.3209. All other cosmological parameters are
+ﬁxed to ﬁducial values from the Planck 2018 results [84],
+in particular, Ω bh2 = 0.022126 and Ω ch2 = 0.12068.
+D. Gaussian process emulation and likelihood
+function
+In order to infer bounds on nCDM parameters and
+to marginalize over the nuisance parameters identiﬁed in
+§ II C, we want to be able to model data as a function of
+theory parameters. A challenge arises because each eval-
+uation of our theory vector naively requires the calcula-
+tion of a hydrodynamical simulation (see § II B) and nu-
+merical methods of inference (e. g., Markov-chain Monte
+Carlo sampling; MCMC) may require millions of these
+evaluations. This would be computationally infeasible
+given the numerical requirements for suﬃciently con-
+verged simulations (see Appendix A). We follow the solu-
+tion we presented in Refs. [41, 42], which is to construct
+a “surrogate model” or “emulator” for the simulations
+using a Gaussian process [e. g., 43] and to ensure conver-
+gence and suﬃcient accuracy in its construction by the
+method of Bayesian emulator optimization. A Gaussian
+process emulator is suﬃciently computationally-cheap to
+evaluate that standard inference methods like MCMC
+can be used.
+We emulate separately at each redshift z =
+[4.2, 4.6, 5.0], the ﬂux power spectrum as a function of
+the nCDM parameters ( § II A) and the nuisance IGM
+and cosmological parameters (§ II C):θ = [α,β,γ,τ 0(z =
+zi),T 0(z = zi),~γ(z = zi),u 0(z = zi),n s,A s, Ωm]. As
+discussed in § II B, we emulate the ﬂux power spec-
+trum at 45 sample wavenumbers in inverse-distance units
+(h Mpc−1). This accounts for the fact that the velocity
+wavenumbers of a given simulation depend on Ωm (by the
+Hubble law) and so emulating in velocity space would be
+complicated by having simulation modes binned diﬀer-
+ently at each training point. In the likelihood function,
+we then linearly interpolate the ﬂux power spectrum to
+velocity wavenumber bins.
+
+--- Page 6 ---
+6
+1. Gaussian process
+Our emulator model is a Gaussian process; this is a
+stochastic process such that a ﬁnite number of simulation
+outputs (i. e., the ﬂux power spectrum) forms a multivari-
+ate Gaussian distribution: Pf(θ) ∼ N(0,K (θ,θ′;ψ)).
+Here, for clarity, we have dropped in the notation the de-
+pendence of Pf on kf and z. The free hyper-parameters
+ψ of the emulator model for Pf(θ) will be optimized (or
+“trained”) using a set of “training simulations” Pf(θ′)
+evaluated at a set of points θ′. The zero mean con-
+dition is approximated by normalizing the ﬂux power
+spectra by the median value in the training set. Hav-
+ing chosen the training set of simulations (see § II D 2),
+the ﬁnal part of the model to determine is the co-
+variance kernel K(θ,θ′;ψ). We use a linear combi-
+nation of a squared exponential kernel
+[
+or radial ba-
+sis function; RBF; σ2
+RBF exp
+(
+− (θ−θ′)2
+2l2
+)]
+, a linear ker-
+nel [σ2
+linearθ.θ′] and a constant noise kernel [ σ2
+noise]; i. e.,
+ψ = [σ2
+RBF,σ 2
+linear,σ 2
+noise,l ]. The Gaussian process model
+constitutes a wide prior in function space and so allows
+emulation of the ﬂux power spectrum without any strong
+prior knowledge of its parameter dependence. Moreover,
+the model is probabilisitic and so any prediction of the
+ﬂux power spectrum away from the training points will
+have an associated uncertainty which can be propagated
+to our statistical model. The choice of covariance ker-
+nel is motivated by wanting a ﬂexible model (hence the
+squared exponential), recognizing that linear interpola-
+tion has been a reasonable approach in previous eﬀorts
+[e. g., 27] (hence the linear kernel) and having a term
+which can account for noise in the training data (although
+we ﬁnd that this is always negligible).
+2. Training simulations
+In the construction of the training data, we adapt
+the methods we presented in Refs. [41, 42] to this more
+general parameterization. We run an initial set of
+ﬁfty simulations spanning the wide prior range on the
+nCDM, IGM and cosmological parameters set out above
+(§ II A and II C). To achieve this, we choose the pa-
+rameter values of these simulations from a Latin hy-
+percube sampling scheme [85]. This sampling scheme
+is chosen because it has good space-ﬁlling properties
+with a low number of sampling points. It distributes
+N training points such that along each parameter axis,
+the full space is sampled in N equally-divided sub-
+spaces. We generate many diﬀerent hypercubes and
+use the one that maximizes the minimum Euclidean
+distance between samples. This Latin hypercube is
+constructed for our input simulation parameters, i. e.,
+[α,β,γ,H A,H S,z rei,T rei,n s,A s, Ωm], since we do not
+know a priori the mapping from input to output IGM
+parameters. This means that in our initial set of train-
+ing simulations, the IGM parameters [ T0(z = zi),~γ(z =
+zi),u 0(z = zi)] are not sampled by a Latin hypercube.
+We ﬁnd, however, that these parameters are still evenly
+sampled (see Fig. 4 for the distribution of training points)
+and the subsequent application of Bayesian emulator op-
+timization will correct for any loss of precision. A partial
+degeneracy appears between T0(z = zi) and u0(z = zi)
+such that snapshots with high T0 and low u0 (and vice
+versa) are not produced. This constitutes a physical
+prior on these parameters as very hot IGMs with lit-
+tle previous heating (and vice versa ) would be contrived.
+We therefore set a prior probability distribution that ex-
+cludes parameter space outside the convex hull of the
+training points in this plane (at each redshift). The full
+details of the prior distribution speciﬁc to the data analy-
+sis we present in Ref. [83] can be found in that reference.
+We also note that τ0(z =zi) does not form part of the
+Latin hypercube since (as discussed in § II C), we can
+have an arbitrary number ofτ0 samples by rescaling mock
+spectrum optical depths. For each training simulation,
+we have ten values of τ0(z = zi)∈ [0.75, 1.25] (i. e., al-
+lowing for 25% corrections to the ﬁducial model). These
+are evenly distributed such that across all the training
+points, we have 10 N = 500 diﬀerent values of τ0 for
+maximal support in this dimension.
+The framework we propose is as follows: the initial
+base nCDM emulator can be used for parameter inference
+on the many particular nCDM models it can character-
+ize (see § II A). This means that the process of Bayesian
+emulator optimization (the iterative addition of train-
+ing simulations until parameter inference has converged)
+should be applied for each particular set of dark matter
+model parameters (and nuisance IGM/cosmological pa-
+rameters). In § III, we demonstrate the example of opti-
+mizing the emulator for inferring a bound on the mass of
+the ultra-light axion. Other dark matter model parame-
+ters can be inferred by equivalent analyses. We therefore
+defer a discussion of the speciﬁcs of the Bayesian emula-
+tor optimization to § III B.
+3. Emulator training
+We now discuss how a given emulator (whether opti-
+mized or not) propagates to the ﬁnal parameter infer-
+ence. With a given training set, we optimize (or “train”)
+the hyperparametersψ of the Gaussian process by max-
+imizing the marginal likelihood of the training data. We
+train each redshift separately but use the same set of
+optimized hyperparameters for each wavenumber within
+each redshift bin. We do not model correlations between
+diﬀerent wavenumbers; Ref. [80] found this to be a suﬃ-
+cient approximation. We can then make predictions for
+the ﬂux power spectrum at arbitrary values of θ∗ by
+evaluating the posterior predictive distribution (PPD)
+for the ﬂux power spectrum conditional on the train-
+ing data. This is a Gaussian distribution with mean
+µ =K∗K−1Pf(θ′) and varianceσ2 =K∗∗−K∗K−1KT
+∗ ,
+where K∗ =K(θ∗,θ′;ψ) and K∗∗ =K(θ∗,θ∗;ψ). The
+
+--- Page 7 ---
+7
+generic behaviour of the Gaussian process PPD is that
+its uncertainty increases as a function of distance to the
+nearest training points. It follows that more precise the-
+oretical estimates of the ﬂux power spectrum will in gen-
+eral be made in regions of parameter space which are
+more densely sampled by training data; the Bayesian
+emulator optimization exploits this feature of Gaussian
+processes (see § III B).
+4. Likelihood function
+In this analysis, we use a Gaussian likelihood function,
+although this initial emulator could be used with any
+likelihood function that can robustly propagate the the-
+oretical uncertainty arising from the Gaussian process
+emulation. The theory vector is taken to be the PPD
+mean µ(θ) and the uncertainty in the ﬂux power spec-
+trum emulation is propagated by adding in quadrature
+the diagonal PPD covariance σ2(θ) to the data covari-
+ance.
+III. ULTRA-LIGHT AXION EMULATOR
+In this section, we present the construction of the
+Bayesian-optimized emulator for inferring a bound on the
+mass of ultra-light axions as the dark matter using the
+Lyman-alpha forest ﬂux power spectrum. This emulator
+is built using the base nCDM emulator presented in § II.
+It constitutes an example of how to construct an opti-
+mized emulator for a particular dark matter model char-
+acterized by the nCDM parameters. Other dark matter
+candidates could be studied in an equivalent way. In
+§ III A, we explain the ultra-light axion model we em-
+ploy; and in § III B, we discuss the method of Bayesian
+emulator optimization and how this connects to estima-
+tion of the posterior probability distribution.
+A. Ultra-light axion model
+Figures 2 and 3 demonstrate the construction of our
+ultra-light axion dark matter model. We ﬁt [using the
+Levenberg-Marquardt algorithm; 87, 88] the nCDM pa-
+rameters [α,β,γ ] to the ULA transfer functions [as cal-
+culated by the Boltzmann code axionCAMB; 86] as a func-
+tion of axion mass ma. We use polynomial functions to
+model the dependences of [ α,β,γ ] on ma.3 We ﬁt the α
+dependence at the ﬁducial value of h = 0.6686 [84], to
+whichh is ﬁxed in this part of the analysis (see § III B).
+No particular physical meaning should be ascribed to the
+3 log(α[h−1 Mpc]) = 5.5× 10−3M3 + 0.33M2 + 6.2M + 33.1;β =
+−0.026M2− 0.82M− 0.45; log(−γ) =−0.013M3− 0.75M2−
+14.7M− 9.6; whereM = log(ma[eV]).
+0.0 0.5 1.0 1.5 2.0 2.5
+log(k[h Mpc−1])
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+T (k)
+log(ma[eV])
+−22.3
+−22.0
+−21.4
+−21.0
+−20.4
+−20.0
+−19.4
+−19.0
+−18.7
+[α, β, γ] - ﬁt
+axionCAMB
+FIG. 2. The transfer function T (k) (as deﬁned in Eq. (1) at
+z = 99) for the ultra-light axion dark matter model as a func-
+tion of comoving distance wavenumberk and axion mass ma.
+The dashed lines show T (k) as calculated by the Boltzmann
+code axionCAMB [86]; the solid lines show our nCDM model ﬁt
+using the [α,β,γ ] parameters. The nCDM model cannot char-
+acterize the small-scale oscillations in the axionCAMB transfer
+functions but in the power spectrum, these are strongly sup-
+pressed relative to the initial cut-oﬀ scale.
+polynomial model we have employed; it serves as a simple
+mapping from axion mass to our nCDM parameters. The
+polynomial model strictly only applies within our prior
+bounds on axion mass, in which our model parameters
+are ﬁt, for log(ma[eV])∈ [−22,−19].
+Our ground truth for the ULA transfer functions is
+given by axionCAMB4, a modiﬁed version of the Einstein-
+Boltzmann solver CAMB [89]. It solves the coupled
+Friedmann/Klein-Gordon system of equations for a ho-
+mogeneous ULA ﬁeld in an expanding universe. At early
+times, whenma≪aH (a is the cosmological scale factor;
+H is the conformal Hubble parameter), the evolving ax-
+ion equation of state w(a) and adiabatic sound speed are
+used to evolve axion energy and pressure perturbations
+along with the other cosmological energy components. At
+late times, when ma≫ aH, the equations become stiﬀ
+and the axion ﬁeld is well-approximated as a pressure-
+less ﬂuid (w = 0) and the perturbations are evolved in
+the WKB approximation for ULAs with scale-dependent
+sound speed [e. g., 90]. This approximation captures the
+suppression of small-scale axion perturbations, observed
+as the sharp cut-oﬀ in the transfer functions in Fig. 2,
+4 https://github.com/dgrin1/axionCAMB.
+
+--- Page 8 ---
+8
+−2.5
+−2.0
+−1.5
+−1.0
+log(α[h−1 Mpc])
+Polynomial model ﬁt
+[α, β, γ]
+5.00
+5.25
+5.50
+5.75
+β
+−22 −21 −20 −19
+log(ma[eV])
+0.2
+0.4
+0.6
+log(-γ)
+FIG. 3. The nCDM model ﬁt for ultra-light axion dark matter
+transfer functions as a function of axion mass ma. From top
+to bottom , the three nCDM parameters [ α,β,γ ], showing a
+polynomial model ﬁt (see text for more details).
+without requiring the resolution of the short ULA os-
+cillation timescale (∼ m−1
+a ). We ﬁnd that the nCDM
+model (Eq. (1)) can well characterize the power spec-
+trum cut-oﬀ produced by axionCAMB (Fig. 2). It is not
+able to characterize the suppressed small-scale oscilla-
+tions in the transfer function. However, even in the ini-
+tial conditions of our simulations ( § II B) in the matter
+power spectrum, these oscillations will be further sup-
+pressed since P (k)∝T 2(k). They will be erased further
+again in propagation to our observable, the ﬂux power
+spectrum at z∼ 5 by non-linearities in the density ﬁeld
+and the projection from a 3D to a 1D line-of-sight power
+spectrum. Considering that current data measure the
+ﬂux power spectrum at the precision of ∼ 10%− 25%
+[e. g., 64], we conclude that our bounds on axion mass
+will be insensitive to this approximation and driven by
+the non-detection of the initial sharp cut-oﬀ in the power
+spectrum. We will discuss this further and compare to
+the approximations in previous eﬀorts in § V. We con-
+sider only the case where ULAs form the entirety of the
+dark matter; future analyses can extend our parameter
+space to consider sub-dominant contributions to the dark
+matter energy density (see § V).
+B. Bayesian-optimized emulator and posterior
+distribution
+In order to infer a bound on the mass of ultra-light ax-
+ions as the entirety of the dark matter (and marginalize
+over nuisance IGM/cosmological parameters; see § II C),
+we must numerically sample the posterior probability dis-
+tribution for the full set of inference parameters φ =
+[log(ma[eV]),τ 0(z = zi),T 0(z = zi),~γ(z = zi),u 0(z =
+zi),n s,A s], for zi = [4.2, 4.6, 5.0]. We use the Gaussian
+likelihood function presented in § II D.
+Although Ωm is varied in our emulator ( § II C), since
+relevant data do not constrain this parameter, here we
+ﬁx Ω m = 0.3209, which is equivalent to h = 0.6686
+[84]. We estimate the posterior probability distribution
+(with a given prior distribution) using the aﬃne-invariant
+MCMC ensemble sampler emcee [91].
+In order to evaluate the theory ﬂux power spectrum, we
+use the nCDM emulator described in § II. We map from
+log(ma[eV]) to [ α,β,γ ] using the model constructed in
+§ III A. However, as mentioned in § II D, the initial base
+emulator with ﬁfty training simulations is un-optimized
+and not guaranteed to give converged estimates of the
+posterior distribution. This can arise when the uncer-
+tainty in emulator prediction (the variance in its pos-
+terior predictive distribution) dominates over the data
+error (covariance) at the peak of the true posterior dis-
+tribution (which is not a priori known). This can lead
+to weakened parameter constraints (as the emulator er-
+ror broadens the peak of the likelihood) or even bias de-
+termination of the maximum posterior point due to the
+non-stationarity of the emulator variance. We account
+for this problem by optimizing the emulator training set
+(iteratively adding to it) such that the true posterior peak
+is determined; this is the Bayesian emulator optimization
+we introduced in Refs. [41, 42].
+At each iteration of the Bayesian emulator optimiza-
+tion, after training the emulator on the existing training
+set and evaluating the posterior distribution by MCMC
+(see above), an acquisition function is maximized in or-
+der to determine the position in parameter space for the
+next training simulation. Following Ref. [41], we use the
+modiﬁed GP-UCB (Gaussian process upper conﬁdence
+bound) acquisition function [92–95] A(~φ) = P(~φ|d) +
+~ασT(~φ)Σ−1σ(~φ). P(~φ|d) is the natural logarithm of
+the posterior probability given data d; Σ is the data co-
+variance matrix; and σ(~φ) is the emulator error vector
+(or standard deviation of the Gaussian process PPD; see
+§ II D). Following Refs. [96, 97], we set the acquisition
+hyperparameter ~α = 0.85; this is roughly equivalent to
+having∼ 1σ conﬁdence in estimation of the posterior dis-
+tribution during optimization. Since, as discussed in § II,
+
+--- Page 9 ---
+9
+we can have an arbitrary number of training points in the
+τ0(z = zi) dimensions due to a computationally-cheap
+simulation post-processing, we do not optimize the train-
+ing set in these dimensions. In the acquisition function,
+~φ is the truncated set of inference parameters without
+τ0(z = zi). It can be seen that the acquisition function
+has two terms which balance (in the ﬁrst term) exploita-
+tion of approximate knowledge of our objective function
+(the posterior distribution) and (in the second term) ex-
+ploration of the full prior volume. The exploitation term
+prefers adding training simulations at the peak of the pos-
+terior (which is the most important region to characterize
+accurately). The exploration term prefers adding simula-
+tions where uncertainty in the estimation of the true (zero
+emulator error) posterior is large, which is equivalent to
+regions where the ratio of emulator to data covariance is
+large. The linear combination balances these two compo-
+nents. In order to prevent the exploitation term getting
+stuck in local or spurious maxima of the true posterior,
+the exploration term and the stochastic element in the
+acquisition (see below) are vital. It is possible to vary
+the balance between exploitation and exploration using
+the acquisition hyperparameter.
+We ﬁnd the maximum of the acquisition function using
+a truncated Newton algorithm [98]. In order to ensure we
+explore the full peak of the posterior distribution (i. e.,
+the 95% to 99% credible region), we then choose the po-
+sition of the next training simulation by adding a random
+displacement (drawn from a multivariate Gaussian distri-
+bution) to the maximum acquisition point [99]. The size
+of this displacement is tuned to the size of the credible re-
+gion which we want to characterize accurately. A further
+subtlety arises since the acquisition function is deﬁned
+on the space of the (truncated) inference parameters,
+which include the output IGM parameters [ T0,~γ,u 0].
+In order to determine which input IGM parameters to
+use for the next training simulation, we map back to
+[HA,H S,z rei,T rei] using radial basis function interpola-
+tion between the existing training set [100]. This method
+is related to, but less general than, the Gaussian process
+emulation and serves as a simple yet robust method for
+this mapping. Once the next training simulation is run,
+the τ0(z = zi) samples are redistributed such that the
+10N (N is the total number of training simulations in-
+cluding the optimization set) points evenly sample the
+full prior range. The emulator is then re-trained (the
+emulator hyperparameters ψ are re-optimized) and the
+posterior distribution is re-estimated by MCMC using
+the new iteration of the emulator.
+The process of Bayesian emulator optimization contin-
+ues and training simulations are added to the emulator
+until convergence is observed. We use improved “double-
+lock” convergence criteria. As in Ref. [41], one criterion is
+that successive estimations of the posterior distribution
+(e. g., as summarized by marginalized statistics like the
+mean and 1σ and 2σ constraints) do not change within a
+given tolerance; we show the results of this convergence
+test in § IV and Fig. 7. The second criterion is that the
+exploration term of the acquisition function evaluated at
+the parameter positions of optimization simulations con-
+verges towards zero. This ensures that the acquisition of
+new training data is then dominated by exploitation, i. e.,
+that training points are being added at the peak of the
+posterior and that the ratio of emulator to data covari-
+ance is tending towards zero in this region. The results
+of this convergence test are shown in § IV and Fig. 5.
+In this analysis, we use the batch version of Bayesian
+emulator optimization [41]. This involves, at each iter-
+ation, proposing a batch of optimization simulations at
+once, running these in parallel and then re-training the
+emulator only after the entire batch has been added to
+the training set. The ﬁrst simulation in a batch of a
+given size is chosen as detailed above. Subsequent mem-
+bers of a batch are chosen in a similar way, except that
+the output (ﬂux power spectra) from previous members
+are not yet known. However, the positions in parameter
+space for these members are known and this informa-
+tion can at least update the emulator error distribution,
+since the PPD variance depends only on the positions of
+training data and not the data themselves (see § II D).
+This partial information updates the exploration term
+of the acquisition function for iterations within a batch.
+Batch optimization can be preferred to balance eﬃcient
+parallel use of computational resources with the loss of
+optimality in the acquisition of new training data. In this
+study, we start with three batches of ﬁve and then switch
+to batches of two, although we note that the third and
+sixth batches are short of one simulation each, owing to
+hardware issues that led to an incomplete calculation.
+IV. TESTS
+In this section, we conduct tests of convergence
+(§ IV A) and cross-validation ( § IV B) on the Bayesian-
+optimized ULA emulator presented in § III.
+A. Tests of convergence
+Figure 4 indicates the distribution of emulator training
+points, projected onto each parameter plane. It can be
+seen that the initial Latin hypercube set of ﬁfty (see § II;
+most lightly shaded in Fig. 4) fully spans the parameter
+space. The optimization simulations (43 in total; see
+§ III; more darkly shaded in Fig. 4) concentrate in a
+smaller sub-space, which corresponds to the peak of the
+posterior distribution (see Fig. 6 and below). There is
+however a degeneracy betweenT0(z =zi) andu0(z =zi)
+since it is unphysical to generate simulations with high
+T0 and low u0 and vice versa . We reiterate that these
+are not samples from the posterior distribution and that
+the posterior is always estimated with fully converged
+MCMC chains.
+Figure 5 shows the ﬁrst of the two convergence tests
+we use. It indicates how the exploration term of the
+
+--- Page 10 ---
+10
+1.5
+2.0
+As
+−21
+−20
+−19
+log(ma[eV])
+0.5
+1.0
+1.5
+T z=5.0
+0 [104 K]
+1.0
+1.5
+~γz=5.0
+5
+10
+15
+uz=5.0
+0
+[
+eV
+mp
+]
+0.5
+1.0
+1.5
+T z=4.6
+0 [104 K]
+1.0
+1.5
+~γz=4.6
+5
+10
+15
+uz=4.6
+0
+[
+eV
+mp
+]
+0.5
+1.0
+1.5
+T z=4.2
+0 [104 K]
+1.0
+1.5
+~γz=4.2
+0.92 0.98
+ns
+5
+10
+15
+uz=4.2
+0
+[
+eV
+mp
+]
+1.5 2.0
+As
+−21 −20
+log(ma[eV])
+0.5 1.0 1.5
+T z=zi
+0 [104 K]
+1.0 1.5
+~γz=zi
+FIG. 4. The positions of the Bayesian-optimized ULA emulator training simulations projected onto each parameter plane. The
+shade of the crosses indicates the iteration at which the training point is added, such that the initial set is shaded lightest
+and the ﬁnal optimization point is shaded darkest. We show only the planes where parameters are emulated together (i. e.,
+not the planes with parameters from diﬀerent redshift bins; or the τ0(z =zi) planes which are densely sampled by simulation
+post-processing, see § II B). It follows that on the x axis, zi corresponds to the redshift indicated on the y axis. We note that
+for log(ma[eV]), the initial set fully spans the [ α,β,γ ] volume and does not project onto that axis; however, the initial set
+contributes to the ﬁnal emulator model as we always emulate in [ α,β,γ ]. It can be seen how the darker-shaded optimization
+points concentrate in a smaller sub-volume, which corresponds to the peak of the posterior distribution (see Fig. 6).
+
+--- Page 11 ---
+11
+0 10 20 30 40
+Optimization simulation number
+0
+200
+400
+600
+800Exploration
+FIG. 5. The convergence of the exploration term of the ac-
+quisition function (see § III B) as a function of optimization
+simulation number for the Bayesian-optimized ULA emulator.
+Bayesian optimization acquisition function (see § III B)
+tends towards zero as more training simulations are
+added to the emulator. The exploration term is eﬀec-
+tively the ratio of emulator to data covariance. Its con-
+vergence to zero reﬂects how the optimization becomes
+more dominated by exploitation, i. e., the proposal of
+training simulations is at the peak of the posterior and
+the ratio of emulator to data covariance is negligible
+there. This means that estimation of the posterior peak
+(by MCMC) tends towards the true posterior, with neg-
+ligible propagated emulator error.
+Figure 6 indicates the convergence of the posterior
+distribution (see § III B) as summarized by the set of
+marginalized 1D and 2D distributions. For clarity, we
+show only the projections in the IGM parameters at
+z = 4.2; we observe similar convergence at the other
+redshifts that we consider. It can be seen in each pro-
+jection that the posterior estimation converges as more
+optimization simulations are added to the emulator train-
+ing set. In most projections, there is a signiﬁcant shift
+from using the initial emulator ( § II) to having added 19
+optimization points. In particular, the axion mass ma
+goes from being (spuriously) detected to setting a lower
+bound. However, after this point, the shifts in the pos-
+terior are much less signiﬁcant; and following the itera-
+tion after which 35 optimization points have been added,
+the shifts in the posterior are statistically negligible. We
+track this more quantitatively using summaries of the
+marginalized posterior (marginalized mean and 1 σ and
+2σ constraints).
+Figure 7 shows for each model parameter, the number
+of sigma shift (deﬁned by the marginalized posteriors at
+a given optimization epoch) in these quantities between
+iterations as a function of optimization simulation num-
+ber. It can be seen that by the end of the optimization,
+the shifts are small, indicating the desired robustness in
+the estimation of the posterior distribution. In Fig. 6,
+in the planes of parameters that are emulated together
+(remembering that diﬀerent redshifts are emulated sepa-
+rately), we indicate by colored crosses the projected po-
+sitions of optimization simulations. It can be seen that
+by Bayesian optimization, the optimization simulations
+are more concentrated in the posterior peak than the
+initial set which is evenly distributed in the full prior
+volume. This reduces the emulator error within the pos-
+terior peak, leading to accurate determination of the ﬂux
+power spectrum (see § IV B) and hence the likelihood
+function in this region.
+B. Tests of cross-validation
+We carry out leave-one-out cross-validation of the
+Bayesian-optimized emulator. This involves, in turn, re-
+moving one of the training simulations, re-training the re-
+duced emulator and then comparing its prediction to the
+truth of the validation simulation that was removed5. We
+remove simultaneously the training simulation from each
+redshift bin since these are emulated separately. Fig-
+ure 8 shows the distribution of the ratio of empirical-to-
+predicted emulator error in the ﬂux power spectrum at
+the validation simulations, as a function of wavenumber
+k and redshift z. The empirical error is the diﬀerence
+between the emulator PPD mean (see § II D) and the
+true ﬂux power spectrum as measured from the validation
+simulation. The predicted emulator error is the standard
+deviation of the emulator PPD. If the emulator model is
+ﬁtting well, the distribution of the error ratio should be
+a unit Gaussian. When the distribution is fatter than
+this, this indicates under-ﬁtting, i. e., that the emulator
+error is being underestimated and that the Gaussian pro-
+cess model does not have suﬃcient ﬂexibility to describe
+accurately the training or the validation data. When
+the distribution is narrower than a unit Gaussian, this
+indicates over-ﬁtting, i. e., that the emulator error is be-
+ing overestimated and that the Gaussian process has too
+much ﬂexibility and is ﬁt too closely to the training data.
+This has negative implications for the generalizability of
+the emulator model for unseen (e. g., validation) data.
+In Fig. 8, the distributions are split into two sets: the
+left-handed halves of each violin consider the validation
+5 This is actually leave- ten-out cross-validation since we remove
+in turn all ten eﬀective optical depth samples (at each redshift)
+associated with a given training simulation. We do not remove
+optical depth samples one-by-one since this would be a trivial
+test considering that these dimensions can be densely sampled
+by a simulation post-processing step. The number of optical
+depth samples was tested in Ref. [42].
+
+--- Page 12 ---
+12
+0.9 1.0 1.1
+τ0(z = 4.2)
+−21
+−20
+log ma
+5
+10
+15u0(z = 4.2)
+1.0
+1.4
+1.8
+~γ(z = 4.2)
+0.8
+1.0
+1.2
+1.4
+T0(z = 4.2)
+1.75
+1.80
+1.85
+1.90
+As
+0.95
+0.96
+0.97
+0.98
+ns
+0.96 0.98
+ns
+1.8 1.9
+As
+0.8 1.0 1.2 1.4
+T0(z = 4.2)
+1.0 1.5
+~γ(z = 4.2)
+5 10 15
+u0(z = 4.2)
+−21 −20
+log ma
+Initial emulator
+After 19 optimization simulations
+After 35 optimization simulations
+After 43 optimization simulations
+FIG. 6. The convergence of the posterior distribution (set of marginalized 1D and 2D distributions) using the Bayesian-
+optimized ULA emulator. Each set of colored contours shows the estimate of the posterior at various iterations of the emulator.
+The darker and lighter shaded regions respectively indicate the 68% and 95% credible regions. In each plane (except the
+τ0(z = 4.2) planes which are densely sampled by simulation post-processing, see § II B), crosses indicate the projected positions
+of emulator training simulations. The crosses are color-coded by the iteration of the emulator by which the training points
+are added. We note that for log( ma[eV]), the initial set fully spans the [ α,β,γ ] volume and does not project onto that axis;
+however, the initial set contributes to the ﬁnal emulator model as we always emulate in [ α,β,γ ].
+T0(z = 4.2) is in units of 10 4 K; u0(z = 4.2) is in units of eV m−1
+p , where mp is the proton mass; and ma is in units of eV. For
+clarity, we show only the projections onto the IGM parameters at z = 4.2; we observe similar convergence at the other
+redshifts we consider.
+
+--- Page 13 ---
+13
+−3
+−2
+−1
+0
+1
+2
+3
+Number of sigma shift [posterior means]
+τ0(z = 5.0)
+τ0(z = 4.6)
+τ0(z = 4.2)
+ns
+As
+T0(z = 5.0)
+T0(z = 4.6)
+T0(z = 4.2)
+~γ(z = 5.0)
+~γ(z = 4.6)
+~γ(z = 4.2)
+u0(z = 5.0)
+u0(z = 4.6)
+u0(z = 4.2)
+log(ma[eV])
+−0.8
+−0.6
+−0.4
+−0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+Number of sigma shift [1 sigma]
+5 10 15 20 25 30 35 40
+Optimization simulation number
+−1.0
+−0.5
+0.0
+0.5
+1.0
+Number of sigma shift [2 sigma]
+FIG. 7. The convergence of summary statistics of the posterior distribution using the Bayesian-optimized ULA emulator.
+From top to bottom , the number of sigma shift (deﬁned by the marginalized posteriors at a given optimization epoch) between
+emulator iterations for the 1D marginalized posterior means, 1 σ and 2σ constraints. Each colored line shows the convergence
+for each model parameter.
+
+--- Page 14 ---
+14
+−2.5
+0.0
+2.5
+(Mean − Truth)/ σ z = 5.0Validation test [optimization simulations]
+Validation test [all simulations]
+−2.5
+0.0
+2.5
+(Mean − Truth)/ σ z = 4.6
+1 2 3
+k[h Mpc−1] bin
+−2.5
+0.0
+2.5
+(Mean − Truth)/ σ z = 4.2
+FIG. 8. A violin plot (set of kernel density estimation histograms) showing the ratio of empirical (emulator mean – truth) to
+predicted emulator error for leave-one-out cross-validation simulations, (from left to right ) as a function of binned wavenumber
+k and (from top to bottom ) redshiftz. The left set of PDFs considers only the simulations added by Bayesian optimization; the
+right set considers all simulations including the initial set. For comparison, we indicate 1 σ and 3σ limits respectively by the
+darker and lighter shaded bands. If the emulator model was ﬁtting perfectly, each distribution would be a unit Gaussian; the
+distribution being fatter indicates under-ﬁtting (underestimating emulator error) and the distribution being narrower indicates
+over-ﬁtting (overestimating emulator error). The wavenumber bins span the following ranges (where k is in h Mpc−1): 1
+[0.6<k< 10]; 2 [10 <k< 19]; 3 [19 <k< 28.3].
+test only for the simulations added by Bayesian optimiza-
+tion, while the right-handed halves consider all the sim-
+ulations including the initial Latin hypercube. In each
+case, we consider only the ﬁnal, converged emulator and
+in cross-validation, optimize the emulator on all other
+92 training simulations. In splitting the distributions
+that are shown, we indicate the two populations that are
+formed. When the initial set of simulations is included,
+the overall distribution tends towards overestimating the
+emulator error, in particular on the largest scales (small-
+est k). However, when considering only the optimiza-
+tion simulations (and hence the training points at the
+peak of the posterior distribution), the Gaussian process
+ﬁt is better, although the error is still overestimated on
+the largest scales; there is some mild underestimation on
+intermediate scales. Overestimating the emulator error
+will tend to weaken parameter constraints as large errors
+broaden the peak of the posterior.
+Figure 9 compares the empirical and predicted emula-
+tor error (i. e., respectively the numerator and denomi-
+nator in the ratio illustrated in Fig. 8) to the data error
+(this is the square root of the diagonal elements of the
+data covariance used in our data analysis presented in
+Ref. [83]). The distributions of (the logarithm of) the ra-
+tio of emulator-to-data error are in general bi-modal; the
+lower-valued modes come from the optimization simula-
+tions, while the other modes come from the initial Latin
+hypercube. This reﬂects how the ratio of emulator-to-
+data error is signiﬁcantly lower for the optimization sim-
+ulations (and therefore at the peak of the posterior distri-
+bution) than for the initial Latin hypercube (in fact, for
+clarity, we only show the lower-valued optimization set
+mode for the empirical ratios in the right-hand PDFs).
+This is a direct consequence (and desired outcome) of the
+Bayesian optimization, which builds up training informa-
+tion at the posterior peak and locally reduces emulator
+uncertainty in the ﬂux power spectrum, which leads to
+more accurate determination of the peak of the poste-
+rior distribution. The left-handed and right-handed dis-
+tributions in each violin show the ratio of emulator-to-
+
+--- Page 15 ---
+15
+−4
+−2
+0
+2
+log (σTheory / σData)
+z = 5.0
+Emulator / Data [all simulations]
+|Mean − Truth| / Data [optimization simulations]
+−4
+−2
+0
+2
+log (σTheory / σData)
+z = 4.6
+1 2 3
+k[h Mpc−1] bin
+−4
+−2
+0
+2
+log (σTheory / σData)
+z = 4.2
+FIG. 9. A violin plot (set of kernel density estimation histograms) showing (the logarithm of) the ratio of theory to data error
+in the ﬂux power spectrum, ( from left to right ) as a function of binned wavenumber k and (from top to bottom ) redshift z. For
+each element, the left PDF shows the ratio of emulator error to data error; for the majority of training data in the optimization
+set (which constitutes the lower-valued mode in each case), this is < 1. Since Fig. 8 shows through cross-validation a tendency
+to overestimate the prediction uncertainty, the right PDFs show the ratio of the empirical error (for validation simulations only
+in the optimization set for clarity) to data error. This ratio is often ≪ 1 (and less than the theoretical emulator-to-data error
+ratio, see also Fig. 8), indicating no statistically-signiﬁcant bias in emulation of the ﬂux power spectrum. See more details
+in the text. The wavenumber bins span the following ranges (where k is in h Mpc−1): 1 [0 .6 < k <10]; 2 [10 < k <19]; 3
+[19<k< 28.3].
+data error respectively for the predicted emulator error
+(PPD standard deviation) and the empirical emulator
+error (diﬀerence between PPD mean and truth). As is
+consistent with the test in Fig. 8, the empirical ratio is
+consistently shifted to lower values than the predicted ra-
+tio, reﬂecting how the emulator tends towards over-ﬁtting
+the training data and overestimating the emulator uncer-
+tainty.
+Nonetheless, for the optimization simulations, the
+mode average of the predicted emulator-to-data error ra-
+tio is always less than one. This means that in the poste-
+rior peak (∼ 95% credible region), uncertainty in the ﬂux
+power spectrum (i. e., the diagonal of the covariance ma-
+trix in the likelihood function; see § II D) is dominated
+by uncertainty in the data. As discussed in Ref. [41],
+this is a key requirement for converged estimation of the
+posterior distribution as it means that any residual un-
+certainty in the emulator model is not statistically signif-
+icant. Further, a key motivation for the Bayesian emula-
+tor optimization that we use is to move beyond relying
+on heuristic assumptions on the accuracy requirements
+of an emulator. The tests of convergence that we present
+in § IV A provide a stringent test that the addition of
+more training points (and so further reducing the emu-
+lator error) makes no statistically signiﬁcant change to
+the inferred parameter constraints. Considering the ten-
+dency to overestimate the emulator error discussed above
+(in particular on the largest scales), the ratio of empir-
+ical emulator-to-data error is often < 0.1. This shows
+that there is no statistically signiﬁcant bias (relative to
+the data uncertainty and accounting for the theoretical
+emulator error included in the likelihood function) in the
+emulation of the ﬂux power spectrum.
+Figure 10 shows a test of cross-validation on the
+inferred posterior distribution using the Bayesian-
+optimised ULA emulator. We show the (marginalized)
+posterior distribution on the ULA model and nuisance
+IGM and cosmological parameters given mock simulated
+
+--- Page 16 ---
+16
+0.9 1.0 1.1
+τ0(z = 4.2)
+−20.5
+−20.0
+−19.5
+log ma
+5
+10
+15u0(z = 4.2)
+1.0
+1.5
+~γ(z = 4.2)
+1.0
+1.2
+T0(z = 4.2)
+1.75
+1.80
+1.85
+As
+0.96
+0.97
+0.98
+ns
+0.96 0.98
+ns
+1.72 1.80 1.88
+As
+1.0 1.2
+T0(z = 4.2)
+1.0 1.5
+~γ(z = 4.2)
+5 10 15
+u0(z = 4.2)
+−20.5 −19.5
+log ma
+Mock data
+Fiducial prior
+FIG. 10. Cross-validation test on the inferred posterior distribution using the Bayesian-optimized ULA emulator: set of
+marginalized 1D and 2D distributions given mock simulated data removed from the training set. The darker and lighter shaded
+regions respectively indicate the 68% and 95% credible regions. The blue set of contours (obscured by the red set) uses a
+Gaussian prior on T0(z = zi) with means matched to the true values of the mock data (and standard deviations of 3000 K):
+respectively atz = [5.0, 4.6, 4.2], [10208, 9471, 10262] K. As a test of sensitivity to the prior distribution, the red set of contours
+instead uses T0(z = zi) prior means set to the ﬁducial simulation values from our data analysis in Ref. [83]: respectively at
+z = [5.0, 4.6, 4.2], [8022, 7651, 8673] K. Dashed lines indicate the true parameter values of the mock data. T0(z = 4.2) is in
+units of 10 4 K; u0(z = 4.2) is in units of eV m−1
+p , where mp is the proton mass; and ma is in units of eV. For clarity, we show
+only the projections onto the IGM parameters at z = 4.2; we observe similarly unbiased inference at the other redshifts we
+consider.
+
+--- Page 17 ---
+17
+data, which have been removed from the emulator train-
+ing set and the emulator re-trained on the reduced set.
+This is a test as to whether parameter values can be in-
+ferred without bias using an emulator for the ﬂux power
+spectrum that has not seen the mock data. We see
+that the truth is almost perfectly recovered at the maxi-
+mum (marginalized) posterior values (we expect no scat-
+ter from the mock data as we do add any noise realiza-
+tion) and always within a fraction of a sigma. The same
+is observed for the nuisance IGM parameters at other
+redshifts, which we do not show for clarity in the ﬁg-
+ure. We do not re-optimize (by Bayesian optimization)
+the emulator for the mock data, and the mock data are
+taken from the optimization set of the training simula-
+tions (those added by Bayesian optimization as shown in
+§ IV A).
+As a test of the sensitivity of the parameter inference
+to the prior distribution, we vary the prior onT0(z =zi).
+The blue set of contours (obscured by the red set) uses a
+Gaussian prior on T0(z =zi) with means matched to the
+true values of the mock data (and standard deviations of
+3000 K; see caption). The red set of contours instead uses
+T0(z =zi) prior means set to the ﬁducial simulation val-
+ues from our data analysis in Ref. [83] (also see caption).
+We see almost no resulting shift in the posterior.
+V. DISCUSSION
+A. Dark matter model
+The model we employ to describe the eﬀect of non-cold
+dark matter on the matter power spectrum [ﬁrst intro-
+duced in 36] can characterize many diﬀerent dark mat-
+ter candidates with diﬀerent physical mechanisms sup-
+pressing the small-scale power spectrum. These include,
+e. g., warm dark matter with a free streaming scale [e. g.,
+101] or dark matter interacting with itself or baryons
+[e. g., 20, 25]; this is discussed further in Ref. [36]. For
+the nCDM model to apply, the detectable eﬀect on the
+power spectrum relative to the cold dark matter limit
+must be fully captured by modiﬁed initial conditions
+at z ∼ 100. We consider here and in an accompany-
+ing data analysis [83], the example of ultra-light axion
+dark matter ( § III). We ﬁt the nCDM model to ULA
+matter power spectra calculated by the modiﬁed Boltz-
+mann code axionCAMB [86, see § III A]. We ﬁnd the ﬁt
+to be good aside from suppressed small-scale power spec-
+trum oscillations which cannot be captured by the nCDM
+model. We argue, however, that given the precision of
+ﬂux power spectrum measurements on the relevant scales
+[∼ 10% to 25%; 64], these suppressed oscillations are cur-
+rently undetectable and so the nCDM model captures the
+relevant phenomenology. This compares to the approx-
+imate ULA power spectrum transfer function employed
+in previous Lyman-alpha forest studies [33], which is a
+semi-analytical approximation presented in Ref. [16]. Al-
+though this model (imperfectly) captures small-scale os-
+cillations (which do not persist to the ﬂux power spec-
+trum atz∼ 5), the initial cut-oﬀ in the power spectrum is
+sharper than for the full calculation made by axionCAMB.
+We ﬁnd that the nCDM model better captures the rele-
+vant cut-oﬀ in the power spectrum (see Fig. 2).
+B. Intergalactic medium model
+Robust dark matter bounds using the Lyman-alpha
+forest must marginalize over uncertainty in the thermal
+and ionization state of the intergalactic medium, which
+leads to a similar, but distinguishable, suppression in the
+small-scale ﬂux power spectrum (see § II C). We model
+the IGM as obeying a single power-law temperature-
+density relation (TDR; Eq. (3)). We also argue that pres-
+sure smoothing can be tracked by the cumulative energy
+deposited per unit mass at the mean density u0(z); and
+exploit the fact that the strength of the photo-ionizing
+UV background is degenerate in the ﬂux power spec-
+trum with the eﬀective optical depth of Lyman-alpha ab-
+sorption. This compares to previous Lyman-alpha forest
+studies of dark matter [e. g., 27, 33] which have usually
+tracked the pressure smoothing by varying the redshift
+of hydrogen reionization. When varying this parameter
+simultaneously with the TDR at each redshift, this can
+lead to marginalizing over unphysical IGMs where the
+energy deposited by (re)ionization is inconsistent with
+the instantaneous gas temperature. This may spuriously
+weaken dark matter bounds. In order to avoid this, we
+model the IGM using only “output” parameters that de-
+scribe the state of the IGM at a ﬁxed time-slice. In the
+data analysis presented in Ref. [83], we prevent unphysi-
+cal redshift evolution of the IGM by preventing changes
+inT0 andu0 between adjacent redshift bins greater than a
+conservative threshold value. We also improve the input
+for our simulations by employing the reionization model
+of Ref. [75]. Compared to previous prescriptions [e. g.,
+73, 76–78], it removes spurious high-redshift heating and
+provides additional physical ﬂexibility by varying both
+the timing of and total heat injection during reioniza-
+tion.
+However, an underlying assumption in our (and previ-
+ous) IGM models is that reionization is a spatially homo-
+geneous process. This is an approximation, as ionization
+and heating are expected to expand in overlapping bub-
+bles around the (uncertain) sources of ionizing radiation
+[e. g., 102]. The resultant temperature and ionizing back-
+ground spatial ﬂuctuations that can persist to the IGM
+at z∼ 5 [e. g., 71, 103] have been suggested as a pos-
+sible source of systematic error in Lyman-alpha forest
+dark matter bounds [e. g., 104]. Ref. [72] found, using
+simulations which couple gas hydrodynamics with radia-
+tive transfer [105], that the relevant eﬀect on the ﬂux
+power spectrum is below the sensitivity of current data
+[e. g., 64]. Nonetheless, as modeling and data improve, fu-
+ture versions of the emulator can beneﬁt from explicitly
+marginalizing over the eﬀect of inhomogeneity in both
+
+--- Page 18 ---
+18
+hydrogen and helium reionizations [e. g., 71, 103, 106].
+VI. CONCLUSIONS
+We have presented a general framework for testing the
+nature of dark matter using cosmological data and N-
+body simulations, speciﬁcally implemented for searching
+for deviation from cold dark matter using the Lyman-
+alpha forest. It consists of a Gaussian process emulator,
+trained using hydrodynamical simulations to predict how
+the Lyman-alpha forest ﬂux power spectrum responds to
+diﬀerent dark matter models, the state of the intergalac-
+tic medium and the spectrum of primordial ﬂuctuations.
+This is necessary since MCMC methods for inference
+would otherwise be impractical owing to the computa-
+tional cost ofN-body simulations. The emulator exploits
+a ﬂexible parameterization of the eﬀect of non-cold dark
+matter on the matter power spectrum [introduced by 36].
+This can accurately capture the suppression in the power
+spectrum arising from many diﬀerent dark matter models
+(relative to the cold dark matter limit), e. g., warm [e. g.,
+101] or interacting [e. g., 20, 25] dark matter or ultra-light
+axion dark matter [16], among others [see 36]. The emu-
+lator can be optimized for the analysis of particular dark
+matter models by the Bayesian emulator optimization we
+presented in Ref. [41]. This tests for convergence in the
+ﬁdelity of the emulator model by adaptively building up
+the emulator’s training information.
+We demonstrate the example of constructing a
+Bayesian-optimized emulator for the mass of ultra-light
+axion dark matter. We carry out tests of convergence
+with respect to the number of hydrodynamical simula-
+tions input to the emulator; and cross-validation for the
+accuracy of ﬂux power spectrum prediction. These tests
+conﬁrm the robustness of the data analysis we carry out
+in Ref. [83]. The emulator framework we present here
+will facilitate the future analysis of other dark matter
+candidates by an equivalent procedure. We argue that
+the application of Bayesian optimization to emulators of
+cosmological “eﬀective theories,” where many diﬀerent
+models are described by a single set of equations, can
+be a powerful approach for robust and computationally-
+eﬃcient parameter inference from the cosmic large-scale
+structure.
+ACKNOWLEDGMENTS
+KKR thanks Jose O˜ norbe for sharing his code for the
+reionization model of Ref. [75] and for valuable discus-
+sions. The authors also thank Simeon Bird, George Ef-
+stathiou, Andreu Font-Ribera, Joe Hennawi, Chris Ped-
+ersen, Andrew Pontzen, Uros Seljak, Licia Verde, Risa
+Wechsler, Matteo Viel and the members of the OKC ax-
+ions journal club for valuable discussions. KKR thanks
+the organizers of the “Understanding Cosmological Ob-
+servations” workshop in Benasque, Spain in 2019, where
+part of this work was performed. HVP acknowledges
+the hospitality of the Aspen Center for Physics, which is
+supported by National Science Foundation grant PHY-
+1607611. KKR was supported by the Science Research
+Council (VR) of Sweden. HVP was supported by the
+Science and Technology Facilities Council (STFC) Con-
+solidated Grant number ST/R000476/1 and the research
+project grant “Fundamental Physics from Cosmological
+Surveys” funded by the Swedish Research Council (VR)
+under Dnr 2017-04212. This work was supported in
+part by the research environment grant “Detecting Axion
+Dark Matter In The Sky And In The Lab (AxionDM)”
+funded by the Swedish Research Council (VR) under Dnr
+2019-02337. This work used computing facilities pro-
+vided by the UCL Cosmoparticle Initiative; and we thank
+the HPC systems manager Edd Edmondson for his inde-
+fatigable support. This work used computing equipment
+funded by the Research Capital Investment Fund (RCIF)
+provided by UK Research and Innovation (UKRI), and
+partially funded by the UCL Cosmoparticle Initiative.
+Appendix A: Numerical convergence
+In this analysis, we use a simulation mass resolution
+and box volume that at least matches (and often im-
+proves upon) the numerics of previous Lyman-alpha for-
+est studies of the small-scale matter power spectrum
+[kf ∼ 10−1 s km−1; e. g., 64]; here, we test convergence
+in these properties. The top panel of Fig. 11 shows a
+test of convergence in the simulated ﬂux power spec-
+trum with respect to the number of simulation particles,
+while ﬁxing the comoving volume of the simulation box to
+(10h−1 Mpc)3. This is equivalently a test of convergence
+with respect to the mass resolution of the simulation. In
+each case, we rescale mock spectrum optical depths such
+that each simulation has the same mean transmitted ﬂux
+in order to remove this parameter dependence. We ob-
+serve convergence as the number of particles is increased
+(and hence the mass resolution is improved). We ﬁnd the
+correction from having more particles than our nominal
+value (2×5123) never to be greater than 10% and always
+less than the typical uncertainty in ﬂux power spectrum
+data [e. g., 64]. We carry out this test for ﬁducial model
+parameters corresponding to a 2 keV warm dark mat-
+ter particle, since it is known that convergence criteria
+are more stringent in the presence of suppressed initial
+conditions [e. g., considering the eﬀect of numerical frag-
+mentation; 107]. We therefore consider this a robust test
+of numerical convergence.
+The second panel from the top of Fig. 11 shows a test
+of convergence with respect to the comoving volume of
+the simulation box, while ﬁxing the mass resolution of
+the simulation. We observe convergence as the box vol-
+ume is increased. We ﬁnd the correction from having a
+larger box than our nominal value (10 h−1 Mpc)3 to be
+∼ 10% or less, which is less than the typical data un-
+certainty. We ﬁnd no statistically signiﬁcant change in
+
+--- Page 19 ---
+19
+the convergence in the observationally-relevant redshift
+windowz∼ 4 — 5.
+Appendix B: Spectral resolution
+The second panel from the bottom of Fig. 11 shows
+a test of the systematic error in the ﬂux power spec-
+trum arising from a mis-estimation of the spectral resolu-
+tion. We ﬁnd that overestimating the resolution by 20%
+[we take the ﬁducial full-width-at-half-maximum to be
+6 km s−1, e. g., 64] increases by∼ 10% the smallest-scale
+power spectrum mode that we consider. This arises since
+the smoothing in the transmitted ﬂux that comes from
+a ﬁnite spectral resolution is over-corrected in the ﬂux
+power spectrum (see Ref. [65] for the full model) and too
+much power is added on small scales. We ﬁnd the oppo-
+site eﬀect when underestimating the spectral resolution.
+The typical estimated uncertainty on the spectral resolu-
+tion is∼ 10%, which we ﬁnd would have no statistically
+signiﬁcant eﬀect on the ﬂux power spectrum (< 5%) com-
+pared to typical data uncertainty [ ∼ 10% to 25%; e. g.,
+64]. This would remain true even if the resolution uncer-
+tainty was underestimated by a factor of two.
+Appendix C: Mean ﬂux evolution
+The bottom panel of Fig. 11 shows a test of the sys-
+tematic error in the ﬂux power spectrum at z = 5 arising
+from ignoring the redshift evolution of the mean trans-
+mitted ﬂux in individual sections of Lyman-alpha forest.
+We model this (without resorting to radiative transfer)
+by injecting a redshift dependence in the eﬀective opti-
+cal depth to mock spectra generated from a simulation
+snapshot at z = 5, using the ﬁducial model presented
+in Ref. [64]. We then calculate the ﬂux power spectrum
+from this snapshot ignoring the redshift dependence, i. e.,
+following the default procedure of normalizing the ﬂux by
+the mean in the whole box. We compare this to the ﬂux
+power spectrum measured from the same snapshot with-
+out the injected redshift dependence, but with the opti-
+cal depths uniformly rescaled to match the global mean
+ﬂux in the two settings. We ﬁnd an eﬀect on all scales
+since the 1D ﬂux power spectrum is a non-linear map-
+ping of the optical depths that we modify. However, as
+expected, the largest eﬀect is on large scales since we are
+eﬀectively modifying a long wavelength mode in the opti-
+cal depth. Nonetheless, the eﬀect on the power spectrum
+is always < 10% and less than the typical data error
+[e. g., 64]. Further, we expect the residual error in our
+analysis to be much less than this since the eﬀect is cor-
+rected in the data by using a “rolling mean” estimator
+[64]. Rather than normalizing the transmitted ﬂux by
+a globally-estimated mean, the mean ﬂux is estimated
+locally at each pixel using a ﬁnite window centered on
+that point. This corrects for the redshift evolution in
+the mean ﬂux within sections of Lyman-alpha forest. We
+0.8
+0.9
+1.0
+1.1
+1.2
+P i
+f (kf)/P ﬁducial
+f (kf)
+2 × 7683 particles
+2 × 5123
+2 × 2563
+0.8
+0.9
+1.0
+1.1
+1.2
+P i
+f (kf)/P ﬁducial
+f (kf)
+(17.5 h−1 Mpc)3 box volume
+(15 h−1 Mpc)3
+(10 h−1 Mpc)3
+0.8
+0.9
+1.0
+1.1
+1.2
+P i
+f (kf)/P ﬁducial
+f (kf)
+Exact spec. res.
++20% error
++10%
+−10%
+−20%
+−2.0 −1.5 −1.0
+log(kf[s km−1])
+0.8
+0.9
+1.0
+1.1
+1.2
+P i
+f (kf)/P ﬁducial
+f (kf)
+Uniform mean ﬂux
+Mean ﬂux evolution [uncorrected]
+FIG. 11. From top to bottom : a test of convergence in the sim-
+ulated ﬂux power spectrum atz = 5 with respect to the num-
+ber of simulation particles (for ﬁxed comoving box volume);
+a test of convergence with respect to the comoving volume
+of the simulation box (for ﬁxed particle mass resolution; the
+emulator is built with simulations with a comoving volume of
+(10h−1 Mpc)3 and 2× 5123 particles); a test of the system-
+atic error arising from mis-estimating the spectral resolution
+of the data [up to±20%; the uncertainty on the spectral res-
+olution is generally estimated to be ∼ 10%, e. g., 64]; and a
+test of the systematic error arising from ignoring the redshift
+evolution of the mean ﬂux in sections of Lyman-alpha forest
+[the residual error in our analysis will be much less since data
+are corrected for this eﬀect by the “rolling mean” estimator;
+e. g., 64]. For comparison, uncertainty in ﬂux power spectrum
+data are∼ 10% to 25% depending on wavenumber [e. g., 64].
+
+--- Page 20 ---
+20
+therefore expect only a residual error in comparing to
+simulations at a ﬁxed time-slice. We expect the eﬀect to
+weaken at lower redshifts. This is because the eﬀective
+optical depth evolves more slowly at later times and the
+redshift path length for a given comoving interval also
+decreases with redshift.
+[1] A. Boveia and C. Doglioni, Dark Matter Searches at
+Colliders, Annual Review of Nuclear and Particle Sci-
+ence 68, 429 (2018), arXiv:1810.12238 [hep-ex].
+[2] P. J. Fox, G. Jung, P. Sorensen, and N. Weiner,
+Dark Matter in Light of LUX, arXiv e-prints ,
+arXiv:1401.0216 (2013), arXiv:1401.0216 [hep-ph].
+[3] G. Jungman, M. Kamionkowski, and K. Griest, Super-
+symmetric dark matter, Phys. Rep. 267, 195 (1996),
+arXiv:hep-ph/9506380 [hep-ph].
+[4] V. Gluscevic, Y. Ali-Haimoud, K. Bechtol, K. K. Boddy,
+C. Boehm, J. Chluba, F.-Y. Cyr-Racine, C. Dvorkin,
+D. Grin, J. Lesgourgues, and others, Cosmological
+Probes of Dark Matter Interactions: The Next Decade,
+BAAS 51, 134 (2019), arXiv:1903.05140 [astro-ph.CO].
+[5] A. Drlica-Wagner, Y.-Y. Mao, S. Adhikari, R. Arm-
+strong, A. Banerjee, N. Banik, K. Bechtol, S. Bird, K. K.
+Boddy, A. Bonaca, and others, Probing the Fundamen-
+tal Nature of Dark Matter with the Large Synoptic Sur-
+vey Telescope, arXiv e-prints , arXiv:1902.01055 (2019),
+arXiv:1902.01055 [astro-ph.CO].
+[6] P. J. E. Peebles, Large-scale background temperature
+and mass ﬂuctuations due to scale-invariant primeval
+perturbations, ApJ 263, L1 (1982).
+[7] G. R. Blumenthal, S. Faber, J. R. Primack, and M. J.
+Rees, Formation of galaxies and large-scale structure
+with cold dark matter, Nature 311, 517 (1984).
+[8] M. Davis, G. Efstathiou, C. S. Frenk, and S. D. White,
+The evolution of large-scale structure in a universe dom-
+inated by cold dark matter, The Astrophysical Journal
+292, 371 (1985).
+[9] J. M. Bardeen, J. R. Bond, N. Kaiser, and A. S. Szalay,
+The Statistics of Peaks of Gaussian Random Fields, ApJ
+304, 15 (1986).
+[10] R. D. Peccei and H. R. Quinn, CP conservation in the
+presence of pseudoparticles, Phys. Rev. Lett. 38, 1440
+(1977).
+[11] S. Weinberg, A new light boson?, Phys. Rev. Lett. 40,
+223 (1978).
+[12] F. Wilczek, Problem of strong p andt invariance in the
+presence of instantons, Phys. Rev. Lett. 40, 279 (1978).
+[13] J. Preskill, M. B. Wise, and F. Wilczek, Cosmology of
+the invisible axion, Physics Letters B 120, 127 (1983).
+[14] L. Abbott and P. Sikivie, A cosmological bound on the
+invisible axion, Physics Letters B 120, 133 (1983).
+[15] M. Dine and W. Fischler, The not-so-harmless axion,
+Physics Letters B 120, 137 (1983).
+[16] W. Hu, R. Barkana, and A. Gruzinov, Fuzzy Cold
+Dark Matter: The Wave Properties of Ultralight Par-
+ticles, Phys. Rev. Lett. 85, 1158 (2000), arXiv:astro-
+ph/0003365 [astro-ph].
+[17] K. Enqvist, K. Kainulainen, and J. Maalampi, Reso-
+nant neutrino transitions and nucleosynthesis, Physics
+Letters B 249, 531 (1990).
+[18] J. K¨ onig, A. Merle, and M. Totzauer, keV sterile neu-
+trino dark matter from singlet scalar decays: the most
+general case, J. Cosmology Astropart. Phys. 2016, 038
+(2016), arXiv:1609.01289 [hep-ph].
+[19] A. Boyarsky, J. Lesgourgues, O. Ruchayskiy, and
+M. Viel, Lyman-α constraints on warm and on warm-
+plus-cold dark matter models, J. Cosmology Astropart.
+Phys. 2009, 012 (2009), arXiv:0812.0010 [astro-ph].
+[20] C. Dvorkin, K. Blum, and M. Kamionkowski, Con-
+straining dark matter-baryon scattering with lin-
+ear cosmology, Phys. Rev. D 89, 023519 (2014),
+arXiv:1311.2937 [astro-ph.CO].
+[21] K. Sigurdson, M. Doran, A. Kurylov, R. R. Caldwell,
+and M. Kamionkowski, Dark-matter electric and mag-
+netic dipole moments, Phys. Rev. D 70, 083501 (2004),
+arXiv:astro-ph/0406355 [astro-ph].
+[22] A. Loeb and N. Weiner, Cores in Dwarf Galaxies from
+Dark Matter with a Yukawa Potential, Phys. Rev. Lett.
+106, 171302 (2011), arXiv:1011.6374 [astro-ph.CO].
+[23] F.-Y. Cyr-Racine, K. Sigurdson, J. Zavala, T. Bring-
+mann, M. Vogelsberger, and C. Pfrommer, ETHOS—an
+eﬀective theory of structure formation: From dark par-
+ticle physics to the matter distribution of the Universe,
+Phys. Rev. D 93, 123527 (2016), arXiv:1512.05344
+[astro-ph.CO].
+[24] L. Ackerman, M. R. Buckley, S. M. Carroll, and
+M. Kamionkowski, Dark matter and dark radiation,
+Phys. Rev. D 79, 023519 (2009), arXiv:0810.5126 [hep-
+ph].
+[25] D. N. Spergel and P. J. Steinhardt, Observa-
+tional Evidence for Self-Interacting Cold Dark Mat-
+ter, Phys. Rev. Lett. 84, 3760 (2000), arXiv:astro-
+ph/9909386 [astro-ph].
+[26] S. Chabanier, M. Millea, and N. Palanque-Delabrouille,
+Matter power spectrum: from Ly α forest to CMB
+scales, MNRAS 489, 2247 (2019), arXiv:1905.08103
+[astro-ph.CO].
+[27] V. Irˇ siˇ c, M. Viel, M. G. Haehnelt, J. S. Bolton, S. Cris-
+tiani, G. D. Becker, V. D’Odorico, G. Cupani, T.-S.
+Kim, T. A. M. Berg, and others, New constraints on
+the free-streaming of warm dark matter from interme-
+diate and small scale Lyman-α forest data, Phys. Rev. D
+96, 023522 (2017), arXiv:1702.01764 [astro-ph.CO].
+[28] A. Garzilli, O. Ruchayskiy, A. Magalich, and A. Bo-
+yarsky, How warm is too warm? Towards robust
+Lyman-α forest bounds on warm dark matter, arXiv
+e-prints , arXiv:1912.09397 (2019), arXiv:1912.09397
+[astro-ph.CO].
+[29] N. Palanque-Delabrouille, C. Y` eche, N. Sch¨ oneberg,
+J. Lesgourgues, M. Walther, S. Chabanier, and E. Ar-
+mengaud, Hints, neutrino bounds, and WDM con-
+straints from SDSS DR14 Lyman- α and Planck full-
+survey data, J. Cosmology Astropart. Phys. 2020, 038
+(2020), arXiv:1911.09073 [astro-ph.CO].
+[30] R. Murgia, V. Irˇ siˇ c, and M. Viel, Novel constraints on
+noncold, nonthermal dark matter from Lyman- α forest
+data, Phys. Rev. D98, 083540 (2018), arXiv:1806.08371
+[astro-ph.CO].
+
+--- Page 21 ---
+21
+[31] W. L. Xu, C. Dvorkin, and A. Chael, Probing sub-
+GeV dark matter-baryon scattering with cosmolog-
+ical observables, Phys. Rev. D 97, 103530 (2018),
+arXiv:1802.06788 [astro-ph.CO].
+[32] M. Archidiacono, D. C. Hooper, R. Murgia, S. Bohr,
+J. Lesgourgues, and M. Viel, Constraining Dark Matter-
+Dark Radiation interactions with CMB, BAO, and
+Lyman-α, J. Cosmology Astropart. Phys. 2019, 055
+(2019), arXiv:1907.01496 [astro-ph.CO].
+[33] V. Irˇ siˇ c, M. Viel, M. G. Haehnelt, J. S. Bolton, and
+G. D. Becker, First Constraints on Fuzzy Dark Mat-
+ter from Lyman- α Forest Data and Hydrodynami-
+cal Simulations, Phys. Rev. Lett. 119, 031302 (2017),
+arXiv:1703.04683 [astro-ph.CO].
+[34] E. Armengaud, N. Palanque-Delabrouille, C. Y` eche,
+D. J. E. Marsh, and J. Baur, Constraining the mass
+of light bosonic dark matter using SDSS Lyman- α for-
+est, MNRAS 471, 4606 (2017), arXiv:1703.09126 [astro-
+ph.CO].
+[35] T. Kobayashi, R. Murgia, A. De Simone, V. Irˇ siˇ c, and
+M. Viel, Lyman-α constraints on ultralight scalar dark
+matter: Implications for the early and late universe,
+Phys. Rev. D 96, 123514 (2017), arXiv:1708.00015
+[astro-ph.CO].
+[36] R. Murgia, A. Merle, M. Viel, M. Totzauer, and
+A. Schneider, “Non-cold” dark matter at small scales: a
+general approach, J. Cosmology Astropart. Phys. 2017,
+046 (2017), arXiv:1704.07838 [astro-ph.CO].
+[37] A. G. Doroshkevich, E. V. Kotok, A. N. Poliudov,
+S. F. Shand arin, I. S. Sigov, and I. D. Novikov, Two-
+dimensional simulation of the gravitational system dy-
+namics and formation of the large-scale structure of the
+universe, MNRAS 192, 321 (1980).
+[38] G. Efstathiou and J. W. Eastwood, On the clustering
+of particles in an expanding universe, MNRAS 194, 503
+(1981).
+[39] V. Springel, N. Yoshida, and S. D. M. White, GAD-
+GET: a code for collisionless and gasdynamical cosmo-
+logical simulations, New A 6, 79 (2001), arXiv:astro-
+ph/0003162 [astro-ph].
+[40] M. Cataneo, L. Lombriser, C. Heymans, A. J. Mead,
+A. Barreira, S. Bose, and B. Li, On the road to per-
+cent accuracy: non-linear reaction of the matter power
+spectrum to dark energy and modiﬁed gravity, MNRAS
+488, 2121 (2019), arXiv:1812.05594 [astro-ph.CO].
+[41] K. K. Rogers, H. V. Peiris, A. Pontzen, S. Bird,
+L. Verde, and A. Font-Ribera, Bayesian emulator opti-
+misation for cosmology: application to the Lyman-alpha
+forest, J. Cosmology Astropart. Phys.2019, 031 (2019),
+arXiv:1812.04631 [astro-ph.CO].
+[42] S. Bird, K. K. Rogers, H. V. Peiris, L. Verde, A. Font-
+Ribera, and A. Pontzen, An emulator for the Lyman- α
+forest, J. Cosmology Astropart. Phys.2019, 050 (2019),
+arXiv:1812.04654 [astro-ph.CO].
+[43] C. E. Rasmussen, Gaussian processes in machine learn-
+ing, in Summer School on Machine Learning (Springer,
+2003) pp. 63–71.
+[44] K. Heitmann, D. Higdon, M. White, S. Habib, B. J.
+Williams, E. Lawrence, and C. Wagner, The Coyote
+Universe. II. Cosmological Models and Precision Em-
+ulation of the Nonlinear Matter Power Spectrum, ApJ
+705, 156 (2009), arXiv:0902.0429 [astro-ph.CO].
+[45] J. Kwan, K. Heitmann, S. Habib, N. Padmanabhan,
+H. Finkel, E. Lawrence, N. Frontiere, and A. Pope, Cos-
+mic Emulation: Fast Predictions for the Galaxy Power
+Spectrum, ApJ 810, 35 (2015), arXiv:1311.6444 [astro-
+ph.CO].
+[46] Z. Zhai, J. L. Tinker, M. R. Becker, J. DeRose, Y.-Y.
+Mao, T. McClintock, S. McLaughlin, E. Rozo, and R. H.
+Wechsler, The Aemulus Project III: Emulation of the
+Galaxy Correlation Function, ArXiv e-prints (2018),
+arXiv:1804.05867.
+[47] J. Liu, A. Petri, Z. Haiman, L. Hui, J. M. Kratochvil,
+and M. May, Cosmology constraints from the weak lens-
+ing peak counts and the power spectrum in CFHTLenS
+data, Phys. Rev. D 91, 063507 (2015), arXiv:1412.0757.
+[48] A. Petri, J. Liu, Z. Haiman, M. May, L. Hui, and
+J. M. Kratochvil, Emulating the CFHTLenS weak lens-
+ing data: Cosmological constraints from moments and
+Minkowski functionals, Phys. Rev. D91, 103511 (2015),
+arXiv:1503.06214.
+[49] W. D. Jennings, C. A. Watkinson, F. B. Abdalla, and
+J. D. McEwen, Evaluating machine learning techniques
+for predicting power spectra from reionization simula-
+tions, ArXiv e-prints (2018), arXiv:1811.09141.
+[50] T. McClintock, E. Rozo, M. R. Becker, J. DeRose, Y.-
+Y. Mao, S. McLaughlin, J. L. Tinker, R. H. Wech-
+sler, and Z. Zhai, The Aemulus Project II: Emulat-
+ing the Halo Mass Function, ArXiv e-prints (2018),
+arXiv:1804.05866.
+[51] M. Walther, J. F. Hennawi, H. Hiss, J. O˜ norbe, K.-
+G. Lee, A. Rorai, and J. O’Meara, A New Precision
+Measurement of the Small-scale Line-of-sight Power
+Spectrum of the Ly α Forest, ApJ 852, 22 (2018),
+arXiv:1709.07354 [astro-ph.CO].
+[52] B. Giblin, M. Cataneo, B. Moews, and C. Heymans,
+On the road to per cent accuracy - II. Calibration of
+the non-linear matter power spectrum for arbitrary cos-
+mologies, MNRAS 490, 4826 (2019), arXiv:1906.02742
+[astro-ph.CO].
+[53] H. J. Kushner, A New Method of Locating
+the Maximum Point of an Arbitrary Multi-
+peak Curve in the Presence of Noise, Jour-
+nal of Basic Engineering 86, 97 (1964),
+asmedigitalcollection.asme.org/ﬂuidsengineering/article-
+pdf/86/1/97/5763745/97 1.pdf.
+[54] U. Seljak, A. Makarov, P. McDonald, S. F. Anderson,
+N. A. Bahcall, J. Brinkmann, S. Burles, R. Cen, M. Doi,
+J. E. Gunn, and others, Cosmological parameter anal-
+ysis including SDSS Ly α forest and galaxy bias: Con-
+straints on the primordial spectrum of ﬂuctuations, neu-
+trino mass, and dark energy, Phys. Rev. D 71, 103515
+(2005), astro-ph/0407372.
+[55] N. Palanque-Delabrouille, C. Y` eche, J. Lesgourgues,
+G. Rossi, A. Borde, M. Viel, E. Aubourg, D. Kirkby,
+J.-M. LeGoﬀ, J. Rich, and others, Constraint on neu-
+trino masses from SDSS-III/BOSS Lyα forest and other
+cosmological probes, J. Cosmology Astropart. Phys. 2,
+045 (2015), arXiv:1410.7244.
+[56] N. Palanque-Delabrouille, C. Y` eche, J. Baur, C. Mag-
+neville, G. Rossi, J. Lesgourgues, A. Borde, E. Burtin,
+J.-M. LeGoﬀ, J. Rich, and others, Neutrino masses
+and cosmology with Lyman-alpha forest power spec-
+trum, J. Cosmology Astropart. Phys. 11, 011 (2015),
+arXiv:1506.05976.
+[57] C. Y` eche, N. Palanque-Delabrouille, J. Baur, and H. du
+Mas des Bourboux, Constraints on neutrino masses
+from Lyman-alpha forest power spectrum with BOSS
+
+--- Page 22 ---
+22
+and XQ-100, J. Cosmology Astropart. Phys. 2017, 047
+(2017), arXiv:1702.03314 [astro-ph.CO].
+[58] S. Chabanier, N. Palanque-Delabrouille, C. Y` eche, J.-
+M. Le Goﬀ, E. Armengaud, J. Bautista, M. Blomqvist,
+N. Busca, K. Dawson, T. Etourneau, and others, The
+one-dimensional power spectrum from the SDSS DR14
+Lyα forests, J. Cosmology Astropart. Phys. 2019, 017
+(2019), arXiv:1812.03554 [astro-ph.CO].
+[59] P. Bode, J. P. Ostriker, and N. Turok, Halo Forma-
+tion in Warm Dark Matter Models, ApJ556, 93 (2001),
+arXiv:astro-ph/0010389 [astro-ph].
+[60] Y. Feng, S. Bird, L. Anderson, A. Font-Ribera, and
+C. Pedersen, Mp-gadget/mp-gadget: A tag for getting
+a doi (2018).
+[61] V. Springel, The cosmological simulation code
+GADGET-2, MNRAS 364, 1105 (2005), arXiv:astro-
+ph/0505010 [astro-ph].
+[62] M. Viel, M. G. Haehnelt, and V. Springel, Inferring
+the dark matter power spectrum from the Lyman-
+alpha forest in high-resolution QSO absorption spectra,
+Monthly Notices of the Royal Astronomical Society354,
+684 (2004), https://academic.oup.com/mnras/article-
+pdf/354/3/684/18653214/354-3-684.pdf.
+[63] S. Bird, FSFE: Fake Spectra Flux Extractor (2017),
+ascl:1710.012.
+[64] E. Boera, G. D. Becker, J. S. Bolton, and F. Nasir,
+Revealing Reionization with the Thermal History of
+the Intergalactic Medium: New Constraints from the
+Lyα Flux Power Spectrum, ApJ 872, 101 (2019),
+arXiv:1809.06980 [astro-ph.CO].
+[65] N. Palanque-Delabrouille, C. Y` eche, A. Borde, J.-M.
+Le Goﬀ, G. Rossi, M. Viel, ´E. Aubourg, S. Bai-
+ley, J. Bautista, M. Blomqvist, and others, The one-
+dimensional Lyα forest power spectrum from BOSS,
+A&A 559, A85 (2013), arXiv:1306.5896 [astro-ph.CO].
+[66] J. Binney and S. Tremaine, Galactic dynamics (Prince-
+ton university press, 2011).
+[67] F. Nasir, J. S. Bolton, and G. D. Becker, Inferring the
+IGM thermal history during reionization with the Ly-
+manα forest power spectrum at redshiftz≃ 5, MNRAS
+463, 2335 (2016), arXiv:1605.04155 [astro-ph.CO].
+[68] M. McQuinn, A. Lidz, M. Zaldarriaga, L. Hernquist,
+P. F. Hopkins, S. Dutta, and C.-A. Faucher-Gigu` ere,
+He II Reionization and its Eﬀect on the Intergalactic
+Medium, ApJ 694, 842 (2009), arXiv:0807.2799 [astro-
+ph].
+[69] L. Hui and N. Y. Gnedin, Equation of state of the
+photoionized intergalactic medium, MNRAS 292, 27
+(1997), arXiv:astro-ph/9612232 [astro-ph].
+[70] J. S. Bolton, M. Viel, T.-S. Kim, M. G. Haehnelt,
+and R. F. Carswell, Possible evidence for an
+inverted temperature-density relation in the
+intergalactic medium from the ﬂux distribu-
+tion of the Ly-alpha forest, Monthly Notices
+of the Royal Astronomical Society 386, 1131
+(2008), https://academic.oup.com/mnras/article-
+pdf/386/2/1131/3635213/mnras0386-1131.pdf.
+[71] J. O˜ norbe, F. B. Davies, Luki´ c, Z. , J. F. Hennawi, and
+D. Sorini, Inhomogeneous reionization models in cosmo-
+logical hydrodynamical simulations, MNRAS 486, 4075
+(2019), arXiv:1810.11683 [astro-ph.CO].
+[72] X. Wu, M. McQuinn, R. Kannan, A. D’Aloisio, S. Bird,
+F. Marinacci, R. Dav´ e, and L. Hernquist, Imprints of
+temperature ﬂuctuations on the z∼ 5 Lyman-α forest: a
+view from radiation-hydrodynamic simulations of reion-
+ization, MNRAS 490, 3177 (2019), arXiv:1907.04860
+[astro-ph.CO].
+[73] F. Haardt and P. Madau, Radiative Transfer in a
+Clumpy Universe. IV. New Synthesis Models of the
+Cosmic UV/X-Ray Background, ApJ 746, 125 (2012),
+arXiv:1105.2039 [astro-ph.CO].
+[74] J. Chardin, M. G. Haehnelt, D. Aubert, and E. Puch-
+wein, Calibrating cosmological radiative transfer sim-
+ulations with Ly α forest data: evidence for large
+spatial UV background ﬂuctuations at z ∼ 5.6-5.8
+due to rare bright sources, MNRAS 453, 2943 (2015),
+arXiv:1505.01853 [astro-ph.CO].
+[75] J. O˜ norbe, J. F. Hennawi, and Z. Luki´ c, Self-consistent
+Modeling of Reionization in Cosmological Hydrodynam-
+ical Simulations, ApJ837, 106 (2017), arXiv:1607.04218
+[astro-ph.CO].
+[76] F. Haardt and P. Madau, Radiative Transfer in
+a Clumpy Universe. II. The Ultraviolet Extragalac-
+tic Background, ApJ 461, 20 (1996), arXiv:astro-
+ph/9509093 [astro-ph].
+[77] F. Haardt and P. Madau, Modelling the UV/X-ray cos-
+mic background with CUBA, inClusters of Galaxies and
+the High Redshift Universe Observed in X-rays , edited
+by D. M. Neumann and J. T. V. Tran (2001) p. 64,
+arXiv:astro-ph/0106018 [astro-ph].
+[78] C.-A. Faucher-Gigu` ere, A. Lidz, M. Zaldarriaga, and
+L. Hernquist, A NEW CALCULATION OF THE ION-
+IZING BACKGROUND SPECTRUM AND THE EF-
+FECTS OF he II REIONIZATION, The Astrophysical
+Journal 703, 1416 (2009).
+[79] E. Puchwein, F. Haardt, M. G. Haehnelt, and
+P. Madau, Consistent modelling of the meta-galactic
+UV background and the thermal/ionization history of
+the intergalactic medium, MNRAS 485, 47 (2019),
+arXiv:1801.04931 [astro-ph.GA].
+[80] T. Takhtaganov, Z. Lukic, J. Mueller, and D. Mo-
+rozov, Cosmic Inference: Constraining Parameters
+With Observations and Highly Limited Number of
+Simulations, arXiv e-prints , arXiv:1905.07410 (2019),
+arXiv:1905.07410 [astro-ph.IM].
+[81] Z. Luki´ c, C. W. Stark, P. Nugent, M. White, A. A.
+Meiksin, and A. Almgren, The Lyman α forest in op-
+tically thin hydrodynamical simulations, MNRAS 446,
+3697 (2015), arXiv:1406.6361 [astro-ph.CO].
+[82] Planck Collaboration and others, Planck 2018 results. I.
+Overview and the cosmological legacy of Planck, arXiv
+e-prints (2018), arXiv:1807.06205 [astro-ph.CO].
+[83] K. K. Rogers and H. V. Peiris, Strong bound on canon-
+ical ultra-light axion dark matter from the Lyman-
+alpha forest, arXiv e-prints , arXiv:2007.12705 (2020),
+arXiv:2007.12705 [astro-ph.CO].
+[84] Planck Collaboration, Planck 2018 results. vi. cosmo-
+logical parameters, A&A 10.1051/0004-6361/201833910
+(2020).
+[85] M. D. McKay, R. J. Beckman, and W. J. Conover, A
+comparison of three methods for selecting values of in-
+put variables in the analysis of output from a computer
+code, Technometrics 21, 239 (1979).
+[86] R. Hloˇ zek, D. J. E. Marsh, D. Grin, R. Allison, J. Dunk-
+ley, and E. Calabrese, Future CMB tests of dark matter:
+Ultralight axions and massive neutrinos, Phys. Rev. D
+95, 123511 (2017), arXiv:1607.08208 [astro-ph.CO].
+
+--- Page 23 ---
+23
+[87] K. Levenberg, A method for the solution of certain non-
+linear problems in least squares, Quarterly of applied
+mathematics 2, 164 (1944).
+[88] D. W. Marquardt, An algorithm for least-squares esti-
+mation of nonlinear parameters, Journal of the Society
+for Industrial and Applied Mathematics 11, 431 (1963),
+https://doi.org/10.1137/0111030.
+[89] A. Lewis and S. Bridle, Cosmological parameters
+from CMB and other data: A Monte Carlo ap-
+proach, Phys. Rev. D 66, 103511 (2002), arXiv:astro-
+ph/0205436 [astro-ph].
+[90] D. J. E. Marsh and P. G. Ferreira, Ultralight scalar
+ﬁelds and the growth of structure in the Universe,
+Phys. Rev. D 82, 103528 (2010), arXiv:1009.3501 [hep-
+ph].
+[91] D. Foreman-Mackey, D. W. Hogg, D. Lang, and
+J. Goodman, emcee: The MCMC Hammer, PASP 125,
+306 (2013), arXiv:1202.3665 [astro-ph.IM].
+[92] D. D. Cox and S. John, Sdo: A statistical method for
+global optimization, in in Multidisciplinary Design Op-
+timization: State-of-the-Art (1997) pp. 315–329.
+[93] P. Auer, Using conﬁdence bounds for exploitation-
+exploration trade-oﬀs, Journal of Machine Learning Re-
+search 3, 397 (2002).
+[94] P. Auer, N. Cesa-Bianchi, and P. Fischer, Finite-time
+analysis of the multiarmed bandit problem, Machine
+learning 47, 235 (2002).
+[95] V. Dani, T. P. Hayes, and S. M. Kakade, Stochastic
+linear optimization under bandit feedback, 21st Annual
+Conference on Learning Theory (2008).
+[96] N. Srinivas, A. Krause, S. M. Kakade, and M. Seeger,
+Gaussian Process Optimization in the Bandit Setting:
+No Regret and Experimental Design, arXiv e-prints ,
+arXiv:0912.3995 (2009), arXiv:0912.3995 [cs.LG].
+[97] E. Brochu, V. M. Cora, and N. de Freitas, A Tuto-
+rial on Bayesian Optimization of Expensive Cost Func-
+tions, with Application to Active User Modeling and
+Hierarchical Reinforcement Learning, arXiv e-prints ,
+arXiv:1012.2599 (2010), arXiv:1012.2599 [cs.LG].
+[98] S. G. Nash, Newton-type minimization via the lanczos
+method, SIAM Journal on Numerical Analysis 21, 770
+(1984), https://doi.org/10.1137/0721052.
+[99] M. J¨ arvenp¨ a¨ a, M. U. Gutmann, A. Pleska, A. Ve-
+htari, and P. Marttinen, Eﬃcient acquisition rules for
+model-based approximate Bayesian computation, arXiv
+e-prints , arXiv:1704.00520 (2017), arXiv:1704.00520
+[stat.ML].
+[100] M. Buhmann and N. Dyn, Spectral convergence of mul-
+tiquadric interpolation, Proceedings of the Edinburgh
+Mathematical Society 36, 319?333 (1993).
+[101] M. Viel, J. Lesgourgues, M. G. Haehnelt, S. Matar-
+rese, and A. Riotto, Constraining warm dark matter
+candidates including sterile neutrinos and light graviti-
+nos with WMAP and the Lyman-α forest, Phys. Rev. D
+71, 063534 (2005), arXiv:astro-ph/0501562 [astro-ph].
+[102] P. Madau, F. Haardt, and M. J. Rees, Radiative Trans-
+fer in a Clumpy Universe. III. The Nature of Cosmolog-
+ical Ionizing Sources, ApJ 514, 648 (1999), arXiv:astro-
+ph/9809058 [astro-ph].
+[103] F. B. Davies and S. R. Furlanetto, Large ﬂuctuations in
+the hydrogen-ionizing background and mean free path
+following the epoch of reionization, MNRAS 460, 1328
+(2016), arXiv:1509.07131 [astro-ph.CO].
+[104] L. Hui, J. P. Ostriker, S. Tremaine, and E. Wit-
+ten, Ultralight scalars as cosmological dark matter,
+Phys. Rev. D 95, 043541 (2017), arXiv:1610.08297
+[astro-ph.CO].
+[105] R. Kannan, M. Vogelsberger, F. Marinacci, R. McKin-
+non, R. Pakmor, and V. Springel, AREPO-RT: radia-
+tion hydrodynamics on a moving mesh, MNRAS 485,
+117 (2019), arXiv:1804.01987 [astro-ph.IM].
+[106] T. Suarez and A. Pontzen, Large-scale ﬂuctuations in
+the cosmic ionizing background: the impact of beamed
+source emission, Mon. Not. Roy. Astron. Soc. 472, 2643
+(2017), arXiv:1706.02716 [astro-ph.CO].
+[107] M. R. Lovell, C. S. Frenk, V. R. Eke, A. Jenkins, L. Gao,
+and T. Theuns, The properties of warm dark mat-
+ter haloes, MNRAS 439, 300 (2014), arXiv:1308.1399
+[astro-ph.CO].

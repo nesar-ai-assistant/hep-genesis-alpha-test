@@ -1,0 +1,1890 @@
+Title: Constraining Mixed Dark Matter models with high redshift Lyman-alpha forest data
+Authors: Olga Garcia-Gallego, Vid Iršič, Martin G. Haehnelt, Matteo Viel, James S. Bolton
+Year: 2025
+arXiv ID: 2504.06367
+
+============================================================
+
+--- Page 1 ---
+Constraining Mixed Dark Matter models with high redshift Lyman-alpha forest data
+Olga Garcia-Gallego1,2, Vid Iršič1,3,4,5,6,7
+ , Martin G. Haehnelt1,2
+ , Matteo Viel4,5,6,7,8
+ , James S. Bolton9
+ ,
+1Kavli Institute for Cosmology, University of Cambridge,
+Madingley Road, Cambridge CB3 0HA, UK
+2Institute of Astronomy, University of Cambridge,
+Madingley Road, Cambridge CB3 0HA, UK
+3Center for Astrophysics Research, Department of Physics,
+Astronomy and Mathematics, University of Hertfordshire,
+College Lane, Hatfield AL10 9AB, UK
+4SISSA- International School for Advanced Studies,
+Via Bonomea 265, 34136 Trieste, Italy
+5INFN – National Institute for Nuclear Physics,
+Via Valerio 2, I-34127 Trieste, Italy
+6IFPU, Institute for Fundamental Physics of the Universe,
+via Beirut 2, 34151 Trieste, Italy
+7INAF, Osservatorio Astronomico di Trieste,
+Via G. B. Tiepolo 11, I-34131 Trieste, Italy
+8ICSC - Centro Nazionale di Ricerca in High Performance Computing,
+Big Data e Quantum Computing,
+Via Magnanelli 2, Bologna, Italy
+9School of Physics and Astronomy, University of Nottingham,
+University Park, Nottingham, NG7 2RD, UK
+This study sets new constraints on Cold+Warm Dark Matter (CWDM) models by leveraging the small-scale
+suppressionofstructureformationimprintedintheLyman- 𝛼forest. UsingtheSherwood-Relicssuite,weextract
+high-fidelityfluxpowerspectrafromsimulatedLyman- 𝛼forestdata,spanningabroadrangeofcosmologiesand
+thermal histories. This enables precise constraints on the warm dark matter (WDM) fraction,𝑓WDM, and the
+mass of the WDM particle,𝑚WDM. A key advancement of our analysis is the integration of a neural network
+emulator directly at the likelihood level, significantly accelerating Bayesian parameter inference. With new
+observations of high-redshift (𝑧 = 4.2−5.0) quasar spectra from UVES and HIRES, we establish stringent upper
+limits: for𝑚WDM = 1 keV, we find𝑓WDM < 0.16 (2𝜎), with constraints loosening to 35%, 50%, and 67% for
+𝑚WDM = 2, 3, and 4 keV, respectively. Our results for pure WDM reaffirm the lower bounds of previous work.
+Crucially,weaccountforthefixedresolutionofsimulationsandtheimpactofpatchyreionization,demonstrating
+theirminimalinfluenceonmixeddarkmatterconstraints. Thisrobustnesspavesthewayfortighterboundswith
+improvedstatisticalsamplesinthefuture. OurfindingssuggestthatCWDMmodelscannaturallyaccommodate
+mild suppression of matter clustering in the high redshift Lyman-𝛼 forest 1D flux power, potentially offering a
+resolution to some of the ongoing cosmological tensions at low redshifts, namely the𝑆8 tension.
+PACS numbers:
+I. INTRODUCTION
+In the standard cosmological model, ΛCDM, cold non-
+baryonicdarkmatterwithnegligibleprimordialvelocitiescon-
+stitutesapproximatelyΩCDM≈0.26ofthetotalenergydensity
+of the Universe. This model provides a pivotal framework for
+galaxy formation theory, where the hierarchical merging of
+non-lineardarkmatterstructures,orhaloes,playsakeyrolein
+shaping the large-scale structure of the Universe. In this con-
+text, theΛCDMparadigmaccuratelypredictstheevolutionof
+thematterpowerspectrumacrosscosmictimefromCMBob-
+servations [1], demonstrating remarkable success in matching
+observationsdowntoscalescomparabletotheaveragespacing
+between galaxies (≈ a few Mpc).
+At smaller scales, however, discrepancies arise between
+theoretical predictions from N-body simulations and obser-
+vational data. Some of these inconsistencies stem from the
+hierarchicalnatureofthetheory. Whiletheapparentmismatch
+in the number of dwarf galaxies in the Milky Way (Missing
+Satellites Problem, [2, 3]), has been largely resolved through
+newobservationsoffaintsatellites([4])andimprovedbaryonic
+modelling in high-resolution simulations (e.g. [5, 6]), other
+tensions persist. The most significant among these is related
+to the amount of dark matter in the inner parts of galaxies
+(Cusp-Core Problem, [7]), particularly the challenge of ex-
+plaining the diverse rotation curves observed [8]. Moreover,
+while the dynamics of the most massive Milky Way satellites
+(Too-Big-To-Fail Problem, [9, 10]) are now better understood
+through updated cosmological simulations (e.g. [11, 12]), the
+situation remains unclear for satellites outside the vicinity of
+the Milky Way ([13]).
+Another key challenge of CDM (cold dark matter) on
+small scales involves the amplitude of matter density fluc-
+tuations, quantified by 𝜎8. The parameter combination
+𝑆8 = 𝜎8
+√︁
+Ωm/0.3 has given rise to the so-called𝑆8 tension,
+wherecosmicshear,galaxyclusteringsurveys,andtheircross-
+correlation with CMB lensing (e.g. [14–20]) suggest lower
+values than those inferred from the CMB ([1]).
+arXiv:2504.06367v2  [astro-ph.CO]  27 Aug 2025
+
+--- Page 2 ---
+2
+A major open question in cosmology is whether both of
+theseproblemscouldbesolvedbybaryonicphysics(e.g. [21–
+27]) or dark matter models beyond the Standard Model (e.g.
+[28–34]).
+Proper modeling of the former, however, is computation-
+ally challenging, and while the physics of galaxy formation is
+understood in broad terms, many of the underlying baryonic
+processes, such as feedback mechanisms, remain poorly con-
+strained [35–39]. As such, exploring alternative dark matter
+models is further motivated by two primary considerations:
+(1) the absence of a viable dark matter candidate within the
+StandardModelofparticlephysics;(2)nodirectdetectionhas
+been achieved thus far, after a decade of experiments aimed
+at detecting either of the two most popular CDM candidates:
+WIMPs(weaklyinteractingmassiveparticles)(LHC),andax-
+ions (ADMX, [40]).
+From a particle physics perspective, the simplest extension
+of the Standard Model is to accommodate aheavy or sterile
+neutrino that can explain the mechanism facilitating neutrino
+oscillations [41]. Sterile neutrinos can be produced via ac-
+tive neutrinos oscillations in the early Universe, as proposed
+by [42]. They would be the prototype for Warm Dark Matter
+(WDM),anhypotheticalthermalrelicdarkmatterparticlethat
+decouples earlier and is more massive than Standard Model
+neutrinos, initially proposed in [43–45]. Such a dark matter
+candidate has a non-negligible primordial velocity distribu-
+tion at the time of decoupling, and can consequently escape
+small gravitational perturbations, suppressing structure for-
+mation on scales smaller than their free-streaming length,𝜆fs,
+which is inversely proportional to the WDM particle mass.
+For WDM particle masses of the order of a few keV, the free-
+streaming length roughly corresponds to the size of a dwarf
+galaxy. WDMfollowsthesamebottom-upstructureformation
+as CDM, making it a promising candidate to address small-
+scale challenges while preserving the successes of CDM at
+larger scales. The most recent constraint from cosmological
+analysisonthismodelexcludesthermalrelicslighterthan 5.7
+keV (2𝜎) [46].
+For this reason, the interest in a hybrid model that in-
+terpolates between CDM-like and WDM cosmology has re-
+emerged. The Cold+Warm Dark Matter (CWDM) model
+was first introduced by [47–50]. The model is parame-
+terized by the fraction of the warm (lighter) counterpart,
+𝑓WDM =Ω WDM/ΩM; and its particle mass𝑚WDM, which has
+the same properties as in a pure WDM cosmology.
+In some variants of the production mechanism of sterile
+neutrinos, the resulting velocity dispersion of the hypotheti-
+cal particle consists of cold and warm components [51, 52].
+Within this framework, a structured dark matter sector could
+exist,featuringcomponentsinthekeVandGeVmassregimes,
+making sterile neutrinos viable candidates for CWDM [53].
+Such a dual-component nature of dark matter has also been
+proposed for axions [33], reinforcing the motivation to inves-
+tigate CWDM.
+The free-streaming property of CWDM can be constrained
+observationally from the Lyman-𝛼 forest, a powerful cosmo-
+logicalprobeofmatterdensityfluctuationsintheweaklynon-
+linear regime through the high redshift and underdense IGM.
+In the past, the Lyman-𝛼forest has been used, combined with
+CMB data, to constrain the matter power spectrum (e.g. [54–
+56]),natureofdarkmatter[57–62],andtotestphysicsbeyond
+the Standard Model using the 3D correlation function to mea-
+sure the scale of Baryon Acoustic Oscillations (e.g. [63–68]).
+At the scales of interest for the dark matter models, the
+Lyman-𝛼forest is influenced by two key factors: the ther-
+mal evolution of the intergalactic medium (IGM) (e.g., [69])
+and the underlying dark matter density field, which drives
+structure formation through gravitational interactions (e.g.,
+[46, 70]). Consequently, accurately interpreting observations
+of the Lyman-𝛼forest at these scales requires hydrodynamic
+simulationstomodel thecomplexgasdynamics. Thesesimu-
+lationshavefacilitateddetailedcomparisonsbetweenthestruc-
+tures predicted by the CDM paradigm and those observed in
+the Lyman-𝛼forest down to the Jeans scale ([71]), while also
+incorporating the free-streaming properties of dark matter. In
+thepast,constraintsonthemass 𝑚WDM havebeenobtainedby
+comparingsimulationswithquasars(QSOs)datasetsofdiffer-
+ent resolution and signal-to-noise ratios (S/N). This compari-
+son is usually done within a Bayesian framework by interpo-
+lating in the parameter space where simulations are available
+([58, 60, 72–74]) , which become unfeasible as the dimen-
+sionality of the inference problem increases. Instead, sur-
+rogate models or emulators can be used based on Gaussian
+process interpolation ([75–80]), or a supervised neural net-
+work interpolator ([81, 82]), demonstrating significant infer-
+ence speedup. The data used to carry out this comparison has
+included, in increasing order of resolution, the Sloan Digital
+SkySurvey(SDSS)andtheBaryonOscillationSpectroscopic
+Survey (BOSS) (e.g., [60, 83]), X-Shooter (e.g., [58]) and
+MIKE spectrograph at the Magellan Telescopes (e.g. [72]),
+and HIRES spectrograph at the Keck I Telescope (Keck) and
+UVES spectrograph of the Very Large Telescope (VLT) (e.g.
+[46]). The higher-resolution data provides stronger bounds
+on𝑚WDM by probing the small scales where the suppression
+occurs.
+Beyond pure WDM, [84] first suggested a preference for
+𝑓WDM < 0.7 mixed models by reinterpreting Lyman-𝛼 forest
+andX-raydatainthepresenceofsterileneutrinos. Later, [52]
+combined the WMAP5 and Lyman-𝛼 (SDSS) data to con-
+strain 𝑓WDM< 0.35fortheminimummassoftheirpriorrange
+𝑚WDM∼1keVinthecaseofthermallydecoupledcandidates.
+[83] found that a mass as light as𝑚WDM> 0.7 keV is allowed
+if 𝑓WDM < 0.15. [85] combined Planck, baryon acoustic os-
+cillations and Milky Way satellites data to constrain𝑓WDM <
+0.29formassesintherange1-10keV.[86]usedN-bodysimila-
+tionsandmodeltheeffectofbaryonsontoptopredictallowed
+mixed models to which weak lensing and galaxy clustering
+power spectra upcoming data will be sensitive to.
+In this work, we update previous constraints on CWDM
+models using high-𝑧 Lyman-𝛼 forest measurements that are
+sensitive to matter clustering to 2x as small separations as
+any previous attempts,𝑘 ∼ 20 ℎ Mpc−1 [87]; and a set of
+hydrodynamical simulations that include the effect of a heavy
+and a light thermal dark matter particle in structure formation
+including full gas physics. We compare the synthetic spec-
+tra to the data in a Bayesian inference framework. Since the
+
+--- Page 3 ---
+3
+gridofsimulationsspansahigh-dimensionalparameterspace,
+we efficiently sample the likelihood by implementing a neu-
+ral network emulator. We perform a variety of analyses that
+incorporate numerical correction due to a fixed resolution of
+simulations (resolution correction), inhomogeneous reioniza-
+tioneffectsandapossiblemis-estimationofinstrumentalnoise
+of the data.
+The structure of this paper is as follows: In Section II, we
+present the 1D Lyman-𝛼 flux power spectrum measurements.
+Section III introduces the hydrodynamical simulations, high-
+lighting their key properties and the impact of CWDM on
+the matter power spectrum. We also describe the synthetic
+flux power spectrum models derived from these simulations.
+Section IV details the emulator used for the MCMC analysis.
+In Section V, we discuss various analysis choices, comparing
+theireffectonconstraintsonmixeddarkmattermodelsandex-
+ploring the degeneracy between the WDM parameters𝑓WDM
+and𝑚WDM. Finally, Section VI summarizes our findings and
+examines the implications of the allowed CWDM models for
+the𝑆8 tension.
+II. DATA
+Weutilizethesamedatasetaspresentedin[46],specifically
+the one-dimensional (1D) flux power spectra introduced in
+[69]. These spectra were derived from a sample of 15 high-
+resolution quasar observations conducted with the UVES and
+HIRES spectrographs per averaged redshift bin, centered at
+𝑧 = 4.2, 4.6 and 5.0. In particular, we analyze the power
+spectra across 16𝑘-bins, uniformly spaced byΔlog10(𝑘)=0.1,
+from log10(𝑘/km−1 s) = -2.2 tolog10(𝑘/km−1 s) = -0.7. The
+measurementsatthese 𝑘-binsincorporatecorrectionsforfinite
+spectral resolution and pixel size, as detailed in Appendix K
+of [69]. These corrections were derived by applying the same
+window function as in [69, 88, 89]. Furthermore, the non-
+diagonal elements of the covariance matrix are adopted from
+[46], which employed the same box size,𝐿box, as in this work
+to construct the bootstrap cross-correlation coefficient.
+The velocity width corresponding to the smallest scale
+probed in this dataset is approximately 30 kms−1, which is
+significantlylargerthanthespectralresolutionsofHIRESand
+UVES, measured as 6≈ km s−1 and 7≈ km s−1, respectively.
+These characteristics make it an ideal dataset to resolve the
+small-scale features of the Lyman-𝛼 forest. Prior studies have
+used lower-resolution datasets with a larger number of QSO
+samples (e.g., [60, 73]) or data from the same instruments but
+with approximately half the number of quasar spectra (e.g.,
+[89, 90]). These studies have been limited to scales of up
+to 𝑘≈ 0.1 s km−1. While such datasets have been effective
+in constraining both the instantaneous thermal state and the
+evolutionoftheintergalacticmedium(IGM),[69]extendsthis
+reach to𝑘max = 0.2 s km−1. Crucially, the high𝑘-bins intro-
+duced in this work are the ones sensitive to dark matter free-
+streaming, allowing us to probe power suppression on scales
+of 10–100 kpc. This extension to smaller scales is made pos-
+sible by improved modeling of instrumental noise and metal
+contaminants [69, 91, 92]. To account for these uncertainties,
+we marginalize over these effects as part of our analysis.
+III. SIMULATIONS
+ToprobeCDMandpurewarmdarkmatterWDMcosmolo-
+gies, we use the same set of simulations from the Sherwood
+projectasemployedin[46],incorporatingthefiducialultravio-
+let(UV)backgroundfrom[95]. Thesesimulationsfeaturesev-
+eraladvancementsoverpreviousmodelsusedinearlierstudies
+([58, 72]), including the implementation of a non-equilibrium
+thermo-chemistry solver.
+In this work, we expand upon the Sherwood simulations
+framework by conducting additional simulation runs aimed
+at constraining CWDM models detailed in Table I. The sim-
+ulations are performed within a cosmological volume of 20
+ℎ−1Mpc, with 2×10243 dark matter and gas particles, which
+provides sufficient resolution to capture the small-scale struc-
+ture of the Lyman-𝛼forest ([46]) (see Subsection IIIC). Fur-
+ther details regarding the simulations can be found in [46]
+(Table I) and [96].
+In Figure 1 we show the projected gas and dark matter
+density fields extracted from simulation runs for CDM and
+WDMcosmologies. Onecanseethattheoverdenseregionsin
+thegasdistribution,whichserveastheseedsfortheformation
+of stars and galaxies, closely follow the distribution of dark
+matteronlargescales. Thegasdistributionatthesmallscales
+appearsmorediffusecomparedtothedarkmatterdistribution
+inthetop-rightpanelduetothepressuresmoothingeffect: the
+gas hydrodynamically reacts to heating from reionization by
+CDM gas
+ CDM DM
+WDM 1 keV DM
+ WDM 3 keV DM
+10 1
+100
+101
+1 + gas
+10 1
+100
+101
+1 + DM
+FIG. 1: Slice through a cosmological simulation of size 20ℎ−1Mpc
+with2×10243 darkmatter(DM)andgasparticlesat 𝑧=4.2fromthe
+Sherwood-Relics simulation suite that was run with theP-Gadget3
+code. Top panel: Hydrogen gas distribution (left), dark matter dis-
+tribution in the standard CDM model (right). Bottom panel: dark
+matterdistributionina1keVWDMmodel(left)comparedtoa3keV
+WDM model (right) with brighter colours indicating higher density.
+
+--- Page 4 ---
+4
+Name 𝐿box 𝑁part 𝑧end
+rei 𝑇0(𝑧= 4.6) 𝑢0(𝑧= 4.6) WDM mass 𝑓WDM
+[ℎ−1 cMpc] [K] [eV m−1p ] [ keV−1]
+L20-ref 20.0 2× 10243 6.00 10,066 7.7 [0, 1
+4, 1
+3, 1
+2, 1] [0, 1
+8, 1
+4, 1
+2, 1]
+L20-ref CLASS 20.0 2× 10243 6.00 10,066 7.7 0 0
+R10-ref 10.0 2×[10243,5123] 6.00 10,066 7.7 [0, 1
+4, 1
+3, 1
+2] [0, 1]
+TABLE I: Reference thermal history simulations used in this work. A complete list, including all thermal history runs, can be found in Table I
+of [46]. The columns include the box size ([ℎ−1 cMpc]), the number of particles, the end of reionisation redshift, the thermal parameters𝑇0
+and𝑢0 at redshift𝑧 = 4.6, the inverse of the WDM mass𝑚WDM−1, and the additional dark matter parameter, the fraction of WDM particle
+mass 𝑓WDM. The first two rows list the main simulations: one with fiducial CAMB initial conditions (as in [46], [93]) and the other using the
+CLASS code ([94]). The last row contains the fiducial simulation for mass resolution correction. Box correction runs match those in [46].
+Notethatthesimulationsinallthreerowsextendto 𝑚WDM =1keV,withthefirstsetcoveringCWDMmodels. DifferentCWDMmodelslisted
+in this table were run for all 12 thermal histories of [46].
+1.5
+ 1.0
+ 0.5
+ 0.0 0.5 1.0 1.5 2.0
+log10 k [h Mpc 1]
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5log10 k3P(k)
+fWDM = 0.16 (mWDM = 1 keV)
+mWDM = 5.47 keV (fWDM = 1)
+mWDM = 1.2 keV, fWDM = 0.2
+mWDM = 1.4 keV, fWDM = 0.24
+mWDM = 1.6 keV, fWDM = 0.27
+mWDM = 1.8 keV, fWDM = 0.3
+CDM
+100 101 102
+k [h Mpc 1]
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0PCWDM(k) / PCDM(k)
+accepted within 2
+rejected within 2
+(1.1,0.18)
+(1.3,0.21)
+(2.0,0.31)
+(2.9,0.44)
+(4.8,0.81)
+mWDM [keV], fWDM
+accepted within 2
+rejected within 2
+FIG. 2:Left: Linear matter power spectrum at𝑧 = 0 computed using the Boltzmann solver CLASS for CDM (black), a CWDM model (blue)
+and pure WDM model (red). The last two correspond to the 2𝜎 bounds found when fixing the highest𝑓WDM (𝑓WDM = 1) and lowest𝑚WDM
+(𝑚WDM = 1keV) in our analysis. We also present a range of CWDM models, shown in blue with varying line styles, which are drawn from
+the region of power suppression of allowed models. These models delineate the 2𝜎 allowed region, represented by the blue shaded area. The
+region of rejected models is shown in gray.Right: The matter transfer function (𝑇2(𝑘)) from random samples of the 2D posterior distribution
+in the (𝑚WDM−1− 𝑓WDM) plane inside (outside) the 2𝜎 contour in blue (gray). We show five allowed models in color, highlighting that we
+are sensitive to both the CWDM departure scale from CDM (mainly set by𝑚WDM) and the suppression amplitude (dependent on𝑓WDM).
+Notably, lower𝑚WDM values can be constrained at the cost of reduced suppression at higher-𝑘.
+expanding,suppressingsmall-scalestructure[95]. Theneutral
+hydrogen, which is responsible for the Lyman-𝛼 absorption,
+resides in these filaments or voids. The bottom two panels
+highlight the primary effect of dark matter free-streaming on
+structure formation. As𝑚WDM decreases in these pure WDM
+models, the free-streaming length increases. This results in
+the smoother filamentary structure observed in the Figure.
+Notably, this smoothing effect is more pronounced for the
+𝑚WDM= 1keVmodelcomparedtothe 𝑚WDM= 3keVmodel.
+A. Imprint of mixed dark matter models on the matter power
+spectrum
+The initial conditions for WDM and CWDM simulations
+differfromthoseofCDMinthecomputationofthepowerspec-
+trum. Thefree-streamingeffect, 𝜆fs,isincorporatedthrougha
+transfer function,𝑇(𝑘), that modifies the original power spec-
+trum, (e.g. [97]). Specifically, the power spectra for CDM
+and pure warm thermal relic models are computed using the
+Boltzmann solver CAMB [93], while for the latter cosmol-
+ogy, we apply the transfer function from [97–99]. The mixed
+models are generated using the in-built CLASS option, which
+accounts for the temperature, mass, and density of non-cold
+dark matter [94, 100]. To ensure consistency across differ-
+ent cosmologies simulated with different codes, we correct
+for minor discrepancies by taking the ratio of the flux power
+spectrum between CDM models computed with CAMB and
+CLASS (see Table I).
+In the context of CWDM models, the transfer function
+asymptotically approaches a constant plateau at small scales.
+Theheightofthisplateauisprimarilydeterminedbythewarm
+dark matter (WDM) fraction,𝑓WDM, due to the presence of a
+dominant CDM component. The characteristic cut-off scale
+is governed by the mass of the warm dark matter counterpart,
+similar to the behavior observed in pure WDM models.
+Figure2showsontheleftthelinearmatterpowerspectrum
+for CDM at𝑧 = 0, along with the 2𝜎 lower bound on pure
+WDM and on a mixed model with𝑚WDM = 1 keV. The latter
+isthelightestthermalrelicallowedinouranalysis. Wefurther
+show models with progressively heavier warm counterparts
+(and correspondingly smaller fractions), which bracket the
+
+--- Page 5 ---
+5
+2𝜎 allowed region found in this work, shaded in blue. This
+Figure illustrates the imprint of CWDM in the matter power
+spectrum: the scale at which it deviates from CDM is set
+by 𝑚WDM while the suppression depends on the abundance
+given by 𝑓WDM. We show in the right plot of Figure 2 the
+distinctsuppressionpatternsofmixedCWDMmodelsrelative
+to CDM. In particular, these hybrid models can remain light
+aslongas 𝑓WDM issmall, resultinginaweakersuppressionof
+the matter power spectrum at slightly larger scales.
+However, CWDM models with stronger suppression at
+larger scales also show less suppression at small scales, com-
+pared to pure WDM models. This is shown for a collection
+of hand-picked models in the color gradient of Figure 2. For
+such modelswe findthat theLyman-𝛼 forest datain thiswork
+constrainboththescaleofthesmall-scalesuppression,andthe
+shape of the transfer function around the suppression scale.
+B. Flux power spectrum models
+The synthetic Lyman-𝛼 forest spectra, specifically the op-
+tical depth field (𝜏), can be computed by extracting the infor-
+mation on neutral hydrogen number density, temperature and
+peculiar velocity contained in each pixel in the box along the
+different lines-of-sight. These are parallel to the boundaries
+of the box and have𝑁bins = 2048 number of bins with width
+𝛿𝑥 = 𝐿box/𝑁bins. We extract𝑁LOS = 5000 lines-of-sight and
+compute the flux (𝐹 =𝑒− 𝜏) field for each. The perturbations
+in flux,𝛿F=𝐹/ ¯𝐹− 1, are characterized by the 1D flux power
+spectrum,𝑃F(𝑘) =𝐿−1
+box⟨𝛿F𝛿∗
+F⟩,where ¯𝐹 isthemeantransmit-
+ted flux calculated as an average of the flux field across all the
+pixels extracted from a simulation at each redshift. We repeat
+this for the three redshift bins used in our analysis.
+Without post-processing, the number of models that we
+have established are spanned by the allowed WDM parame-
+ters,𝑚WDM = [1,2,3,4] keV and𝑓WDM = [0.125,0.25,0.5,1.0].
+Theseaddupto16WDMcosmologies+1fromCDM( 𝑓WDM
+=0). Asdescribedabove,foreachcosmology,werun12sim-
+ulations,eachonewithdifferentthermalhistory,characterized
+by the evolution of the cumulative injected heat into the IGM
+atmeandensity( 𝑢0(𝑧)). Thisamountsto17×12=204models
+per redshift bin.
+Under the assumption of photo-ionization equilibrium, we
+post-process the simulations before inferring our cosmology
+from the flux power spectra models in two steps. First, we
+exploit the temperature dependence of the recombination co-
+efficient𝛼HII∝T−0.72 in the Lyman-𝛼 forest regime to isolate
+the impact of the instantaneous temperature of the gas on the
+power spectrum. We do this by rotating and translating the
+𝑇−𝜌 planeofsimulationparametersashasbeendoneinpre-
+vious work (e.g. [69], [46]), recalculating the𝜏 field for a
+range of𝑇0,𝛾 values. In this way, we obtain flux models for a
+combination of𝑇0∈ [5000, 14000]K spaced by 1000K, and
+𝛾∈ [0.9, 1.8] in steps of 0.1.
+In the second step, we adopt the common approach of ad-
+justing the mean flux, ¯𝐹, derived from the simulated spec-
+tra to match the observed measurements of effective optical
+depth 𝜏eff, in order to account for uncertainties in the UV
+background. This is done by rescaling the𝜏 field , with¯𝐹 de-
+fined as ¯𝐹 =𝑒− 𝜏eff, since𝜏∝Γ−1
+HI under the photo-ionization
+equilibrium assumption. This method is preferred over direct
+rescalingof ΓHIbecausethemeantransmittedLyman- 𝛼fluxis
+measurable ([101–103]), providing valuable prior knowledge
+of𝜏eff to calibrate simulations and infer physically motivated
+posteriors on model parameters.
+After post-processing, the total number of models span a
+grid of 15× 10× 10× 204 models = 306000 parameter
+values.
+In Figure 3, we show the relative ratio of these simulated
+flux power spectrum for WDM and CWDM cosmologies to
+thereferenceCDMsimulationat 𝑧=4.2andforafixedthermal
+history(𝑢0= 8.14eV,𝑇0= 10700K,𝛾=1.2)andthemeanflux
+( ¯𝐹)isfixedsuchthattheeffectiveopticaldepthmatchesthatof
+[69],i.e. 𝜏eff≡− ln ¯𝐹=𝜏effB. Onecanseethatthesuppression
+inpoweratsmallscales(high 𝑘 values)isenhancedforWDM
+models with lower𝑚WDM. This agrees with what one expects
+foralighterDMparticlethathasalargerfreestreaminglength.
+The magnitude of the suppression increases as the larger free
+streaming strength suppresses structure at even larger scales.
+Thiscanalsobeseeninthebehaviourofthepowerspectrumfor
+different 𝑓WDM values, namely, the smaller𝑓WDM, the weaker
+theeffectonthepowerspectrum,eventuallyrecoveringCDM.
+The1𝜎 uncertaintiesfrom[69]arealsoshowntoillustratethe
+sensitivity of the data to the WDM models. The sensitivity is
+higher for "hotter" dark matter models, whereas the "colder"
+darkmattermodelsdifferbylessthantheerrormargin,making
+it difficult for the data to distinguish between them effectively.
+C. Mass resolution and box size correction
+Priortoperformingtheinference,wetestwhetherthemod-
+elsextractedfromsimulationsareabletoresolvetheLyman- 𝛼
+forest structure by running numerical convergence tests. The
+two relevant parameters are𝐿box and 𝑁p ([104–106]). The
+firstparametersetsthenumberof 𝑘-modesonlargescalesand
+influences all scales due to non-linear coupling between the
+modes. When𝐿box is kept fixed, the smallest resolvable scale
+is governed by the particle number,𝑁p.
+Following[46],wesplicetogetherthefluxpowerfromlarge
+and small box size simulations,𝐿box = 40 and 10ℎ−1Mpc,
+varying 𝑁p = [10243, 5123] ([107]). We check that [69] is
+sensitive only to the intermediate splicing regime. Therefore,
+we correct the flux power spectra obtained with our reference
+simulation 𝑃20,1024 by using the ratio of a simulation with
+better resolution,𝑃10,1024, and an equally limited resolution
+as the reference,𝑃10,512, 𝑅𝑠 = 𝑃10,1024/𝑃10,512, where𝑅𝑠 is
+the mass resolution correction. The correction ranges from
+5-14%overthescalesofinterestanditincreaseswithredshift
+[108]. These models are shown in Table I in [46].
+Furthermore, the finite box size naturally introduces a trun-
+cationofthefluxpowerspectrumatlargescalesbutalsoaffects
+thesmallscales. Thissystematiciscorrectedwiththeboxsize
+correction from the ratio𝑃40,2048/𝑃20,1024. As shown in [46],
+the correction at the low-𝑘 modes is at the level of 3-5%. We
+further check that the effect of mean flux rescaling in post-
+
+--- Page 6 ---
+6
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4PF / Pref
+fWDM = 1
+mWDM = 4.0 keV
+mWDM = 3.0 keV
+mWDM = 2.0 keV
+mWDM = 1.0 keV
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+mWDM = 2.0 keV
+fWDM = 0.125
+fWDM = 0.25
+fWDM = 0.5
+fWDM = 1.0
+±  Boera+19
+FIG. 3: Flux power spectrum ratio of simulated models to the reference model for CDM cosmology with post-processed parameters fixed to
+fiducial values (𝑇0 = 10700K,𝛾 = 1.2) at𝑧 = 4.2. Left: The WDM particle mass varied with fixed𝑓WDM = 1. Right: CWDM models with
+vaying 𝑓WDM for𝑚WDM= 2keV.
+processing on the box size correction is≤ 0.5%. Therefore,
+we correct our models at fixed mean flux corresponding to
+𝜏effB.
+D. Patchy correction
+Cosmicreionizationisnothomogeneousbutoccursinthree
+stages: the formation of H II bubbles, their overlap due to
+increased number of ionizing sources, and the disappearance
+of the last remaining neutral hydrogen regions as a uniform
+UV background forms. As pointed out in previous work that
+hasusedthesamesuiteofsimulations(e.g. [46,74]),thenon-
+uniformnatureofthereionizationprocessleavesanimprinton
+theLyman-𝛼 forestatbothlargeandsmallscales. Theformer
+consistsofanenhancementofpoweratscales 𝑘 <0.03km−1s
+morenoticeableathigherredshiftsaswellasthermalhistories
+with an earlier end of reionization. This can be understood
+throughthe temperaturedependence ofthe recombinationco-
+efficient already mentioned in Subsection IIIB, which means
+thatfluctuationsinthegastemperaturecontributetothevaria-
+tions of the neutral hydrogen fraction. At small scales, patchy
+reionizationcausessuppressioninthepowerspectrummainly
+throughthermalbroadeninganddifferencesinpeculiarveloc-
+ity for regions that reionized recently [74, 109]. We account
+for this extra power by computing the correction tabulated in
+[74] following [46].
+IV. STATISTICAL MEASURES OF THE FLUX
+DISTRIBUTION
+The flux power spectrum models are defined on a six-
+dimensional grid per redshift bin, for each combination of
+model parameters (𝑇0 𝑧𝑖, 𝛾 𝑧𝑖, 𝜏𝑧𝑖
+eff, 𝑢0 𝑧𝑖, 𝑚WDM−1, 𝑓WDM) =
+− →𝜃. Comparing power spectra derived from observations and
+simulations enables us to constrain the free parameters of the
+model,− →𝜃, a process typically conducted within a Bayesian
+Monte Carlo Markov Chain (MCMC) framework. In this
+study, we utilize theCobaya code [110] to sample the Gaus-
+sianmultivariatelikelihoodfunctionfrom[69]ateachredshift.
+However, our approach differs from previous works in the in-
+terpolation scheme used to generate simulated power spectra
+ateachgridpoint. Specifically,weemployamachinelearning
+modelcapableofpredictingthepowerspectrawithinafraction
+of a second on a single CPU.
+A. Neural network emulator
+Given that− →𝜃 ∈ R6, evaluating the likelihood at each grid
+point is limited by the computation cost of interpolating in
+such a high-dimensional space. We circumvent this problem
+byemployinganeuralnetwork. Thisneuralnetworkmapsthe
+input parameters𝜃 to the output parameters𝑃F(𝑘 𝑚), in the
+form 𝑃F(𝑘 𝑚) = 𝑓[− →𝜃, 𝜙], where𝜙 are the hyperparameters
+that describe the relationship between input and output, and
+𝑘 𝑚 is a finite set of wavenumbers matching the ones reported
+in the measurements of [69].
+As an initial framework, we adopt the model architecture
+proposed by [82] and make two key observations. First, the
+originalworkassessedtheemulationerrorusing 𝑘-foldcross-
+validationonthetrainingsetitself. Thisapproachlikelyleads
+to overfitting, reducing the model’s ability to generalize to
+unseen data, which is precisely the role of an independent test
+set. Secondly,wecanenhancetheperformanceoftheemulator
+by using a combination of baseline models, also known as
+ensemble learning. In particular, we consider averaging the
+output from a range of models trained using𝑘-fold cross-
+validation.
+Webeginbyrandomlysplittingthedatasetintoa90%train-
+ing set and a 10% test set, with the validation set excluded
+
+--- Page 7 ---
+7
+𝑘-cross Fold Validation
+Fold 1
+Fold 2
+Fold 3
+Fold 4
+...
+Fold 10
+Training
+Validation
+ 
+im
+✓1
+✓2
+✓3
+✓6
+...
+h(1)
+1
+h(1)
+2
+h(1)
+3
+h(1)
+4
+h(1)
+120
+...
+h(2)
+1
+h(2)
+2
+h(2)
+3
+h(2)
+4
+h(2)
+120
+...
+h(3)
+1
+h(3)
+2
+h(3)
+3
+h(3)
+4
+h(3)
+120
+...
+ˆPk, 1
+ˆPk, 2
+ˆPk, 16
+...
+ !✓ =
+(T0
+zi ,  zi , ⌧ zi
+e↵ , u0zi ,
+m 1
+WDM, fWDM)
+hl
+j =  (b l
+j + Pn
+i=1w l
+i,j x l 1
+i )
+1
+ 
+FIG. 4: Illustration of the emulator building process used in this work.Left: 𝑘-fold cross-validation.Right: Neural network trained on each
+fold𝑖∈ [1,10]. We first extract the training set from the total input and output data to perform a𝑘-fold cross-validation as shown on the left.
+Each fold is divided into 10 subsets, 9 are used to train the neural network model depicted on the right, while the remaining one is used as a
+validation set to monitor the convergence. We feed the cosmological model parameters− →𝜃 in the input blue layer. The hidden layers are shown
+in gray. For hidden neuron𝑗 in layer𝑙 with𝑛 = 6 input parameters, the inputs to each node are combined in the weighted linear combination
+ℎ𝑖 𝑗 shown on top in gray, where− →𝑏 is the bias vector andw is the weight matrix, such that𝜙 = [− →𝑏, w],𝑥 𝑙−1 are the outputs from the previous
+layer, and𝜎 is the so termed activation function, which permits non linear relations between the input and the output. This step results in 10
+modelsvalidatedondifferentsubsetsofthetrainingdata. Then,wefeedtheunseentestdataintoeachmodelandaveragethepredictionsacross
+all the emulators. The output are the power spectrum values in 16𝑘-bins shown in red, corresponding to the output layer. Note that this is
+repeated for the 3 redshift bins,𝑧 = 4.2, 4.6, 5.0, of the data.
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+0.990
+0.995
+1.000
+1.005
+1.010Predicted/True
+z = 4.2
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+z = 4.6
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+z = 5.0
+1 fold
+10 folds
+-1.0%
+-0.5%
+0.0%
+0.5%
+1.0%
+Percentage
+FIG. 5: Characterising the performance of the neural network emulator with the predicted versus true power spectra ratio distribution on the
+test set before and after performing𝑘-fold cross-validation. Lighter blue and red regions correspond to the 95% confidence intervals for one
+fold (before cross-validation) and for ten folds (after cross-validation), respectively. The same applies to the darker shaded regions, which
+correspond to the 68% confidence interval. The median of the distribution is shown as well as a solid line. Perfect recovery is indicated by the
+gray dashed line.
+within the training subset. We then divide the training set
+into𝑘 subsets,andperformthe 𝑘-foldcross-validation. Inthis
+way,eachneuralnetworkistrainedon 𝑘-1foldsofthetraining
+data,withtheremainingonebeingusedasvalidation. Weuse
+𝑘 = 10, therefore repeating the process iteratively 10 times.
+Thisresultsin10neuralnetworkemulators,eachvalidatedon
+a different subset of the mock spectra. We build our neural
+networkmodelusing PyTorchinPython,whichenablesGPU
+
+--- Page 8 ---
+8
+execution. Before training, we apply min-max normalization
+torescaletheinputdata,ensuringthat − →𝜃∈[0,1],whiletheout-
+put (labels) undergo a logarithmic transformation. These pre-
+processingstepsmitigatedatavariability,therebyenablingthe
+networktolearnmoreefficiently. Weperformcross-validation
+for several hyperparameter combinations and, after monitor-
+ing the convergence of the loss function, we settle on a neural
+network with [120,120,120] units and a Rectified Linear Unit
+activationfunction(seeFigure4). Wefurtherfindthatthemin-
+imum of the validation loss is generally achieved afterΔ𝑡 =
+500 epochs. However, by allowing for early stopping, we note
+thatthelowestredshiftbincompletestrainingearlier,whereas
+higher redshift bins do not meet the early stopping criteria.
+We further optimize training by allowing the initial learning
+rate to decrease from an initial value of10−3, to a minimum
+value of10−6 if the validation loss does not improve forΔ𝑡 =
+30 epochs. We choose theAdam optimization algorithm and
+a batch size = 18. Even though this batch size seems small
+compared to the total data size, we check that larger batches
+are not able to achieve as small losses for even larger number
+of epochs.
+This process of hyperparameter tuning is therefore done
+withincross-validation,whereeachneuralnetworkisvalidated
+using a different subset of the original training set, while the
+test set remains unseen. The building process of the emulator
+is shown in Figure 4.
+In this way, we end up with 10 neural networks per redshift
+bin at our disposal. To obtain the final prediction, we average
+the prediction extracted from each model using the arithmetic
+mean. Since each model was trained in parallel and on a
+different training set in cross-validation, the combination of
+thesemodelswillgiveabetteraverageperformancethaneach
+model individually. We also use this method to estimate the
+combined emulator’s error, as shown in Figure 5. This shows
+that the error from the emulator is significantly smaller than
+the error on the data shown in Figure 3 and the one used in
+[82] without model ensembling and a separate test set.
+V. RESULTS
+Theresultsofthemainanalysesforthermalanddarkmatter
+parameters are shown in Figure 6 and Figure 7. We employ
+a uniform prior on𝑚WDM−1, specificallyU∼[ 0, 1] keV−1,
+after verifying that the emulator’s predictions are unreliable
+in extrapolated regions of the parameter space. Similarly, we
+impose a uniform prior on𝑓WDM,U∼[ 0, 1]. Figure 6 shows
+the 1 and 2𝜎 recovered posterior projected in the (𝑚WDM−1−
+𝑓WDM)plane. Theshapeofthecontoursmatchestheexpected
+degeneracybetweenthetwoparameters,wherethedataallows
+for a very light thermal relic as long as its abundance is small
+(𝑚WDM−1→1),oraheavythermalrelicwithlargeabundance
+(𝑓WDM→ 1), with CDM at (𝑚WDM−1, 𝑓WDM) = (0,0) in this
+parameterization. This degeneracy is well-fitted by a power
+law of the form𝑓WDM = 𝐴×( 1keV/𝑚WDM)𝑏. For the 2𝜎
+contours of the default analysis, we find𝐴 = 0.14± 0.0007
+for the normalization, and𝑏 = -1.1± 0.0033 for the index
+parameter. We further identify a combination of𝑓WDM and
+0.0 0.2 0.4 0.6 0.8 1.0
+mWDM 1 (keV 1)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+fWDM
+Default
+Patchy + CMB + Rscdm (u0)
+1  Irsic+24
+2  Irsic+24
+FIG.6: The2Dposteriordistributioninthe 𝑓WDM and𝑚−1
+WDM plane
+forourdefaultanalysis(gaussianpriorson 𝑇0)andforpatchy+ 𝜏CMB
++ 𝑅𝑠cdm (𝑢0). Vertical black and gray dashed lines correspond to
+the 1𝜎 and 2𝜎 constraints from [46]. The grid of simulations is also
+shown as the starred black points.
+𝑚WDM−1 that is perpendicular to the above degeneracy axis,
+and is best-constrained by the data, through the parameter
+𝑊WDM≈ 𝑓WDM (1 keV/𝑚WDM)3.4. The 1𝜎 models in the 2D
+posterior of Figure 6 result in the upper bound𝑊WDM < 0.27
+at 1𝜎.
+The default analysis uses gaussian priors on𝑇0 𝑧𝑖 centered
+onfitted 𝑇0 𝑧𝑖 measurementsfromobservationsatlow- 𝑧([112])
+and high-𝑧 ([113]), following [46]. The second analysis (or-
+ange) represents the model that incorporates all the physical
+considerations in addition to the default priors. These include
+a thermal-dependent resolution correction, patchy reioniza-
+tioncorrectionand 𝑢0−𝑇0 informedthroughthemeasurement
+of 𝜏CMB from Planck [114]. The following sections outline
+eachcorrectionandtheresulting 𝑚WDM and 𝑓WDM constraints
+from the analyses, which are summarized in Figure 8. For
+the two main models in Figure 6, we show their fit to the
+data in Figure 9. We further show that the predicted IGM
+thermalevolutionisinagreementwithindependentnumerical
+and observational predictions in Figures 10 and 11. A sum-
+mary of the results from all the analyses, including thermal
+anddarkmatterparametersalongwiththeirbest-fit 𝜒2 values,
+is presented in Table II.
+A. Thermal priors
+To effectively constrain the (𝑚WDM−1− 𝑓WDM) plane, we
+need to marginalize over the two astrophysical effects that
+impactthesmallscalepowerspectrumapartfromdarkmatter
+
+--- Page 9 ---
+9
+0.6 0.8 1.0 1.2 1.4
+T04.2/104 (K)
+5
+10
+15
+20
+u4.2
+0 (eV m 1
+p )
+0.4 0.6 0.8 1.0 1.2
+T04.6/104 (K)
+4
+6
+8
+10
+12
+14
+u4.6
+0 (eV m 1
+p )
+0.6 0.8 1.0 1.2 1.4
+T05.0/104 (K)
+5
+10
+15
+u5.0
+0 (eV m 1
+p )
+Villasenor+22
+Rogers+21
+Boera+19
+Irsic+24
+0.0 0.5 1.0
+mWDM 1 (keV 1)
+5
+10
+15
+20
+u4.2
+0 (eV m 1
+p )
+Default
+Patchy + CMB + Rscdm (u0)
+0.0 0.5 1.0
+mWDM 1 (keV 1)
+4
+6
+8
+10
+12
+14
+u4.6
+0 (eV m 1
+p )
+0.0 0.5 1.0
+mWDM 1 (keV 1)
+3
+4
+5
+6
+7
+8
+u5.0
+0 (eV m 1
+p )
+0.0 0.5 1.0
+fWDM
+5
+10
+15
+20
+u4.2
+0 (eV m 1
+p )
+0.0 0.5 1.0
+fWDM
+4
+6
+8
+10
+12
+14
+u4.6
+0 (eV m 1
+p )
+0.0 0.5 1.0
+fWDM
+3
+4
+5
+6
+7
+8
+u5.0
+0 (eV m 1
+p )
+FIG. 7: 2D posterior distributions for thermal parameters and dark matter parameters for the two analysis shown in Figure 6. The analysis
+shown are corrected for resolution,𝑅𝑠cdm, a posteriori. The gray band represents the prior band imposed in the𝑢0−𝑇0 plane. Best-fit values
+for the same data-sets are also shown shown in red ([111]), green ([62]), purple ([69]), and blue ([46]). In the middle row, we show the 2𝜎
+upper limit on𝑚WDM−1 from [46] slighly shifted to the right for illustrative purposes.
+free-streaming.
+The thermal histories within our hydrodynamical simula-
+tions were constructed to bracket observational constraints on
+thethermalstateoftheIGMandeffectiveopticaldepthevolu-
+tion. These models can provide a useful prior in the(𝑢0−𝑇0)
+plane, corresponding to the gray band in the 2D contours in
+the top row of Figure 7, as was done in [46].
+Alternatively, as proposed by [46], one can impose a prior
+on the thermal state of the IGM represented by𝑇0, based on
+observational data and therefore independent of the specific
+physicalmodelsusedinouranalysis. Weapplythesepriorsin
+our default analysis shown in Figure 7.
+Finally, one can impose informed thermal priors through
+measurements of the Thomson scattering optical depth, de-
+noted as𝜏CMB, derived from Cosmic Microwave Background
+(CMB)data. ThisparameteroffersameanstoassesstheIGM
+thermalhistorybyquantifyingtheintegratedscatteringrateof
+photons by electrons over time, a quantity which is inherently
+dependentontheelectronnumberdensity[96]. Consequently,
+foreachthermalhistorymodel,thereexistsamappingbetween
+the integrated and instantaneous thermal history, which is pa-
+rameterized by𝑢0 𝑧𝑖 and𝑇0 𝑧𝑖, and the electron scattering opti-
+cal depth. We use this mapping to interpolate𝜏CMB for each
+sampled combination (𝑢0 𝑧𝑖,𝑇0 𝑧𝑖). At the likelihood level, we
+introduce an additional Gaussian term for𝜏CMB, centered on
+𝜏CMB = 0.054± 0.007 as inferred by Planck [114]. While
+
+--- Page 10 ---
+10
+the derived𝜏CMB is heavily dependent on our simulated mod-
+els, the prior effectively constrains the thermal parameters in
+a manner that ensures the preferred cosmology is consistent
+with CMB measurements of this parameter.
+We find similar results to [46] in that the contour in the
+(𝑢0−𝑇0) plane for the default analysis expands along the
+anti-correlationdirection,withslightlycoldermodelsallowed
+within 1𝜎 at 𝑧 = 4.2 and 4.6, as shown by the blue contours
+in the upper row of Figure 7. This then results in a slight up-
+wardshiftinthe( 𝑢0−𝑚WDM−1)planeinthemiddlerow,with
+colder models showing less pressure smoothing. The effect
+of different thermal priors does not have a noticeable effect in
+the (𝑚WDM−1− 𝑓WDM) plane (bottom row); therefore, the 2𝜎
+constraints for pure WDM (see Table II) are also very similar.
+The addition of𝜏CMB only slightly shrinks the posterior in the
+thermal parameter space at𝑧 = 4.2, resulting in smoother 1𝜎
+contours, but the inferred parameters are practically the same.
+For mixed DM models, we find that𝑓WDM ≲ 16%, 35%, 50%
+and 67% for fixed𝑚WDM = [1,2,3,4] keV, respectively, where
+the choice of different thermal priors only changes these con-
+straints by≤ 5%.
+1 2 3 4
+mWDM (keV)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0fWDM
+kmax <  0.1 s/km
+Anoise
+u0 T0 + Rscdm (u0)
+Fiducial
+Patchy + CMB + Rscdm (u0)
+FIG. 8: Comparison of 2𝜎 upper bounds on𝑓WDM at fixed𝑚WDM
+bins.
+B. Effect of small scale cut
+The previous data sets used to infer the WDM constraints
+extend to 𝑘≈ 0.1 s/km [46, 57, 116]. We check whether
+we reproduce their results on pure WDM thermal relics by
+performing an analysis with both uninformative and default
+thermalpriorsandwithoutthelast3 𝑘-binsinthedata. These
+scales are key to disentangle thermal effects from dark matter
+free-streaming, meaning that without them, constraints in this
+parameter space will be dominated by the priors. The best-fit
+modelforthedefaultanalysiswiththesmallscalecutprecisely
+recovers𝑇0 𝑧𝑖, within the Gaussian prior’s peak. The case for
+uninformedpriorsexpandsalongthe 𝑢0−𝑇0 degeneracyaxes,
+effectively showing no sensitivity to these parameters at the
+scales considered. The recovered𝜒2 when including or not
+includingthermalpriorsare12.3/20and11.6/20,respectively.
+We further recover weaker constraints for pure𝑚WDM < 3.67
+and𝑚WDM < 3.82 keV (2𝜎) for each analysis, consistent with
+[46, 70]. In terms of mixed dark matter models, the scale cut
+weakens the allowed𝑓WDM by 15%, with a stronger effect for
+𝑚WDM = 3 keV, where the difference is≈ 30% as shown in
+Figure 8.
+C. Effect of noise
+The small scale power in the Lyman-𝛼power spectrum in-
+cludescontributionsfrommetallines,instrumentalresolution,
+and potentially underestimated instrumental noise. As men-
+tioned in Section II, we correct for instrumental resolution
+and pixel size of the data following [69]. Furthermore, we
+use the analysis results of [69] that corrects for the effect of
+the intervening metal lines. However, to address instrumental
+noise, [69] estimated the "noiseless" power spectrum by sub-
+tracting the white noise power corresponding to the mean of
+the noise distribution, which dominates the measurement at
+high𝑘 values. [46] fitted the noise data for each redshift bin,
+as estimated by [69], to a log-normal distribution. To assess
+whether the noise flux power may be underestimated in the
+data, [46] added an additional term to the theoretical model,
+which accounts for deviations from the mean of the noise dis-
+tribution. We model the noise in the same way, including an
+extra parameter with log-normal priors,𝐴𝑧𝑖
+noise, alongside the
+power spectra predicted by the emulator as given by Eq. 4 in
+[46]. Thisanalysisexcludespurethermalrelicswith 𝑚WDM<
+3.82 keV (2𝜎), in agreement with [46].
+Moreover, we recover the same behavior for𝐴𝑧𝑖
+noise, which
+remains largely insensitive to 𝑚WDM−1 (that is, the free-
+streaming effect), while exhibiting a correlation with the ther-
+mal parameters𝑇0 𝑧𝑖 and𝑢0 𝑧𝑖. This correlation with the IGM
+temperature favors hotter models (see Table II), whereas its
+anti-correlationwith 𝑢0 𝑧𝑖 suggestsapreferenceforlaterreion-
+ization, implying smaller heat injection. Importantly, we ob-
+tain mean values for the posteriors of𝐴𝑧=4.2
+noise = 0.72+0.98
+−0.34,
+𝐴𝑧=4.6
+noise = 1.19+1.61
+−0.85, and 𝐴𝑧=5.0
+noise = 1.19+1.65
+−0.78, suggesting that
+the noise in the data might indeed be underestimated. Com-
+paredto[46],the1 𝜎errorisbroader,primarilyduetothelarge
+uncertaintyin 𝑇0 𝑧𝑖,whichallowsforaverywarmIGMtemper-
+ature, thereby weakening constraints on the WDM mass. The
+preferencetowardslessheat injected(lower 𝑢0)isparticularly
+noticeable at𝑧 = 4.6, as shown in Figures 10 and 11.
+Regarding CWDM constraints, we find that the upper
+boundson 𝑓WDMdecreasebyupto25%(seeFigure8),yielding
+very similar results to those obtained in the scale-cut analysis
+as described in Subsection VB.
+D. Effect of mass resolution
+Our emulator provides an averaged prediction of the abso-
+lutebinnedfluxpowerspectrum,asdescribedinSectionIVA.
+Assuming that the box size and mass resolution corrections
+
+--- Page 11 ---
+11
+2.0
+ 1.5
+ 1.0
+10 2
+10 1
+kP(k)/
+z = 4.2, 2 = 8.26, Default
+Boera+19
+2.0
+ 1.5
+ 1.0
+10 2
+10 1
+kP(k)/
+z = 4.6.0, 2 = 21.4
+2.0
+ 1.5
+ 1.0
+10 2
+10 1
+kP(k)/
+z = 5.0, 2 = 15.9
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+0.5
+1.0
+1.5Residual
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+0.5
+1.0
+1.5Residual
+2.0
+ 1.5
+ 1.0
+log10 (k [km 1 s])
+0.5
+1.0
+1.5Residual
+FIG. 9: Best-fit plot with individual𝜒2 for each redshift bin for our default analysis (Gaussian𝑇0 priors +𝑅𝑠cdm) with four redshift dependent
+parameters (𝑇0,𝛾,𝜏eff,𝑢0) and fixed dark matter parameters,𝑚WDM−1 and 𝑓WDM. The combined weighted𝜒2 is 45.6/34.
+2 3 4 5 6
+Redshift z
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+1.6
+T0 / 104 (K)
+Puchwein+19
+Villasenor+22
+Irsic+2024
+Gaikwad+20
+Gaikwad+20b
+kmax <  0.1 s/km
+Anoise
+u0 T0 + Rscdm (u0)
+Fiducial
+Patchy + CMB + Rscdm (u0)
+Rogers+21
+Boera+19
+Patchy + CMB + Rscdm (u0)
+Rogers+21
+Boera+19
+FIG. 10: Marginalized mean of the posteriors and corresponding
+error bars for𝑇0 (𝑧) with other thermal evolution constraints. We
+show in different tones of blue the inferred temperature and mean
+density for a variety of analyses. The gray and pink bands show
+independent measurements from [112] and [113]. The black line
+show the predicted evolution from our simulated models ([115]).
+Inferredvaluesfromotherworks([69],[62],[105]and[46])arealso
+shown. We have shifted the redshift axis for each new measurement
+for visual clarity.
+are independent of the parameters in our flux models, we ap-
+ply these correctionsa posteriori, that is, after obtaining the
+predicted flux power spectrum from the emulator. This cor-
+responds to the default analysis resulting in the fit shown in
+Figure 9.
+However, this simplified method does not account for the
+fact that the mass resolution correction depends on thermal
+parameters. The missing small-scale perturbations in the flux
+power spectrum are influenced by the initial perturbations in
+thisregime. Theseperturbationscontributetotheformationof
+small-scalestructures,whicharesmoothedoutinmodelswith
+morecumulativeinjectedheat(higher 𝑢0). Asaresult,models
+wherethehydrodynamicresponsenaturallysuppressessmall-
+scale perturbations tend to be more numerically converged,
+leading to a smaller resolution correction. This effect was ex-
+ploredin[46],whichallowedthisworktoimposeeventighter
+constraints on dark matter free-streaming. We re-compute the
+models and find that scenarios with earlier reionization re-
+quire a correction that is about 5% smaller than that required
+for colder models. This refined resolution correction is de-
+noted as𝑅𝑠cdm (𝑢0). In practice, we also apply this correction
+a posteriori, interpolating in𝑢0 𝑧𝑖 on the fly during sampling.
+We find that including the thermal dependence in the mass
+resolution tightens the posteriors in the thermal parameter
+space while broadening the contours in the dark matter pa-
+rameter space, ultimately leading to weaker constraints on
+𝑚WDM and 𝑓WDM. ThisconclusionholdsforthedefaultGaus-
+sian𝑇0 priors, and when including𝑢0−𝑇0 priors on top of
+the default prior, with the latter exhibiting only a slightly re-
+duced constraining power in the high𝑚WDM−1 regime due to
+the posteriors in𝑢0−𝑇0 being confined to the envelope of the
+simulations. For a pure WDM cosmology, we obtain a lower
+boundof 𝑚WDM >4.66keVfor 𝑓WDM=1whenaccountingfor
+the thermal dependence of mass resolution, similar to bounds
+found by [46]. The constraints on𝑓WDM and fixed mass bins
+become weaker by 5-10% (Figure 8).
+E. Effect of patchy correction
+We account for the effect of patchy reionization on the de-
+fault analysis by repeating the inference using a new set of
+
+--- Page 12 ---
+12
+emulatorstrainedonmodelsthatincludethepatchycorrection
+described in Section IIID. With default thermal priors, we
+find that thedata tends to prefercold models with verylow𝑢0
+values. This was observed in [46], and occurs due to patchy-
+corrected models showing less structure at the small scales as
+a result of the peculiar velocity field structure [117]. These
+models therefore match a very late end of reionisation, even-
+tually becoming unphysical. If we impose a𝑢0−𝑇0 prior, the
+posterior still shifts to lower values but within the envelope of
+simulations,leavingmoreroomfordarkmatterfree-streaming.
+The bounds on WDM now become𝑚WDM > 5.86 keV, with
+little change of≤ 5% on mixed models.
+Adding the thermal-dependent resolution correction shifts
+theposteriorintheotherdirection,sinceresolutioncorrection
+increases flux power at small scales, increasing with decreas-
+ing heat injected during reionization. As a result, slightly
+warmer IGM temperatures are allowed with𝑢0, specially at
+high 𝑧, pushing the lower bound. As a result the constraints
+slightly weaken to𝑚WDM > 5.11 keV with the𝑢0−𝑇0 prior,
+and to a lesser extent (𝑚WDM > 5.39 keV) with the𝜏CMB
+prior. We show this behavior in orange for the analysis with
+thermal priors using𝜏CMB, patchy and a thermal-dependent
+resolution correction in Figure 7. We further note that the𝜒2
+does not change noticeably compared to the default analysis
+when both patchy and𝑅𝑠cdm are modeled (see Table II). The
+CWDM constraints, as shown in Figure 8, are stronger than
+the other analyses and comparable to the default one. From
+the 2𝜎 contour in Figure 6, the patchy +𝜏CMB + 𝑅𝑠cdm (𝑢0)
+orangemodelismoreinflatedthanthefiducialmodeltowards
+high𝑚WDM−1,yieldingslightlyweakerconstraintsatthefixed
+mass bins shown in Figure 8. In general, the difference with
+respect to other analyses is more noticeable in the intermedi-
+ate mass bin,𝑚WDM = 3 keV, corresponding to the region in
+Figure6wherethedegeneracybetween 𝑓WDM and𝑚WDM−1 is
+stronger. While these models incorporate physical effects ap-
+pliedaposteriori,theresultingconstraintsremainunchanged,
+as the opposing effects of patchy reionization and resolution
+correctioncounterbalanceeachother. Tothebestofourknowl-
+edge, this approach represents the most comprehensive level
+of modeling. Investigating a cosmology-dependent resolution
+correction, alongside other effects including peculiar velocity
+[46], will improve our understanding of the recovered bounds
+for each mass bin in the context of CWDM models. This is
+particularly crucial in the regime𝑘 >0.1 km−1s, where the
+sensitivity to dark matter free-streaming is the highest.
+F. Comparison to previous CWDM analyses
+The main results of this work are shown in Figure 8. A
+thermal relic as light as𝑚WDM = 1 keV is allowed by the
+data if it contributes< 16% at 2𝜎 to the total dark matter
+energy density, with increasing 𝑓WDM for increasing mass.
+ThepureWDMlimitinthedefaultanalysisresultsina 𝑚WDM
+>5.47keV(2𝜎),whichisslightlyweakerthanthemassbound
+found by [46]. However, within our set of analyses we also
+recover the𝑚WDM > 5.86 keV (2𝜎) constraints (Table II).
+These lower bounds are highly sensitive to the modeling of
+4.0 4.5 5.0 5.5 6.0 6.5
+Redshift z
+5
+10
+15
+u0  [eV m 1
+p ]
+Puchwein+19
+Boera+19
+Rogers+21
+Villasenor+22
+Irsic+24
+kmax <  0.1 s/km
+Anoise
+u0 T0 + Rscdm (u0)
+Fiducial
+Patchy + CMB + Rscdm (u0)
+FIG.11: Marginalizedmeanoftheposteriorsandcorrespondingerror
+barsfor 𝑢0(𝑧)withotherinferredconstraintsatthesameredshiftbins
+from [69], [62], [105] and [46]).
+𝑃F (𝑘),includingthecorrectionsdescribedinSubsectionIIIC
+and IIID. Moreover, incorporating𝑓WDM into the− →𝜃 model
+parametersrequiressamplingahigher-dimensionalparameter
+space during MCMC compared to [46]. This introduces non-
+trivialdegeneracies,particularlytheoneillustratedinFigure6,
+which requires a substantial number of samples to achieve
+convergence. Notably, the quoted limits have been derived by
+filteringtheoriginalsamplesfromCWDMruns,incontrastto
+fixed mass bin analyses conducted for axions [118, 119]. A
+similar degeneracy between the fraction and the axion mass
+hasbeenobservedalsoinpreviousworkbasedonsimulations
+of mixed dark matter [120], with updated constraints by [62]
+using the same Lyman-𝛼 data from [69] as in this work. The
+degeneracyinthecontextofCWDMmodels,however,appears
+in the keV mass range.
+ThemaintwoanalysescarriedoutinthecontextofLyman- 𝛼
+CWDMconstraintsare[52,83]. Theformerfoundconstraints
+onthermalrelicsthataresignificantlyweaker. Theconstraints
+found in the main analysis of the former are weaker, allowing
+the smallest thermal-relic mass probed,𝑚WDM = 1.1 keV, for
+𝑓WDM < 40%, with the pure WDM limit𝑚WDM≥ 1.7 keV
+(95% C.L.). These constraints are not competitive with the
+resultspresentedinFigure6mainlyduetothelowerresolution
+of the data used (SDSS and the VISTA Hemisphere Survey
+with𝑘max = 0.03 km−1s).
+[83] analysed BOSS DR9 data combined with XQ-100,
+HIRES, and MIKE, finding𝑚WDM > 0.7 keV for𝑓WDM <
+0.10. Their𝑚WDM bound falls outside our simulation grid in
+the (𝑓WDM – 𝑚−1
+WDM) plane. Their power-law fit to the pos-
+terior in this plane, given by𝑓WDM = 𝐴×( 1keV/𝑚WDM)𝑏,
+yielded the same𝐴 value but smaller𝑏 compared to the fit
+described in Section V. This yields an inflated posterior for
+𝑓WDM→ 1 (larger𝛼), leading to weaker WDM constraints,
+whichdeclinesmoresteeply,with 𝑓WDM≤ 0.17at𝑚WDM= 1
+keV, almost identical to our constraints. Compared to [83],
+the work presented in this paper uses improved simulations
+
+--- Page 13 ---
+13
+TABLE II: Best-fit constraints on thermal and dark matter model parameters for different analysis at𝑧 = 4.6. Default corresponds to using
+Gaussian𝑇0 priors and mass resolution correction𝑅𝑠cdm except for the thermal resolution dependent analysis where𝑅𝑠cdm (𝑢0) is applied
+instead. The remaining analysis are additive on top of the default.
+Analysis 𝑇0 𝑢0 𝑚WDM (2𝜎) 𝐴noise 𝜒2/dof
+[ 104 K] [eV mp−1] [keV] ( 𝑓WDM=1)
+Default 0.714+0.113
+−0.099 6.461+2.10
+−0.58 > 5.47 - 45.6/34
+𝜏CMB 0.749+0.066
+−0.137 6.362+2.149
+−0.331 > 5.52 - 47.6/34
+𝑢0−𝑇0 0.749+0.101
+−0.033 6.349+0.612
+−0.644 > 5.42 - 47.1/34
+𝑘max= 0.1 s/km 1.18+0.22
+−0.68 5.03+4.93
+−0.9 > 3.58 - 11.6/20
+𝐴noise 1.30+0.1
+−0.8 3.87+2.93
+−0.221 > 3.82 1.30+0.1
+−0.09 15.3/31
+𝜏CMB +𝑅𝑠cdm(𝑢0) 0.862+0.021
+−0.201 < 5.92 > 5.22 - 43/34
+𝑢0−𝑇0 +𝑅𝑠cdm(𝑢0) 0.893+0.107
+−0.275 < 5.75 > 4.66 - 39.2/34
+patchy +𝑢0−𝑇0 0.754+0.068
+−0.07 < 6.28 > 5.86 - 55.7/34
+patchy +𝑢0−𝑇0 +𝑅𝑠cdm (𝑢0) 0.788+0.043
+−0.089 < 4.70 > 5.11 - 46/34
+patchy +𝜏CMB +𝑅𝑠cdm (𝑢0) 0.885+0.055
+−0.1345 3.69+1.01
+−0.94 > 5.39 - 45.2/34
+that vary thermal history for all the CWDM models consid-
+ered. The effects of thermal history are marginalized over a
+more physical and conservative prior range than in [83]. This
+would weaken the resulting constraint on CWDM models, a
+point discussed in previous works [58, 83]. However, the im-
+proved resolution (higher𝑘max) and treatment of systematics
+(e.g. noise, metal contamination) in [69] counterbalances this
+effect, yielding slightly stronger constraints for these mixed
+models.
+The results by [83] show that, as𝑚WDM−1 increases, the
+1𝜎 contour in the (𝑓WDM –𝑚−1
+WDM) plane shrinks when using
+higher resolution data. This would in principle mean that
+there exists a light thermal relic for which the contour closes,
+meaningthatLyman- 𝛼forestdatawouldbeabletocompletely
+exclude CWDM models beyond a𝑚WDM value.
+In our analysis, however, we use data that reaches to higher
+𝑘max than in [83]. While the posterior in Figure 6 shrinks due
+to the small-scale information available from [69] data, we
+expect the high𝑚−1
+WDM regime to achieve a constant plateau.
+This arises from the imprint that these light thermal relics
+(𝑚WDM < 1 keV) leave on the matter power spectrum, as
+discussed in Section III. For large𝑚−1
+WDM, suppression in the
+matter power spectrum shifts to lower𝑘-modes. While the
+Lyman-𝛼forestdataissensitivetothemildlynon-linearscales,
+and therefore not to the free-streaming scale from these light
+thermalrelics,theplateaureachedbythesemixeddarkmatter
+models shifts the overall amplitude of𝑃F(𝑘). This effect is
+degenerate with other astrophysical effects, mainly with the
+mean IGM transmission,𝜏eff. The difference between these
+flux models is therefore smaller than the error on the data,
+shown in Figure 3, meaning that the data will not be sensitive
+tothem. Consequently,evenifadditionalsimulationswererun
+for𝑚WDM>1keV,weexpectthedatatomaintaintheconstraint
+on the fraction𝑓WDM at the same level. This is likely true for
+the models where the half-mode scale is smaller than0.05
+Mpc−1, at which point marginalising over other cosmological
+parameters (e.g.𝐴𝑠,𝑛 𝑠) would become important.
+VI. CONCLUSIONS
+In this work, we present updated constraints on CWDM
+modelsusingnew1Dfluxpowerspectrummeasurementsfrom
+the high redshift Lyman-𝛼 forest provided by [69]. The sta-
+tistical power of this data set is limited by cosmic variance
+as a result of the small number of QSO sightlines available.
+However, the number of sightlines has more than doubled
+compared to previous analyses using the same spectrographs,
+and the improvement in the systematic modeling provides ac-
+cess to scales a factor of≈ 2 smaller than those probed in
+previous WDM and CWDM constraints. This enables direct
+measurementofthefluxpowerspectrumatwavenumbers 𝑘≥
+10 ℎ Mpc−1, precisely where free-streaming effects from the
+WDMcomponentareexpectedtosuppressstructureformation
+in these hybrid models.
+Our analysis indicates that a thermal relic with𝑚WDM = 1
+keVisallowedifitscontributiontothetotaldarkmatterdensity
+does not exceed 16% (2𝜎). For higher mass bins (𝑚WDM =
+2, 3, 4keV),increasinglylargerabundancesarepermitted,with
+𝑓WDM = 0.35, 0.50, and 0.67 at 2𝜎. These findings refine
+previous constraints from [52], which were based on lower-
+resolution SDSS and VHS data, as well as a limited number
+ofsimulationsforlow 𝑚WDM values. Additionally,ourresults
+align closely with those of [83] on CWDM in the low-𝑚WDM
+regime explored by our simulations, with minor differences
+arisingfromvariationsinthermalhistorytreatment,simulation
+runs at lower𝑚WDM grid points, and improved data from
+HIRES.
+On the pure WDM side, we also obtain stronger constraints
+than previous studies ([52, 70, 116], due to the inclusion of
+higher 𝑘-bin information. These constraints remain consis-
+tent with those reported by [46], although fiducial analysis
+
+--- Page 14 ---
+14
+results in slightly weaker lower bounds. This is primarily
+attributed to the extensive sampling required to explore the
+high-dimensional parameter space, particularly the degener-
+acy between𝑓WDM and𝑚−1
+WDM. However, in certain analyses,
+we derive even more stringent constraints. For instance, the
+patchy+ 𝑢0−𝑇0 modelyields 𝑚WDM> 5.86keVcomparedto
+𝑚WDM > 5.10 keV in [46]. This suggests that incorporating
+additional physical effects may alleviate the strong degenera-
+cies among sampled parameters. Specifically, patchy models
+consistentlyfavorscenarioswithreducedheatinjection,which
+may, in turn, enhance the efficiency of likelihood sampling.
+Beyond Lyman-𝛼 forest analyses, CWDM has also been
+constrained by combining BOSS data with Planck and esti-
+mates of the number of satellite galaxies [85]. Our constraint
+atthelowestmassbinprobedinthisanalysis, 𝑚WDM=1keV,is
+10%stronger. Morerecently,[121]demonstratedthatthecom-
+bination of CMB data and the predicted 21 cm signal power
+spectrumyieldsveryweakconstraintsinthe( 𝑓WDM−𝑚WDM−1)
+plane, with a lower bound of𝑚WDM > 1.8 keV (𝑓WDM = 1),
+in contrast to the significantly stronger constraints from the
+Lyman-𝛼 forest given in this work. In particular, the main
+findings of this work can be summarized as:
+• We provide new updated constraints on CWDM cos-
+mology, where a thermal relic with𝑚WDM = 1 keV is
+allowedfor 𝑓WDM<0.16(2𝜎). Highermassbinsarevi-
+ablewithincreasingabundances,leadingtoastrongde-
+generacy between𝑓WDM and𝑚WDM−1 parameters. The
+2𝜎 contour (𝑓WDM−𝑚WDM−1) plane is well-described
+by 𝑓WDM= 0.14(1keV/𝑚WDM)−1.1.
+• We update previous Bayesian-inference framework for
+1D flux power spectrum Lyman-𝛼 forest analysis by in-
+tegratinganeuralnetworkemulator. Modelensembling
+via𝑘-foldcross-validationreducestheemulatorerrorto
+< 0.5% at 2𝜎 across all𝑘-bins.
+• We recover a thermal state and evolution of the
+IGM consistent with previous Lyman-𝛼 forest analyses
+([62, 69, 70]), and external measurements ([112, 113],
+with very mild variations in𝑇0 and𝑢0 due to the strong
+degeneracy between these two parameters. The mean
+IGMtransmissionisalsoinagreementwithindependent
+measurements from e.g. [101, 103, 122].
+• Limitingtheamountofinformationinthehigh 𝑘-modes
+results in weaker WDM constraints of𝑚WDM < 3.6
+keV, consistent with previous work by [70]. We further
+recoversimilarfindingsby[46]onthattheinstrumental
+noise on the data might be underestimated by≈ 30%.
+• Modeling of patchy reionization and thermally depen-
+dent resolution correction can vary the 2𝜎 constraints
+on 𝑓WDM by≈5%inmostcases. Furtherworkoninves-
+tigating the effect of peculiar velocity on small scales,
+as pointed out by [46], as well as on a cosmology de-
+pendent resolution correction, will help mitigate these
+differences.
+Our results build upon the latest constraints on pure WDM
+from [46], to further highlight the Lyman-𝛼 forest as a unique
+andsensitiveprobeofmatterclusteringonsub-galacticscales.
+Extending this analysis to CWDM cosmologies, we find that
+theupdatedconstraintshavebroaderimplicationsforanydark
+mattermodelthatsuppressestheamountofclusteringonsmall
+scales. Our findings suggest that the scale of suppression can
+be moved to larger scales, but only if the level of the sup-
+pression on smaller scales is lower. A logical next step is to
+constructageneralframeworkthatquantifiestheallowedsup-
+pression amplitude and its scale dependence, enabling com-
+parison across a wide class of dark matter models exhibiting
+small-scale power suppression ([62, 123, 124]). A parameter-
+isation of this kind was introduced by [125] for a large set of
+both thermal and non-thermal relics. We leave the develop-
+ment of such a generalised framework for future work.
+The main interest in constraining this broad class of dark
+matter models lies in their potential to resolve the𝑆8 tension
+when the Lyman-𝛼 forest is combined with other large-scale
+structure probes (e.g. [126]). For instance, the tension has
+been reported to be alleviated when incorporating CMB data
+in the presence of axion DM ([34]) or with weak lensing data
+([127]). A detailed investigation of the implications for𝑆8
+within the particular CWDM models allowed in this work is
+also left for future study.
+Acknowledgments
+TheauthorswouldliketothankDavidChemaly,TomHehir,
+Harry Bevins and Will Handley for helpful conversations.
+VI acknowledges support by the Kavli Foundation. MV
+is supported by the INFN PD51 INDARK grant. Support
+by ERC Advanced Grant 320596 ‘The Emergence of Struc-
+ture During the Epoch of Reionization’ is gratefully acknowl-
+edged. MGHhasbeensupportedbySTFCconsolidatedgrant
+ST/N000927/1andST/S000623/1. JSBissupportedbySTFC
+consolidated grant ST/X000982/1. For the purpose of open
+access,theauthorhasappliedaCreativeCommonsAttribution
+(CC BY) licence to any Author Accepted Manuscript version
+arising from this submission.
+The simulations used in this work were performed using
+the Joliot Curie supercomputer at the Trés Grand Centre de
+Calcul (TGCC) and the Cambridge Service for Data Driven
+Discovery (CSD3), part of which is operated by the Univer-
+sityofCambridgeResearchComputingonbehalfoftheSTFC
+DiRAC HPC Facility (https://dirac.ac.uk/). We acknowledge
+the Partnership for Advanced Computing in Europe (PRACE)
+for awarding us time on Joliot Curie in the 16th call. The
+DiRACcomponentofCSD3wasfundedbyBEIScapitalfund-
+ingviaSTFCcapitalgrantsST/P002307/1andST/R002452/1
+and STFC operations grant ST/R00689X/1. This work also
+used the DiRAC@Durham facility managed by the Insti-
+tute for Computational Cosmology on behalf of the STFC
+DiRAC HPC Facility. The equipment was funded by BEIS
+capital funding via STFC capital grants ST/P002293/1 and
+ST/R002371/1,DurhamUniversityandSTFCoperationsgrant
+ST/R000832/1. DiRACispartoftheNationale-Infrastructure.
+
+--- Page 15 ---
+15
+[1] Planck Collaboration, N. Aghanim, Y. Akrami, M. Ashdown,
+J. Aumont, C. Baccigalupi, M. Ballardini, A. J. Banday, R. B.
+Barreiro, N. Bartolo, et al., A&A652, C4 (2021).
+[2] A.Klypin,A.V.Kravtsov,O.Valenzuela,andF.Prada,Astro-
+phys. J.522, 82 (1999), astro-ph/9901240.
+[3] B. Moore, S. Ghigna, F. Governato, G. Lake, T. Quinn,
+J. Stadel, and P. Tozzi, Astrophysical Journal Letters524, L19
+(1999), astro-ph/9907411.
+[4] J. D. Simon, ARA&A57, 375 (2019), 1901.05465.
+[5] C. Engler, A. Pillepich, A. Pasquali, D. Nelson, V. Rodriguez-
+Gomez,K.T.E.Chua,E.K.Grebel,V.Springel,F.Marinacci,
+R.Weinberger,etal.,MNRAS 507,4211(2021),2101.12215.
+[6] A. S. Font, I. G. McCarthy, and V. Belokurov, MNRAS505,
+783 (2021), 2011.12974.
+[7] W.J.G.deBlok,AdvancesinAstronomy 2010,789293(2010),
+0910.3538.
+[8] I.M.E.Santos-Santos,J.F.Navarro,A.Robertson,A.Benítez-
+Llambay,K.A.Oman,M.R.Lovell,C.S.Frenk,A.D.Ludlow,
+A. Fattahi, and A. Ritz, MNRAS495, 58 (2020), 1911.09116.
+[9] M.Boylan-Kolchin,J.S.Bullock,andM.Kaplinghat,MNRAS
+415, L40 (2011), 1103.0007.
+[10] M.Boylan-Kolchin,J.S.Bullock,andM.Kaplinghat,MNRAS
+422, 1203 (2012), 1111.2048.
+[11] A.R.Wetzel,P.F.Hopkins,J.-h.Kim,C.-A.Faucher-Giguère,
+D. Kereš, and E. Quataert, Astrophysical Journal Letters827,
+L23 (2016), 1602.05957.
+[12] J. Samuel, A. Wetzel, E. Tollerud, S. Garrison-Kimmel,
+S. Loebman, K. El-Badry, P. F. Hopkins, M. Boylan-Kolchin,
+C.-A. Faucher-Giguère, J. S. Bullock, et al., MNRAS491,
+1471 (2020), 1904.11508.
+[13] L. V. Sales, A. Wetzel, and A. Fattahi, Nature Astronomy6,
+897 (2022), 2206.05295.
+[14] M. White, R. Zhou, J. DeRose, S. Ferraro, S.-F. Chen,
+N. Kokron, S. Bailey, D. Brooks, J. García-Bellido, J. Guy,
+et al., J. Cosmology Astropart. Phys. 2022, 007 (2022),
+2111.09898.
+[15] S. Ferraro, N. Sailer, A. Slosar, and M. White, arXiv e-prints
+arXiv:2203.07506 (2022), 2203.07506.
+[16] A. Amon, N. C. Robertson, H. Miyatake, C. Heymans,
+M. White, J. DeRose, S. Yuan, R. H. Wechsler, T. N. Varga,
+S. Bocquet, et al., MNRAS518, 477 (2023), 2202.07440.
+[17] M. M. Ivanov, O. H. E. Philcox, G. Cabass, T. Nishimichi,
+M.Simonović,andM.Zaldarriaga,Phys.Rev.D 107,083515
+(2023), 2302.04414.
+[18] J. U. Lange, A. P. Hearin, A. Leauthaud, F. C. van den Bosch,
+E. Xhakaj, H. Guo, R. H. Wechsler, and J. DeRose, MNRAS
+520, 5373 (2023), 2301.08692.
+[19] G.S.Farren,A.Krolewski,N.MacCrann,S.Ferraro,I.Abril-
+Cabezas, R. An, Z. Atkins, N. Battaglia, J. R. Bond, E. Cal-
+abrese, et al., Astrophys. J.966, 157 (2024), 2309.05659.
+[20] S.-F. Chen, M. M. Ivanov, O. H. E. Philcox, and L. Wenzl,
+Phys. Rev. Lett.133, 231001 (2024), 2406.13388.
+[21] S. Mashchenko, H. M. P. Couchman, and J. Wadsley, Nature
+(London) 442, 539 (2006), astro-ph/0605672.
+[22] A. M. Brooks, M. Kuhlen, A. Zolotov, and D. Hooper, Astro-
+phys. J.765, 22 (2013), 1209.5394.
+[23] A. Fattahi, J. F. Navarro, T. Sawala, C. S. Frenk, L. V.
+Sales, K. Oman, M. Schaller, and J. Wang, arXiv e-prints
+arXiv:1607.06479 (2016), 1607.06479.
+[24] A. Pontzen and F. Governato, Nature (London) 506, 171
+(2014), 1402.1764.
+[25] M.P.vanDaalen,J.Schaye,C.M.Booth,andC.DallaVecchia,
+MNRAS415, 3649 (2011), 1104.1174.
+[26] V.Springel,R.Pakmor,A.Pillepich,R.Weinberger,D.Nelson,
+L. Hernquist, M. Vogelsberger, S. Genel, P. Torrey, F. Mari-
+nacci, et al., MNRAS475, 676 (2018), 1707.03397.
+[27] N.E.Chisari,A.J.Mead,S.Joudaki,P.G.Ferreira,A.Schnei-
+der,J.Mohr,T.Tröster,D.Alonso,I.G.McCarthy,S.Martin-
+Alvarez, et al., The Open Journal of Astrophysics2, 4 (2019),
+1905.06082.
+[28] K.-Y.SuandP.Chen,J.CosmologyAstropart.Phys. 2011,016
+(2011), 1008.3717.
+[29] L.Wang,V.Gonzalez-Perez,L.Xie,A.P.Cooper,C.S.Frenk,
+L. Gao, W. A. Hellwing, J. Helly, M. R. Lovell, and L. Jiang,
+MNRAS468, 4579 (2017), 1612.04540.
+[30] M. R. Lovell, V. Gonzalez-Perez, S. Bose, A. Boyarsky,
+S. Cole, C. S. Frenk, and O. Ruchayskiy, MNRAS468, 2836
+(2017), 1611.00005.
+[31] J. Liu, S. Bird, J. M. Zorrilla Matilla, J. C. Hill, Z. Haiman,
+M.S.Madhavacheril,A.Petri,andD.N.Spergel,J.Cosmology
+Astropart. Phys.2018, 049 (2018), 1711.10524.
+[32] E. O. Nadler, D. Yang, and H.-B. Yu, Astrophysical Journal
+Letters958, L39 (2023), 2306.01830.
+[33] A. Laguë, B. Schwabe, R. Hložek, D. J. E. Marsh, and K. K.
+Rogers, Phys. Rev. D109, 043507 (2024), 2310.20000.
+[34] K. K. Rogers and V. Poulin, Physical Review Research7,
+L012018 (2025), 2311.16377.
+[35] M.P.vanDaalen,J.Schaye,C.M.Booth,andC.DallaVecchia,
+MNRAS415, 3649 (2011), 1104.1174.
+[36] T.NaabandJ.P.Ostriker,ARA&A 55,59(2017),1612.06891.
+[37] M. Vogelsberger, F. Marinacci, P. Torrey, and E. Puchwein,
+Nature Reviews Physics2, 42 (2020), 1909.07976.
+[38] I.Medlock,C.Neufeld,D.Nagai,D.Anglés-Alcázar,S.Genel,
+B. D. Oppenheimer, X. Sims, P. Singh, and F. Villaescusa-
+Navarro, Astrophys. J.980, 61 (2025), 2410.16361.
+[39] L.Bigwood, M.A.Bourne, V.Irsic, A.Amon, andD.Sĳacki,
+arXiv e-prints arXiv:2501.16983 (2025), 2501.16983.
+[40] D. Lyapustin, arXiv e-prints arXiv:1112.1167 (2011),
+1112.1167.
+[41] A. Boyarsky, M. Drewes, T. Lasserre, S. Mertens, and
+O. Ruchayskiy, Progress in Particle and Nuclear Physics104,
+1 (2019), 1807.07938.
+[42] S.DodelsonandL.M.Widrow,Phys.Rev.Lett. 72,17(1994),
+hep-ph/9303287.
+[43] G. R. Blumenthal, H. Pagels, and J. R. Primack, Nature (Lon-
+don) 299, 37 (1982).
+[44] P. J. E. Peebles, Astrophysical Journal Letters263, L1 (1982).
+[45] J. R. Bond, A. S. Szalay, and M. S. Turner, Phys. Rev. Lett.
+48, 1636 (1982).
+[46] V. Iršič, M. Viel, M. G. Haehnelt, J. S. Bolton, M. Molaro,
+E. Puchwein, E. Boera, G. D. Becker, P. Gaikwad, L. C. Keat-
+ing, et al., Phys. Rev. D109, 043511 (2024), 2309.04533.
+[47] M. Davis, F. J. Summers, and D. Schlegel, Nature (London)
+359, 393 (1992).
+[48] A. N. Taylor and M. Rowan-Robinson, Nature (London)359,
+396 (1992).
+[49] A.vanDalenandR.K.Schaefer,Astrophys.J. 398,33(1992).
+[50] A. Klypin, J. Holtzman, J. Primack, and E. Regos, Astrophys.
+J. 416, 1 (1993), astro-ph/9305011.
+[51] X. Shi and G. M. Fuller, Phys. Rev. Lett.82, 2832 (1999),
+astro-ph/9810076.
+[52] A. Boyarsky, J. Lesgourgues, O. Ruchayskiy, and M. Viel, J.
+
+--- Page 16 ---
+16
+Cosmology Astropart. Phys.2009, 012 (2009), 0812.0010.
+[53] M. Shaposhnikov and I. Tkachev, Physics Letters B639, 414
+(2006), hep-ph/0604236.
+[54] R. A. C. Croft, D. H. Weinberg, M. Bolte, S. Burles, L. Hern-
+quist, N. Katz, D. Kirkman, and D. Tytler, Astrophys. J.581,
+20 (2002), astro-ph/0012324.
+[55] P. McDonald, U. Seljak, R. Cen, D. Shih, D. H. Weinberg,
+S. Burles, D. P. Schneider, D. J. Schlegel, N. A. Bahcall, J. W.
+Briggs,etal.,Astrophys.J. 635,761(2005),astro-ph/0407377.
+[56] A. Lidz, C.-A. Faucher-Giguère, A. Dall’Aglio, M. McQuinn,
+C.Fechner,M.Zaldarriaga,L.Hernquist,andS.Dutta,Astro-
+phys. J.718, 199 (2010), 0909.5210.
+[57] M.Viel,G.D.Becker,J.S.Bolton,andM.G.Haehnelt,Phys.
+Rev. D88, 043502 (2013), 1306.2314.
+[58] V. Iršič, M. Viel, M. G. Haehnelt, J. S. Bolton, S. Cris-
+tiani, G. D. Becker, V. D’Odorico, G. Cupani, T.-S. Kim,
+T. A. M. Berg, et al., arXiv e-prints arXiv:1702.01764 (2017),
+1702.01764.
+[59] V. Iršič, M. Viel, M. G. Haehnelt, J. S. Bolton, and G. D.
+Becker, Phys. Rev. Lett.119, 031302 (2017), 1703.04683.
+[60] N. Palanque-Delabrouille, C. Yèche, N. Schöneberg, J. Les-
+gourgues, M. Walther, S. Chabanier, and E. Armengaud, J.
+Cosmology Astropart. Phys.2020, 038 (2020), 1911.09073.
+[61] A. Garzilli, A. Magalich, O. Ruchayskiy, and A. Boyarsky,
+MNRAS502, 2356 (2021).
+[62] K. K. Rogers and H. V. Peiris, Phys. Rev. Lett.126, 071302
+(2021), 2007.12705.
+[63] A.Slosar,A.Font-Ribera,M.M.Pieri,J.Rich,J.-M.LeGoff,
+É. Aubourg, J. Brinkmann, N. Busca, B. Carithers, R. Char-
+lassier,etal.,J.CosmologyAstropart.Phys. 2011,001(2011),
+1104.5244.
+[64] A. Slosar, V. Iršič, D. Kirkby, S. Bailey, N. G. Busca,
+T. Delubac, J. Rich, É. Aubourg, J. E. Bautista, V. Bhard-
+waj, et al., J. Cosmology Astropart. Phys.2013, 026 (2013),
+1301.3459.
+[65] N. G. Busca, T. Delubac, J. Rich, S. Bailey, A. Font-Ribera,
+D. Kirkby, J. M. Le Goff, M. M. Pieri, A. Slosar, É. Aubourg,
+et al., A&A552, A96 (2013), 1211.2616.
+[66] H.duMasdesBourboux,J.Rich,A.Font-Ribera,V.deSainte
+Agathe,J.Farr,T.Etourneau,J.-M.LeGoff,A.Cuceu,C.Bal-
+land, J. E. Bautista, et al., Astrophys. J.901, 153 (2020),
+2007.08995.
+[67] A.G.Adame,J.Aguilar,S.Ahlen,S.Alam,D.M.Alexander,
+M. Alvarez, O. Alves, A. Anand, U. Andrade, E. Armen-
+gaud, et al., J. Cosmology Astropart. Phys.2025, 124 (2025),
+2404.03001.
+[68] DESI Collaboration, M. Abdul-Karim, J. Aguilar, S. Ahlen,
+C. Allende Prieto, O. Alves, A. Anand, U. Andrade, E. Ar-
+mengaud, A. Aviles, et al., arXiv e-prints arXiv:2503.14739
+(2025), 2503.14739.
+[69] E. Boera, G. D. Becker, J. S. Bolton, and F. Nasir, Astrophys.
+J. 872, 101 (2019), 1809.06980.
+[70] B.Villasenor,B.Robertson,P.Madau,andE.Schneider,Phys.
+Rev. D108, 023502 (2023), 2209.14220.
+[71] M. Viel, J. S. Bolton, and M. G. Haehnelt, MNRAS399, L39
+(2009), 0907.2927.
+[72] M.Viel,G.D.Becker,J.S.Bolton,andM.G.Haehnelt,Phys.
+Rev. D88, 043502 (2013), 1306.2314.
+[73] C. Yèche, N. Palanque-Delabrouille, J. Baur, and H. du Mas
+des Bourboux, J. Cosmology Astropart. Phys. 2017, 047
+(2017), 1702.03314.
+[74] M. Molaro, V. Iršič, J. S. Bolton, L. C. Keating, E. Puch-
+wein, P. Gaikwad, M. G. Haehnelt, G. Kulkarni, and M. Viel,
+MNRAS509, 6119 (2022), 2109.06897.
+[75] S. Bird, K. K. Rogers, H. V. Peiris, L. Verde, A. Font-Ribera,
+and A. Pontzen, J. Cosmology Astropart. Phys.2019, 050
+(2019), 1812.04654.
+[76] M.Walther,J.Oñorbe,J.F.Hennawi,andZ.Lukić,Astrophys.
+J. 872, 13 (2019), 1808.04367.
+[77] K. K. Rogers, H. V. Peiris, A. Pontzen, S. Bird, L. Verde,
+and A. Font-Ribera, J. Cosmology Astropart. Phys.2019, 031
+(2019), 1812.04631.
+[78] M. Walther, E. Armengaud, C. Ravoux, N. Palanque-
+Delabrouille,C.Yèche,andZ.Lukić,J.CosmologyAstropart.
+Phys.2021, 059 (2021), 2012.04008.
+[79] M. A. Fernandez, M.-F. Ho, and S. Bird, MNRAS517, 3200
+(2022), 2207.06445.
+[80] S. Bird, M. Fernandez, M.-F. Ho, M. Qezlou, R. Monadi,
+Y. Ni, N. Chen, R. Croft, and T. Di Matteo, arXiv e-prints
+arXiv:2306.05471 (2023), 2306.05471.
+[81] L. Cabayol-Garcia, J. Chaves-Montero, A. Font-Ribera, and
+C. Pedersen, MNRAS525, 3499 (2023), 2305.19064.
+[82] M. Molaro, V. Iršič, J. S. Bolton, M. Lieu, L. C. Keating,
+E. Puchwein, M. G. Haehnelt, and M. Viel, MNRAS521,
+1489 (2023), 2303.05167.
+[83] J. Baur, N. Palanque-Delabrouille, C. Yèche, A. Boyarsky,
+O. Ruchayskiy, É. Armengaud, and J. Lesgourgues, J. Cos-
+mology Astropart. Phys.2017, 013 (2017), 1706.03118.
+[84] A.Palazzo,D.Cumberbatch,A.Slosar,andJ.Silk,Phys.Rev.
+D 76, 103511 (2007), 0707.1495.
+[85] R. Diamanti, S. Ando, S. Gariazzo, O. Mena, and C. Weniger,
+J.CosmologyAstropart.Phys. 2017,008(2017),1701.03128.
+[86] G.Parimbelli,G.Scelfo,S.K.Giri,A.Schneider,M.Archidi-
+acono,S.Camera,andM.Viel,J.CosmologyAstropart.Phys.
+2021, 044 (2021), 2106.04588.
+[87] The 1D Lyman-𝛼 clustering is sensitive only to line-of-sight
+Fouriermodes 𝑘∥.Forthesakeofsimplicityweadoptashort-
+hand notation of𝑘 in velocity units to denote wavenumbers
+along the line-of-sight.
+[88] N. Palanque-Delabrouille, C. Yèche, J. Baur, C. Magneville,
+G. Rossi, J. Lesgourgues, A. Borde, E. Burtin, J.-M. LeGoff,
+J.Rich,etal.,J.CosmologyAstropart.Phys. 2015,011(2015),
+1506.05976.
+[89] V.Iršič,M.Viel,T.A.M.Berg,V.D’Odorico,M.G.Haehnelt,
+S. Cristiani, G. Cupani, T.-S. Kim, S. López, S. Ellison, et al.,
+arXiv e-prints arXiv:1702.01761 (2017), 1702.01761.
+[90] M. Viel, J. Schaye, and C. M. Booth, MNRAS429, 1734
+(2013), 1207.6567.
+[91] A. Day, D. Tytler, and B. Kambalur, MNRAS489, 2536
+(2019).
+[92] N. G. Karaçaylı, N. Padmanabhan, A. Font-Ribera, V. Iršič,
+M. Walther, D. Brooks, E. Gaztañaga, R. Kehoe, M. Levi,
+P. Ntelis, et al., MNRAS509, 2842 (2022), 2108.10870.
+[93] A. Lewis, A. Challinor, and A. Lasenby, Astrophys. J.538,
+473 (2000), ascl:1102.026.
+[94] D.Blas,J.Lesgourgues,andT.Tram,J.CosmologyAstropart.
+Phys.2011, 034 (2011), 1104.2933.
+[95] E. Puchwein, F. Haardt, M. G. Haehnelt, and P. Madau, MN-
+RAS485, 47 (2019), 1801.04931.
+[96] E. Puchwein, J. S. Bolton, L. C. Keating, M. Molaro, P. Gaik-
+wad, G. Kulkarni, M. G. Haehnelt, V. Iršič, T. Šoltinský,
+M. Viel, et al., MNRAS519, 6162 (2023), 2207.13098.
+[97] M. Viel, J. Lesgourgues, M. G. Haehnelt, S. Matarrese, and
+A.Riotto,Phys.Rev.D 71,063534(2005),astro-ph/0501562.
+[98] P. Bode, J. P. Ostriker, and N. Turok, Astrophys. J.556, 93
+(2001), astro-ph/0010389.
+[99] M.Viel,G.D.Becker,J.S.Bolton,andM.G.Haehnelt,Phys.
+Rev. D88, 043502 (2013), 1306.2314.
+
+--- Page 17 ---
+17
+[100] J. Lesgourgues and T. Tram, J. Cosmology Astropart. Phys.
+2011, 032 (2011), 1104.2935.
+[101] G. D. Becker, P. C. Hewett, G. Worseck, and J. X. Prochaska,
+MNRAS430, 2067 (2013), 1208.2584.
+[102] S. E. I. Bosman, X. Fan, L. Jiang, S. Reed, Y. Matsuoka,
+G. Becker, and M. Haehnelt, MNRAS 479, 1055 (2018),
+1802.08177.
+[103] S. E. I. Bosman, F. B. Davies, G. D. Becker, L. C. Keating,
+R. L. Davies, Y. Zhu, A.-C. Eilers, V. D’Odorico, F. Bian,
+M. Bischetti, et al., MNRAS514, 55 (2022), 2108.03699.
+[104] A. Borde, N. Palanque-Delabrouille, G. Rossi, M. Viel, J. S.
+Bolton, C. Yèche, J.-M. LeGoff, and J. Rich, J. Cosmology
+Astropart. Phys.2014, 005 (2014), 1401.6472.
+[105] B. Villasenor, B. Robertson, P. Madau, and E. Schneider, As-
+trophys. J.912, 138 (2021), 2009.06652.
+[106] C. C. Doughty, J. F. Hennawi, F. B. Davies, Z. Lukić, and
+J. Oñorbe, MNRAS (2023), 2305.16200.
+[107] P.McDonald,Astrophys.J. 585,34(2003),astro-ph/0108064.
+[108] J. S. Bolton, E. Puchwein, D. Sĳacki, M. G. Haehnelt, T.-S.
+Kim,A.Meiksin,J.A.Regan,andM.Viel,MNRAS 464,897
+(2017), 1605.03462.
+[109] N.K.Khan,G.Kulkarni,J.S.Bolton,M.G.Haehnelt,V.Iršič,
+E. Puchwein, and S. Asthana, MNRAS530, 4920 (2024),
+2310.07767.
+[110] J.TorradoandA.Lewis, Cobaya: Bayesiananalysisincosmol-
+ogy, Astrophysics Source Code Library, record ascl:1910.019
+(2019), 2005.05290.
+[111] B.Villasenor,B.Robertson,P.Madau,andE.Schneider,arXiv
+e-prints arXiv:2209.14220 (2022), 2209.14220.
+[112] P. Gaikwad, M. Rauch, M. G. Haehnelt, E. Puchwein, J. S.
+Bolton,L.C.Keating,G.Kulkarni,V.Iršič,E.Bañados,G.D.
+Becker, et al., MNRAS494, 5091 (2020), 2001.10018.
+[113] P. Gaikwad, R. Srianand, M. G. Haehnelt, and T. R. Choud-
+hury, MNRAS506, 4389 (2021), 2009.00016.
+[114] Planck Collaboration, N. Aghanim, Y. Akrami, M. Ashdown,
+J. Aumont, C. Baccigalupi, M. Ballardini, A. J. Banday, R. B.
+Barreiro,N.Bartolo,etal.,A&A 641,A6(2020),1807.06209.
+[115] E. Puchwein, F. Haardt, M. G. Haehnelt, and P. Madau, MN-
+RAS485, 47 (2019), 1801.04931.
+[116] V. Iršič, M. Viel, M. G. Haehnelt, J. S. Bolton, S. Cristiani,
+G. D. Becker, V. D’Odorico, G. Cupani, T.-S. Kim, T. A. M.
+Berg, et al., Phys. Rev. D96, 023522 (2017), 1702.01764.
+[117] M. Molaro, V. Iršič, J. S. Bolton, L. C. Keating, E. Puch-
+wein, P. Gaikwad, M. G. Haehnelt, G. Kulkarni, and M. Viel,
+MNRAS509, 6119 (2022), 2109.06897.
+[118] S.Zelmer,E.Artis,E.Bulbul,S.Grandis,V.Ghirardini,A.von
+derLinden, Y. E.Bahar, F.Balzer, M.Brüggen, I. Chiu, etal.,
+arXiv e-prints arXiv:2502.03353 (2025), 2502.03353.
+[119] E. Calabrese, J. C. Hill, H. T. Jense, A. La Posta, I. Abril-
+Cabezas, G. E. Addison, P. A. R. Ade, S. Aiola, T. Alford,
+D. Alonso, et al., arXiv e-prints arXiv:2503.14454 (2025),
+2503.14454.
+[120] T.Kobayashi,R.Murgia,A.DeSimone,V.Iršič,andM.Viel,
+Phys. Rev. D96, 123514 (2017), 1708.00015.
+[121] G. Facchinetti, arXiv e-prints arXiv:2503.11261 (2025),
+2503.11261.
+[122] A.-C. Eilers, F. B. Davies, and J. F. Hennawi, Astrophys. J.
+864, 53 (2018), 1807.04229.
+[123] M. Archidiacono, D. C. Hooper, R. Murgia, S. Bohr, J. Les-
+gourgues, and M. Viel, J. Cosmology Astropart. Phys.2019,
+055 (2019), 1907.01496.
+[124] D. C. Hooper, N. Schöneberg, R. Murgia, M. Archidiacono,
+J. Lesgourgues, and M. Viel, J. Cosmology Astropart. Phys.
+2022, 032 (2022), 2206.08188.
+[125] R. Murgia, V. Iršič, and M. Viel, Phys. Rev. D98, 083540
+(2018), 1806.08371.
+[126] M. Esposito, V. Iršič, M. Costanzi, S. Borgani, A. Saro, and
+M. Viel, MNRAS515, 857 (2022), 2202.00974.
+[127] F. Hervas Peters, A. Schneider, J. Bucko, S. K. Giri, and
+G. Parimbelli, A&A687, A161 (2024), 2309.03865.
