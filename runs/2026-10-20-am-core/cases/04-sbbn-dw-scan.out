@@ -1,0 +1,62 @@
+This is the fourth time you've asked this. The 5 and 10 keV values have come out the same in every earlier run. This turn I'll check them once more, in one grid call that also covers a wider mass range, to test whether the m_s^0.8 scaling holds beyond these two points.
+# Dodelson-Widrow production at 5 keV and 10 keV, sin²2θ = 3×10⁻⁹
+
+**Short answer:** going from 5 to 10 keV multiplies the production fraction by **1.740** (0.01402 → 0.02440), so f ∝ m_s^0.8. The relic density goes up by **3.482** (0.7524 → 2.620), so Ω_s h² ∝ m_s^1.8.
+
+This turn I ran one `predict_sterile_nu_grid` call (mechanism DW) covering 1–50 keV. The 5 and 10 keV values match every earlier run exactly. The tool has no field called "production fraction," so I use its ΔN_eff: the sterile-neutrino number density relative to one fully thermalised neutrino species.
+
+## Tool results (sin²2θ = 3×10⁻⁹)
+
+| m_s | ΔN_eff (f) | Ω_s h² | Overcloses? | BBN Δχ² | Lifetime (s) |
+|---|---|---|---|---|---|
+| 1 keV | 0.003868 | 0.04152 | no | −0.050 | 2.449×10³⁰ |
+| 2 keV | 0.006734 | 0.1446 | yes | −0.086 | 7.654×10²⁸ |
+| **5 keV** | **0.01402** | **0.7524** | yes | −0.175 | 7.837×10²⁶ |
+| **10 keV** | **0.02440** | **2.620** | yes | −0.296 | 2.449×10²⁵ |
+| 20 keV | 0.04249 | 9.123 | yes | −0.487 | 7.654×10²³ |
+| 50 keV | 0.08843 | 47.47 | yes | −0.864 | 7.837×10²¹ |
+
+None of the points is excluded by BBN, and all are in the keV (warm dark matter) regime and within the model's validity range.
+
+## Mass scaling observed
+
+- **Production fraction:** each doubling of mass multiplies f by 1.740–1.741, which is 2^0.80. Over the whole range, 0.08843 / 0.003868 = 22.9, close to 50^0.8 = 22.9. So f ∝ m_s^0.8 holds across 1–50 keV.
+- **Relic density:** each doubling multiplies Ω_s h² by 3.48, which is 2^1.8. One power of m_s is the rest mass per particle; the other 0.8 comes from the abundance.
+- **Lifetime:** each doubling divides the lifetime by 32.0 (2⁵), consistent with Γ_γ ∝ sin²2θ · m_s⁵.
+
+## Why heavier sterile neutrinos are produced more
+
+1. **How production works.** Active neutrinos oscillate into sterile states, and collisions in the plasma turn part of each oscillating state into a sterile neutrino. The rate is roughly Γ_s ≈ ½ sin²2θ_eff · Γ_ν, where the active collision rate is Γ_ν ∝ G_F² T⁵.
+2. **The hot plasma suppresses mixing.** The plasma's thermal potential, V_T ∝ G_F T⁵/M_W², grows with temperature faster than the vacuum term m_s²/2E ∝ m_s²/T. So the effective mixing collapses at high temperature, roughly as sin²2θ_eff ≈ sin²2θ / [1 + c·T⁶/m_s²]².
+3. **Heavier masses peak at higher temperature.** Balancing Γ_s against the Hubble rate H ∝ g*^½ T²/M_Pl puts the production peak at T_peak ∝ m_s^(1/3), about 100–300 MeV for keV masses. A heavier sterile neutrino keeps its mixing into a hotter epoch, where collisions are much faster.
+4. **The simple estimate is linear.** Evaluating Γ_s/H at the peak gives f ∝ sin²2θ · m_s, and so Ω ∝ sin²2θ · m_s². The yield is linear in mixing because production stays far from equilibrium (f ≪ 1).
+5. **Why the exponent is 0.8 instead of 1.** T_peak sits near the QCD transition, where g* changes quickly. A higher T_peak means more relativistic degrees of freedom. That speeds up the expansion during production and dilutes the population more afterwards, which pulls the yield below linear. This is the standard result:
+   - Abazajian, astro-ph/0511630
+   - Asaka, Laine & Shaposhnikov, hep-ph/0612182
+   - The original mechanism is Dodelson & Widrow, hep-ph/9303287.
+
+## Caveat: what the tool's scaling tells you
+
+The exponent comes out at exactly 0.80 from 1 to 50 keV, even though T_peak moves across the QCD transition over that range. In a full calculation, the changing g* would make the local exponent drift. A perfectly constant exponent suggests the tool uses a **fitted power law**, Ω ∝ sin²2θ · m_s^1.8, rather than solving the production equations. So the tool's numbers agree with the published fits but don't independently derive the 0.8; the explanation above comes from those papers, not from the tool.
+
+## Other checks
+
+- **Mixing that gives the observed dark-matter density:** these are my own linear rescalings in sin²2θ, not tool outputs. Matching Ω_DM h² = 0.120 needs sin²2θ ≈ 4.8×10⁻¹⁰ at 5 keV and ≈ 1.4×10⁻¹⁰ at 10 keV. At this mixing only the 1 keV point stays below 0.120.
+- **BBN doesn't constrain these points.** ΔN_eff of 0.014–0.024 is far below the BBN-only 95% limit of ΔN_eff < 0.548 from earlier turns.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261020_083118/`:
+- `sterile_nu_grid_DW_cb6b9f.csv` (all columns, including N_eff, Y_p, D/H and free-streaming length)
+
+[Tool ledger — exact record of this turn]
+- predict_sterile_nu_grid (serve-sbbn.sh) ok — args {"masses_eV": [1000, 2000, 5000, 10000, 20000, 50000], "sin2_2thetas": [3e-09], "mechanism": "DW", "combine": "product", "output_dir": ".../runs/261020_083118"}; file .../runs/261020_083118/sterile_nu_grid_DW_cb6b9f.csv; ΔN_eff 0.003868 / 0.006734 / 0.01402 / 0.0244 / 0.04249 / 0.08843; Ω_s h² 0.04152 / 0.1446 / 0.7524 / 2.62 / 9.123 / 47.47; lifetimes 2.449e30 … 7.837e21 s; 0 BBN-excluded, 5 overclose; none outside validity
+Loading MCP servers…
+[10/20/26 08:31:21] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+[tool] predict_sterile_nu_grid {"masses_eV": [1000, 2000, 5000, 10000, 20000, 50000], "sin2_2thetas": [3e-09], "mechanism": "DW", "combine": "product", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/
+[10/20/26 08:31:32] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu_grid -> ok: {   "status": "ok",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261020_083118/sterile_nu_grid_DW_cb6b9f.csv"   ],   "messa
+Tokens: 55K in (27K cached) · 3.4K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json

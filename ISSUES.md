@@ -370,3 +370,8 @@ D3 (CCL→sacc→augur→sacc_inspect), D4 (augur→sacc→firecrown, χ²=0.00)
 D7 (namaster simulate→compute_cls→sacc), D10 (meta→firecrown→convert_cosmology).
 v0.3.18 on claude-opus-5-5. 48 of 54 tools loaded (6 CCL tools absent, see #24).
 
+
+## 2026-10-20-am-core — 10 pass / 0 flagged
+
+Clean run — no flags.
+
