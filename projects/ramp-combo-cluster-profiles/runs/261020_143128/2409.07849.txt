@@ -1,0 +1,2030 @@
+Title: Hydrostatic mass bias for galaxy groups and clusters in the FLAMINGO simulations
+Authors: Joey Braspenning, Joop Schaye, Matthieu Schaller, Roi Kugel, Scott T. Kay
+Year: 2024
+arXiv ID: 2409.07849
+
+============================================================
+
+--- Page 1 ---
+MNRAS000, 1–19 (2024) Preprint 19 December 2024 Compiled using MNRAS L ATEX style file v3.0
+Hydrostatic mass bias for galaxy groups and clusters in the FLAMINGO
+simulations
+Joey Braspenning,1★ Joop Schaye,1 Matthieu Schaller,2,1 Roi Kugel,1 Scott T. Kay3
+1Leiden Observatory, Leiden University, PO Box 9513, 2300 RA Leiden, the Netherlands
+2Lorentz Institute for Theoretical Physics, Leiden University, PO box 9506, 2300 RA Leiden, the Netherlands
+4Jodrell Bank Centre for Astrophysics, Department of Physics and Astronomy, The University of Manchester, Oxford Road, Manchester M13 9PL, UK
+Accepted XXX. Received YYY; in original form ZZZ
+ABSTRACT
+ThemassesofgalaxyclustersarecommonlymeasuredfromX-rayobservationsundertheassumptionofhydrostaticequilibrium
+(HSE). This technique is known to underestimate the true mass systematically. The fiducial FLAMINGO cosmological hydro-
+dynamical simulation predicts the median hydrostatic mass bias to increase from𝑏HSE≡( 𝑀HSE,500c−𝑀500c)/𝑀500c≈− 0.1 to
+-0.2 when the true mass increases from group to cluster mass scales. However, the bias is nearly independent of the hydrostatic
+mass.Thescatteratfixedtruemassisminimumfor 𝑀500c∼ 1014 M⊙,where 𝜎(𝑏HSE)≈ 0.1,butincreasesrapidlytowardslower
+and higher masses. At a fixed true mass, the hydrostatic masses increase (decrease) with redshift on group (cluster) scales, and
+thescatterincreases.Thebiasisinsensitivetothechoiceofanalyticfunctionsassumedtorepresentthedensityandtemperature
+profiles, but it is sensitive to the goodness of fit, with poorer fits corresponding to a stronger median bias and a larger scatter.
+The bias is also sensitive to the strength of stellar and AGN feedback. Models predicting lower gas fractions yield more (less)
+biasedmassesforgroups(clusters).Thescatterinthebiasatfixedtruemassisduetodifferencesinthepressuregradientsrather
+than in the temperature at𝑅500c. The total kinetic energies within𝑟500c in low- and high-mass clusters are sub- and super-virial,
+respectively, though all become sub-virial when external pressure is accounted for. Analyses of the terms in the virial and Euler
+equations suggest that non-thermal motions, including rotation, account for most of the hydrostatic mass bias. However, we find
+that the mass bias estimated from X-ray luminosity weighted profiles strongly overestimates the deviations from hydrostatic
+equilibrium.
+Key words:galaxies: clusters: intracluster medium – large-scale structure of Universe – galaxies: clusters: general – methods:
+numerical – X-rays: galaxies: clusters
+1 INTRODUCTION
+Measuring masses of massive groups and clusters of galaxies poses
+a formidable challenge because there is no universally applicable
+or unbiased method. Whereas simulations can simply measure the
+massofalltheparticlesorvolumeelementsenclosedwithinagiven
+3D radius, observations do not have that luxury. Two widely used
+methods are estimating masses from X-ray observations under the
+assumptionofhydrostaticequilibriumandweakgravitationallensing
+observations, both of which have their own challenges.
+Weak lensing observations can be used to infer masses by mea-
+suring the slight distortion of background objects around massive
+clusters.Massesmeasuredinthiswayareinherentlyprojectedalong
+the line of sight, polluting the mass estimate by correlated fore-and-
+background structures (e.g. Debackere et al. 2022).
+Uncertaintiesassociatedwithweaklensingmassesconsistmainly
+of three parts. Shape measurements can be inaccurate due to the
+difficultyofcorrectingtheanisotropicPSF(e.g.Hamanaetal.2013),
+whichismostimportantfortheshapesoffaintgalaxies(e.g.Heymans
+★ E-mail: braspenning@strw.leidenuniv.nl
+etal.2006;Masseyetal.2007;Bridleetal.2010;Kitchingetal.2012,
+2013; Mandelbaum et al. 2015). Background galaxy selection can
+dilute cluster cores, which depends on redshift, richness, and radius
+(e.g. Okabe & Smith 2016), correcting for this can change the mass
+estimates by up to 40 per cent but is highly uncertain (Okabe et al.
+2016). Finally, the weak lensing mass inference depends strongly on
+theorientationofthehalo(e.g.Herbonnetetal.2022).Forexample,
+Muñoz-Echeverría et al. (2024) find that the true mass is under-
+estimatedby25percentwhenalignedwiththesecondprincipalaxis
+of the cluster, but over-estimated by the same amount when aligned
+with the zeroth principal axis.
+Alternatively, the mass can be estimated using the hydrostatic
+massinferredfromX-rayobservations.Usingthesurfacebrightness
+distribution, the gas density profile can be extracted (e.g. Pratt &
+Arnaud 2002; Ettori et al. 2013; Ghirardini et al. 2019). Assuming
+an emission model, the spatially resolved X-ray spectrum can be
+converted into a temperature profile (e.g. Arnaud 1996). Under the
+assumption of hydrostatic equilibrium, fits to these profiles with an
+analyticfunctioncanbeusedtocomputetheenclosedmass(seee.g.
+Sarazin 1988).
+Inpractice,hydrostaticmassmeasurementsposeasignificantchal-
+© 2024 The Authors
+arXiv:2409.07849v2  [astro-ph.CO]  18 Dec 2024
+
+--- Page 2 ---
+2 J. Braspenning et al.
+lenge. To obtain the mass enclosed within a sphere, the density and
+temperature profiles have to be three-dimensional, which means ob-
+servations have to be deprojected from the plane of the sky in which
+they are observed (see e.g. Turner et al. 2024, for a comprehen-
+sive description of the process). Unlike in the case for weak lensing
+mass estimates, the cluster shape only has a 1 per cent effect on
+themassestimate(Buote&Humphrey2012).However,temperature
+inhomogeneities within a single radial bin of the profile can have a
+10 per cent effect on the mass, due to clumpy cold gas biasing the
+meantemperaturelow(Mazzottaetal.2004;Rasiaetal.2014;Hen-
+son et al. 2017). Forward modelling and external observations, e.g.
+of the Sunyaev-Zeldovich effect, can improve the hydrostatic mass
+measurements and the estimates of the associated errors.
+On top of that, to measure the total mass of a galaxy cluster,
+observations have to extend quite far out from the centre to capture
+the full extent of the cluster’s mass distribution. Even at𝑅500c1 the
+X-raysurfacebrightnesstendstobeverylowandobservationscarry
+largeerrorbars.Asthemassdependsonthespatialderivativeofthe
+profiles at a given radius, small errors in the profiles can translate to
+largeerrorsinthemassestimates.Forexample,Rossettietal.(2024)
+findthatacarefulre-analysisoftheirgalaxyclusterdatachangesthe
+slope of the temperature profile by 20 per cent.
+The total hydrostatic mass is linearly dependent on the absolute
+temperature. In observations, there is a known systematic difference
+of up to 30 per cent between the temperatures inferred from the
+eROSITA, XMM-Newtonand Chandratelescopes, especially above
+5 keV(Migkasetal.2024;Schellenbergeretal.2015).However,Mar-
+tino et al. (2014) find near perfect agreement in the inferred mass
+between XMM-Newton and Chandra, suggesting that the slopes of
+the retrieved density and temperature profiles also differ to compen-
+sate for the offset in temperature.
+The hydrostatic masses inferred from X-ray observations are thus
+found to be biased. One method of determining the hydrostatic
+mass bias is by comparing the X-ray inferred masses (𝑀500c,X)
+with weak lensing masses (𝑀500c,WL). Using this approach, the
+XXL cluster survey found a value of𝑀X/𝑀WL = 0.72± 0.08
+for 2× 1014 M⊙ < 𝑀500c < 1015 M⊙ (Eckert et al. 2016),
+and the Canadian Cluster Project in combination with the Multi
+Epoch Nearby Cluster Survey obtained𝑀X/𝑀WL = 0.84± 0.04
+for 4× 1014 M⊙ < 𝑀500c < 2× 1015 M⊙ (Herbonnet et al.
+2020), a slightly smaller bias than𝑀X/𝑀WL = 0.74± 0.06 mea-
+sured by Lovisari et al. (2020) who expanded the measurements
+with new X-ray and weak lensing observations in the mass range
+3× 1014 M⊙ < 𝑀500c < 2× 1015 M⊙. However, much weaker bi-
+asesof 𝑀X/𝑀WL= 0.95±0.05for 2×1014 M⊙ < 𝑀500c < 1015 M⊙
+werefoundbySmithetal.(2016)andlater 𝑀X/𝑀WL= 0.84±0.095
+for 3× 1014 M⊙ < 𝑀500c < 1015 M⊙ by Wicker et al. (2023).
+In simulations, the hydrostatic mass can be compared to the true
+mass. Barnes et al. (2021) applied a consistent forward modeling
+pipeline and hydrostatic mass inference technique to a diverse set
+of cosmological simulations, yielding𝑀500c bias measurements for
+𝑀500c ≥ 1014 M⊙ of 𝑀X/𝑀True = 0.89± 0.01 for IllustrisTNG
+(Springel et al. 2018),𝑀X/𝑀True = 0.87± 0.002 for BAHAMAS
+(McCarthyetal.2017),and 𝑀X/𝑀True= 0.85± 0.003fortheMAC-
+SIS(Barnesetal.2017a)simulations.Ansarifardetal.(2020)found
+that in the 300 simulations (which yield𝑀X/𝑀True = 0.9± 0.09),
+the bias can be accounted for by correcting for the azimuthal scatter
+and thermal pressure slope derived from the mock X-ray emission.
+1 𝑅500c is the radius at which the average interior density is 500 times the
+critical density of the Universe.
+Jennings & Davé (2023) find a bias that is𝑀X/𝑀True= 0.85± 0.15
+formass-weightedprofiles,but 𝑀X/𝑀True= 0.7±0.15foremission-
+weightedprofilesfortheSIMBAsimulations.However,comparedto
+weak lensing - X-ray cluster samples, the simulated clusters are, on
+average,oflowermass.Whileallcosmologicalsimulationsthatwere
+comparedbyBarnesetal.(2021)showedabiasincreasingwithmass,
+the limited number of simulated clusters with𝑀500c≈ 1015 M⊙
+makes reliable comparisons challenging.
+Among the explanations for the hydrostatic bias is the neglected
+contribution from non-thermal pressure (e.g. Kay et al. 2004; Nagai
+etal.2007;Martizzi&Agrusa2016;Ettori&Eckert2022).Oneim-
+portant source of non-thermal pressure could be contributions from
+magneticfieldsandcosmicrays(seeRuszkowski&Pfrommer2023,
+for a review). However, Biffi et al. (2016) argued that the object-
+to-object variation is far too large to effectively include a correction
+terminthehydrostaticmasscalculation.Furthermore,inajointanal-
+ysis of Sunyaev–Zel’dovich (SZ) effect observations, strong-lensing
+data,andweak-lensingdata,Siegeletal.(2018)constrainedthenon-
+thermal pressure fraction to be< 0.11, indicating that it would at
+most be a modest correction. However, that number is significantly
+lower than the turbulent pressure contribution found in some simu-
+lations, which can exceed 30 per cent (Nelson et al. 2014). Future
+observations with high-resolution X-ray spectrographs will resolve
+the spatial turbulence, potentially leading to self-consistent correc-
+tions to the hydrostatic mass on an object-by-object basis (e.g. Ota
+etal.2018).Apartfromthecontributionofnon-thermalpressure,the
+hydrostaticmassbiascanalsoariseifclustersareoutofequilibrium,
+e.g. due to recent mergers.
+Fittinganalyticprofiles,basedontheexpectedshapeofthecluster
+density distribution, can help overcome low signal-to-noise at large
+radii. Because the analytic profiles are fit to the entire range of ob-
+served densities and temperatures, the higher fidelity data nearer to
+the cluster centre will contribute to the constraints, resulting in a
+more precise mass estimate. The results will, however, only be more
+accurate if the chosen profile is realistic.
+Recent simulations by Scheck et al. (2023) have furthermore
+shown that even in idealised hydrostatic clusters, there is a bias
+of up to 7 per cent in the retrieved hydrostatic mass. This bias is
+entirelyduetothefittothedeprojecteddensityprofile,hintingatthe
+sensitivity of the deprojection procedure.
+Among the widely adopted analytic profiles is the𝛽-profile (Cav-
+aliere & Fusco-Femiano 1976, 1978), employing the King approxi-
+mation to the galaxy distribution profile arising from the isothermal
+model and assuming that the gas follows the mass distribution of
+galaxies within the cluster. The model has three free parameters:
+the normalisation, the power-law slope at large radii, and the turn-
+over radius between the core and power-law. This model describes
+a gas density distribution with a single power law and a core (i.e.
+a flat central density profile). In reality, observations find that many
+clusters have cusps (i.e. steep central density profiles), as well as a
+steepening of the slope at larger radii. To account for these two ef-
+fects, the modified-𝛽-model was introduced (Vikhlinin et al. 2006),
+increasing the number of free parameters to seven. This model is
+no longer derived directly from the physics of an isothermal sphere
+since it includes empirical modifications, but it better represents the
+observed deprojected density profiles.
+Alternatively,thereisarangeofmethodsforobtaininggasdensity
+profiles starting from a dark matter profile. For example, Sullivan
+etal.(2024)createaflexibleprofilewhichassumesdistinctslopesfor
+theinnerandouterprofiles,withanadditionalparametercontrolling
+the transition. Similarly, Patej & Loeb (2015) create a family of
+MNRAS000, 1–19 (2024)
+
+--- Page 3 ---
+Hydrostatic mass bias for FLAMINGO clusters 3
+models which transform a given dark matter density profile into a
+gasdensityprofile,assuminganaccretionshockispresentinthegas.
+The observed temperatures in radial bins are similarly fit with
+an analytic profile. The prevailing choice is the 9-parameter model
+introducedbyVikhlininetal.(2006).Thismodelincludesanoverall
+normalisation,atermdescribingthetemperaturedropnearthecluster
+centre,andabrokenpowerlawwithatransitionregiondescribingthe
+outer part of the cluster. The model’s significant flexibility, arising
+fromitsnumerousfreeparameters,enablesaccuratefittingofnearly
+all observed temperature profiles.
+In this work, we will employ the FLAMINGO hydrodynamical
+cosmological simulations (Schaye et al. 2023; Kugel et al. 2023)
+to study the hydrostatic mass bias of a large number of galaxy
+groups and clusters. In light of the limited number of massive
+galaxyclustersinprevioushydrodynamicalsimulations,theunprece-
+dentedvolumeoftheFLAMINGOsimulationspresentsanimportant
+step forward. At𝑧 = 0, FLAMINGO contains>105 clusters with
+𝑀500c > 1014 M⊙ in their full cosmological context. Furthermore,
+the suite of simulations contains model variations varying the feed-
+back strength, the type of AGN feedback, and the cosmology. The
+fiducial model has been shown to reproduce scaling relations and
+thermodynamic profiles from X-ray observations of galaxy clusters
+(Braspenning et al. 2023). In Kay et al. (2024), we have shown that
+usingSunyaev-Zel’dovicheffectweightedtemperaturesandfocusing
+on the most massive clusters, the mass bias is only 5 per cent, which
+increases to 22 per cent when using X-ray weighted temperatures.
+Thispaperisorganisedasfollows,Section2providesadescription
+of the FLAMINGO simulations, the baryonic profiles and fitting
+procedure, and the computation of the hydrostatic mass. Section 3
+presents our main results, Section 4 aims to understand the origin of
+the bias and we summarise our findings in Section 5.
+2 METHODS
+Inthissection,wewilldescribetheFLAMINGOsimulations(§2.1),
+the construction of thermodynamic profiles (§2.2), the computation
+of hydrostatic masses (§2.3), and the analytic profiles we fit to the
+simulated clusters (§2.4).
+2.1 The FLAMINGO simulations
+FLAMINGO(Full-hydroLarge-scalestructuresimulationswithAll-
+skyMappingfortheInterpretationofNextGenerationObservations)
+is a large suite of hydrodynamical cosmological simulations, cover-
+ing large cosmic volumes. The flagship run comprises a region of
+(2.8 Gpc)3,whichissufficientlylargeforstatisticalstudiesofgalaxy
+groups and clusters. At𝑧 = 0 FLAMINGO contains> 106 haloes
+with𝑀500c≥ 1013 M⊙,> 105 haloes with𝑀500c≥ 1014 M⊙, and
+461 haloes with𝑀500c≥ 1015 M⊙. The simulations are described
+in detail in Schaye et al. (2023). A unique feature is the machine
+learning-aidedcalibrationofthesubgridprescriptionsforstellarand
+AGN feedback to the observed𝑧 = 0 galaxy stellar mass function
+and𝑧= 0.1− 0.3clustergasfractions(Kugeletal.2023).Variations
+onthefiducialmodelaremadebyshiftingtheobservedgasfractions
+upanddownbyamultipleoftheiruncertainty( 𝜎),andrecalibrating
+the model to fit those new data points. FLAMINGO also includes
+modelsthatvarythegalaxymassfunctionorthecosmology.Wewill
+not use the latter here as we found that the cosmology variations do
+not affect the bias.
+In this work we mainly use the redshift 𝑧 = 0 snapshot of
+the(2.8 Gpc)3 simulation, which has a gas particle mass𝑚gas =
+1.07× 109 M⊙, a dark matter particle mass 𝑚CDM = 5.65×
+109 M⊙, a Plummer-equivalent comoving gravitational softening
+length𝜖com = 22.3 ckpc, and a maximum proper gravitational soft-
+ening length𝜖prop= 5.70 pkpc. When comparing physics models in
+the FLAMINGO suite, we use the(1 Gpc)3 volumes, which were
+simulated using the same resolution as the(2.8 Gpc)3 run.
+FLAMINGOusestheopensourcesimulationcode swift(Schaller
+et al. 2024), and solves the hydrodynamics using thesphenix sph
+scheme (Borrow et al. 2022). Massive neutrinos are included using
+the𝛿fmethod(Elbersetal.2021).Theinitialconditionsaregenerated
+withamodifiedversionof monofonic(Hahnetal.2021;Elbersetal.
+2022),andthecosmology‘3x2pt+allexternalconstraints’fromthe
+dark energy survey year 3 is used (Ωm = 0.306, Ωb = 0.0486,
+𝜎8 = 0.807, H0 = 68.1 km s−1 Mpc−1,𝑛s = 0.967) (Abbott et al.
+2022).
+The FLAMINGO model includes subgrid implementations of ra-
+diativecooling(Ploeckinger&Schaye2020),starformation(Schaye
+&DallaVecchia2008),stellarmassloss(Wiersmaetal.2009;Schaye
+et al. 2015), supernova feedback (Dalla Vecchia & Schaye 2008;
+Chaikinetal.2022),seedingandgrowthofsupermassiveblackholes,
+and thermally-driven AGN feedback (Springel et al. 2005; Booth &
+Schaye 2009; Bahé et al. 2022). Two of the physics variations use
+kinetic jet feedback from AGN (Huško et al. 2022).
+Haloes are found using a 3D Friends-of-Friends (FoF) algorithm,
+after which the center and substructure are identified using the 6D
+Friends-of-Friends (FoF) algorithm VELOCIraptor (Elahi et al.
+2019). It defines the halo center as the particle with the lowest po-
+tential and separates bound particles of a single FoF group into a
+central and satellites. We then use the Spherical Overdensity and
+Aperture Processor (SOAP)2 to compute halo properties within a
+range of apertures. The mass𝑀500c used in this work is found by
+determiningtheradiusatwhichtheaverageinternaldensitybecomes
+500timesthecriticaldensityoftheuniverse,andsummingthemass
+of all particles within that radius.
+2.2 Thermodynamic profiles
+We make use of the temperature, density, and pressure profiles of
+massive objects (𝑀500c > 1013 M⊙) in the FLAMINGO suite of
+simulations.Theconstructionoftheseprofiles,andtheircomparison
+to observations, is described in detail by Braspenning et al. (2023).
+Here we provide a short overview.
+Profilesarecomputedbydissectingahalointo30logarithmic3D
+radial bins between 0.01 and 3.0𝑟500c. Within each bin, a weighted
+average of the thermodynamic properties of the particles is com-
+puted. The average can be computed using different weights per
+particle. Unless stated otherwise, we use X-ray luminosity-weighted
+observer-frame [0.5-2.0 keV] profiles, because those are most rele-
+vant for the interpretation of and comparison with hydrostatic mass
+measurements.However,wewillalsocomparewiththebiasinferred
+from volume weighted profiles, which gives better insight into the
+true dynamical state. To compute a weighted profile, each particle is
+multiplied by its value of the weighting quantity, then all weighted
+particlesintheradialbinaresummed,andfinally,thesumisdivided
+by the sum of the weights.
+WeexcludeallparticleswhichhaveexperienceddirectAGNheat-
+inginthelast 15 Myr,asthosemighthavespurioustemperaturesand
+densities.However,wefindthistohavenosignificanteffectonthere-
+trievedhydrostaticbias.Anyparticlesinsubhaloesarealsoremoved,
+2 https://github.com/SWIFTSIM/SOAP
+MNRAS000, 1–19 (2024)
+
+--- Page 4 ---
+4 J. Braspenning et al.
+which is comparable to the removal of substructure in X-ray obser-
+vations. In observations, only massive substructures that are distinct
+in 2D surface brightness maps can be removed. Our removal goes
+much further, removing all substructures, but we show in Appendix
+A that this makes no important difference.
+Haloes are selected purely on their true mass, with no additional
+selection on their dynamical state. We checked for a correlation
+between the bias and relaxedness criteria, but did not find any (see
+Appendix B).
+We note that in Braspenning et al. (2023) we have shown that
+the thermodynamic profiles for the FLAMINGO simulations are
+generally in agreement with results from observational campaigns.
+2.3 Hydrostatic mass
+We define the hydrostatic mass bias as the difference from unity of
+the ratio of the hydrostatic mass to the true mass3 measured directly
+from the particles in the simulation:
+𝑏HSE= 𝑀HSE,500c
+𝑀500c
+− 1. (1)
+Withthisdefinition,anunderestimateofthemassresultsinanegative
+bias.Thehydrostaticmassisdefinedasthemassofthehaloinferred
+from the thermodynamic profiles under the assumption that it is in
+hydrostatic equilibrium. With the assumption of hydrostatic equilib-
+rium (and in the absence of non-thermal pressure), the hydrostatic
+mass contained within a radius𝑟 depends only on the derivatives of
+the temperature and density profiles, and the value of the tempera-
+ture at that radius. This can be understood as a balance between the
+gravitational force and the thermal pressure gradient.
+The hydrostatic mass can then be computed as
+𝑀HSE(<𝑟)=−𝑘B𝑇(𝑟)
+𝐺𝜇𝑚 p
+ dlog𝑇(𝑟)
+dlog𝑟 + dlog𝜌(𝑟)
+dlog𝑟
+
+𝑟, (2)
+with𝑘B the Boltzmann constant,𝐺 the gravitational constant,𝑇(𝑟)
+the temperature at radius𝑟, 𝜇 = 0.59 the mean particle mass of a
+fully ionised gas,𝑚p the proton mass, and𝜌(𝑟) the density at radius
+𝑟. If non-thermal pressure were accounted for, then there would be
+an additional term proportional to the spatial derivative of the non-
+thermal pressure.
+In practice, when determining the hydrostatic mass𝑀HSE,500c,
+one first has to find the radius at which the internal density equals
+500 times the critical density of the universe,𝜌500c. We find this
+radius by minimizing the following quantity
+𝛿𝑀 =
+
+4
+3𝜋𝑟 3𝜌500c−𝑀HSE(𝑟)
+, (3)
+wherewedenotetheresultantradius 𝑟500c,HSE.Thehydrostaticmass
+can then be computed using
+𝑀HSE,500c= 4
+3𝜋𝑟 3
+500c,HSE𝜌500c. (4)
+2.4 Fitting the thermodynamic profiles
+Following the approach of observational studies (e.g. Turner et al.
+2024; Eckert et al. 2016; Vikhlinin 2006), we fit our 3D density
+andtemperatureprofileswithanalyticfunctions,whichthenprovide
+3 Note that some authors define the hydrostatic bias as1+ 𝑏HSE or−𝑏HSE.
+smooth, well-defined derivatives at any radius. To compute the hy-
+drostatic mass, only the profile around𝑟500c is important, hence we
+limit our fits to the region 0.5-2.0𝑟500c.
+Forthegasdensityprofile,wemakeuseofthreedifferentanalytic
+profiles. The first is the 3-parameter𝛽-profile,
+𝜌g(𝑟)=𝜌(0)
+ 
+1+
+𝑟
+𝑟c
+ 2!−3𝛽/2
+, (5)
+where the central density,𝜌(0), the core radius,𝑟c, and𝛽, which
+determines the slope at large radii, are free parameters.
+Thesecondisthemodified- 𝛽-profile,whichisourfiducialchoice,
+𝜌g(𝑟)=
+
+𝜌(0)2
+h
+𝑟
+𝑟c
+i− 𝛼
+
+1+
+h
+𝑟
+𝑟c
+i 23𝛽− 𝛼/2
+'››
+«
+1
+1+
+h
+𝑟
+𝑟s
+i 𝛾
+“ﬁﬁ
+‹
+𝜀/𝛾
+1/2
+, (6)
+where 𝛼, 𝛽, 𝛾, 𝜖 are free parameters, as well as the normalisation
+of the density profile𝜌(0), the core radius𝑟c, and the scale radius
+𝑟s. The scale radius (𝑟s) allows for a second characteristic transition
+radius in the profile. Though this model has 7 free parameters,𝛾 is
+conventionally set to𝛾 = 3, which we adopt throughout this work.
+Notethatbecauseweonlyfittheregion0.5-2.0 𝑟500c,theparameters
+related to the core remain largely unconstrained.
+Though the modified-𝛽-profile tends to be a better fit to galaxy
+cluster profiles, the modifications are empirical and lack a theoreti-
+cal footing. An alternative to the approach of adding modifications
+to the simple𝛽-profile, are the family of gas density profiles intro-
+duced by Patej & Loeb (2015). Starting from spherically symmetric
+dark matter density profiles, they obtain analytic expressions for gas
+density profiles under minimal assumptions, apart from requiring a
+virial shock to be present. The profile we utilise is the gas density
+profile in that family belonging to an NFW dark matter profile. This
+is our third analytic function for the density profile,
+𝜌g(𝑟)=Γ 𝐴 (𝑟/𝑠)2Γ−2
+𝑟/𝑟s
+ 1+( 𝑠/𝑟s)(𝑟/𝑠)Γ2 , (7)
+with 𝑟s the NFW scale radius,𝑠 the radius where the virial shock
+occurs,Γ the ratio of the gas to dark matter shock jump parameters,
+and𝐴 a normalisation. Hence there are four free parameters.
+Instead of fitting the density and temperature profiles separately,
+some authors choose to fit the pressure profile (e.g. Kay et al. 2024;
+Gupta et al. 2017; Planelles et al. 2017; Pearce et al. 2020; Nagai
+et al. 2007), which is the product of the two. The equation for the
+hydrostaticmass(Eq.2)thensimplifiestoonlyrequiringthepressure
+derivative.HerewewillfitpressureprofileswithageneralisedNFW
+profile (GNFW),
+𝑃g(𝑟)= 𝑃0
+(𝑐500c𝑟)𝛾(1+(𝑐500c𝑟) 𝛼)(𝛽−𝛾)/ 𝛼 , (8)
+where we treat𝑃0,𝑐500c,𝛼, and𝛽 as free parameters, and we use
+𝛾= 0.31 in line with Arnaud et al. (2010); Barnes et al. (2017b).
+The temperature profile is always fit using the universal tempera-
+ture profile introduced by Vikhlinin et al. (2006),
+𝑇(𝑟)=𝑇0
+
+h
+𝑟
+𝑟c
+i 𝛼c
++ 𝑇min
+𝑇0
+1+
+h
+𝑟
+𝑟c
+i 𝛼c
+
+
+h
+𝑟
+𝑟t
+i− 𝛼
+
+1+
+h
+𝑟
+𝑟t
+i 𝛽 𝛾/𝛽
+
+, (9)
+MNRAS000, 1–19 (2024)
+
+--- Page 5 ---
+Hydrostatic mass bias for FLAMINGO clusters 5
+1013 1014 1015
+M500c [M ]
+0.6
+0.4
+0.2
+0.0
+0.2
+0.4
+bHSE(M)
+Wicker+2023
+Eckert+2016
+Herbonnet+2020
+The 300
+BAHAMAS
+MACSIS
+TNG300-L1
+The 300
+BAHAMAS
+MACSIS
+TNG300-L1
+1013 1014 1015
+MHSE, 500c [M ]
+Beta
+mod-Beta
+Patej
+CS
+GNFW
+Figure1. Themedianhydrostaticmassbias,calculatedusingdifferentmethods,asafunctionofthetruemass(leftpanel)ortheinferredhydrostaticmass(right
+panel).Differentcoloursindicatetheuseofdifferentanalyticprofilestoestimatethederivativesofthedensityandtemperatureprofilesat 𝑟500c.Theshadedareas
+show the16th-84th percentile ranges for the modified-𝛽 and cubic-spline methods. Thin black lines in the left panel show predictions for massive objects from
+other simulations. Red data points with error bars are observational measurements from comparisons between X-ray and weak lensing masses. The predictions
+are in good agreement with the data.
+an eight-parameter function, where𝑇0 represents the temperature
+normalisation, 𝑇min the minimum temperature of the core,𝑟c the
+core radius,𝑟t the transition radius, which, along with𝛼,𝛼c,𝛽, and
+𝛾, are free parameters. Similar to the modified-𝛽-profile, out choice
+to fit between 0.5-2.0𝑟500c leaves the parameters related to the core
+largely unconstrained.
+Thesefunctionsarefittothethermodynamicprofilesusingaleast
+squaresminimizationprocessinlogarithmicspaceundertheassump-
+tionofuniformerrors,employingthe Nelder-Meadalgorithm(Gao
+& Han 2012).
+Finally, as an alternative to fitting analytic profiles, we employ
+non-parametriccubic-splineinterpolationbetweenthedatapointsof
+the raw profiles computed from the simulations. Applying a cubic-
+splineinterpolatorthengivesaccesstosmoothvaluesandderivatives
+atanygivenradiusoftheprofile.Whenusingthecubic-splineinthis
+work, we will apply it to both the density and temperature profiles.
+For all other methods, the temperature profile is fit using Eq. 9.
+3 RESULTS
+In this section we will investigate the dependence of the hydro-
+static bias on mass (§3.1), the choice of analytic profile (§3.2), the
+weightingschemeforthethermodynamicprofiles(X-rayfluxversus
+volumeweightedaveraging;§3.3),theeffectofphysicsmodelvaria-
+tions within FLAMINGO on the bias (§3.4), and the dependence on
+redshift (§3.5).
+3.1 Dependence on mass
+TheblacksolidlineinFig.1showsthemedianhydrostaticmassbias
+predicted by our fiducial model (the𝑧 = 0 output from the 2.8 Gpc
+simulation, X-ray luminosity weighted thermodynamic profiles fit
+with a modified-𝛽 density profile and a Vikhlinin (2006) universal
+temperature profile). The left and right panels show the hydrostatic
+bias as a function of the the true mass (𝑀500c) and the hydrostatic
+mass(𝑀HSE,500c),respectively.Theshadedregionsindicatethe16 th-
+84th percentiles for the modified-𝛽-profile and cubic-spline interpo-
+lation. The scatter is smallest for true masses∼ 1014 M⊙.
+When binning in true mass all methods exhibit a significant in-
+crease in the median absolute bias in the massive cluster regime,
+signalling a substantial underestimation of cluster mass. This under-
+estimation increases to an offset of 25 per cent for the most massive
+objects. The cubic-spline and GNFW methods have slightly smaller
+bias compared to the others. However, when binning in inferred hy-
+drostaticmass,thebiasisalmostmass-independentforallparametric
+methods, hovering around a value of𝑏HSE≈− 0.1.
+Withintheclusterregime( 𝑀500c/ M⊙ > 1014.5),theresultsthus
+depend strongly on whether we bin in true or inferred hydrostatic
+mass. Since there are relatively few high-mass objects, up-scatter
+through a positive bias from lower masses can come to dominate
+the highest-mass bins, raising the median bias above zero, when ex-
+pressed as a function of𝑀HSE,500c. The cubic-spline interpolation
+method is especially susceptible to this effect, which can be under-
+stoodduetotheincreaseinscatterathightruemassasseenfromthe
+shaded blue region in the left panel.
+Our results for the median X-ray weighted bias as a function of
+true mass align closely with the results from Barnes et al. (2021)
+utilising mock X-ray observations on BAHAMAS, MACSIS, and
+IllustrisTNG as shown by thin broken black lines in Fig. 1. The bias
+for the 300 simulations (Gianfagna et al. 2023), shown by the solid
+black line, is significantly less mass-dependent and only agrees with
+FLAMINGO around 1014 M⊙. We note that the 300 simulations
+were fit using mass-weighted profiles.
+Observational determinations of the bias, shown as the red data
+points,scatterwidelybelow 1015 M⊙.Weextractthedatapointsfrom
+MNRAS000, 1–19 (2024)
+
+--- Page 6 ---
+6 J. Braspenning et al.
+the observational literature by taking the highest and lowest mass
+in each observed sample and applying the power-laws, with errors,
+fittedbytherespectiveauthorsatthosemasses.Thesedatapointsare
+obtainedusingeither 𝛽-ordouble- 𝛽-profilestofitthedensityprofile,
+andtheVikhlinin(2006)prescriptionforthetemperatureprofile.Our
+results agree very well with Wicker et al. (2023) at3× 1014 M⊙,
+and have a very similar mass trend. In the study from Eckert et al.
+(2016)theinversemasstrendisfound,wherethebiasdecreaseswith
+increasing mass, though the magnitude is very similar to our result
+and the trend is weak. Herbonnet et al. (2020) find no clear mass
+trend with a slight dip in the bias around1014.8 M⊙. We conclude
+that the FLAMINGO hydrostatic biases are in good agreement with
+the observations, but that the observational constraints are rather
+uncertain for all but the highest masses.
+We note that during the calibration of the FLAMINGO subgrid
+feedbacktotheobservedclustergasfractions,aconstanthydrostatic
+mass bias of -0.257 was assumed for gas fractions inferred from
+X-ray observations (Kugel et al. 2023). This value was taken from
+weak lensing calibrations and agrees well with the FLAMINGO
+predictions for the most massive clusters. In appendix C we show
+thatrecalibratingtheFLAMINGOmodeltodatacorrectedusingthe
+hydrostatic mass-dependent bias predicted here only leads to small
+differences in the gas fractions. The exception is the group regime,
+wherethegasfractionsbecomesignificantlyhigher,butwherethere
+is no lensing data to compare the predicted bias with.
+3.2 Dependence on the analytic profile
+We explore how the choice of analytic profile affects the hydrostatic
+mass, and consequently, the hydrostatic bias predicted by the simu-
+lations. The hydrostatic bias at𝑟HSE,500c is computed using the five
+distinct methods introduced in section 2.4:
+1. 𝛽-profile
+2. modified-𝛽-profile
+3. Patej-profile
+4. GNFW-profile
+5. cubic-spline interpolation
+The results are depicted as different coloured lines in Fig. 1. The
+scatter is only shown for the fiducial modified-𝛽 and cubic spline
+profiles. For all parametric methods the scatter is similar to that for
+thefiducialprofile,butthecubicspinemethodyieldsalargerscatter.
+Withinthegalaxygroupregime( 1013.0 < 𝑀500c/ M⊙ < 1013.5),
+the𝛽-profilemethodexhibitsasignificantlysmallermedianbias(i.e.
+a smaller absolute value of𝑏) than the other methods. For objects
+straddling the boundary between groups and clusters (1013.75 <
+𝑀500c/ M⊙ < 1014.25), the five methods converge to a median
+bias of approximately𝑏HSE≈− 0.1. These findings hold both when
+binning in true and in hydrostatic mass.
+For the remainder of this work, we will employ the modified-
+𝛽-profile as a middle-of-the-road model. We note that none of our
+conclusionschangeifweoptforanyoftheotherparametricprofiles.
+3.3 X-ray versus volume weighted averaging
+Because hydrostatic masses are inferred from spherically averaged
+profiles, any deviations from spherical symmetry will complicate
+their interpretation.The presence ofstructure will leadto deviations
+between thermodynamic profiles computed using different weight-
+ingschemes.OurapproachofusingX-rayweightedthermodynamic
+profiles in the hydrostatic mass inference is appropriate when com-
+paring with results from X-ray observations, but to measure the true
+1013 1014 1015
+M500c [M ]
+0.5
+0.4
+0.3
+0.2
+0.1
+0.0
+0.1
+bHSE
+X-ray weighted
+volume weighted
+Figure2. Themedianhydrostaticmassbias,calculatedusingthemodified- 𝛽
+methodfromX-rayweighted(black)andvolumeweighted(green)thermody-
+namicprofiles,asafunctionofthetruemass.Shadedareasshowthe16th-84th
+percentile ranges. The volume weighted bias is significantly smaller and less
+mass dependent compared to the X-ray weighted hydrostatic mass bias.
+dynamicalstateoftheclustervolumeweightingisthenaturalchoice.
+Ifthegasisclumpy,thenX-rayweightingwillfavourdensergas,pro-
+videditisnotsufficientlydensetocooltolowtemperatures,because
+the emissivity scales with the square of the density. In Appendix A
+we study the impact of subhaloes on the hydrostatic bias, and find it
+to be relatively small.
+We compare the hydrostatic mass bias measured from X-ray- and
+volume weighted profiles. In earlier work we compared with mass-
+weighted profiles, and found them to fall in-between the X-ray- and
+volume-weighted cases (Braspenning et al. 2023). From Fig. 2, it is
+clearthattheX-ray-weightedprofilesresultinasignificantlystronger,
+and more mass dependent bias. As a large mass bias is driven by
+shallow gradients, this indicates that the thermal pressure gradient
+in X-ray-weighted gas is shallower. We conclude that for𝑀500c≫
+1013M⊙ most of the hydrostatic mass bias is due to X-rays being
+a biased tracer of the gas rather than due to true deviations from
+hydrostatic equilibrium.
+3.4 Model variations
+A key feature of the FLAMINGO suite of simulations is the avail-
+abilityofsimulationsthatvarytheclustergasfractionsand/orstellar
+mass function, and the AGN feedback mechanism. Different gas
+fractions in massive haloes yield different thermodynamic profiles.
+Particularly notable are the Jet models of AGN feedback, which ex-
+hibitadistinctlydifferentdistributionofgas,especiallyinthecluster
+cores (see Braspenning et al. 2023). Because those differences are
+largest in cluster cores, they might have only a small effect on the
+bias which is measured around the overdensity radius𝑟500c. Fig. 3
+illustrates different bias values obtained for the different models as
+a function of the true mass, employing the modified-𝛽-profile. The
+top panels show the median values (note the narrower y-axis range
+compared to Fig. 1), and the bottom panels the difference between
+MNRAS000, 1–19 (2024)
+
+--- Page 7 ---
+Hydrostatic mass bias for FLAMINGO clusters 7
+0.35
+0.30
+0.25
+0.20
+0.15
+0.10
+0.05
+0.00
+bHSE
+Wicker+2023
+Eckert+2016
+Herbonnet+2020
+fgas+2
+L1_m9
+fgas 2
+fgas 4
+fgas 8
+Wicker+2023
+Eckert+2016
+Herbonnet+2020
+L1_m9
+Jet
+Jet_fgas 4
+M*
+1013 1014 1015
+M500c [M ]
+0.4
+0.3
+0.2
+0.1
+0.0
+0.1
+0.2
+0.3
+0.4
+P16, 84 P50(bHSE)
+P84 P50
+P16 P50
+1013 1014 1015
+M500c [M ]
+Figure 3.Top panels show the median hydrostatic mass bias as a function of true mass for different FLAMINGO physics variations (different colours). Bottom
+panelsshowthedifferencebetweenthe 16th percentiles(dashed),and 84th (solid)percentilesandthemedianofeachmodelvariation.Therearelargedifferences
+in both the median bias and scatter between models. Red scatter points indicate observed bias values, with the highest mass taken to be1014.9 M⊙ to align with
+the mass range probed by the L1_m9.
+the84 th percentileandthemedian(solidlines)andbetweenthe16 th
+percentile and the median (dashed lines).
+In the top left panel, we observe a dip where the bias becomes
+strongly negative at low masses, after which the bias recovers to
+𝑏HSE =−0.1 before again becoming increasingly negative toward
+higher masses. The depth and mass at which the dip occurs increase
+with decreasing gas fraction, from having no such dip for fgas+2𝜎,
+to 𝑏HSE≈− 0.15 at 1013 M⊙ for fgas−2𝜎 and increasing towards
+𝑏HSE≈− 0.22at 2×1013 M⊙ forfgas−8𝜎.Apartfromthehorizontal
+shift, the shape of the bias curve seems identical for all gas fraction
+variations.Thedifferenceinmedianbiasatagivenmassbetweenthe
+two most extreme models𝑏HSE[fgas− 8𝜎] and 𝑏HSE[fgas+ 2𝜎],
+is around 0.1 for most masses, only around the turnover point at
+4× 1013 M⊙ is the difference significantly smaller.
+We note that between7× 1014 M⊙ and 1015 M⊙, the bias in-
+ferred from observations shows significant scatter. It ranges from a
+bias exceeding that found for the highest gas fraction variation in
+FLAMINGO (Herbonnet et al. 2020, at7× 1014 M⊙) to a smaller
+biasthanpredictedbythelowestgasfractionvariation(Wickeretal.
+2023; Herbonnet et al. 2020, at1015 M⊙). In general, the difference
+MNRAS 000, 1–19 (2024)
+
+--- Page 8 ---
+8 J. Braspenning et al.
+0.35
+0.30
+0.25
+0.20
+0.15
+0.10
+0.05
+0.00
+bHSE
+fgas+2
+L1_m9
+fgas 2
+fgas 4
+fgas 8
+L1_m9
+Jet
+Jet_fgas 4
+M*
+1013 1014 1015
+MHSE, 500c [M ]
+0.4
+0.3
+0.2
+0.1
+0.0
+0.1
+0.2
+0.3
+0.4
+P16, 84 P50(bHSE)
+P84 P50
+P16 P50
+1013 1014 1015
+MHSE, 500c [M ]
+Figure 4.As Fig. 3 but for the bias as a function of the inferred hydrostatic mass𝑀HSE,500c. Compared to the bias as a function of true mass shown in Fig. 3,
+the median biascurves are less mass dependent,but the magnitude of theoffset between the different physicsmodels is comparable. The scatteris less sensitive
+to the physics model than in Fig. 3.
+between the gas fraction variations is of the same order as the error
+on the observationally determined bias.
+The top right panel shows that the model with a reduced galaxy
+stellar mass function predicts a hydrostatic bias that is very similar
+to that of the fiducial model, with just a slight offset in the same
+direction as decreasing gas fraction. That is unlike the jet model,
+which is almost identical to the fgas+2𝜎 model, at all masses. At
+lowmasses,thiscanbeexplainedduetotheincreasedgasfractionin
+thatmodelforgroups(seeFigure10ofSchayeetal.2023),however,
+for clusters the gas fractions are identical to the fiducial model. The
+changeinAGNfeedbackmodeseeminglyaffectsthegasdistribution
+out to large radii, yielding temperature and density gradients similar
+totheincreasedgasfractionmodel.TheJet_fgas −4𝜎modelexhibits
+a horizontal offset close to that of the fgas−4𝜎 model, but the dip
+in the bias at low mass reaches a minimum value of𝑏HSE≈− 0.17
+compared with𝑏HSE≈− 0.20 for fgas−4𝜎, yielding a flatter bias
+curve with mass. The flattening of the bias curve only occurs below
+1014 M⊙, indicating that the change in AGN feedback mode has its
+largest effect on group mass haloes.
+Thescattershowninthelowerpanelshasasimilarhorizontalshift
+between the models with different gas fractions as for the median
+curves in the upper panels. The minimum spread of𝜎 ≈ 0.2 is
+MNRAS000, 1–19 (2024)
+
+--- Page 9 ---
+Hydrostatic mass bias for FLAMINGO clusters 9
+1013 1014 1015
+M500c [M ]
+0.6
+0.4
+0.2
+0.0
+0.2
+0.4
+bHSE
+Wicker+2023
+Eckert+2016
+Herbonnet+2020
+Wicker+2023
+Eckert+2016
+Herbonnet+2020
+1013 1014 1015
+MHSE, 500c [M ]
+0.0
+0.5
+1.0
+1.5
+Redshift
+Figure5. AsFig.1,butshowingthebiasinferredusingthemodified- 𝛽-profileatdifferentredshifts(differentcolours).Asafunctionoftruemass,thebiascurves
+steepen with increasing redshift. However, at a fixed inferred hydrostatic mass they are almost unchanged except at the highest redshift considered (𝑧 = 1.5).
+The observational data points are all for clusters with𝑧≤ 0.5
+reachedat 3× 1013 M⊙ forfgas+2𝜎afterwhichthescattergradually
+increases towards higher masses reaching𝜎≈ 0.35at 5× 1014 M⊙,
+whereas for the lowest gas fraction model the minimum spread is
+reached at 1014 M⊙, resulting in a smaller spread of𝜎≈ 0.25 at
+5× 1014 M⊙.
+The increase of scatter towards larger masses is dominated by the
+downscatterwhichincreasesfasterthantheupscatter,indicatingthat
+the distribution becomes skewed at high masses. Below the mass of
+minimum spread, the scatter in the bias diverges, with the lower gas
+fraction model variations having more scatter.
+Thebottomrightpanelshowsthatthestellarmassvariation( 𝑀★−
+𝜎) is very close to the fiducial model (L1_m9), but slightly offset in
+thedirectionoffgas−2𝜎.Thejetmodelissimilartofgas +2𝜎,andthe
+Jet_fgas−4𝜎 model is as fgas−4𝜎 but suppressed below1014 M⊙.
+It should be noted that although the differences in bias between
+themodelsarelargeatallmasses,theyremainwithintheboundsset
+by the1𝜎 percentiles of the fiducial model.
+Fig.4showsthesameresultbutasafunctionoftheinferredhydro-
+staticmass,whichisthemassthatwouldbemeasuredinobservations
+wherethetruemasscannotbeaccessed(i.e.X-rayobservations).The
+top panels indicate that the offsets in the median bias values persist,
+thoughthemassofthecrossingpointisnowthesameforallmodels
+at 𝑀HSE,500c ≈ 4× 1014 M⊙. After this crossing point, the bias
+curves flatten instead of decreasing with increasing mass. They set-
+tle around a value of𝑏HSE≈− 0.1, lower gas fractions yielding a
+smaller 𝑏HSE, i.e. a more biased measurement. The jet and stellar
+mass model variations have the same relative behaviour to the gas
+fraction variations as when comparing with the true mass𝑀500c.
+Thescatter(bottompanels)showsaslightlyincreasingtrendwith
+increasing mass. For𝑀HSE,500c > 3× 1013 M⊙ the scatter is rela-
+tively insensitive to the physics model.
+3.5 Redshift evolution
+The left panel of Fig. 5 shows that the most massive objects at each
+redshifthaveamedianbiasof 𝑏HSE≈− 0.3.Thebiasisadecreasing
+function of true mass at all redshifts. The most striking feature at
+𝑧 >0 is a sharp upturn of the hydrostatic mass for objects between
+1− 3× 1013 with increasing redshift. The mass of those objects is
+overestimated by≈ 20 per cent at𝑧 > 1. A positive bias can be
+explained by either an enhanced temperature or an increase in the
+densityandtemperaturegradients.Thisseemstooccurpreferentially
+for lower mass objects at higher redshifts.
+Generally,themedianbiascurvefor 𝑀500c steepenswithincreas-
+ing redshift, making the bias more strongly mass dependent. The
+right panel shows that as a function of the inferred hydrostatic mass
+(𝑀HSE,500c) the bias remains insensitive to mass as the redshift in-
+creases but weakens for𝑧 ≳ 1. The scatter in the bias increases with
+redshift.
+Between𝑧 = 0 and𝑧 = 1.5 the number of haloes decreases from
+>106to>105for𝑀500c≥ 1013 M⊙,from >105to>103for𝑀500c≥
+1014 M⊙, and from461to 0 for𝑀500c≥ 1015 M⊙.
+4 ORIGIN OF THE MASS BIAS
+This section will investigate the origin of the bias. We first study the
+effect of the fit quality on the obtained bias in Section 4.1, followed
+byacharacterisationoftheobjectswithoutlyingbiasvaluesfortheir
+massinSection4.2.Wethenstudythecontributionoftheconstituent
+components of the hydrostatic mass equation to the bias in Section
+4.3. Finally, we study the energy balance of virial equilibrium in
+Section 4.4.
+4.1 Fit quality
+The stronger hydrostatic mass bias at high true masses (Fig. 1),
+combined with the enhanced scatter for the bias values at high mass
+inferred using the cubic-spline method to fit the profiles, prompts
+us to investigate the fit quality across the entire mass range. To this
+end, we compute a goodness-of-fit (GOF) statistic for each fit to the
+densityortemperatureprofile(usingthemodified- 𝛽-profiletofitthe
+MNRAS000, 1–19 (2024)
+
+--- Page 10 ---
+10 J. Braspenning et al.
+0.4
+0.3
+0.2
+0.1
+0.0
+0.1
+bHSE
+  
+10 4.2
+10 3.9
+10 3.7
+10 3.5
+10 3.3
+10 3.2
+10 3.0
+10 2.8
+10 2.5
+10 1.9
+1013 1014 1015
+M500c [M ]
+0.6
+0.4
+0.2
+0.0
+0.2
+0.4
+0.6
+P16, 84 P50(bHSE)
+P84 P50
+P16 P50
+1013 1014 1015
+MHSE, 500c [M ]
+Figure 6.As Fig. 3, but showing the hydrostatic mass bias inferred using the modified-𝛽 fit to the density profile in bins ofΔF, the root mean square error of
+thefitteddensityandtemperatureprofiles.Eachlinecorrespondstoasubsetof10percentofallhaloes,withthecolourindicatingthemedian ΔF inthatsubset
+(a lowerΔF indicates a better fit). Poorer fits tend to correspond to a larger absolute value of, and more scatter in the bias. The effect is stronger at larger true
+masses.
+density profile),
+ΔF =
+vut
+1
+𝑁bins
+𝑁bins∑︁
+𝑖=1
+h
+log10
+
+F/F analytic
+i 2
+, (10)
+which is the root mean square difference between the logarithm of
+the profileF and the best fit,Fanalytic; 𝑁bins = 8 is the number of
+radial bins in the profile between0.5𝑟500c and 2.0𝑟500c.
+Fig. 6 shows how the bias changes in 10 bins of decreasing fit
+quality. Each bin contains 10 per cent of all objects, and the legend
+denotes the median combinedΔF from both the density and tem-
+perature profile in that bin (ΔF𝜌+ΔF𝑇). The median bias increases
+towardlargernegativevaluesof 𝑏HSE withdecreasingfitquality(i.e.
+increasingΔF).
+As a function of the true mass𝑀500c, apart from increasing in
+magnitude, the bias also becomes more mass dependent for poorer
+fits. The quality of the fit is particularly important at high masses.
+For the 30 per cent of massive clusters (𝑀500c∼ 1015 M⊙) with the
+poorest fits, the bias is close to that inferred from observations.
+As a function of the inferred hydrostatic mass𝑀HSE,500c, poorer
+MNRAS000, 1–19 (2024)
+
+--- Page 11 ---
+Hydrostatic mass bias for FLAMINGO clusters 11
+4
+ 3
+ 2
+ 1
+ 0
+log  / log r
+1.5
+1.0
+0.5
+0.0
+0.5
+log T / log r
+log10
+M500c
+M  = 13.0-13.1
+bHSE = +0.63
+bHSE = -0.73
+4
+ 3
+ 2
+ 1
+ 0
+log  / log r
+log10
+M500c
+M  = 13.5-13.6
+bHSE = +0.25
+bHSE = -0.48
+4
+ 3
+ 2
+ 1
+ 0
+log  / log r
+log10
+M500c
+M  = 14.0-14.1
+bHSE = +0.29
+bHSE = -0.51
+4
+ 3
+ 2
+ 1
+ 0
+log  / log r
+log10
+M500c
+M  = 14.5-14.6
+bHSE = +0.29
+bHSE = -0.67
+4
+ 3
+ 2
+ 1
+ 0
+log  / log r
+log10
+M500c
+M  = 15.0-15.1
+bHSE = +0.22
+bHSE = -0.73
+Figure7. Thelogarithmicderivativesoftheluminosity-weightedmodified- 𝛽 densityprofilesandtheluminosity-weightedtemperatureprofiles,at 𝑟HSE,500c,for
+theobjectswiththe5percentlowesthydrostaticmasses(black)or5percenthighestmasses(red)in5narrowtruemassbins.Thelegendineachpanelindicates
+the median bias values of each subset. The two sets of contours are consistently offset and can be connected by moving almost orthogonal to the thin black
+diagonallineswhichcorrespondtoaconstantpressurederivative,showingthatthedifferenceinbiascouldbeexplainedbydifferencesintheprofilederivatives
+at a constant temperature (see Eq. 2).
+fits incur a larger absolute bias in the mass range4× 1013− 5×
+1014 M⊙, whereas they converge towards𝑏HSE ≈ 0.1 for larger
+masses.
+The bottom panels of Fig. 6 show that the scatter increases with
+increasing ΔF. For the worst fits (yellow lines) the spread in bias
+values reaches𝜎= 0.6 for 1014 M⊙ haloes.
+In the bottom right panel, we observe a highly asymmetric scatter
+for 𝑀HSE,500c > 5× 1014 M⊙, for all values ofΔF the upscatter
+is significantly larger than the downscatter. At the highest masses
+(𝑀HSE,500c∼ 1015 M⊙) the downscatter approaches zero, and the
+bias is positive for nearly all haloes.
+Both as a function of true mass and inferred hydrostatic mass, the
+best 20 per cent of fits yield an almost constant bias (𝑏HSE≈− 0.1),
+with small scatter,𝜎HSE= 0.1.
+Intuitively, these results make sense as more massive objects are
+more likely to be disturbed and hence have fluctuations in their den-
+sity and temperature profiles, particularly in the outskirts (see also
+Kay et al. 2024). The fluctuations are always positive, since un-
+masked,interveningstructureresultsinalocalincreaseinthedensity
+field, and the luminosity-weighted density profiles will be higher if
+the gas is more clumpy. When fitting the binned profiles, such bins
+with increased densities tend to flatten the profile, yielding smaller
+derivatives, smaller hydrostatic masses (see Eq. 2) and hence larger
+negative biases.
+Wenotethateventhe10percentworstfits(yellowline),stillhave
+small errors, of order0.1 dex per data point. We checked that the
+other analytic fits to the density profile yield similar results.
+4.2 Drivers of outlying hydrostatic mass
+This section investigates the scatter in hydrostatic mass bias at fixed
+massbyidentifyingtheobjectswiththe5percenthighestandlowest
+bias values within each true mass bin. To ensure that we do not see
+anyresidualdependenceonthegoodness-of-fit(asshowninFig.6),
+we match theΔF distributions of the two subsamples containing
+outliers. About70 per cent of the objects in the subsamples can be
+matched, for each object in a sample the other sample has an object
+for which theΔF differs by less than 10 per cent. Leveraging the
+mathematical expression for hydrostatic mass (Eq. 2), we analyze
+thederivativeswithradiusofthetemperatureanddensityprofilesfor
+these two groups of objects.
+Fig. 7 reveals a separation between the two groups in thedlog𝜌-
+Figure 8.The luminosity-weighted temperature at𝑟HSE,500c of objects with
+the 5 per cent lowest hydrostatic masses, i.e. the5th percentile 𝑃5, (black)
+or 5 per cent highest hydrostatic masses, i.e. the95th percentile 𝑃95, (red)
+in 5 different bins of true mass. The medians (horizontal solid lines) and
+distributions of temperatures (the width of the shaded region is proportional
+tothenumberofobjects)arecomparablebetweenthetwosamplesforallmass
+bins. This indicates that temperature differences cannot explain the different
+hydrostatic masses.
+dlog𝑇 plane, with the derivatives computed at𝑟HSE,500c. Moving
+along the thin diagonal lines, the bias would change due to a differ-
+ent temperature at a fixed sum of derivatives (i.e. a fixed pressure
+derivative, see Eq. 2), whereas moving perpendicular to those lines
+thebiaschangesatfixedtemperature,butduetochangingderivatives.
+Objects with the largest hydrostatic mass (red in Fig. 7) in each
+binoftruemasshavemorenegativederivatives(i.e.steeperprofiles)
+comparedtothosewiththelowesthydrostaticmass(blackinFig.7).
+Qualitatively, this effect is independent of the true mass. Shallow
+profiles, characterized by small absolute values of the derivatives,
+may arise due to dynamical disturbance within clusters. We investi-
+gated this by examining correlations between bias and the center of
+potential - center of mass offset, a measure for relaxedness (Evrard
+MNRAS000, 1–19 (2024)
+
+--- Page 12 ---
+12 J. Braspenning et al.
+1013 1014 1015
+M500c [M ]
+3.0
+2.5
+2.0
+1.5
+logr
+1013 1014 1015
+M500c [M ]
+0.6
+0.7
+0.8
+0.9
+1.0
+1.1
+1.2
+1.3T(rHSE, 500c)/T500c
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+Figure 9.Medians of components of the hydrostatic mass equation (Eq. 2) for different FLAMINGO gas fraction variation models. The solid lines in the left
+panel show the sum of the logarithmic derivatives of the density and temperature profiles at𝑟HSE,500c. The solid lines in the right panel show the temperature at
+thatradiusnormalisedbythevirialexpectation( 𝑇500c).Thedashedlinesindicatetherequiredderivatives(ortemperatures)giventhetemperature(orderivative)
+curve in the other panel. Different colours correspond to models with different cluster gas fractions, as indicated in the legend.
+et al. 1993; Mohr et al. 1993), but found no correlations (see Ap-
+pendix B for details). Previous work by Biffi et al. (2016) found a
+slight dependence of the bias on dynamical state, but we note that
+thoseauthorsdidnotmatchthegoodness-of-fitandthattheirsample
+was very small, including just 6 regular and 8 disturbed systems.
+Thedifferenceinthederivativesbetweenthehighandlowinferred
+hydrostatic mass subsamples is found for all methods of computing
+profile derivatives, both for the parametric fits and the derivatives
+obtained from cubic-spline interpolation.
+From Fig. 7 it can be seen that the two subsets can be connected
+by moving almost perpendicularly to the thin lines, indicating that
+the change in inferred hydrostatic mass could be explained by a
+change in the pressure gradient at fixed temperature. This agrees
+with results from Ansarifard et al. (2020), who provide a partial
+empircalcorrectiontothehydrostaticmassbiasbyusingthegradient
+of the density profile. To confirm this, we examine the temperatures
+at𝑟HSE,500c for these two groups of outliers. Fig. 8 illustrates that
+objects exhibiting low and high inferred hydrostatic masses have
+comparable temperatures within identical narrow true mass bins.
+Consequently, we infer that the scatter in the bias at a fixed mass
+and at fixed goodness-of-fit can be accounted for by differences in
+thederivativesofthetemperatureanddensityprofiles,asdepictedin
+Fig. 7, indicating steeper (shallower) pressure profiles for the largest
+(smallest) hydrostatic masses at fixed true mass.
+4.3 Components of the hydrostatic mass equation
+To further investigate the differences in the hydrostatic mass bias at
+fixedtruemassbetweenthedifferentFLAMINGOmodelvariations,
+weanalyzetheconstituentcomponentsofthehydrostaticmassequa-
+tion and their expected values in a virialised system. There are three
+variable parts in Eq. 2, the temperature𝑇(𝑟HSE,500c), the sum of
+derivatives
+∑︁
+𝜕log𝑟(𝑟HSE,500c)=
+ dlog𝑇
+dlog𝑟 + dlog𝜌
+dlog𝑟
+
+, (11)
+and the radius𝑟HSE,500c. At fixed𝑀500c the variation in the radius
+𝑟HSE,500cacrossdifferentphysicsmodelvariationsisminimal,sowe
+donotdelveintoitanyfurther.Thetemperature 𝑇 andthelogarithmic
+derivative of the pressure˝𝜕log𝑟 could exhibit significant variation
+betweenthedifferentmodels,andholddistinctexpectationsforself-
+similar virialised haloes, to which we can compare.
+At the spherical overdensity radius𝑟500c, the temperature of a
+self-similar virialised halo has the expected value (for a derivation
+see e.g. Braspenning et al. 2023)
+𝑇500c= 𝜇𝑚p
+2𝑘B
+ 500𝐺2
+2
+1/3
+𝑀2/3
+500c𝐻(𝑧)2/3. (12)
+Additionally, in hydrostatic equilibrium, an isothermal sphere has a
+logarithmicdensityslope 𝑑 log 𝜌
+𝑑 log 𝑟 =−2.Whiletheequationforhydro-
+staticmassaccommodatesforanon-constanttemperatureprofile,the
+sumofthederivativesshouldstillequal −2ifthetemperatureequals
+𝑇500c at𝑟500c4. However, Braspenning et al. (2023) have shown that
+FLAMINGO haloes are not self-similar.
+Fig. 9 shows the median sum of derivatives in the left panel,
+and in the right panel the median temperature divided by the virial
+expectation𝑇500c. The right panel shows that the deviation of the
+temperature from𝑇500c is strongly mass dependent, and that there is
+astrongmodeldependence.Lowergasfractionsmodelsyieldhigher
+temperatures. At the lowest masses considered (< 2× 1013 M⊙) the
+temperatures are similar.
+Theleftpanelshowsdifferencesinthesumofderivatives.Thegas
+fraction variations show similar relative offsets as in the right panel.
+Thedashedlinesindicate,ateachmass,thederivativesthatwouldbe
+requiredtohavenobias(i.e. 𝑏HSE= 0)giventhetemperaturesinthe
+right panel. In the right panel, all solid lines are always below their
+corresponding dashed line, indicating that the total thermal force is
+insufficient to obtain a zero bias.
+4 This follows from entering𝑇500c for the temperature and demanding no
+bias (𝑀HSE,500c= 𝑀500c).
+MNRAS000, 1–19 (2024)
+
+--- Page 13 ---
+Hydrostatic mass bias for FLAMINGO clusters 13
+1013 1014 1015
+M500c[M ]
+0.0
+0.2
+0.4
+0.6
+Ekin, therm, non therm / |Epot|
+ Ekin/|Epot| Etherm/|Epot| Enon therm/|Epot|
+Figure 10.Ratio between the total kinetic (blue), thermal (green), and non-
+thermal (orange) energy to the potential energy within𝑟500c as a function of
+thetruemass.Solidlinesshowthemedians,andtheshadedregionsshowthe
+16th to 84th percentiles. Below1014 M⊙ there is an excess of kinetic energy,
+whereas at higher masses there is a deficit compared to the value expected
+from the virial theorem, indicated by the grey dashed horizontal line. The
+contribution from non-thermal kinetic energy reaches 20 per cent both for
+lowandhighmasses,butdecreasesto5percentforintermediatemasses.The
+dashed blue line indicates the total kinetic energy after applying a correction
+for the external thermal pressure. When external pressure is accounted for,
+clusters of all masses are sub-virial at𝑟500c.
+InthetopleftpanelofFig.3inSection3.4,acrossingpointisseen
+when we compare the bias for different gas fractions. At low mass,
+lower gas fractions give a stronger bias, whereas at high mass the
+inverseistrue.Thiscanbeunderstoodintermsofthedifferentshapes
+of the derivatives and temperatures as a function of mass. Towards
+lowmasses( < 7× 1013 M⊙)boththederivativesandtemperatureas
+a function of mass flatten. However, the temperatures flatten earlier
+than the derivatives, with the inflection happening at increasingly
+higher masses for lower gas fractions. The different inflection points
+for derivatives and temperatures result in a rapidly changing bias
+with mass, until the point where both curves flatten, which happens
+at 2×1013 M⊙ forfgas−8𝜎.Theoffsetinbiasvaluesathighermasses
+(> 1014 M⊙) can be understood because the distance between the
+solidanddashedlinesissmallerforthelowergasfractionvariations.
+This implies that they are closer to full thermal pressure support.
+The derivatives become insensitive to mass above3× 1014 M⊙,
+whereas the temperatures for the most extreme gas fraction vari-
+ations become insensitive to mass towards the lowest masses (<
+3× 1013 M⊙).
+4.4 Energy balance
+Non-thermal pressure has been posited as one solution to the dis-
+crepancy between hydrostatic mass and true mass. Because under
+the assumption of hydrostatic equilibrium, the mass is computed
+by equating the gravitational force with the thermal pressure gradi-
+ent, if there is an additional pressure gradient from the non-thermal
+component, the gravitational force and hence the mass would be un-
+derestimated. Similarly, if there is significant net rotation, then the
+centrifugal force would lead to an underestimate of the mass. Fur-
+thermore, there is no guarantee that the assumption of hydrostatic
+equilibrium is valid.
+Since deviations from hydrostatic equilibrium are present in our
+sample, we study whether these can be understood in terms of devi-
+ations from virial equilibrium. According to the equations of virial
+equilibrium,thegravitationalpotentialenergyofthegasshouldequal
+−2 times its kinetic energy. Following the derivation of virial equi-
+librium in the presence of external pressure (e.g. Draine 2011)
+𝐸pot=−2𝐸kin (13)
+=−2  𝐸non−therm+𝐸therm−𝐸therm,0
+ , (14)
+where𝐸therm,0 represents a correction to the thermal energy due to
+external thermal pressure,
+𝐸pot=−2𝐸non−therm− 3
+∫
+𝑃d𝑉+
+∮
+dﬁ𝑆·ﬁ𝑟𝑃, (15)
+where dﬁ𝑆 is the surface element, and we neglect the non-thermal
+component of the external pressure. The first integral term is the
+thermal energy within the volume under consideration
+𝐸therm = 3
+2
+∫
+𝑃d𝑉 (16)
+where the factor3/2 follows from the equipartition theorem for a
+monatomic gas, and the second integral term expresses the pressure
+exertedonthesurfacewithinwhichthethermalenergyiscomputed.
+Assuming the external pressure exerted on the spherical surface is a
+constant,𝑝0, we can write
+𝐸therm,0= 1
+2
+∮
+dﬁ𝑆·ﬁ𝑟𝑃 = 3
+2𝑝0𝑉. (17)
+We compute𝑝0 as the volume weighted mean thermal pressure at
+𝑟500c. We find that at𝑟500c, the surface pressure yields a≈ 20 to 40
+per cent correction to the thermal energy required for equilibrium.
+This shows that the external pressure is an important effect when
+considering deviations from virial equilibrium at𝑟500c.
+Thepotentialenergyiscomputedbysummingthecontributionsof
+the potential energy between the gas particles and all particles (gas,
+stars, and dark matter) within𝑟500c
+𝐸pot=
+∑︁
+𝑖∈gas
+∑︁
+𝑗∈all
+−𝐺𝑚 𝑖𝑚 𝑗
+𝑟𝑖 𝑗
+, (18)
+where𝑚𝑖 and𝑚 𝑗 denotethemassesofparticles 𝑖and 𝑗,respectively,
+𝑟𝑖 𝑗 represents the distance between the two particles, and pairs are
+only counted once. The kinetic terms are defined as
+𝐸non−therm =
+∑︁
+𝑖∈gas
+1
+2𝑚𝑖𝑣2
+𝑖 , (19)
+𝐸therm = 3
+2
+∑︁
+𝑖∈gas
+𝑁𝑖kB𝑇𝑖, (20)
+where𝑣𝑖 representsthemagnitudeofthepeculiarvelocityofparticle
+𝑖withrespecttothecenterofmassvelocityofallmatterwithin 𝑟500c
+(we neglect the Hubble flow inside𝑟500c),𝑇𝑖 the temperature, and
+𝑁𝑖 = 𝑚gas,𝑖
+𝜇𝑚H . We compute this last value by dividing the mass of
+simulation gas particle𝑖 by the mean particle mass,𝜇𝑚H, where we
+assume𝜇= 0.6,whichisappropriateforafullyionizedplasma.Note
+that the non-thermal energy includes contributions from turbulence,
+bulk motions, and rotation.
+Fig. 10 shows the ratios of the non-thermal (𝐸non−therm; orange),
+thermal (𝐸therm; green), and total kinetic (without surface term)
+(𝐸kin; blue) energies to the potential energy (𝐸pot) as a function of
+the true mass (𝑀500c). The dashed grey horizontal line indicates
+the expected ratio between kinetic and potential energy of 0.5 from
+the virial theorem. Below3× 1014 M⊙ there is an excess of kinetic
+MNRAS000, 1–19 (2024)
+
+--- Page 14 ---
+14 J. Braspenning et al.
+energy of≈ 20 per cent, while at higher masses there is a lack of
+kinetic energy, gradually growing towards larger masses, reaching
+10 per cent for the highest masses,2×𝑀500c∼ 1015 M⊙.
+The dashed blue line indicates the value for the total kinetic en-
+ergyiftheexternalpressurecorrectionisapplied.Forallmasses,this
+correction yields a deficiency of kinetic energy relative to the virial
+expectation, which suggests strong pressure confinement by the sur-
+roundingmedium,i.e.thegasjustoutside 𝑟500c.Hence,eventhough
+at low mass, the total kinetic energy exceeds the virial expectation,
+thegasissub-virialiftheexternalpressureistakenintoaccount.We
+note that Shaw et al. (2006) found a 15 per cent correction to virial
+equilibrium when using the surface pressure at𝑟178c for dark matter
+haloes. Though our correction is at most twice as large, we include
+hydrodynamics and measure at a significantly smaller radius.
+We note that the external pressure contribution was computed
+under the assumption of constant pressure, equal to the volume
+weighted average, on the spherical surface at𝑟500c. In reality, the
+pressureisunlikelytobeazimuthallysymmetricduetothepresence
+of substructure and, at low mass, outflows driven by feedback. We
+neglectedexternalrampressure,whichwouldbenegativeinthecase
+of outflows. Although the magnitude of the correction for external
+pressureisthusuncertain,thedeficiencyinkineticenergyrelativeto
+thevirialexpectationwhenusingtheexternalpressuretermsuggests
+that significant work would have to be done to move the gas beyond
+𝑟500c.
+We can understand the excess of kinetic energy below masses
+of 3× 1014 M⊙ to be due to the injection of kinetic energy from
+baryonic feedback. At the highest masses the baryon fractions are
+close to universal (Schaye et al. 2023) and cooling flows are more
+prevalent (Braspenning et al. 2023), which could reduce the thermal
+energy relative to virial expectations, in line with what we show in
+Fig. 10. The shortage of kinetic energy at the highest masses may
+also imply that these systems are still in the process of virialization,
+even at𝑟500c.
+Non-thermal motions account for 5 to 15 per cent of the total
+kinetic energy, the contribution is smallest around1014 M⊙, and
+increases towards both lower and higher masses. Since we ignored
+turbulence, rotation, and bulk motions in the hydrostatic mass equa-
+tion (Eq. 2), we may expect a bias of about𝑏HSE ≈− 0.1 if the
+gradientofthenon-thermalforcesfollowsthoseofthethermalpres-
+sure, which is a bias value close to what we find at low mass for
+our fiducial X-ray luminosity weighted thermodynamic profiles (see
+Fig. 1). However, the mass bias measured from volume weighted
+profilesissmallerthanthefractionofthenon-thermalkineticenergy
+(see Fig. 2), though their mass dependencies have similar shapes.
+This could imply that the turbulent energy fraction is larger towards
+the centre than at𝑅500c where we measure the bias.
+The scatter of∼ 10per cent in Fig. 10 is in line with the scatter in
+thehydrostaticbiaswefindfor 𝑀500c > 3×1013 M⊙ (seeFig.2),but
+we do not observe the steep increase in scatter at the lowest masses
+seen for the bias.
+Martizzi&Agrusa(2016),whosimulatedclustersinthe 𝑀500c≈
+1− 3× 1014 M⊙ range,foundthat,usingvolumeweighting,at 𝑟500c
+non-thermal energy can fully account for the hydrostatic bias. We
+find that in this mass range, the non-thermal energy in FLAMINGO
+is indeed sufficient to achieve virial equilibrium if we ignore exter-
+nal pressure. Our estimate of≈ 10 per cent non-thermal energy is
+furthermore in line with what is found in observations by Ettori &
+Eckert (2022) for massive clusters.
+Finally, we note that several sources of non-thermal energy chan-
+nels are not explored in this work, such as magnetic fields and cos-
+mic rays, which could potentially contribute significantly (see e.g.
+Ruszkowski & Pfrommer 2023). We note that since these processes
+arenotincludedinFLAMINGO,haloesareexpectedtoreachenergy
+equilibriumwithoutincludingtermsrepresentingtheircontributions.
+4.5 Mass decomposition from the Euler equation
+An alternative approach to using hydrostatic equilibrium in estimat-
+ing the mass is to find the mass contained within a sphere using
+the Euler equation, rewritten with the Poisson equation and Gauss’
+theorem,
+𝑀tot= 1
+4𝜋𝐺
+∫
+𝜕𝑉
+dﬁ𝑆 ·ﬁ∇𝜙, (21)
+= 1
+4𝜋𝐺
+∫
+𝜕𝑉
+dﬁ𝑆 ·
+
+− 1
+𝜌gas
+ﬁ∇𝑃therm−(ﬁ𝑣·ﬁ∇)ﬁ𝑣− 𝜕ﬁ𝑣
+𝜕𝑡
+
+, (22)
+with𝜙thegravitationalpotential.Wheneverytermisaccountedfor,
+this is guaranteed to yield the total mass, hence it can be used to un-
+derstandwhichtermsareimportant,asidefromthethermalpressure
+gradient.Eq.21doesnotassumesphericalsymmetryorequilibrium,
+and will always return the total mass contained within the sphere.
+Following Suto et al. (2013) (see also Oppenheimer 2018), we de-
+compose the mass into four effective terms in spherical coordinates:
+𝑀therm =− 1
+4𝜋𝐺
+∫
+𝜕𝑉
+d𝑆 1
+𝜌gas
+𝜕𝑃 therm
+𝜕𝑟 , (23)
+𝑀rot= 1
+4𝜋𝐺
+∫
+𝜕𝑉
+d𝑆
+𝑣2
+𝜃+𝑣2
+𝜙
+𝑟 , (24)
+𝑀stream=− 1
+4𝜋𝐺
+∫
+𝜕𝑉
+d𝑆
+
+𝑣𝑟
+𝜕𝑣 𝑟
+𝜕𝑟 + 𝑣 𝜃
+𝑟
+𝜕𝑣 𝑟
+𝜕𝜃 + 𝑣 𝜙
+𝑟 sin𝜃
+𝜕𝑣 𝑟
+𝜕𝜙
+
+, (25)
+𝑀accel=− 1
+4𝜋𝐺
+∫
+𝜕𝑉
+d𝑆 𝜕𝑣 𝑟
+𝜕𝑡 . (26)
+We evaluate the equations by creating10× 10 angular bins in a
+narrow radial bin,[0.95− 1.05]× 𝑟500c. For each bin, we compute
+volumeweightedandX-rayluminosityweightedaverageddensities,
+pressures and velocities, angular derivatives are found in a discrete
+fashion between neighbouring angular bins. The acceleration term
+cannotbedirectlycomputedfromsimulationoutputasthoselackthe
+required fine time resolution. However, because, by definition, the
+sumofthefourmasstermsequalsthetotalmass,itcanbeidentified
+as the remaining mass once the other three terms are accounted for
+𝑀rem=𝑀accel=𝑀tot−(𝑀therm+𝑀rot+𝑀stream). (27)
+Note that except for𝑀rot, the mass terms can be negative, which
+happens if they do not counteract gravity.
+The averaging of velocities in angular bins erases the small-scale
+turbulence present in the system. Hence, the remainder mass term
+will also include contributions from such turbulent motions.
+The approach in this section makes fewer assumptions than using
+the virial theorem. In virial equilibrium, the acceleration vanishes,
+and the remainder term𝑀rem would account only for those turbu-
+lent motions that are averaged out when computing the velocities
+in angular bins. Furthermore, for the computation of the hydrostatic
+mass, we assume spherical symmetry, hence the angular derivatives
+𝜕𝑣𝑟
+𝜕 𝜃 and 𝜕𝑣𝑟
+𝜕𝜙 vanish. For pure pressure support, the radial derivative
+of the velocity vanishes𝜕𝑣𝑟
+𝜕𝑟 = 0, and there is no angular motion
+𝑣 𝜃 = 𝑣 𝜙 = 0. Taking all those narrowing assumptions together,
+𝑀rot = 𝑀stream = 𝑀accel = 0, and the only remaining term is
+𝑀therm, which is what is usually considered when computing hy-
+drostatic equilibrium masses.
+Fig. 11 shows the fractional contributions of the various terms as
+MNRAS000, 1–19 (2024)
+
+--- Page 15 ---
+Hydrostatic mass bias for FLAMINGO clusters 15
+1013 1014 1015
+M500c [M ]
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+M /M500c
+ Mtherm
+Mrot
+Mstream
+Mrem
+1013 1014 1015
+M500c [M ]
+0.0
+0.2
+0.4
+0.6
+0.8
+M /M500c
+ Mtherm
+Mrot
+Mstream
+Mrem
+Figure 11.Contributions of different terms (different line styles; see equations 23 - 27) resulting from a decomposition of the Euler equation towards the total
+mass 𝑀500c. The left and right panels show volume weighted and X-ray weighted results, respectively. The calculations were done at𝑟500c in 10× 10 angular
+bins, see the text for details. The thermal component, representing the thermal pressure gradient, dominates. This is followed, in the case of volume weighting,
+by the term representing rotational support. The contribution of streaming motions is negligible at all true total masses. The remainder mass term is equal to
+the difference between the total mass and the other mass terms, it represents turbulent motions that were averaged out due to the angular binning as well as
+acceleration, its contribution is small at all masses for volume weighting, but increases for the highest masses if we use X-ray weighting.
+a function of the true total mass for the case of volume weighting
+(left panel) and X-ray luminosity weighting (right panel). Focusing
+firstontheleftpanel,weseethatthethermalmass,equivalenttothe
+hydrostaticequilibriummass,dominatesacrosstheentiremassrange.
+Thestreamingmassisnegligible.However,themassduetorotational
+motion contributes∼ 10 per cent of the total mass. Finally, the
+remainingfewpercentismadeupofthe 𝑀rem term,whichincludes
+turbulence (due to the angular binning applied in the calculation of
+the rotational and streaming masses) and the acceleration term.
+In Fig. 10 we have shown that the non-thermal energy fraction
+varies smoothly with mass and has a slight uptick for the lowest
+masses.Thatfindingisconsistentwiththeslightincreaseinremain-
+der mass below4× 1013 M⊙ we find here.
+TherightpanelofFig.11showsthatifweuseX-rayweightingto
+computeaveragesintheangularbinsusedfortheEulerequations,we
+findasharpupturninremaindermassattheveryhighesttruemasses
+(𝑀500c > 1015 M⊙).Thisupturncanbeduetoincreasedturbulence
+in the X-ray gas that is averaged out in the angular binning or it
+can be due to the acceleration term. Such an increased acceleration
+couldindicatea lackofvirialisationofthe gasdominatingtheX-ray
+fluxoralarge-scalecooling-flowforthosehighest-massobjects,and
+may serve as an explanation for the increased hydrostatic bias above
+𝑀500c = 1015 M⊙ found in this work from X-ray weighted profiles
+(see Fig. 2). That aligns with the significant velocity gradients near
+𝑟500c forthemostmassiveclustersinFLAMINGO(Kayetal.2024)
+for X-ray weighted gas.
+The most massive haloes tend to be the least relaxed and might
+havesignificantdynamicaldisturbances.Asaresult,theycanbeless
+axisymmetric and perhaps more clumpy, which are the conditions
+under which the largest differences between weighting schemes are
+expected.
+5 CONCLUSIONS
+This study examined the hydrostatic mass bias for galaxy clus-
+tersfromtheFLAMINGOcosmologicalhydrodynamicalsimulation
+suite.Assuminghydrostaticequilibrium,hydrostaticmassesarecom-
+putedusingthederivativesoftheX-rayluminosity-weighteddensity
+and temperature profiles at𝑟HSE,500c, along with the absolute tem-
+perature at that radius (Eq. 2). Our main results can be summarized
+as follows:
+• As a function of the true mass, the median hydrostatic bias
+𝑏HSE =(𝑀HSE,500c−𝑀500c)/𝑀500c≈− 0.1 at group mass scales,
+but increases to≈− 0.2 at the cluster mass scale (Fig. 1, left panel).
+The scatter in the bias is smallest for𝑀500c ∼ 1014M⊙, where
+𝜎(𝑏HSE)≈ 0.1. The scatter rapidly diverges for𝑀500c≪ 1014M⊙
+and also increases markedly for𝑀500c≫ 1014M⊙. The results for
+the median bias are in good agreement with the bias inferred from
+comparisons between hydrostatic masses from X-ray observations
+and weak-lensing masses, though the observations are not yet very
+constraining due to the large differences between different studies.
+The predictions also align with results from other simulations.
+• Although theoretical studies conventionally predict the hydro-
+static mass bias as a function of the true mass, to correct observed
+hydrostatic masses, we require the bias as a function of the inferred
+hydrostatic mass. We predict the median bias to be nearly indepen-
+dent of the hydrostatic mass (Fig. 1, right panel). The qualitative
+difference with the bias as a function of true mass is caused by the
+upscatterofobjectswithalowertruemass.Atfixedhydrostaticmass
+these lower-mass objects mix with slightly more massive objects
+whose mass is more strongly underestimated, thus erasing the mass
+dependence of the bias.
+• The hydrostatic mass bias is highly sensitive to the weight-
+ing applied to particles when computing the spherically averaged
+thermodynamic profiles (Fig. 2). Compared with X-ray luminosity
+weighted profiles, volume weighted profiles, which are theoretically
+MNRAS000, 1–19 (2024)
+
+--- Page 16 ---
+16 J. Braspenning et al.
+preferable but cannot be obtained observationally, result in a much
+small hydrostatic mass bias for𝑀500c≫ 1013 M⊙. This suggests
+that much of the observed bias is not due to deviations from thermal
+hydrostatic equilibrium, but is caused by the biased nature of X-ray
+emitting gas.
+• The hydrostatic mass bias is insensitive to the assumed func-
+tional form of the density profile (Fig. 1).
+• The FLAMINGO suite includes simulations for which the sub-
+grid stellar and AGN feedback prescriptions have been re-calibrated
+to fit perturbed versions of the observed cluster gas fractions or
+galaxy stellar mass function. The models varying the cluster gas
+fractions and/or galaxy stellar mass function exhibit up to a factor 2
+offsetinthehydrostaticbias.Comparedwithourfiducialsimulation,
+modelswithlowergasfractionsyieldlessbiasedhydrostaticmasses
+for 𝑀500c > 1014 M⊙, but predict a stronger bias at lower masses
+(Figs. 3 and 4).
+• At higher redshifts the median bias is a more steeply declining
+function of the true mass. For𝑀500c∼ 1015M⊙ the true mass is
+more strongly underestimated at higher redshift, but for𝑀500c ∼
+1013M⊙ 𝑏HSE increaseswithredshift,leadingtoanoverestimateof
+thetruemassfor 𝑧 >1(Fig.5).Themedianbiasisinsensitivetothe
+hydrostatic mass at all redshifts, but𝑏HSE increases for𝑧 ≳ 1. The
+scatter in the bias increases with redshift, regardless of whether we
+bin in true or hydrostatic mass.
+• The magnitude of the bias depends on how well the adopted
+analytic functions describe the actual density and temperature pro-
+files of the cluster (Fig. 6). For example, at a true or hydrostatic
+mass of 1014M⊙ the median bias strengthens from𝑏HSE =−0.1
+to 𝑏HSE =−0.3 from the best 50 per cent to the worst 10 per cent
+fits to the density and temperature profiles. Poorer fits also yield a
+morestronglymass-dependentbias.Thescatterinthebiasmorethan
+doubles from the best to the worst fits.
+• The scatter in hydrostatic bias at fixed true mass can be ex-
+plained by differences in the pressure gradients between haloes, but
+notbydifferencesinthetemperatures.Haloeswithahighervaluefor
+the hydrostatic bias have similar temperatures, but steeper pressure
+gradients, compared to objects with a lower value of𝑏HSE (Figs. 7
+and 8).
+• Atfixedtruemass,thetemperatureandpressuregradientsdiffer
+strongly between the FLAMINGO models with different cluster gas
+fractions (Fig. 9 ). The clusters in models with smaller gas fractions
+have shallower pressure gradients, but higher temperatures.
+• Fortruemassesof 𝑀500c ≲ 1014 M⊙ thesumofthethermaland
+non-thermal energies exceeds what is required for virial equilibrium
+(Fig.10).Athighermasses,thetotalkineticenergyfallsincreasingly
+short of what is required for virial equilibrium, suggesting that the
+most massive objects are still in the process of virialization even at
+𝑟500c.However,ifweaccountfortheexternalpressureat 𝑟500c,then
+the total kinetic energy is sub-virial at all masses.
+• Non-thermal energy contributes∼ 10− 20 per cent to the total
+kinetic energy (Fig. 10). Naively, this could be taken to imply that
+the hydrostatic mass bias could be due to the neglect of the non-
+thermal energy. However, the volume weighted mass bias is much
+smaller than the X-ray weighted mass bias. This suggests that the
+non-thermal energy is concentrated towards the cluster centre and
+hence has relatively little effect on the hydrostatic mass measured at
+𝑅500c.
+• We quantify the contribution of different terms in the Euler
+equation to the total mass (Fig. 11). Coherent rotational support is
+∼ 10 per cent at all true masses. When using volume weighting, the
+acceleration term, which includes small-scale turbulence averaged
+out by binning, contributes∼ 10 per cent at the lowest masses but
+quickly becomes negligible with increasing true mass. If, instead,
+X-ray weighting is used, the acceleration term contributes up to 30
+per cent of the total mass for the most massive objects. This hints at
+incompletevirialisationofthegasdominatingtheX-rayemissionfor
+those masses and provides a possible explanation for the increased
+hydrostatic bias for the highest mass objects.
+BycomparingdifferentFLAMINGOsimulations,wehaveshown
+that the hydrostatic mass bias is strongly dependent on the median
+clustergasfractionsandthusonthestrengthofstellarandAGNfeed-
+back. Because the differences between reasonable gas fraction mod-
+els is larger than the error bars on many cluster mass measurements,
+testsofobservationalmethodsshouldthususehydrodynamicalsim-
+ulations that span a range of gas fractions. This is also critical for
+estimatingerrorsonX-rayinferredmassesforclustercosmology.On
+topofthat,thestrongsystematicdependenceofthebiasonthequal-
+ityofthefittothedensityandtemperatureprofilespotentiallycreates
+another source of significant systematic uncertainty that should be
+accounted for.
+As a result of the magnitude and mass dependence of the scatter,
+the dependence of the hydrostatic bias on mass is rather different
+dependingonwhethertheclustersarebinnedintermsoftheirtrueor
+hydrostatic masses. This means that different values for the bias are
+requiredwhenattemptingtocorrecthydrostaticmassesinferredfrom
+X-rayobservationsandwhenattemptingtoimposeahydrostaticbias
+on the true masses predicted by simulations.
+Taken together, our results suggest the need to employ forward
+modeling using hydrodynamical simulations when precise cluster
+masses are required. The simulations should have volumes suffi-
+ciently large to model the full distribution of the bias at fixed mass
+because this is required to model the differential effects of upscatter
+anddownscatterbetweenmassbinsaswellastomodelselectionef-
+fects.Thesimulationsshouldvarytheuncertainsubgridprescriptions
+for feedback processes within the ranges allowed by observation.
+While we used X-ray luminosity-weighted thermodynamic pro-
+files, in this work, we did not attempt to create virtual observations
+ortoaccountforthelimitationsofspecificsurveys.Ourconclusions
+could be strengthened by the production of mock X-ray data and by
+mimicking observational techniques. This is particularly important
+in the light of the fact that we infer a much smaller hydrostatic mass
+bias from volume weighted average thermodynamic profiles than
+when we use X-ray luminosity weighting.
+ACKNOWLEDGEMENTS
+We acknowledge support from research programme Athena
+184.034.002 from the Dutch Research Council (NWO). This work
+usedtheDiRAC@DurhamfacilitymanagedbytheInstituteforCom-
+putational Cosmology on behalf of the STFC DiRAC HPC Facil-
+ity (www.dirac.ac.uk). The equipment was funded by BEIS capi-
+tal funding via STFC capital grants ST/K00042X/1, ST/P002293/1,
+ST/R002371/1 and ST/S002502/1, Durham University and STFC
+operations grant ST/R000832/1. DiRAC is part of the National e-
+Infrastructure. This project has received funding from the European
+Research Council (ERC) under the European Union’s Horizon 2020
+research and innovation programme (grant agreement No 769130).
+DATA AVAILABILITY
+The data underlying the plots within this article are available on
+reasonable request to the corresponding author. The FLAMINGO
+MNRAS000, 1–19 (2024)
+
+--- Page 17 ---
+Hydrostatic mass bias for FLAMINGO clusters 17
+simulation data will eventually be made publicly available, though
+we note that the data volume (several petabytes) may prohibit us
+from simply placing the raw data on a server. In the meantime,
+people interested in using the simulations are encouraged to contact
+the corresponding author
+REFERENCES
+Abbott T. M. C., et al., 2022, Phys. Rev. D, 105, 023520
+Ansarifard S., et al., 2020, A&A, 634, A113
+Arnaud K. A., 1996, in Jacoby G. H., Barnes J., eds, Astronomical Society
+of the Pacific Conference Series Vol. 101, Astronomical Data Analysis
+Software and Systems V. p. 17
+Arnaud M., Pratt G. W., Piffaretti R., Böhringer H., Croston J. H., Pointe-
+couteau E., 2010, A&A, 517, A92
+Bahé Y. M., et al., 2022, MNRAS, 516, 167
+Barnes D. J., Kay S. T., Henson M. A., McCarthy I. G., Schaye J., Jenkins
+A., 2017a, MNRAS, 465, 213
+Barnes D. J., et al., 2017b, MNRAS, 471, 1088
+Barnes D. J., Vogelsberger M., Pearce F. A., Pop A.-R., Kannan R., Cao K.,
+Kay S. T., Hernquist L., 2021, MNRAS, 506, 2533
+Biffi V., et al., 2016, ApJ, 827, 112
+Booth C. M., Schaye J., 2009, MNRAS, 398, 53
+Borrow J., Schaller M., Bower R. G., Schaye J., 2022, MNRAS, 511, 2367
+Braspenning J., et al., 2023, arXiv e-prints, p. arXiv:2312.08277
+Bridle S., et al., 2010, MNRAS, 405, 2044
+Buote D. A., Humphrey P. J., 2012, MNRAS, 421, 1399
+Cavaliere A., Fusco-Femiano R., 1976, A&A, 49, 137
+Cavaliere A., Fusco-Femiano R., 1978, A&A, 70, 677
+Chaikin E., Schaye J., Schaller M., Bahé Y. M., Nobels F. S. J., Ploeckinger
+S., 2022, MNRAS, 514, 249
+Dalla Vecchia C., Schaye J., 2008, MNRAS, 387, 1431
+Debackere S. N. B., Hoekstra H., Schaye J., 2022, MNRAS, 515, 6023
+Draine B. T., 2011, Physics of the Interstellar and Intergalactic Medium
+Eckert D., et al., 2016, A&A, 592, A12
+Elahi P. J., Cañas R., Poulton R. J. J., Tobar R. J., Willis J. S., Lagos C. d. P.,
+Power C., Robotham A. S. G., 2019, Publ. Astron. Soc. Australia, 36,
+e021
+Elbers W., Frenk C. S., Jenkins A., Li B., Pascoli S., 2021, MNRAS, 507,
+2614
+Elbers W., Frenk C. S., Jenkins A., Li B., Pascoli S., 2022, MNRAS, 516,
+3821
+Ettori S., Eckert D., 2022, A&A, 657, L1
+Ettori S., Donnarumma A., Pointecouteau E., Reiprich T. H., Giodini S.,
+Lovisari L., Schmidt R. W., 2013, Space Sci. Rev., 177, 119
+Evrard A. E., Mohr J. J., Fabricant D. G., Geller M. J., 1993, ApJ, 419, L9
+GaoF.,HanL.,2012,ComputationalOptimizationandApplications,51,259
+Ghirardini V., et al., 2019, A&A, 621, A41
+Gianfagna G., Rasia E., Cui W., De Petris M., Yepes G., Contreras-Santos
+A., Knebe A., 2023, MNRAS, 518, 4238
+Gupta N., Saro A., Mohr J. J., Dolag K., Liu J., 2017, MNRAS, 469, 3069
+Hahn O., Rampf C., Uhlemann C., 2021, MNRAS, 503, 426
+Hamana T., Miyazaki S., Okura Y., Okamura T., Futamase T., 2013, PASJ,
+65, 104
+Henson M. A., Barnes D. J., Kay S. T., McCarthy I. G., Schaye J., 2017,
+MNRAS, 465, 3361
+Herbonnet R., et al., 2020, MNRAS, 497, 4684
+Herbonnet R., et al., 2022, MNRAS, 513, 2178
+Heymans C., et al., 2006, MNRAS, 368, 1323
+HuškoF.,LaceyC.G.,SchayeJ.,SchallerM.,NobelsF.S.J.,2022,MNRAS,
+516, 3750
+Jennings F., Davé R., 2023, MNRAS, 526, 1367
+KayS.T.,ThomasP.A.,JenkinsA.,PearceF.R.,2004,MNRAS,355,1091
+Kay S. T., Braspenning J., Chluba J., Helly J. C., Kugel R., Schaller M.,
+Schaye J., 2024, MNRAS,
+Kitching T. D., et al., 2012, MNRAS, 423, 3163
+Kitching T. D., et al., 2013, ApJS, 205, 12
+Kugel R., et al., 2023, MNRAS, 526, 6103
+LovisariL.,EttoriS.,SerenoM.,SchellenbergerG.,FormanW.R.,Andrade-
+Santos F., Jones C., 2020, A&A, 644, A78
+Mandelbaum R., et al., 2015, MNRAS, 450, 2963
+Martino R., Mazzotta P., Bourdin H., Smith G. P., Bartalucci I., Marrone
+D. P., Finoguenov A., Okabe N., 2014, MNRAS, 443, 2342
+Martizzi D., Agrusa H., 2016, arXiv e-prints, p. arXiv:1608.04388
+Massey R., et al., 2007, MNRAS, 376, 13
+Mazzotta P., Rasia E., Moscardini L., Tormen G., 2004, MNRAS, 354, 10
+McCarthy I. G., Schaye J., Bird S., Le Brun A. M. C., 2017, MNRAS, 465,
+2936
+Migkas K., et al., 2024, arXiv e-prints, p. arXiv:2401.17297
+Mohr J. J., Fabricant D. G., Geller M. J., 1993, ApJ, 413, 492
+Muñoz-Echeverría M., et al., 2024, A&A, 682, A124
+Nagai D., Kravtsov A. V., Vikhlinin A., 2007, ApJ, 668, 1
+Nelson K., Lau E. T., Nagai D., 2014, ApJ, 792, 25
+Okabe N., Smith G. P., 2016, MNRAS, 461, 3794
+Okabe N., et al., 2016, MNRAS, 456, 4475
+Oppenheimer B. D., 2018, MNRAS, 480, 2963
+Ota N., Nagai D., Lau E. T., 2018, PASJ, 70, 51
+Patej A., Loeb A., 2015, ApJ, 798, L20
+Pearce F. A., Kay S. T., Barnes D. J., Bower R. G., Schaller M., 2020,
+MNRAS, 491, 1622
+Planelles S., et al., 2017, MNRAS, 467, 3827
+Ploeckinger S., Schaye J., 2020, MNRAS, 497, 4857
+Pratt G. W., Arnaud M., 2002, A&A, 394, 375
+Rasia E., et al., 2014, ApJ, 791, 96
+Rossetti M., et al., 2024, A&A, 686, A68
+Ruszkowski M., Pfrommer C., 2023, A&ARv, 31, 4
+Sarazin C. L., 1988, X-ray emission from clusters of galaxies
+Schaller M., et al., 2024, MNRAS, 530, 2378
+Schaye J., Dalla Vecchia C., 2008, MNRAS, 383, 1210
+Schaye J., et al., 2015, Monthly Notices of the Royal Astronomical Society,
+446, 521
+Schaye J., et al., 2023, MNRAS, 526, 4978
+Scheck D., Sanders J. S., Biffi V., Dolag K., Bulbul E., Liu A., 2023, A&A,
+670, A33
+SchellenbergerG.,ReiprichT.H.,LovisariL.,NevalainenJ.,DavidL.,2015,
+A&A, 575, A30
+Shaw L. D., Weller J., Ostriker J. P., Bode P., 2006, ApJ, 646, 815
+Siegel S. R., et al., 2018, ApJ, 861, 71
+Smith G. P., et al., 2016, MNRAS, 456, L74
+Springel V., Di Matteo T., Hernquist L., 2005, MNRAS, 361, 776
+Springel V., et al., 2018, MNRAS, 475, 676
+Sullivan A., Power C., Bottrell C., Robotham A., Shabala S., 2024, arXiv
+e-prints, p. arXiv:2403.09946
+Suto D., Kawahara H., Kitayama T., Sasaki S., Suto Y., Cen R., 2013, ApJ,
+767, 79
+Turner D. J., et al., 2024, arXiv e-prints, p. arXiv:2403.07982
+Vikhlinin A., 2006, ApJ, 640, 710
+Vikhlinin A., Kravtsov A., Forman W., Jones C., Markevitch M., Murray
+S. S., Van Speybroeck L., 2006, ApJ, 640, 691
+Wicker R., Douspis M., Salvati L., Aghanim N., 2023, A&A, 674, A48
+WiersmaR.P.C.,SchayeJ.,TheunsT.,DallaVecchiaC.,TornatoreL.,2009,
+MNRAS, 399, 574
+APPENDIX A: THE EFFECT OF SUBHALOES ON THE
+HYDROSTATIC BIAS
+InX-rayobservations,brightsubstructuresaretypicallyremovedbe-
+fore extracting thermodynamic profiles. Potentially, the subtraction
+of such substructure could influence the determination of the hy-
+drostatic bias. Figure A1 shows that this is at most a small effect.
+Removing all subhaloes, which is our fiducial approach, gives only
+small differences in the median bias compared with no removal, and
+MNRAS000, 1–19 (2024)
+
+--- Page 18 ---
+18 J. Braspenning et al.
+1013 1014 1015
+M500c [M ]
+0.250
+0.225
+0.200
+0.175
+0.150
+0.125
+bHSE
+remove all subhaloes
+remove massive subhaloes
+no removal
+FigureA1. Medianhydrostaticmassbiasasafunctionoftruemassobtained
+using the cubic-spline measurement approach for different exclusion criteria
+for subhaloes. The difference between removing all subhaloes or only the
+most massive (𝑀sub > 0.1𝑀500c) subhaloes is small.
+below 𝑀500c∼ 1014 M⊙ the removal of subhaloes becomes irrel-
+evant. For the most massive haloes𝑀500c∼ 1015 M⊙ the offset in
+the bias is largest,Δ𝑏HSE≈ 0.05. However, the effect of removing
+only the most massive (𝑀sub > 0.1𝑀500c) subhaloes is consistent
+withthatofremovingallsubhaloes.Thisshowsthatonlythebright-
+est subhaloes can significantly affect the thermodynamic profiles.
+Hence, the removal of bright substructures, as is done in observa-
+tions, is sufficient for computing the hydrostatic mass.
+APPENDIX B: THE EFFECT OF THE CLUSTER
+DYNAMICAL STATE ON THE HYDROSTATIC BIAS
+Since the hydrostatic mass calculation relies on the assumption of
+hydrostatic equilibrium, a natural consequence is that dynamically
+disturbed systems, such as recent mergers, may not be adequately
+captured by this approach, possibly resulting in incorrect mass de-
+terminations. We use the centre-of-mass – centre-of-potential offset
+normalised to𝑟500c as a measure of relaxedness, which has been
+shown to accurately distinguish between dynamical disturbed and
+relaxed systems (Evrard et al. 1993; Mohr et al. 1993).
+Figure B1 shows that only for the most massive clusters there is a
+difference in bias between the 10 per cent most and 10 per cent least
+offsetsystems,andallarewellwithinthescatterinthebiasatagiven
+mass. Clearly, relaxedness is not the driving cause of scatter in the
+biasandcanbeignoredforourpurposes.Ifanything,thehydrostatic
+masses for the more relaxed (less offset) systems are more strongly
+biasedcomparedtothelessrelaxed(moreoffset)systems.Thisresult
+also holds when binning in hydrostatic mass instead of true mass.
+The effect of the dynamical state is negligible in both cases.
+APPENDIX C: RECALIBRATING FLAMINGO
+During the calibration of the subgrid models for feedback in the
+FLAMINGO suite of simulations, a constant hydrostatic bias of
+𝑏HSE =−0.257 was assumed based on comparisons between X-
+ray and weak lensing observations (Kugel et al. 2023). This affects
+the calibration of cluster gas fractions, by shifting X-ray inferred
+1013 1014 1015
+M500c [M ]
+0.30
+0.25
+0.20
+0.15
+0.10
+bHSE
+most offset
+least offset
+all
+FigureB1. Medianhydrostaticmassbiasasafunctionoftruemassobtained
+usingthecubic-splinemeasurementapproachforclustersindifferentdynam-
+icalstates.Thedashedlineshowsthemedianbiasforthe10percentofhaloes
+with the largest normalised center-of-mass – center-of-potential offset (least
+relaxed), whereas the dotted line shows the median for the 10 per cent least
+offset (most relaxed) haloes. The difference between the most- and least off-
+set haloes is very small, which implies that there is no significant correlation
+between bias and dynamical state.
+massestakenfromtheliterature.Inthiswork,wefoundthatusingan
+analyticfittotheclusterdensityprofile,aswouldbedoneintheX-ray
+observationsunderlyingthevalueofhydrostaticbiasusedincalibra-
+tion, yields a mass-dependent bias (see Fig. 1). As a function of the
+inferredhydrostaticmass( 𝑀HSE,500c)thebiasisalwayssmallerthan
+the calibration value, and has only a slight mass dependence.
+Fig.C1showstheresultofapplyingthe 𝑀HSE,500c-dependenthy-
+drostatic bias from the modified-𝛽 fit to the fiducial FLAMINGO
+model (see Fig. 1) to the observed gas fraction data. Red triangles
+showthenewvalues,andthedashedredlineisthepredictionfromthe
+emulator of Kugel et al. (2023). Calibrating the FLAMINGO model
+tothisnewdatayieldsslightlydifferentvaluesforthe4subgridfeed-
+back parameters that are varied by the Gaussian process emulator.
+Table C1 indicates that the AGN heating temperature,Δ𝑇AGN, is in
+between those for the fiducial and the+2𝜎 gas fraction models. The
+black hole accretion rate boost factor,𝛽BH, is slightly larger than
+fiducial, but still significantly below the fgas+2𝜎 model. The stellar
+feedback couples slightly less efficiently to the ISM (𝑓SN is lower)
+movingtowardsfgas+2𝜎,butthewindvelocityishigherthaninthat
+model.
+Shifting the X-ray data with the𝑀HSE,500c-dependent hydrostatic
+bias,yieldsauniquesetofparametersforwhichtheemulatorpredic-
+tion for𝑏HSE(𝑀500c) exhibits a somewhat different shape and slope
+compared to the other gas fraction variation models, the enhance-
+ment in gas fraction at lower masses makes it more similar to the
+Jet model. The characteristic S-shape of the other models is absent
+andreplacedbyanalmostlinearincreaseingasfractionwithaweak
+flatteningabove 1014 M⊙.EventhoughboththeAGNandsupernova
+feedbackareweakerinthismodel,androughlyhalfwaybetweenthe
+fiducial and fgas+2𝜎 model parameters, the gas fractions are close
+to the fiducial model across most of the mass range.
+Thegeneraltrendisthatfeedbackbecomesslightlyweakerinthis
+model, especially for low-mass groups where supernova feedback
+dominates over AGN feedback.
+MNRAS000, 1–19 (2024)
+
+--- Page 19 ---
+Hydrostatic mass bias for FLAMINGO clusters 19
+Table C1.Values of the calibrated subgrid parameters for the fiducial model
+and the±2𝜎 feedback variations at intermediate resolution, compared to
+usingthe 𝑀HSE,500c-dependenthydrostaticbiasfromthiswork(bottomrow).
+Prefix 𝑓SN Δ𝑣SN Δ𝑇AGN 𝛽BH
+(kms−1) (K)
+Fid_m9 0.238 562 107.95 0.514
+fgas+2𝜎_m9 0.219 577 107.71 0.554
+fgas−2𝜎_m9 0.206 552 108.08 0.497
+This work 0.228 584 107.85 0.522
+1013 1014 1015
+M500c [M ]
+0.02
+0.04
+0.06
+0.08
+0.10
+0.12
+0.14
+0.16
+fgas, 500c
+b/ m
+Akino+2022 (WL)
+Mulroy+2019 (WL)
+Hoekstra+2015 (WL)
+X-ray data bHSE = 0.257
+X-ray data bHSE(M)
+L1_m9
+fgas+2
+fgas 2
+fgas 4
+fgas 8
+M*
+M* _fgas 4
+Jet
+This work
+Figure C1.Median group and cluster gas fractions compared with observa-
+tions.TheredsymbolsindicatetheX-rayobservationsiftheyareshiftedwith
+the 𝑀HSE,500c-dependent hydrostatic bias found in this paper, whereas the
+black symbols use the constant hydrostatic bias of𝑏HSE =−0.257 assumed
+during the calibration of the FLAMINGO simulations.
+This paper has been typeset from a TEX/LATEX file prepared by the author.
+MNRAS000, 1–19 (2024)

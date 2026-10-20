@@ -1,0 +1,2307 @@
+Title: The impact of feedback on the evolution of gas density profiles from galaxies to clusters: a universal fitting formula from the Simba suite of simulations
+Authors: Daniele Sorini, Sownak Bose, Romeel Davé, Daniel Anglés-Alcázar
+Year: 2024
+arXiv ID: 2409.05815
+
+============================================================
+
+--- Page 1 ---
+Version December 3, 2024
+Preprint typeset using LATEX style openjournal v. 09/06/15
+THE IMPACT OF FEEDBACK ON THE EVOLUTION OF GAS DENSITY PROFILES FROM GALAXIES TO CLUSTERS:
+A UNIVERSAL FITTING FORMULA FROM THE SIMBA SUITE OF SIMULATIONS
+Daniele Sorini 1,★, Sownak Bose 1, Romeel Davé 2,3, and Daniel Anglés-Alcázar 4
+1Institute for Computational Cosmology, Department of Physics, Durham University, South Road, Durham, DH1 3LE, United Kingdom
+2Institute for Astronomy, University of Edinburgh, Royal Observatory, Blackford Hill, Edinburgh, EH9 3HJ, United Kingdom
+3University of the Western Cape, Bellville, Cape Town 7535, South Africa and
+4Department of Physics, University of Connecticut, 196 Auditorium Road, U-3046, Storrs, CT 06269-3046, USA
+Version December 3, 2024
+ABSTRACT
+The radial distribution of gas within galactic haloes is connected to the star formation rate and the nature
+of baryon-driven feedback processes. Using six variants of the hydrodynamic simulationSimba, we study
+the impact of different stellar/AGN feedback prescriptions on the gas density profiles of haloes in the mass
+range 1011 M⊙ < 𝑀200c < 1014 M⊙ and redshift interval0 < 𝑧 <4. We find that the radial profiles are well
+represented by a power law and that, for a fixed total halo mass, the slope and amplitude of such power law are
+generally weakly dependent on redshift. Once AGN-driven jets are activated in the simulation, the gas density
+profileofhaloeswith 𝑀200c ≳ 1013 M⊙ declinesmoregentlywithradialdistance. Wearguethatthisdistinctive
+feature could be exploited with current observations to discriminate amongst the predictions of the different
+feedbackmodels. Weintroduceauniversalfittingformulafortheslopeandamplitudeofthegasdensityprofile
+as a function of mass and redshift. The best-fit functions are suitable for all feedback variants considered,
+and their predictions are in excellent agreement with the numerical results. We provide the values of all fit
+parameters, making our fitting formula a versatile tool to mimic the effect ofSimba feedback models onto
+N-body simulations and semi-analytical models of galaxy formation. Our results can also aid observational
+estimates of the gas mass within haloes that assume a specific slope for the underlying gas density profile.
+Subject headings:galaxies: formation; galaxies: haloes; galaxies: structure; methods: numerical
+1. INTRODUCTION
+Understanding the distribution of gas within galactic halos
+is pivotal to unravelling the complexities of galaxy formation
+andevolution. Theefficiencyofstarformationwithingalaxies
+depends on the amount of gas and its thermal state. These are
+directlyaffectedbycomplexastrophysicalfeedbackprocesses
+suchassupernovaeexplosions,stellarwindsoroutflowsdriven
+by active galactic nuclei (AGN), which are not yet fully un-
+derstood but are thought to play a critical role in shaping the
+properties of the galaxy population through cosmic time (see
+e.g. Somerville & Davé 2015; Crain & van de Voort 2023,
+for recent reviews). Thus, observing and modelling the radial
+distribution of different gaseous phases within galaxies and
+their surrounding circumgalactic medium (CGM) has been
+the focus of a large body of research.
+SeveralobservationalcampaignsexploitedtheLy 𝛼 absorp-
+tion line from background quasars to probe the CGM of fore-
+ground galaxies (Steidel et al. 2010; Rudie et al. 2012, 2013;
+Turner et al. 2014), damped Ly𝛼 systems (Rubin et al. 2015)
+andquasars(e.gHennawi&Prochaska2007;Prochaskaetal.
+2013) at redshift 2 ≲ 𝑧 ≲ 3. At lower redshift, metal ab-
+sorbers have been utilised to study the spatial extent of the
+coolCGMofquasars(Farinaetal.2011,2013,2014;Johnson
+et al. 2015b,a, 2016). These studies are complemented by
+observations of Ly𝛼 and metal emission lines around𝑧 ≳ 2
+quasars(e.g.ArrigoniBattaiaetal.2015). Integral-fieldspec-
+★daniele.sorini@durham.ac.uk
+troscopicinstrumentssuchasMUSE(Baconetal.2010)have
+enabled further studies of the distribution of cool gas around
+2 ≲ 𝑧 ≲ 3 quasars (e.g. Arrigoni Battaia et al. 2019, 2023)
+andevenhigher-redshift( 𝑧 <4.5)galaxies(e.g.Galbiatietal.
+2023, 2024). Recently, the radial surface brightness profiles
+ofhotgasaroundlow-redshiftgalaxiesandclustershavebeen
+mapped (Lyskova et al. 2023; Zhang et al. 2024) thanks to
+theeROSITAX-rayobservatory(Merlonietal.2024). Obser-
+vations of the thermal and kinetic Sunyaev-Zeldovich effects
+(Sunyaev & Zeldovich 1970, 1972) have enabled constrain-
+ingthermodynamicalpropertiesoftheCGMaroundgalaxies,
+groups, and of the intracluster medium (Amodeo et al. 2021).
+Thus, the combination of a large amount of data from differ-
+ent wavelength bands enables us to trace the distribution of
+differentgaseousphasesaroundawidemassrangeofobjects,
+over a considerable redshift interval. This wealth of data is
+invaluable for constraining models for the build up of galax-
+ies in a cosmological context, which often rely on specific
+assumptions on the gas density profiles within haloes.
+Widely used semi-analytical models of galaxy formation
+adopt a spherically symmetric density profile declining as the
+inversesquareofthedistancefromthehalocentre(Coleetal.
+1994; Kauffmann et al. 1999; Hernquist & Springel 2003;
+Lacey et al. 2016; Pandya et al. 2020). While this assump-
+tion was later validated by cosmological simulations, at least
+in the outskirts of haloes (Stinson et al. 2015), other choices
+appearedintheliteratureaswell. Forinstance,somefullyan-
+alyticalframeworksforcosmicstarformationhistoryormod-
+arXiv:2409.05815v3  [astro-ph.GA]  2 Dec 2024
+
+--- Page 2 ---
+2 D. Sorini et al.
+els of the CGM structure prefer a generic power law (Hern-
+quist & Springel 2003; Sorini & Peacock 2021; Pandya et al.
+2023). Otherauthors(Mathews&Prochaska2017;Prochaska
+&Zheng2019)proposedamodificationoftheso-called‘NFW
+profile’,whichiswellknowntoaccuratelydescribedarkmatter
+density profiles in N-body simulations (Navarro et al. 1997).
+Another recurrent functional shape for the gas density profile
+is the ‘beta model’, which is empirically motivated by both
+observations (e.g. Zhang et al. 2024) and simulations (Sug-
+inohara & Ostriker 1998). Different analytical solutions for
+thegasdensityprofileshavebeenderivedfromfirstprinciples
+(Capeloetal.2010;Sternetal.2016,2019),providingfurther
+insight into the connection between astrophysical processes
+and the radial distribution of gas within haloes.
+Full cosmological hydrodynamic simulations can provide a
+more accurate description of the gas distribution within and
+around galaxies, without invoking simplifying assumptions
+suchassphericalsymmetry. However,dependingontheexact
+sub-grid implementation of stellar and AGN feedback pro-
+cesses, the predictions may vary considerably from code to
+code. For example, Pallottini et al. (2014) showed that simu-
+lationsbasedonthe RAMSESadaptivemesh-refinementcode
+(Teyssier2002)produceneutralhydrogendensityprofilesthat
+are in agreement with Ly𝛼 absorption measurements in the
+CGM of𝑧∼ 2 galaxies (Steidel et al. 2010). The Nyx (Alm-
+grenetal.2013;Lukićetal.2015)andIllustris(Vogelsberger
+etal. 2014)simulationprovide agood matchtosimilar obser-
+vations(Turneretal.2014),exceptintheregionwithin 10 kpc
+from galaxies, despite exhibiting rather different gas density
+and temperature profiles (Sorini et al. 2018). On the other
+hand, the Illustris simulation predicts a hot gas mass distribu-
+tion that is broadly consistent with observations of the X-ray
+coronal emission from low-mass spirals (Bogdán et al. 2015).
+More recently, the CAMELS suite of cosmological sim-
+ulations (Villaescusa-Navarro et al. 2021) has been used in
+conjunction with thermal SZ data from the Atacama Cosmol-
+ogy Telescope (ACT; Madhavacheril et al. 2020) and lensing
+measurements from the Dark Energy Survey (DES; Amon
+et al. 2022; Secco et al. 2022) to constrain the effect of feed-
+backprescriptionsonthematterpowerspectrum(Moseretal.
+2022; Pandey et al. 2023). Other works with the CAMELS
+suite explicitly highlighted the dependence on the parameters
+of different feedback models of the the gas distribution across
+various scales Gebhardt et al. (2024), the halo baryon mass
+Delgado et al. (2023) fraction and the gas power spectrum Ni
+et al. (2023).
+Further insights were offered by zoom-in numerical cam-
+paigns. TheFIRE-2simulations(Hopkinsetal.2018)showed
+that the inclusion of cosmic rays may significantly affect the
+gas density profiles of galaxies more massive than the Milky
+Way, without appreciably altering the temperature. Different
+implementations of the code underlying theThe Three Hun-
+dred simulations (Cui et al. 2018) provide varying levels of
+agreement with observations (McDonald et al. 2017; Ghirar-
+dini et al. 2021) of the gas profile around galaxy clusters (Li
+et al. 2023).
+From this brief historical excursus, it is clear that conclu-
+sionscandifferdependingontheastrophysicalmodelembed-
+ded in the simulations. For a systematic study of the effects
+of specific stellar and AGN feedback prescriptions on the dis-
+tributionofgaswithinhaloes, itisthenusefultoadoptasuite
+of simulations with same box size, mass resolution and initial
+conditions, but differing only on the modelling of feedback
+processes. In this respect, the Simba suite of simulations
+(Davé et al. 2019) represents an ideal test bed, incorporating
+six feedback variants. The suite has already been utilised to
+study the effect of stellar and different AGN feedback modes
+on the gas distribution and thermal state of gas within haloes
+both at high (Sorini et al. 2020) and low redshift (Khrykin
+et al. 2024; Yang et al. 2024). A more detailed analysis was
+provided by Sorini et al. (2022), who showed the evolution
+of the radial profile of various gaseous phases within haloes
+of different mass between𝑧 = 2 and𝑧 = 0, for five feedback
+variants of theSimbasimulation.
+In this study, we build up on the previous body of work
+around theSimba simulation by undertaking a more system-
+atic study of the evolution of the total gas density profiles.
+Weconsiderhaloeshostingdifferentobjects, fromgalaxiesto
+clusters(massrange 1011− 1014 M⊙),overtheredshiftinterval
+0 < 𝑧 <4. Our investigation also includes a new feedback
+variant of theSimba suite of simulations, which we present
+forthefirsttimeinthispaper,wherewedonotimposeafixed
+cap for the maximum speed of AGN-driven jets. We find that
+the gas density profiles, in all runs and in the entire mass and
+redshift range considered, are well approximated by a power
+law. The slope and normalisation of the power law are sen-
+sitive to the the different feedback modes, depending on the
+halo mass and redshift. Thus, we argue that measuring these
+quantities with current and forthcoming observations has the
+potential to tightly constrain different feedback prescriptions.
+Wealsoprovideauniversalfittingformulafortheredshiftand
+mass evolution of the slope and normalisation of the gas den-
+sityprofiles,forallrunsconsidered. Thisisthemainresultof
+the paper, and can be used to mimic the effect ofSimba-type
+feedback onto N-body simulations or semi-analytic models.
+Webrieflypresentthe Simbasimulationsin§2. Weanalyse
+the gas density profiles, and the evolution of their slope and
+normalisationovermassandredshift,in§3. Weintroduceour
+universalfittingformulain§4anddiscusstheapplicabilityof
+limitations of our work in § 5. We present our conclusions in
+§ 6. Throughout this manuscript, unless otherwise indicated,
+co-movingquantitiesareprecededbya‘c’(e.g. ckpc, cMpc,
+etc.).
+2. SIMULATIONS
+2.1. Description of the simulations
+Simba is a suite of cosmological simulations (Davé et al.
+2019) based on the Gizmo hydrodynamic code (Hopkins
+2015). It represents the successor of the Mufasa simula-
+tions, incorporating significant enhancements such as dual-
+mode black hole accretion, triple-mode AGN feedback, and
+an on-the-fly dust evolution model.Simbahas been found to
+accurately reproduce key properties of the intergalactic and
+circumgalactic media (e.g. Appleby et al. 2020; Bradley et al.
+2022; Christiansen et al. 2020; Yang et al. 2022), black holes
+(e.g. Thomas et al. 2019; Habouzit et al. 2021, 2022), and
+star formation history (e.g. Appleby et al. 2021; Scharré et al.
+2024). Given its widespread use in the literature, we will
+therefore limit the discussion of the suite of simulations to
+the features that are most relevant for this work, referring the
+interested reader to previous publications for further details
+(Davé et al. 2019; Li et al. 2019; Thomas et al. 2019).
+Simbaadopts theGrackle-3.1 library (Smith et al. 2017)
+for radiative cooling and photoionisation heating, including
+metalcoolingandnon-equilibriumevolutionofprimordialel-
+ements. TheevolutionoftheionisingUVbackgroundfollows
+theHaardt&Madau(2012)model,adjustedforself-shielding
+
+--- Page 3 ---
+A universal fitting formula for gas density profiles 3
+TABLE 1
+Simba runs used in this work.
+Simulation 𝐿box 𝑁 𝑚 DM 𝑚gas Stellar Feedback AGN winds AGN-jet X-ray heating Variable 𝑣jet cap
+(ℎ−1 cMpc) ( M⊙) ( M⊙)
+Var-vjet-cap 50 2× 5123 9.6× 107 1.82× 107 ✓ ✓ ✓ ✓ ✓
+Simba-50 50 2× 5123 9.6× 107 1.82× 107 ✓ ✓ ✓ ✓ —
+No-X-ray 50 2× 5123 9.6× 107 1.82× 107 ✓ ✓ ✓ — —
+No-jet 50 2× 5123 9.6× 107 1.82× 107 ✓ ✓ — — —
+No-AGN 50 2× 5123 9.6× 107 1.82× 107 ✓ — — — —
+No-feedback 50 2× 5123 9.6× 107 1.82× 107 — — — — —
+Simba-100 100 2× 10243 9.6× 107 1.82× 107 ✓ ✓ ✓ ✓ —
+Simba-25 25 2× 2563 9.6× 107 1.82× 107 ✓ ✓ ✓ ✓ —
+Simba HighRes 25 2× 5123 1.2× 107 2.28× 106 ✓ ✓ ✓ ✓ —
+From left to right, the first five columns of the table report: the name of the simulation as labelled in this manuscript; the box size; the cumulative number of
+initialDMparticlesandinitialgaselements;themassofaDMparticle;themassofagasresolutionelement. Thefollowingcolumnsdisplaywhetherthespecific
+features mentioned in the header are activated in each run (see § 2 for details). The fiducial run, typed in boldface, is the Simba-50 run. The main results of this
+work concern the comparison of the first six simulations listed in the table. The remaining three simulations are variants of the fiducial run with either different
+box size or mass resolution, and are used primarily for convergence testing purposes.
+with the Rahmati et al. (2013) formula. Star formation is
+derived from the Schmidt (1959) law forH2, estimated us-
+ing the Krumholz & Gnedin (2011) prescription. Gas with
+a hydrogen number density above𝑛th = 0.13 cm−3 is artifi-
+ciallypressurisedtoresolvestar-forminggasintheinterstellar
+medium (ISM). Eligible ISM gas must containH2 and meet
+specificdensityandtemperaturecriteriainordertotriggerstar
+formation. Thechemical enrichmentmodel trackseleven ele-
+ments(H,He,C,N,O,Ne,Mg,Si,S,Ca,Fe)fromsupernovae
+(Type Ia and II) and AGB stars (Oppenheimer & Davé 2006).
+Stellar feedback is implemented through star formation-
+driven galactic winds that are modelled using kinetic decou-
+pled ejection. Such outflows represent the collective effect
+of Type II supernovae, radiation pressure, and stellar winds.
+They are implemented via a sub-grid prescription ejecting
+wind particles perpendicularly to their velocity and acceler-
+ation vectors. The mass loading factor and wind speed are
+key parameters adopted from the scaling relations found in
+the FIRE zoom-in simulations (Muratov et al. 2015; Anglés-
+Alcázaretal.2017b). Windsaremetal-loaded,accountingfor
+Type II supernovae yields, with 30% of wind particles heated
+according to the difference between kinetic energy and the
+supernova energy (𝑢SN = 5.165× 1015 erg g−1), and the rest
+ejected at𝑇≈ 103K. Ejected wind particles are hydrodynam-
+ically decoupled to prevent numerical inaccuracies as a result
+of individual gas elements having high Mach numbers com-
+pared to their environment. Additionally, cooling is disabled
+to allow the hot winds to transfer their thermal energy to the
+CGM.Thewindelementsrecouplewheneithertheyhavebeen
+for at least 2% of the Hubble time since launch, their density
+is falls 0.01𝑛th, or below the ISM density and their velocity
+matches the one of the surrounding particles.
+Simba includes black hole (BH) particles that accrete gas
+using a dual model. Non-ISM gas above𝑇 = 105 K follows
+the Bondi accretion rate (‘hot-accretion mode’; see Bondi
+1952), while cooler gas within the BH kernel uses a torque-
+limited‘cold-accretionmode’,drivenbygravitationalinstabil-
+ities (Hopkins & Quataert 2011; Anglés-Alcázar et al. 2013,
+2015, 2017a). AGN feedback is implemented with three
+modes, depending on the BH mass𝑀BH and accretion rate:
+• Black holes accreting rapidly (> 0.2 times the Edding-
+ton accretion rate) ejectAGN winds characterised as
+purely bipolar outflows, aligned with the angular mo-
+mentum of gas within the BH kernel. The speed of the
+AGN winds in this radiative feedback mode follows the
+relation, based on X-ray observations of AGN by Perna
+et al. (2017):
+𝑣AGN w
+km s−1 = 500+ 500
+3
+
+log 𝑀BH
+M⊙
+− 6
+
+. (1)
+After ejection, the winds are kinetically coupled to the
+nearby gas particles. AGN winds do not influence the
+gas temperature directly, which remains determined by
+the ISM pressurisation model mentioned earlier.
+• For BHs with a mass exceeding107.5 M⊙, as the ac-
+cretion rate in Eddington units,𝑓Edd, drops below0.2,
+AGNfeedbackevolvesintothe AGN-jetmodefeedback.
+AGN jets are still implemented as purely bipolar out-
+flows, but can achieve significantly higher speeds than
+the AGN radiative winds, as described by the equation
+below:
+𝑣AGN jet
+km s−1 = 𝑣AGN w
+km s−1+ 7000 log
+ 0.2
+𝑓Edd
+
+. (2)
+Clearly, as the accretion rate diminishes, the AGN-
+jet mode becomes increasingly dominant. Neverthe-
+less, in most runs considered in this work (see Ta-
+ble 1 and § 2.2) the velocity increase is limited to
+7000 km s−1 when the Eddington ratio is𝑓Edd≤ 0.02.
+Instead, only in the No-vjet-cap variant, the maximum
+speed increase depends on the mass of the BH as in
+𝑣cap= 7000(𝑀BH/108)1/3 km s−1.
+• In addition, BHs undergoing AGN jets can provideX-
+rayheating feedbackifthegasfractioninthehostgalaxy
+is below0.2. X-ray heating impacts only the gas parti-
+cles within the BH kernel, and this impact is inversely
+proportional to the square of the distance from the BH.
+Inside the kernel, the temperature of the non-ISM gas
+rises according to the local heating flux, whereas for
+ISM gas, half of the X-ray energy is coupled as heating
+and the remaining half is transferred as kinetic energy,
+causing a radial outward motion in the gas particles.
+Through this mechanism, low-resolution ISM avoids
+therapidcoolingthatmightoccurasaresultoftheISM
+pressurisation model.
+
+--- Page 4 ---
+4 D. Sorini et al.
+2.2. Runs
+The main results of this work are obtained with six variants
+of theSimba suite of hydrodynamic simulations, all starting
+fromthesameinitialconditions. Allboxeshavethesamebox
+size (50ℎ−1 cMpcper side) and contain equal number of DM
+and gas particles (5123 per species), hence they are endowed
+withthesamemassresolution( 9.6×107 M⊙and 1.82×107 M⊙
+for DM and gas, respectively). The cosmological model un-
+derlying all simulations is consistent with Planck-16ΛCDM
+cosmology (Planck Collaboration et al. 2016). THe cosmo-
+logical parameters are: Ωm = 0.3, ΩΛ = 1−Ωm = 0.7,
+Ωb = 0.048, ℎ = 0.68,𝜎8 = 0.82,𝑛𝑠 = 0.97, with the usual
+definitions.
+The Simba-50 simulation is the fiducial run, containing all
+features described in § 2.1. In four of the other five variants
+considered, different feedback prescriptions are deactivated
+(see Table 1). Instead, the remaining run (‘Var-vjet-cap’)
+contains all stellar and AGN feedback prescriptions included
+in the Simba-50 simulation. However, it differs from the
+fiducial run for the maximum speed increment that can be
+achieved by the AGN-jet mode (see § 2.1 for details). This is
+the new variant of theSimbasimulation that we mentioned in
+§ 1 and adopt in this work for the first time.
+On top of the50 ℎ−1 cMpc boxes, we also consider three
+simulationsfollowingthesamephysicalprescriptionsasinthe
+Simba-50 run, but with different box size or mass resolution.
+These additional simulations are not used for the core results
+of this paper, but rather for convergence testing purposes (see
+Appendix A for details).
+Throughout all simulations, halos are identified using a 3D
+friends-of-friends algorithm incorporated inGizmo, originat-
+ing from V. Springel’sGadget-3 code. A linking length set
+to0.2timestheaverageinter-particleseparationisutilised. In
+post-processing, we employ theyt-based softwareCaesar 1
+tocouplegalaxiesandhalos. Caesaradditionallygeneratesa
+catalogue containing numerous relevant pre-computed prop-
+erties of galaxies and halos. Several outcomes of this study
+are derived from analysing such catalogues.
+3. GAS DENSITY PROFILES
+We begin by extracting the spherically averaged radial den-
+sity profiles of the gas contained within haloes in allSimba
+50ℎ−1 cMpc boxes, studying their dependence on halo mass
+and redshift. In § 3.1, we will first undertake a qualitative
+comparisonacrossthedifferentfeedbackvariantsofthe Simba
+suite of simulations. Then, in § 3.2, we will propose a fitting
+formulaforthegasdensityprofiles,andqualitativelystudythe
+mass and redshift dependence of the best-fit parameters, i.e.
+slope and normalisation. A quantitative analysis and physical
+interpretation of the evolution of these parameters will follow
+in § 3.3 and § 3.4.
+3.1. Qualitative comparison across different feedback runs
+For every snapshot from𝑧 = 4 down to 𝑧 = 0 of each
+feedback variant, we select all haloes wherein at least one
+galaxy is identified byCaesar. As a result, depending on
+the snapshot and feedback run considered, the smallest halo
+selected with this criterion has a total mass between∼ 8.1×
+109 M⊙ and∼ 1.1× 1011 M⊙, and contains between 72 and
+1327 DM particles.
+1 https://caesar.readthedocs.io/en/latest/
+All other haloes are deemed to be unresolved for the pur-
+poses of the following analysis. For each resolved halo, we
+orderallgaselementsin20bins,accordingtotheirradialdis-
+tance,𝑟,fromthepositionoftheminimumofthegravitational
+potential of the halo (hereafter, ‘halo centre’). The first radial
+bincontainsgaselementswithin 0.01𝑅200c ofthehalocentre,
+where𝑅200cistheradiusenclosingatotalmatterdensityequal
+to 200 times the critical density of the universe,𝜌c. We des-
+ignate the scale𝑅200c as our definition for the virial radius of
+thehalo. Theother19binsofradialdistancespantheinterval
+0.01 < 𝑟/𝑅200c < 5, with equal width in logarithmic space.
+Wethen derivetheradial gasmassdensity profile, 𝜌gas(𝑟), by
+dividing the total mass of all gas elements within every bin
+bythevolumeenclosedbythesphericalshellsdelimitingsaid
+bin.
+We visualise the gas (co-moving) density profile of haloes
+ofdifferentmassandatdifferentredshiftfromall Simbafeed-
+back variants in Figure 1. Throughout our analysis, we will
+define the total halo mass as𝑀200c, i.e., the mass of all mat-
+ter enclosed within the virial radius𝑅200c described earlier.
+We plot the density profiles obtained from four representative
+snapshots,correspondingtotheredshiftsindicatedaboveeach
+column in the figure. Within a given snapshot, we divide the
+haloes into four mass bins with a width of0.2 dex, centred at
+𝑀200c = 1011 M⊙, 𝑀200c = 1012 M⊙, 𝑀200c = 1013 M⊙ and
+𝑀200c= 1013.5 M⊙,respectively. Whilethechoiceofthelower
+boundofthefirstmassbinexcludessmallerhaloesthatpassed
+ourinitialselectionbasedonthe Caesarhalofinder,itensures
+thathaloesfromallrunsarerepresentedateveryredshift. We
+also include an additional halo mass bin containing all haloes
+above𝑀200c > 1014 M⊙. Since we are not matching haloes
+across different runs based on their DM mass or shared DM
+particles, a given halo may move between neighbouring bins
+whendifferentfeedbackmodelsareconsidered. Thisisnotan
+issue in the context of this work, as we are mainly interested
+in understanding how the gas density profiles of a statisti-
+callysignificantsampleofhaloesinagivenmassrangewould
+look under different feedback prescriptions, rather than how
+individual haloes would change their gas distribution when
+feedback mechanisms are modified. Our approach is thus
+more oriented towards the comparison between simulations
+and observations. Nevertheless, the interpretation of our re-
+sults is not significantly hindered by the fact that we are not
+matching haloes by their unique DM particle identifiers: as
+shown by Sorini et al. (2022), the largest relative difference
+in the total mass of haloes selected based on their shared DM
+particles across differentSimbaruns is at most 25% at𝑧= 0,
+and decreases to as little as7% at𝑧= 4.
+Every panel in Figure 1 shows the gas density profiles of
+haloes with a total mass comprised within the bin edges an-
+notated inside each plot, at the redshift indicated in the upper
+part of the figure. We thus show the gas density profiles asso-
+ciated with a wide range of objects, from galaxies to groups
+and clusters, in the redshift interval0 < 𝑧 <4. The results
+obtained from differentSimba runs are plotted with different
+colours, as indicated in the legend. The circles represent the
+arithmeticmeanofthegasdensityatthecorrespondingradial
+bin, averaged over all haloes falling within the mass bin and
+snapshot considered. The vertical error bars represent the as-
+sociatedstandarddeviations. Thelowererrorbarsareomitted
+if their lower bound falls below minimum of the𝑦-axis, to
+improve the readability of the figure.
+We note that at redshift𝑧≥ 2, the average comoving gas
+
+--- Page 5 ---
+A universal fitting formula for gas density profiles 5
+r/R200c
+101
+103
+105
+107
+ρgas (M⊙ ckpc□3)
+10.9 < log(M200c/M⊙) < 11.110.9 < log(M200c/M⊙) < 11.110.9 < log(M200c/M⊙) < 11.110.9 < log(M200c/M⊙) < 11.110.9 < log(M200c/M⊙) < 11.110.9 < log(M200c/M⊙) < 11.110.9 < log(M200c/M⊙) < 11.1
+z = 4
+r/R200c
+101
+103
+105
+107
+ρgas (M⊙ ckpc□3)
+11.9 < log(M200c/M⊙) < 12.111.9 < log(M200c/M⊙) < 12.111.9 < log(M200c/M⊙) < 12.111.9 < log(M200c/M⊙) < 12.111.9 < log(M200c/M⊙) < 12.111.9 < log(M200c/M⊙) < 12.111.9 < log(M200c/M⊙) < 12.1
+r/R200c
+101
+103
+105
+107
+ρgas (M⊙ ckpc□3)
+12.9 < log(M200c/M⊙) < 13.112.9 < log(M200c/M⊙) < 13.112.9 < log(M200c/M⊙) < 13.112.9 < log(M200c/M⊙) < 13.112.9 < log(M200c/M⊙) < 13.112.9 < log(M200c/M⊙) < 13.112.9 < log(M200c/M⊙) < 13.1
+r/R200c
+101
+103
+105
+107
+ρgas (M⊙ ckpc□3)
+13.4 < log(M200c/M⊙) < 13.613.4 < log(M200c/M⊙) < 13.613.4 < log(M200c/M⊙) < 13.613.4 < log(M200c/M⊙) < 13.613.4 < log(M200c/M⊙) < 13.613.4 < log(M200c/M⊙) < 13.613.4 < log(M200c/M⊙) < 13.6
+10□2 10□1 100
+r/R200c
+101
+103
+105
+107
+ρgas (M⊙ ckpc□3)
+log(M200c/M⊙) > 14log(M200c/M⊙) > 14log(M200c/M⊙) > 14log(M200c/M⊙) > 14log(M200c/M⊙) > 14log(M200c/M⊙) > 14log(M200c/M⊙) > 14
+Simba-100
+Var-vjet-cap
+Simba-50
+No-X-ray
+No-jet
+No-AGN
+No-feedback
+r/R200c
+z = 2
+r/R200c
+r/R200c
+r/R200c
+10□2 10□1 100
+r/R200c
+r/R200c
+z = 1
+r/R200c
+r/R200c
+r/R200c
+10□2 10□1 100
+r/R200c
+r/R200c
+z = 0
+r/R200c
+r/R200c
+r/R200c
+10□2 10□1 100
+r/R200c
+Fig. 1.—Co-movingdensityprofilesoftotalgaswithinhaloesofdifferenttotalhalomasses(asindicatedineachrowofpanels),atdifferentredshifts(asreported
+at the top of each column of panels), for the different variants of theSimbasimulation, as specified in the legend. For each run considered, the circles represent
+the average density profiles of all haloes within the mass bin and redshift that correspond to the panel in question. The error bars represent the standard deviation
+of the gas density in each radial bin, across the haloes considered. We omit the lower error bar if its limit falls below the lowest bounds of the𝑥-axis, for the sake
+ofreadability. Thethinlinesfollowingthesamecolourcodingasthemarkersrepresentthebest-fitpowerlawstotheaveragedensityprofiles. Theverticaldotted
+lines indicate the limits of radial distance within which the fits were made. Within this radial range, we find that for haloes with mass𝑀200c ≳ 1014 M⊙, all gas
+density profiles are well represented by a power law.
+
+--- Page 6 ---
+6 D. Sorini et al.
+density profiles are similar across all runs considered, regard-
+less of the halo mass. However, at lower redshift (𝑧 < 2)
+and within galaxy groups (1013 < 𝑀200c/M⊙ < 1014), the
+gas density profiles appear to decline more slowly in the runs
+containingatleastAGN-jetfeedback. Additionally, theinclu-
+sion of the AGN-jet mode reduces the normalisation of the
+gas density profiles. This feature suggests that the action of
+AGN-jet is more prominent in the redshift and mass range in
+question 1013 < 𝑀200c/M⊙ < 1014, effectively expelling part
+ofthegaseouscomponentofhaloesoutwards. Suchbehaviour
+is consistent with the findings of previous related studies of
+theSimbasuiteofsimulations(e.g. Borrowetal.2020;Chris-
+tiansen et al. 2020; Sorini et al. 2022; Khrykin et al. 2024 ;
+see also the discussion in Wang & He 2024).
+Within galaxy clusters (𝑀200c > 1014 M⊙), the gas den-
+sity varies significantly in the inner regions of haloes (𝑟 <
+0.05𝑅200c) across the various runs. However, we verified
+that such radial distances typically fall below the convergence
+radius(Poweretal.2003;Ludlowetal.2019),thusthegasden-
+sityprofileswithin 𝑟 <0.05𝑅200carenotnumericallyreliable.
+Ontheotherhand,intheregionwherenumericalconvergence
+isachieved( 𝑟 >0.05𝑅200c),thegasdensityprofilesofgalaxy
+clusters do not exhibit as appreciable differences when the
+feedback prescriptions are changes. This aligns again with
+previousnumericalstudiesshowingthatclustersapproachthe
+‘closed-box approximation’ (Angelinelli et al. 2022, 2023),
+in which the baryon mass fraction is consistent with the cos-
+mic value 𝑓b = Ωb/Ωm (Sorini et al. 2022; Ayromlou et al.
+2023) and the stronger feedback heating mechanisms balance
+the larger amount of gas undergoing cooling (e.g. Allen et al.
+2011).
+There are no cluster-size haloes at𝑧≥ 1 due to the limited
+boxsizeofthesimulations,whichlimitsthestatisticsofhigher-
+mass structures. Indeed, if we repeat our analysis for the
+Simba-100run,wefindthatwecanprobemoremassivehaloes
+at every given redshift (teal data points in Figure 1). In the
+mass bins that are not empty in the50ℎ−1 cMpc boxes, the
+results of the Simba-100 run are consistent with those of the
+Simba-50simulation. Thisprovesthatthegasdensityprofiles
+ofourfiducial 50ℎ−1 cMpcrunarenotaffectedbythelimited
+box size, even in the highest mass bins. We verified that the
+gasdensityprofilesarealsowellconvergedwithrespecttothe
+mass resolution of the simulations.
+3.2. Modelling the radial dependence of gas density
+To quantitatively describe the radial dependence of the gas
+density,weseekaconvenientfittingformulathatcouldbeap-
+plied to all feedback runs considered. The distance to which
+different feedback models affect the distribution of baryons
+outside haloes has already been quantified for theSimbasim-
+ulationinSorinietal.2022(seetheirfigure12). Inthiswork,
+we will then focus on the distribution of gas within haloes,
+hence we will consider only data points corresponding to dis-
+tance bins within the virial radius. Furthermore, we will also
+exclude all bins below0.05𝑅200c, which we cannot trust due
+to poor numerical convergence (see § 3.1). The limits of the
+data points that we consider for fitting the gas density profiles
+are delimited with vertical dotted lines in Figure 1.
+We note that in the radial distance range of interest, the gas
+density profiles in all50ℎ−1 cMpc runs appear to resemble a
+power law, regardless of the halo mass bin and redshift. We
+thereforeperformaminimum- 𝜒2 fittoallprofilesinFigure1,
+adopting the following functional shape for the gas density:
+𝜌gas(𝑟)=𝜌𝑅
+ 𝑟
+𝑅200c
+−𝜂
+. (3)
+The free parameters𝜂 and 𝜌𝑅 represent the slope and nor-
+malisation of the power law, respectively. The latter is, by
+definition, thevalueofthegasdensityatthevirialradius, and
+is related to the gas mass fraction within𝑅200c. Equation (3)
+may not be an adequate fitting formula for the gas density
+profilesinthefullrangeofhalocentricdistanceplottedinFig-
+ure 1, thus our choice of restricting to the region within the
+virial radius will improve the accuracy of the fit. We leave
+theinvestigationofafittingformulaforthegasdensityprofile
+beyond the virial radius for future work.
+We now plot the resulting best-fit power laws in Figure 1
+withthinsolidlines,usingthesamecolourcodingofthe Simba
+run to which they refer. By visual inspection, the power laws
+providegoodagreementwiththedata. Theonlyexceptionare
+thegasdensityprofilesofgalaxyclusters( 𝑀200c > 1014 M⊙),
+which exhibit a more prominent curvature, hence deviating
+from a power law. We rigorously confirmed our preliminary
+considerations by verifying that the reduced𝜒2 is maintained
+below unity for all runs, except for𝑀200c > 1014 M⊙ haloes
+(this aspect will be discussed further in § 5). We note similar
+deviations from a power law in the Simba-100 run, for haloes
+with𝑀200c≈ 1013.5 M⊙ at𝑧= 2. However,therearenohaloes
+with this mass scale in the50ℎ−1 cMpc boxes. Since in this
+work we are mainly interested in understanding the impact of
+feedback, we are primarily concerned with the50ℎ−1 cMpc
+Simbavariants. Therefore, wecansafelyadoptthepowerlaw
+in equation (3) to describe the gas density profiles, as long as
+we exclude haloes with𝑀 >1014 M⊙ from our analysis.
+Hereafter, we will then restrict ourselves to the mass range
+1011 ≲ 𝑀200c/M⊙ ≲ 1014 M⊙ and study the dependence of
+thebest-fitparameters 𝜂and𝜌𝑅 onthehalomassandredshift.
+Webeginwiththeslopeparameter,showingtheresultsofour
+analysis in Figure 2. We consider all available snapshots in
+the redshift range0< 𝑧 <4 for allSimba 50ℎ−1 cMpc runs,
+and organise the haloes in total mass bins of width0.2 dex,
+centredaroundthevaluesindicatedatthetopofeverycolumn
+ofpanelsinFigure2. Foreverymassbin,wefitthegasdensity
+profilesofeachhaloindividually,obtainingthecorresponding
+slope and normalisation parameters. We then split the haloes
+in 40× 40 2D-bins of redshift and slope𝜂. All bins have
+the same width along each axis, equal to1/40 of the redshift
+interval 0 < 𝑧 <4 and slope range0 < 𝜂 <5, respectively.
+For the Var-vjet-cap run, there are fewer snapshots available
+compared with the other runs, and some bins are empty. We
+plottheresulting2D-histograminFigure2,whereeachrowof
+panels refers to a different run, as indicated in the right-most
+panels. For any fixed redshift bin, the colour map shows the
+probabilitydensityfunction(PDF)oftheslopewithinthatbin.
+This is the reason why, in every run and for all mass scales,
+thereisgenerallyahigherdensityofhaloesaroundthecentral
+region of the histogram at any fixed redshift. However, the
+spread in𝜂 is substantial, especially in lower-mass haloes.
+It would certainly be useful to assess how the average and
+variance of the slope of the gas density profile evolves with
+redshift at any fixed time. To do this, for any given mass bin,
+wesubdividetheredshiftrangeintosmallerintervalsofequal
+widthΔ𝑧 = 0.2 each. We then take the arithmetic mean of
+thegasdensityprofileofallhaloesfallingwithinsuchredshift
+
+--- Page 7 ---
+A universal fitting formula for gas density profiles 7
+intervals, exactly as we did in § 3.1. We then fit the resulting
+stacked density profile with the power law in equation (4),
+and derive the normalisation and slope parameters. We plot
+the ‘average’ slopes obtained with this procedure as black
+circlesinFigure2;theverticalbarsindicatethestatisticalerror
+derivedfromtheminimum- 𝜒2fit,andthehorizontalerrorbars
+mark the bounds of the redshift interval. The average slopes
+are close to the median of the PDF of𝜂 at any fixed redshift.
+Wefindasignificantresult: inallruns,atlowerhalomasses
+(𝑀 ≲ 1013 M⊙), the average slope exhibits little variation
+with redshift. This is also true at higher masses in runs that
+do not include AGN-jet feedback. However, when this feed-
+back mode is included, we observe a stronger variation of
+the slope of the gas density profile with redshift in galaxy
+groups and clusters (𝑀 ≳ 1013 M⊙). One might indeed ex-
+pect a more conspicuous redshift evolution in higher-mass
+haloes, since they form more recently and, in case of major
+mergers, are less likely to be relaxed by present time (e.g.
+Harker et al. 2006). However, if the stronger evolution of
+theslopeofthegasdensityprofileinhigher-masshaloeswere
+connectedtostructureformationratherthanastrophysicalpro-
+cesses, one would expect to observe this feature in allSimba
+runs. The fact that it appears only once AGN-jet are activated
+strongly suggests a more direct connection between this spe-
+cific feedback mode and the distribution of gas within haloes
+with𝑀200c > 1013 M⊙.
+We now repeat the analysis described above for the nor-
+malisation parameter. Figure 3 follows the same structure as
+Figure 2, except that the histograms are built on 2D-bins in
+redshift andlog(𝜌𝑅/𝜌c), which we will redefine aslog𝐴 for
+convenience. The redshift bins are defined as before. Along
+the log𝐴 axis, all bins have the same width, spanning to1/40
+of the range−2 < log𝐴 < 1.5. The colour map shows the
+PDF of log𝐴 at any fixed redshift. We also stack the gas
+density profiles following the same procedure described for
+Figure 2. In this case, we derive the𝜌𝑅 parameter from the
+minimum-𝜒2 fit to the stacked profiles, and then compute the
+corresponding ‘average normalisation’log𝐴, which is repre-
+sented with black circles. The meaning of the error bars is
+analogous to Figure 2.
+Overall, we find that the average normalisation is weakly
+dependent on redshift down to𝑧≈ 1 at low mass (𝑀200c≈
+1011M⊙). After𝑧= 1,most Simbarunsexhibitanupturn,with
+the exception of the Var-vjet-cap variant. At higher masses,
+weobserverelativelyweakbutqualitativelyvarieddependen-
+cies of the average normalisation on redshift. Generally, runs
+without AGN-jet exhibit a slightly increasinglog𝐴, while the
+inclusionofthisfeedbackmodetendstodecreasethenormal-
+isation at late times. This reflects the fact that AGN-jet in
+Simbaare very effective at removing gas from within higher-
+mass haloes, especially at later times (𝑧 <2; see Sorini et al.
+2022). As a consequence, the normalisation of the gas den-
+sity profile decreases (see also Figure 1). Instead, AGN-jet
+are absent from𝑀 ≈ 1011 M⊙, whose central BHs fail to
+reach the minimum mass threshold for the activation of this
+feedback mode (see, e.g. Thomas et al. 2019; Scharré et al.
+2024). This explains why there is no downturn of the average
+normalisation in the lowest mass bin showed in Figure 3.
+It is important to note that the spread in the normalisation–
+redshift relationship at any fixed mass𝑀200c≤ 1012 is larger,
+in relative terms, than in the case of the slope𝜂. This is es-
+peciallytrueatlowerredshift,wheremultiplefeedbackmech-
+anisms are more likely to co-exist (Sorini et al. 2022). The
+interplay between stellar and AGN feedback in galaxy-size
+haloes (𝑀 <1013 M⊙) is notoriously complex to disentangle
+andcanresultinmorevariedeffectsonthegasdistributionof
+individual haloes (e.g. Booth & Schaye 2013; Delgado et al.
+2023; Tillman et al. 2023; Gebhardt et al. 2024). Indeed, the
+spread in the normalisation–redshift relationship is larger in
+thebottomthreerowsofpanelsinFigure3,whichcorrespond
+to runs where at least AGN-jet are activated. On the other
+hand, the scatter around the average normalisation is smaller
+athighermasses 𝑀200c > 1013 M⊙,andparticularlyforgalaxy
+clusters (𝑀200c≈ 1014 M⊙). Additionally, the normalisation–
+relationship is very similar for galaxy clusters across different
+runs. This partially follows form the fact that clusters can
+be approximately treated as closed boxes (Angelinelli et al.
+2022,2023). Theactionofdifferentfeedbackmodeswillthen
+generally redistribute the gas density within the halo, without
+ejecting a relatively high gas mass fraction outside the virial
+radius, hence preventing the decrease in the normalisation of
+the gas density profile.
+While feedback processes play an important role in the
+spread of the relationships shown in Figures 2-3, it is hard
+toquantifytowhatextenttheycontributetotheobservedscat-
+ter, compared with other effects. Part of the variance in the
+slope and normalisation may follow from the intrinsic scatter
+in the concentration of the underlying DM density profiles,
+which in turn would affect the gas distribution in the halo.
+Thefactthatthescatterinbothslopeandnormalisationseems
+to be comparable in all feedback runs for the lowest mass bin
+suggests that at least for𝑀200c= 1011 M⊙ haloes the variance
+in the DM structure may be the dominant source of the scat-
+ter. However, at higher masses, as discussed earlier, there is
+a larger spread in the redshift evolution of the normalisation
+parameteroncetheAGN-jetmodeisactivated,thushighlight-
+ing a more prominent role of this feedback mechanism. In
+any case, one should also bear in mind the potential impact
+of numerical effects: in principle, the limited box size may
+artificially decrease the scatter in the relationship at higher
+halo masses. Nevertheless, we verified that the normalisation
+isrobustunderdifferentboxsizes,thereforeourresultscanbe
+considered well converged in this respect (see Appendix A).
+To summarise, we verified that, for allSimba 50ℎ−1 cMpc
+simulations,theradialgasmassdensityprofilesofhaloesinthe
+massrange 1011 < 𝑀200c/M⊙ < 1014 M⊙ andredshiftinterval
+0< 𝑧 <4 are well represented by a power law. For any fixed
+halo mass, the slope of such profiles depends only weakly on
+redshiftfor 𝑀200c ≲ 1013 M⊙,andexhibitsastrongerevolution
+otherwise. Thenormalisationofthegasdensityprofile,which
+is related to the gas mass fraction enclosed within the virial
+radius, evolves mildly at higher redshift (𝑧 ≳ 2), and more
+strongly at lower redshift. Such empirical trends set the stage
+for a more quantitative analysis aimed at capturing the overall
+dependence of both slope and normalisation parameters with
+halo mass and redshift, in all runs considered.
+3.3. Evolution of the slope of the gas density profile
+From Figure 2, we learnt that the redshift evolution of the
+slope of the stacked gas density profile at any fixed total halo
+mass is well represented by a power law. We therefore intro-
+duce the following function to describe the dependence of the
+average slope on mass and redshift:
+𝜂(𝑀200c, 𝑧)=𝜂0(𝑀200c)( 1+𝑧)𝛽(𝑀200c), (4)
+
+--- Page 8 ---
+8 D. Sorini et al.
+0
+2
+4η
+M200c = 1011 M⊙
+10□3
+10□2
+10□1
+100
+PDF of η at ﬁxed redshift
+M200c = 1012 M⊙
+ M200c = 1013 M⊙
+No-feedback
+M200c = 1014 M⊙
+Best ﬁt
+Stacked proﬁles
+0
+2
+4η
+No-AGN
+0
+2
+4η
+No-jet
+0
+2
+4η
+No-X-ray
+0
+2
+4η
+Simba-50
+1234
+z
+0
+2
+4η
+1234
+z
+1234
+z
+01234
+z
+Var-vjet-cap
+Fig. 2.—Redshift evolution of the slope of the gas density profile within haloes in theSimba 50ℎ−1 cMpc boxes. Every row of panels refers to a different run,
+asspecifiedintheleftpartofthefigure. Eachcolumnreportstheresultsofhaloeswithinatotalmassbincentredinthevalueindicatedinthetoppartofthefigure
+and width equal to0.2 dex. The colour map in each panel shows the 2D histogram of the redshift corresponding to the snapshots considered, and the slope of the
+gas density profile of the haloes in the selected mass bin (see § 3 for details). The colour coding represents the PDF of the slope of the gas density profile at any
+given redshift bin. The black data points show the slope of the average gas density profile resulting from stacking all haloes in the snapshots within the redshift
+rangeindicatedbythehorizontalbars. Theverticalerrorbarsshowthecorrespondingstandarddeviationresultingfromfittingthepowerlawinequation(3)tothe
+average density profile. The red lines represent the best-fit power law to the slope-redshift relationship at any given total halo mass, following from equation (4).
+Such fit represents an accurate description of the data at any mass scale. For𝑀200c< 1013 M⊙, the slope generally varies only mildly with redshift.
+
+--- Page 9 ---
+A universal fitting formula for gas density profiles 9
+□2
+□1
+0
+1
+log A = log(ρR/ρc)
+M200c = 1011 M⊙
+10□3
+10□2
+10□1
+100
+PDF of log A = log(ρR/ρc) at ﬁxed redshift
+M200c = 1012 M⊙
+ M200c = 1013 M⊙
+No-feedback
+M200c = 1014 M⊙
+Best ﬁt
+Stacked proﬁles
+□2
+□1
+0
+1
+log A = log(ρR/ρc)
+No-AGN
+□2
+□1
+0
+1
+log A = log(ρR/ρc)
+No-jet
+□2
+□1
+0
+1
+log A = log(ρR/ρc)
+No-X-ray
+□2
+□1
+0
+1
+log A = log(ρR/ρc)
+Simba-50
+1234
+z
+□2
+□1
+0
+1
+log A = log(ρR/ρc)
+1234
+z
+1234
+z
+01234
+z
+Var-vjet-cap
+Fig. 3.—Redshift evolution of the normalisation of the gas density profile within haloes in theSimba 50ℎ−1 cMpc boxes. Every row of panels refers to a
+differentrun,asspecifiedintheright-mostcolumn. Eachcolumnreportstheresultsofhaloeswithinatotalmassbincentredinthevalueindicatedinthetoppart
+ofthefigure, andwidthequalto 0.2 dex. Thecolourmapineachpanelshowsthe2Dhistogramoftheredshiftcorrespondingtothesnapshotsconsideredandthe
+normalisation of the gas density profile of the haloes in the selected mass bin (see § 3 for details). The colour coding represents the PDF of the normalisation of
+the gas density profile at any given redshift bin. The black data points show the normalisation of the average gas density profile resulting from stacking all haloes
+inthesnapshotswithintheredshiftrangeindicatedbythehorizontalbars. Theverticalerrorbarsshowthecorrespondingstandarddeviationresultingfromfitting
+the power law in equation (3) to the average density profile. The red lines represent the best-fit power law to the normalisation-redshift relationship at any given
+total halo mass, following from equation (4). Such fit represents a accurate description of the data at any mass scale, although the relationship exhibits a larger
+scatter at𝑧< 1 for𝑀200c< 1013 M⊙.
+
+--- Page 10 ---
+10 D. Sorini et al.
+11.0 11.5 12.0 12.5 13.0 13.5 14.0
+log(M200c/M⊙)
+1.0
+1.5
+2.0
+2.5
+η0
+η(M200c, z) = η0(M200c)(1 + z)β(M200c)
+No-feedback
+No-AGN
+No-jet
+No-X-ray
+Simba-50
+Var-vjet-cap
+11.0 11.5 12.0 12.5 13.0 13.5 14.0
+log(M200c/M⊙)
+□0.4
+□0.2
+0.0
+0.2
+0.4
+0.6
+β
+Mass-dependence of the parameters deﬁning the slope of the gas density proﬁle
+Fig. 4.— Top panel: Mass dependence of the𝜂0 parameter, representing the slope of the gas density profile at redshift𝑧 = 0 (see equation 4), for allSimba
+50ℎ−1 cMpc runs. The data points represent the median𝑀200c in every mass bin defined by the boundaries of the horizontal bars. The vertical error bars
+represent the statistical error on𝜂0 deriving from the fit of the average gas density profile in every mass bin (see § 4 for details), and the shaded regions show
+the standard deviation expected due to cosmic variance. The solid lines with the same colour coding as the data points represent the best-fit polynomials for
+𝜂(𝑀200c) given by equation (6). The present-day slope of the gas density profile in haloes with mass𝑀200c ≳ 1013 M⊙ is significantly less steep once AGN
+jets are included in the simulation.Bottom panel: Mass dependence of the power-law index𝛽 in the redshift evolution of the gas density slope (see equation 4),
+for allSimba 50ℎ−1 cMpc considered. The solid lines with the same colour coding as the data points represent the best-fit polynomials for𝛽(𝑀200c) given by
+equation (7). For haloes with mass𝑀200c ≲ 1012.5 M⊙, the value of𝛽 is close to zero, thus the slope of the gas density profiles varies only mildly with redshift.
+Simulations that include at least the AGN-jet mode exhibit a stronger redshift evolution of the slope of the gas density profile at the higher-mass end.
+where𝜂0(𝑀200c) and𝛽(𝑀200c) are functions of the total halo
+mass, yet to be determined. At any fixed mass,𝜂0(𝑀200c)
+representsthepresent-dayslopeofthegasdensityprofile,and
+𝛽(𝑀200c) captures the rapidity of its evolution with redshift.
+To investigate the mass dependence of 𝜂0(𝑀200c) and
+𝛽(𝑀200c), we divide all gas density profiles in the red-
+shift interval considered into logarithmic total halo mass
+bins with equal width (0.2 dex), covering the mass range
+1011 < 𝑀200c/M⊙ < 1014 M⊙. Withineachbin,weobtainthe
+slope-redshift relationship exactly as we did for Figure 2 (see
+§ 3.2 for details). We then fit the resulting relationship with
+equation (4) via𝜒2-minimisation.
+We show the values of the𝜂0 and 𝛽 parameters derived
+in every halo mass bin and for every feedback variant with
+different sets of data points in the upper and lower panels
+of Figure 4, respectively. The data points are plotted at the
+median value of the halo mass bin, which is delimited by the
+horizontalbars. Theverticalerrorbarsrepresentthestatistical
+erroron 𝜂0and𝛽derivedfromthefit. Theshadedareasdisplay
+the scatter on the parameters due to cosmic variance. This is
+estimated by jackknife re-sampling the haloes after splitting
+thesimulationboxofallsnapshotsconsideredintoeightcubic
+octants of equal volume. As expected, the scatter due to
+cosmic variance increases at larger masses, as a consequence
+of the comparatively lower number of haloes. Nevertheless,
+thescatterisgenerallyofthesameorderasthestatisticalerror
+derived from the fitting procedure.
+Thepresent-dayslopeofthegasdensityprofile, 𝜂0(𝑀200c),
+exhibits significantly different behaviours depending on the
+run considered. In the No-feedback run,𝜂0(𝑀200c) decreases
+with increasing mass for𝑀200c ≲ 1012.5 M⊙, and almost flat-
+tensatthehigher-massendaround 𝜂0≈ 1.65. Intheabsenceof
+anyexplicitfeedbackenergyinput,thereisnooutwardsource
+of pressure within the virial shock, but gas accretion follow-
+ing from the cooling of the CGM can still be present. The
+analytical cooling flow solution found by Stern et al. (2019)
+predicts a slope of𝜂0≈ 1.6, in excellent agreement with our
+findings for the No-feedback run. This does not significantly
+
+--- Page 11 ---
+A universal fitting formula for gas density profiles 11
+change when stellar feedback is included, as the No-AGN run
+exhibits a qualitatively similar trend of the present-day slope
+with halo mass. The main difference with respect to the No-
+feedback case is that, for𝑀200c ≲ 1012.5 M⊙, the slope of the
+gas density profile at𝑧 = 0 is steeper. Consequently, a slope
+closertothecoolingflowsolutionisachievedathighermasses
+(𝑀200c≈ 1013 M⊙)comparedwiththeNo-feedbackcase. This
+owes to the additional pressure introduced by stellar-driven
+winds. The situation is not significantly different once radia-
+tiveAGNwindsareactivated. Thisinlinewithpreviousfind-
+ings form theSimba suite, showing that this feedback mode
+only marginally affects the distribution of baryons within and
+outsidehaloes(Sorinietal.2022;Khrykinetal.2024)andthe
+star formation history (Scharré et al. 2024).
+Once the AGN-jet mode is turned on, the present-day slope
+of the gas density profile becomes less steep for𝑀200c ≳
+1012.5 M⊙,andisheavilysuppressedabove 𝑀≈ 1013 M⊙,i.e.,
+ingalaxygroups. Thisisaconsequenceoftheejectionpower
+of AGN jets, which can push baryons up to∼ 10 virial radii
+from the halo (Sorini et al. 2022; see also Borrow et al. 2020
+and Gebhardt et al. 2024). The energy input inSimbaoccurs
+viajet-inflatedbubblesasobservableinX-raymaps(Jennings
+et al. 2024), which over-pressurises gas at𝑀200c ≲ 1013.5 M⊙
+thereby driving gas out of the halo. The evacuation of gas
+resultsinasmoothingeffectonthedensityprofile,whichthen
+declinesmoregraduallywiththedistancefromthehalocentre.
+However, in galaxy clusters (𝑀200c∼ 1014 M⊙) the density
+profilesteepensupagain. TheadditionofX-rayfeedbackorof
+a variable maximum speed for the jets does not significantly
+affect the trend at the higher-mass end for theSimba runs
+showninFigure4,meaningthatthemostimportantprocessin
+redistributinggasingalaxiesandclustersat 𝑧= 0isstillAGN-
+jetfeedback. Weverifiedthattheupturnin 𝜂0 atlargermasses
+is dependent on the box size. For the Simba-100 simulation,
+thepresent-dayslopesteepensupat 𝑀200c > 1014 M⊙,becom-
+ing close to𝜂0 = 2 at 𝑀200c≈ 1014.6 M⊙ (see Appendix A).
+A slope of𝜂0 = 2 would corresponds to an isothermal gas
+distributioninhydrostaticequilibrium. Giventhatclustersare
+among the largest collapsed structures, their deep potential
+wells are able to retain halo gas despite AGN-jet feedback,
+and indeed in Jennings et al. (2024) it was found that for the
+highestmassgroups( 𝑀200c ≳ 1013.5 M⊙)theAGN-jetenergy
+input is at best able to balance the gas cooling but not exceed
+it. It would then be reasonable to expect that the resulting gas
+distribution is closer to hydrostatic equilibrium. However, we
+caution that we did not explicitly test this hypothesis in our
+suite of simulations.
+We can understand the redshift evolution of the slope of
+the gas density profile from the trend of𝛽(𝑀200c) with the
+halo mass. For runs where AGN jets are deactivated, we
+have that|𝛽| < 0.12, meaning that the slope of the gas den-
+sity profiles varies only mildly with time at all mass scales.
+The activation of AGN jets does not change this trend for
+𝑀200c ≲ 1012.5 M⊙. However, above𝑀200c ≳ 1012.5 M⊙ and
+up to𝑀200c≈ 1013.6 M⊙, we observe a larger positive index
+𝛽. The slope of the gas density profile is therefore generally
+steeper at earlier times within galaxy groups. This reflects
+the fact that the ejective action of the AGN jets accumulates
+over time, and progressively diminishes the steepness of the
+gas profile. In galaxy clusters (1013.8 < 𝑀200c/M⊙ < 1014)
+the index𝛽 becomes either negative or consistent with zero,
+depending on the run considered. However, this data point is
+significantlyaffectedbythelimitedboxsize(seeAppendixA).
+Thus, measuring𝛽 clusters would be particularly promising
+for discriminating amongst the different feedback models in
+galaxy groups, up until𝑀200c < 1013.8 M⊙.
+3.4. Evolution of the normalisation of the gas density profile
+InFigure3weanalysedtheredshiftevolutionoftheaverage
+logarithmic normalisation of the stacked gas density profiles
+for different fixed halo masses. In most cases, the redshift de-
+pendence appears to be consistent with a power law (thin red
+lines). However,insomeofthefeedbackvariants,theaverage
+normalisation-redshift relationship departs from a power law
+at late times, especially for low-mass haloes. Nevertheless,
+such deviations appear to be mild and, for the sake of sim-
+plicityandforconsistencywithourapproachin§3.3,wewill
+again assume a power-law relationship to describe the red-
+shift evolution of the average normalisation of the gas density
+profile at fixed halo mass. Whether or not this is a good ap-
+proximationwillbeassessedatalaterstage,whenwewilltest
+the accuracy of our model (see § 4.2).
+Wethendefinethefollowingfittingfunctionforthenormal-
+isation:
+log𝐴(𝑀200c, 𝑧)= log𝐴0(𝑀200c)+ 𝛼(𝑀200c) log(1+𝑧), (5)
+where log𝐴0(𝑀200c) is the present-day value of the logarith-
+mic normalisation log𝐴≡ log(𝜌𝑅/𝜌c) defined earlier, and
+𝛼(𝑀200c) is the power-law index expressing how fast the nor-
+malisation at a given halo mass changes with redshift. We
+calculatethevalueof log𝐴0(𝑀200c)and𝛼(𝑀200c)inthesame
+halo mass bins defined earlier for the slope of the gas density
+profile, using the exact same procedure described in § 3.3.
+The results are shown in Figure 5.
+The normalisation of the gas density profiles in the No-
+feedback run increases with the total halo mass, flattening out
+at𝑀200c ≳ 1013 M⊙. IncludingstellarfeedbackorAGNwinds
+results in the same trend, except that the normalisation is sys-
+tematicallyhigher. OnceAGN-jetfeedbackisactivated,there
+is a drop inlog𝐴0 at 𝑀200c≈ 1011.5 M⊙ that continues until
+𝑀200c≈ 1012.5 M⊙. Above this mass scale the normalisation
+increases again, until it plateaus at𝑀200c ≳ 1013.5 M⊙.
+These results can be more easily interpreted by noting that,
+forafixedhalomass,thenormalisationofthegasdensitypro-
+file is proportional to the gas mass fraction within the virial
+radius. Thus,thelarger log𝐴0intheNo-AGNrunisexplained
+bythelargeramountofgasavailablefollowingquenchingdue
+to stellar feedback. Likewise, the suppression of the normali-
+sationinrunscontainingatleastAGN-jetfeedbackreflectsthe
+lower gas mass fraction resulting from the outward displace-
+ment of gas. Analysing the mass dependence of the normali-
+sation for a single run is somewhat less straightforward, since
+theproportionalitybetweenthegasmassfractionandthenor-
+malisation of the gas density profile at𝑧= 0 is not exact, but
+rather modulated by the mass-dependent present-day slope of
+the profile. But we verified that once this extra dependence is
+disentangled, then the trends observed in the upper panel of
+Figure 5 are consistent with the gas mass fraction of haloes
+studied in previous work with theSimba suite (Sorini et al.
+2022).
+Wecautionthattheestimatesof log𝐴arenotwellconverged
+withrespecttomassresolution. TheSimba-HighResrunpre-
+dictsasystematicallyhigher log𝐴byafactorof ∼ 1.6,mostly
+for𝑀200c ≲ 1012.3 M⊙ (see Appendix A). One may then need
+to rescale the results for the present-day normalisation before
+
+--- Page 12 ---
+12 D. Sorini et al.
+11.0 11.5 12.0 12.5 13.0 13.5 14.0
+log(M200c/M⊙)
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+log A0 = log(ρR 0/ρc)
+log(ρR(M200c, z)/ρc) = log A0(M200c) + α(M200c) log(1 + z)
+No-feedback
+No-AGN
+No-jet
+No-X-ray
+Simba-50
+Var-vjet-cap
+11.0 11.5 12.0 12.5 13.0 13.5 14.0
+log(M200c/M⊙)
+□1.0
+□0.5
+0.0
+0.5
+α
+Mass-dependence of the parameters deﬁning the normalisation of the gas density proﬁle
+Fig. 5.— Top panel: Mass dependence of thelog𝐴0 parameter, representing the normalisation of the gas density profile at redshift𝑧 = 0 (see equation 5),
+for allSimba 50ℎ−1 cMpc runs. The data points represent the median𝑀200c in every mass bin defined by the boundaries of the horizontal bars. The vertical
+error bars represent the statistical error onlog𝐴0 deriving from the fit of the average gas density profile in every mass bin (see § 4 for details), and the shaded
+regions show the standard deviation expected due to cosmic variance. The solid lines with the same colour coding as the data points represent the best-fit
+polynomials forlog𝐴0(𝑀200c) given by equation (8). The present-day normalisation of the gas density profile drops significantly in the total halo mass range
+1011.4 M⊙ < 𝑀200c< 1013.5 M⊙ with the inclusion of AGN jets in the simulation.Bottom panel: Mass dependence of the power-law index𝛼 in the redshift
+evolutionofthegasdensityslope(seeequation5),forall Simba 50ℎ−1 cMpcconsidered. Thesolidlineswiththesamecolourcodingasthedatapointsrepresent
+thebest-fitpolynomialsfor 𝛼(𝑀200c) givenbyequation(9). Forhaloeswithmass 𝑀200c ≳ 1011.5 M⊙,theinclusionofAGNjetsimprintsaqualitativelydifferent
+redshift evolution of the normalisation of the gas density profile.
+comparing them with observations or other models. Such
+rescaling would also apply to the gas mass fraction derived
+from the normalisation parameter of the gas density profile.
+The poor convergence reflects the resolution-dependence of
+theoutflowsintroducedinthedifferentfeedbackprescriptions,
+the parameters of which are not re-tuned for every run in the
+suite of simulations (see Appendix A for further details).
+In the lower panel, we see that the power-law index𝛼 is
+negative for all runs without AGN-jet feedback in the entire
+mass range considered. This means that the normalisation
+of the gas density profile increases with time, suggesting that
+the action of feedback (where present) is not strong enough
+to effectively push gas towards the outskirts of the halo, or
+is sub-dominant with respect to gas accretion onto the halo.
+On the contrary, in the mass range1011.5 M⊙ < 𝑀200c <
+1013.5 M⊙,theactivationofAGN-drivenjetsinvertsthistrend,
+underscoring the power of this feedback mode at evacuating
+haloes of a significant fraction of their gas over time. this
+is again consistent with previous results (Sorini et al. 2022).
+Thus, measuring the normalisation of the gas density profile
+canpotentiallytightlyconstrainAGN-jetfeedbackinthemass
+range 1011.5 M⊙ ≲ 𝑀200c ≲ 1013.5 M⊙.
+4. A UNIVERSAL FITTING FORMULA
+In this section, we propose a universal fitting formula to
+describe the gas density profiles in all feedback variants of
+the Simbasimulation. We will build upon the analysis under-
+taken in § 3.3 and § 3.4, by looking for a suitable analytical
+function for the mass-dependence of the slope and normali-
+sation parameters. The best-fit functions introduced in this
+section, coupled with equation (3), will allow us to analyti-
+cally represent the average gas density profile of any halo in
+the mass range 1011 M⊙ < 𝑀200c < 1014 M⊙ and redshift
+interval 0< 𝑧 <4.
+4.1. Mass-dependence of slope and normalisation
+We begin by considering the mass and redshift evolution
+of the slope of the gas density profile, encapsulated in equa-
+tion(4). Tomakethemassdependencefullyexplicit,wefitthe
+values of𝜂0 and𝛽 as a function of the corresponding median
+
+--- Page 13 ---
+A universal fitting formula for gas density profiles 13
+TABLE 2
+Best-fit parameters of the polynomial describing the mass dependence of the present-day slope of the gas density profile𝜂0 and the power-law
+index regulating its redshift evolution,𝛽, as defined in equations(4)-(7).
+Parameter No-feedback No-AGN No-jet No-X-ray Simba-50 No-vjet-cap
+𝜂0, 0 1.656± 0.033 1 .877± 0.030 1 .994± 0.020 1 .928± 0.079 1 .759± 0.090 1 .872± 0.098
+𝜂0, 1 −0.168± 0.037 −0.447± 0.024 −0.85± 0.016 −1.417± 0.087 −1.859± 0.080 −1.968± 0.092
+𝜂0, 2 0.487± 0.073 0 .370± 0.055 0 .075± 0.068 −0.62± 0.23 −0.66± 0.29 −0.92± 0.36
+𝜂0, 3 −0.256± 0.067 0 .085± 0.037 1 .347± 0.046 1 .20± 0.23 2 .10± 0.22 2 .75± 0.30
+𝜂0, 4 −0.071± 0.041 −0.066± 0.019 0 .094± 0.068 0 .47± 0.19 0 .59± 0.28 1 .82± 0.44
+𝜂0, 5 0.084± 0.021 −1.121± 0.035 −0.87± 0.15 −1.49± 0.17 −2.27± 0.28
+𝜂0, 6 — — −0.021± 0.021 −0.057± 0.056 −0.073± 0.071 −1.47± 0.20
+𝜂0, 7 — — 0.2994± 0.0068 0 .254± 0.018 0 .412± 0.025 0 .647± 0.069
+𝜂0, 8 — — — — — 0.426± 0.026
+𝛽0 0.046± 0.014 0 .015± 0.016 −0.043± 0.025 0 .011± 0.037 0 .045± 0.063 0 .090± 0.092
+𝛽1 −0.051± 0.021 0 .010± 0.018 0 .100± 0.027 0 .414± 0.055 0 .619± 0.097 0 .70± 0.14
+𝛽2 −0.158± 0.021 −0.219± 0.026 0 .039± 0.066 0 .452± 0.076 0 .71± 0.13 0 .46± 0.28
+𝛽3 0.042± 0.023 −0.008± 0.024 −0.142± 0.065 −0.256± 0.11 −0.282± 0.19 −1.577± 0.41
+𝛽4 0.057± 0.010 0 .0918± 0.0097 −0.161± 0.047 −0.517± 0.063 −0.69± 0.11 −1.31± 0.28
+𝛽5 — — 0.047± 0.033 0 .001± 0.034 −0.059± 0.070 1 .58± 0.34
+𝛽6 — — 0.070± 0.010 0 .12± 0.00 0 .127± 0.018 1 .28± 0.14
+𝛽7 — — — −0.394± 0.019 −0.495± 0.069 −0.495± 0.069
+𝛽0 8 — — — — — −0.394± 0.019
+TABLE 3
+Best-fit parameters of the polynomial describing the mass dependence of the present-day normalisation of the gas density profilelog𝐴0 and
+the power-law index regulating its redshift evolution,𝛼, as defined in equations(5)-(9).
+Parameter No-feedback No-AGN No-jet No-X-ray Simba-50 No-vjet-cap
+log𝐴0, 0 −0.051± 0.015 0 .1278± 0.0099 0 .101± 0.016 −0.054± 0.030 0 .006± 0.027 0 .002± 0.023
+log𝐴0, 1 0.313± 0.079 0 .536± 0.028 0 .892± 0.091 1 .63± 0.16 1 .67± 0.14 0 .77± 0.18
+log𝐴0, 2 0.36± 0.14 −0.10± 0.017 −0.75± 0.17 −2.65± 0.27 −3.19± 0.23 0 .80± 0.54
+log𝐴0, 3 −0.252± 0.086 — 0.37± 0.12 1 .43± 0.16 1 .87± 0.14 −4.47± 0.76
+log𝐴0, 4 0.043± 0.016 — −0.067± 0.028 −0.228± 0.034 −0.322± 0.029 4 .17± 0.50
+log𝐴0, 5 — — — — — −1.46± 0.13
+log𝐴0, 6 — — — — — 0.178± 0.010
+𝛼0 0.056± 0.022 −0.173± 0.043 −0.187± 0.027 0 .075± 0.074 −0.025± 0.050 0 .275± 0.053
+𝛼1 −0.440± 0.053 −0.05± 0.29 0 .18± 0.10 −1.19± 0.37 −1.05± 0.25 −1.91± 0.26
+𝛼2 0.067± 0.028 0 .86± 0.71 −0.34± 0.11 2 .83± 0.59 3 .56± 0.39 3 .79± 0.40
+𝛼3 — −1.65± 0.75 0 .075± 0.038 −1.60± 0.34 −2.29± 0.23 −2.09± 0.20
+𝛼4 — 0.89± 0.33 — 0.249± 0.068 0 .401± 0.043 0 .335± 0.037
+𝛼5 — −0.149± 0.048 — — — —
+halo masses in each bin with a polynomial:
+𝜂0(𝑀200c)=
+∑︁
+𝑖
+𝜂0,𝑖
+
+log
+𝑀200c
+𝑀ref
+𝑖
+(6)
+𝛽(𝑀200c)=
+∑︁
+𝑖
+𝛽𝑖
+
+log
+𝑀200c
+𝑀ref
+𝑖
+, (7)
+where𝑀ref isaconvenientnormalisationconstantforthehalo
+mass, which we arbitrarily set to𝑀 = 1012.5 M⊙ (the log-
+arithmic mid-point of the mass interval considered), and all
+the𝜂0,𝑖 and 𝛽𝑖 are free parameters. The choice of a polyno-
+mialrelationshipisnotmotivatedbyfirstprinciples,butrather
+practicalreasons. Sincethemainpurposeofouranalysisisto
+find a flexible empirical relationship for the slope of the gas
+density profile that can be capture the impact of astrophysical
+processes across differentSimbavariants, we prefer to main-
+tain our model as simple as possible. A polynomial function
+certainly satisfies this requirement.
+The question now is what degree each polynomial should
+have. WedeterminethisbyapplyingtheAkaike’sinformation
+criterion (AIC; Akaike 1974) to our numerical data. This rig-
+orousinformationcriterionranksthequalityofvariousmodels
+inrepresentingagivendatasetbyminimisinginformationloss
+whileavoidingoverfitting. Wefindthat,dependingontherun,
+we need a polynomial of degree between 4 and 8 for both the
+present-dayslopeandthe 𝛽parameter(seeAppendixBforde-
+tails). Thefulllistofbest-fitparametersforallrunsisreported
+in Table 2. The best-fit functions for the two parameters are
+plotted in Figure 4 with thin solid lines, following the same
+colourcodingasthedatapointstowhichtheyrefer. Westress
+that the AIC is based on the relative comparison among the
+different models, and does not provide any indication on the
+absolute quality of the fit, which should be assessed through
+other methods (see § 4.2).
+We now undertake a similar analysis for the normalisation
+parameter, the evolution of which is represented by equa-
+tion (5). Having qualitatively inspected the trends oflog𝐴0
+and 𝛼 with the halo mass in § 3.4, we can now quantify
+such functions by seeking a suitable fitting function. For
+consistency with our study of the parameters regulating the
+slope-redshift-massrelationship,wechooseagainpolynomial
+
+--- Page 14 ---
+14 D. Sorini et al.
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+No-feedback
+□2
+□1
+0
+1
+2
+⟨ηtrue □ ηpred⟩/σηtrue
+No-AGN
+ No-jet
+11.0 11.5 12.0 12.5 13.0 13.5
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5z
+No-X-ray
+11.0 11.5 12.0 12.5 13.0 13.5
+log(M200c/M⊙)
+Simba-50
+11.0 11.5 12.0 12.5 13.0 13.5 14.0
+log(M200c/M⊙)
+Var-vjet-cap
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+No-feedback
+ No-AGN
+ No-jet
+11.0 11.5 12.0 12.5 13.0 13.5
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5z
+No-X-ray
+11.0 11.5 12.0 12.5 13.0 13.5
+log(M200c/M⊙)
+Simba-50
+11.0 11.5 12.0 12.5 13.0 13.5 14.0
+log(M200c/M⊙)
+Var-vjet-cap
+□2.0
+□1.5
+□1.0
+□0.5
+0.0
+0.5
+1.0
+1.5
+2.0
+⟨log Atrue □ log Apred⟩/σlog Atrue
+Fig. 6.—Top panels: Average difference of the slope of the gas density profile of haloes within 2D-bins in redshift and total mass as measured from the
+simulations,andaspredictedbythefittingformulagivenbyequation(4),forall Simba 50ℎ−1 cMpcruns. Thedifferenceisnormalisedbythestandarddeviation,
+in each bin, of the distribution of the slope computed by the simulations.Bottom panels: as in the upper panels, but for the predicted (equation 5) vs measured
+normalisationofthegasdensityprofileswithinhaloesinsteadoftheslope. Asshownbythecolourbar, thedifferencebetweenpredictedandmeasuredslopeand
+normalisation stays within one standard deviation for most 2D-bins for both the normalisation and slope, and exceeds two standard deviations only in some of the
+highest-mass bins. Our fitting formula therefore provides an accurate representation of the slope and normalisation of the gas density profile within haloes for all
+feedback variants of theSimbasimulation. The fit under performs only at the boundary of the portion of the redshift-halo mass plane probed by the simulations,
+where the statistics of haloes is lower.
+
+--- Page 15 ---
+A universal fitting formula for gas density profiles 15
+functions, defined as:
+log𝐴0(𝑀200c)=
+∑︁
+𝑖
+log𝐴0,𝑖
+
+log
+𝑀200c
+𝑀ref
+𝑖
+(8)
+𝛼(𝑀200c)=
+∑︁
+𝑖
+𝛼𝑖
+
+log
+𝑀200c
+𝑀ref
+𝑖
+, (9)
+where all log𝐴0,𝑖 and𝛼𝑖 are free parameters. We select the
+samepivotscaleforthehalomassasinthecaseoftheslopeof
+the gas density profile, i..e,𝑀ref = 1012.5 M⊙. We determine
+thedegreeofeachpolynomialbyapplyingtheAIC,following
+thesamemethodutilisedfortheslopeofthegasdensityprofile.
+Theoptimaldegreeisbetween2and6for log𝐴0,andbetween
+2 and 5 for𝛼 (see Appendix B). We report the values of the
+best-fit parameters for all runs in Table 3. We remind the
+readerthatthe log𝐴0 parametermaybeunderestimateddueto
+sub-optimal numerical convergence with respect to the mass
+resolution, hence the corresponding fitting parameters may
+need to be rescaled appropriately (see also discussion in § 3.4
+and in the Appendix A).
+At this point, all parameters needed to describe the redshift
+evolutionandmassdependenceoftheslopeandnormalisation
+of the gas density profile (equations 4-5) have been specified
+(Tables 2-3). Combining equations 6-8 with equations (3)-
+(5), we obtain a universal fitting formula for the average gas
+density profile of a halo with total mass𝑀200c and redshift𝑧
+in any feedback variant of theSimbasimulation.
+4.2. Accuracy of the model
+In this section, we assess the accuracy of our modelling for
+the evolution of the gas density profiles in theSimba suite
+of simulations. We begin by testing how the slope and nor-
+malisation of the gas density profiles predicted by our fitting
+formulae compare with the same quantity measured directly
+from the simulations.
+For every feedback variant, we consider all available snap-
+shots in the redshift range0< 𝑧 <4, and organise the haloes
+respecting the resolution criteria adopted in this work in 2D-
+bins of halo mass and redshift. Along the mass dimension,
+the bins cover the range1011 M⊙ < 𝑀200c < 1014 M⊙ and
+have equal logarithmic width of0.2 dex. The bins are lin-
+early spaced along the redshift dimension, with width equal
+toΔ𝑧= 0.25. We individually fit the gas density profile of all
+haloswithinevery2D-binwiththepowerlawinequation(3),
+and extract their slope,𝜂true, and normalisation,log𝐴true. For
+each halo, we then calculate the the same quantities as pre-
+dicted by equations (4)-(8),𝜂pred and log𝐴pred, using as input
+fortheindependentvariablesthehalomassandredshiftofthe
+halo in question.
+To assess the accuracy of our fitting formulae for the slope,
+we take the arithmetic mean of the difference between𝜂true
+and𝜂pred in every 2D-bin in halo mass and redshift. We then
+normalise this average difference by the standard deviation of
+the slope of all haloes as measured in the simulation,𝜎𝜂true.
+Thiswilltellushowtheaverageaccuracyofthepredictedslope
+compares with the intrinsic scatter of the actual slopes of the
+gas density profiles of the haloes in every mass and redshift
+bin. Iftheyareofthesameorder,itmeansthatourmodeldoes
+agoodjobatreproducingthenumericaldata,sinceitdoesnot
+significantly increase the dispersion in the slopes. We adopt
+the same procedure for determining the average accuracy of
+the normalisation parameterlog𝐴.
+Our results for the slope and normalisation parameters are
+shownintheupperandlowersetsofsixpanels,respectively,in
+Figure6. Eachpanelreportstheresultsofadifferentrun. The
+squares inside every panel correspond to the 2D-bins in halo
+massandredshiftdescribedearlier. Thebinsarecolourcoded
+according to the average accuracy at reproducing the slope
+(upper panels) or normalisation (lower panels) parameters,
+normalised by the intrinsic scatter.
+Forbothparameters,theaverageaccuracyistypicallyequal
+to or smaller than the intrinsic standard deviation. At the
+higher-mass end in all runs, the average accuracy gets gener-
+ally worse, becoming comparable to∼ 2 standard deviations.
+At higher redshift (𝑧 >1.5), the error associated with our fit-
+ting formula in the highest-mass bins is approximately∼ 2.5
+and 3 sigma deviations for the normalisation and slope pa-
+rameters, respectively. But these are isolated cases, affected
+by the low statistics of haloes in the bins in question. In-
+deed, in the great majority of the bins considered, our model
+does a remarkable job at reproducing the average slope and
+normalisation parameters.
+Westressthattheaccuracytestthatweperformedisstricter
+compared to the strategy adopted for the calibration of the
+parameters in our fitting formulae. Indeed, the free param-
+eters in equations (4)-(8) are obtained by fitting thestacked
+gasdensityprofilesindifferentredshiftandhalomassbins. In
+Figure6,wetestedtheaccuracyofthepredictedslopeandnor-
+malisation by comparing them to the ones obtained by fitting
+individual haloes. Therefore, our model passed a stringent
+test, widening the scope for its applicability (see § 5).
+If we perform a less strict test, following more closely the
+methodology utilised to derive the fitting formula for the gas
+density profiles, we unexpectedly obtain even better results.
+Wedividethehaloesinthesame2D-binsofredshiftandhalo
+mass adopted in Figure 6, and compute the average gas den-
+sity profile following the same stacking procedure explained
+in§3.1. Wethencomputethegasdensityprofilepredictedby
+ouruniversalfittingformula,i.e. combiningequation(3)with
+equations (4)-(8). The reduced𝜒2 resulting from a goodness-
+of-fit test between the stacked and predicted gas density pro-
+files in each redshift-mass 2D-bin and every feedback variant
+is shown in Figure 7.
+We find an excellent reduced𝜒2 in all 2D-bins for the runs
+withoutAGN-jetfeedback. OnceAGN-jetareintroduced,the
+qualityofthefitworsensatthehigher-massendfor 𝑧 <2. This
+is indeed the halo mass and redshift regime where AGN-jet
+become the dominant process in shaping the gas distribution
+within haloes (Sorini et al. 2022). Nevertheless, the reduced
+𝜒2 is still within unity for all bins.
+To summarise, our universal fitting formula does an excel-
+lent job at reproducing the average gas density profiles in all
+Simba 50 ℎ−1 cMpc variants. It also correctly predicts the
+slope and normalisation of the gas density profiles of individ-
+ual haloes with an accuracy of the same order of the intrinsic
+scatteroftheseparametersamongthehaloesinthesimulation.
+5. APPLICABILITY AND LIMITATIONS
+Wequantifiedhowdifferentfeedbackprescriptionsaffectthe
+slope and normalisation of the gas density profiles within the
+Simba simulation. Our results highlight a distinctive feature
+imprintedbytheAGN-jetmodeontheslopeofthegasdensity
+profile in galaxy groups and clusters (𝑀200c ≳ 1013 M⊙): the
+present-dayslopeislesssteepandexhibitsastrongervariation
+with redshift (Figure 4) than other feedback variants. These
+
+--- Page 16 ---
+16 D. Sorini et al.
+11 12 13 14
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+No-feedback
+11 12 13 14
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+No-AGN
+11 12 13 14
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+No-jet
+11 12 13 14
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+No-X-ray
+11 12 13 14
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+Simba-50
+11 12 13 14
+log(M200c/M⊙)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+z
+Var-vjet-cap
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+Reduced χ2 for stacked haloes
+Fig. 7.—Average reduced𝜒2 obtained from a goodness-of-fit test comparing the average gas density profile resulting from stacking all haloes within different
+2D-bins in redshift and total mass, with the power-law profile predicted by our fitting formulae (equation 3, combined with equations 4-8). The low reduced
+𝜒2 < 1 values prove that our fitting formulae provide an accurate description of the gas density profiles of haloes in allSimba 50ℎ−1 cMpc runs in the redshift
+and mass range considered.
+predictions can potentially be verified with current observa-
+tions. For example, Zhang et al. (2024) measured stacked
+X-ray surface brightness profiles of Milky-Way-size galaxies,
+groups and clusters, using data from the eROSITA mission
+(Merloni et al. 2024). They showed that the data are well
+represented with a beta profile; far from the core of the halo,
+a beta profile can be approximated with a power law, and this
+would enable a more direct comparison with the predictions
+in Figure 4 (Sorini et al. 2024b). Indeed, the core radii in-
+ferred by Zhang et al. (2024) for their sample of objects is in
+the range5− 15 kpc, which correspond to0.02− 0.04𝑟200c.
+Thus, the radial distance range over which the beta profiles
+can be approximated with a power law (𝑟 >0.02− 0.04𝑟200c)
+is compatible with the halo-centric distance range considered
+in this work (0.05<𝑟/𝑟200c < 1).
+ObservationsofthermalandkineticSZinthegaseousenvi-
+ronmentofgalaxies,groupsandclustersprovedtobepromis-
+ing at constraining the impact of different feedback prescrip-
+tions on thermal state of the gas (e.g. Amodeo et al. 2021;
+Moser et al. 2022; Pandey et al. 2023). However, most of the
+kineticSZsignal comesfromregionsbeyondthe virialradius
+(Hadzhiyskaetal.2024),whichisoutsidetheboundariesthat
+weconsideredforourfittingformula. Thus,infutureworkwe
+willextendthemodellingofthegasdensityprofilesbeyondthe
+virialradiusinordertobestexploitthekineticSZdata. Onthe
+otherhand,atlowermasses( 1011.5 M⊙ ≲ 𝑀200c ≲ 1012.5M⊙),
+thepredictionsforthepresent-dayslopeofthegasdensitypro-
+file of the No-AGN and No-feedback run may be sufficiently
+differenttobediscernedbyongoingmeasurements. Forexam-
+ple, observations in the optical and infrared domain with the
+Euclid wide survey (Euclid Collaboration et al. 2022) could
+provide a large enough sample of galaxies to meaningfully
+constrain the predicted gas density profiles.
+Recent observations of𝑧≈ 3 CO emitters (Pensabene et al.
+2024) and of ion absorbers such as MgII around high-redshift
+Ly𝛼 emitters traced the amount of cool gas in the CGM of
+galaxies across the redshift range𝑧∼ 3− 4 (Galbiati et al.
+2024), which is sensitive to feedback processes. Such mea-
+surements can thus be exploited for constraining the𝛼 pa-
+rameter regulating the redshift evolution of the normalisa-
+tion of the gas density profile, which exhibits a qualitatively
+different mass dependence when the AGN-jet mode is in-
+cluded (Figure 5). The present-day normalisation,log𝐴0, is
+also very sensitive to the inclusion of AGN-jet and, some-
+what less conspicuously, stellar feedback, in the mass range
+1011.5 M⊙ ≲ 𝑀200c ≲ 1013 M⊙. However, this parameter is
+not well converged with respect to mass resolution (see Ap-
+pendixA).Whileitwouldstillbepossibletoconstrain log𝐴0
+with observations, one would need to account for an extra
+source of uncertainty due to the poor numerical convergence
+before drawing robust conclusions.
+It is important to bear in mind that there are several inter-
+mediate passages to address before making a fair comparison
+between theSimbapredictions presented in this work and the
+aforementioned observations. Firstly, we considered the to-
+tal gas mass density profile, whereas different observations
+tracegaswithspecifictemperatureandchemicalcomposition.
+Thus, our analysis should be restricted to the gaseous phases
+
+--- Page 17 ---
+A universal fitting formula for gas density profiles 17
+that can be detected by different wavelength bands. Further-
+more, the connection between surface brightness and density
+profileneedstobecarefullymodelled,takingintoaccountthe
+characteristics of the instruments used in the observations. A
+faircomparisonwouldthenbemosteffectivelyundertakenby
+generating mock observations from theSimba suite of simu-
+lations. We will do this in future work.
+The applicability of our work is not limited to constrain-
+ing feedback prescriptions from observations. In fact, our
+universal fitting formula can aid certain observations. For
+instance, mass estimates of the circumgalactic gas of𝑧∼ 3
+redshift galaxies from Ly𝛼 emission measurements relies on
+assumptionsoftheunderlyinghydrogendensityprofile(Vidal-
+Garcíaetal.2024). Re-adaptingouranalysistospecificatomic
+species would then enable more physically motivated, albeit
+model-dependent, estimates of the CGM mass in this kind of
+studies.
+From a theoretical perspective, our fitting formula can be
+usedtomimictheeffectsof Simba-typefeedbackprescriptions
+onto the results of N-body simulations or semi-analytic mod-
+els. Indeed, as long as halo mass and redshift are known, one
+canapplyourmodelandreadilyobtainthegasdensityprofiles
+following the desiredSimbafeedback variant, without having
+to run full hydrodynamic simulationsab initio. Our results
+can also be coupled to analytic models of cosmic star for-
+mation that rely on the simplifying assumption of spherically
+symmetric power-law gas density profiles within haloes (e.g.
+Hernquist & Springel 2003; Sorini & Peacock 2021). Once
+again, our work provides a physically motivated evolution of
+the gas density profiles, based on sophisticated cosmological
+simulations.
+The main limitations of this work is that our results are
+confined to the redshift interval0 < 𝑧 < 4 and halo mass
+range( 1011 M⊙ < 𝑀200c < 1014 M⊙). Thelowermasslimitis
+dictated by the finite mass resolution of the simulation. Run-
+ning higher-resolution hydrodynamic simulations would then
+enable us to extend our study to dwarf galaxies and towards
+higher redshift, where the cutoff of the halo mass function
+occursatlowermasses. Ontheotherhand, usinglargerboxes
+can extend our analysis at larger halo masses, approaching
+supercluster scales (𝑀200c∼ 1015 M⊙; see Appendix A).
+Clearly, the universality of our fitting formula is still re-
+stricted to the six Simba variants considered. Our fitting
+procedure could be reasonably replicated in the runs of the
+CAMELS suite of simulations (Villaescusa-Navarro et al.
+2021) that closely follow theSimba galaxy formation model
+andextenditwithmanyadditionalvariationsoftheunderlying
+feedback parameters (Ni et al. 2023). However, it is not clear
+whetherouranalysisisoutrightportabletoothercosmological
+simulationswithsignificantlydifferentfeedbackprescriptions.
+For instance, the gas density profiles in theIllustrisTNG
+(Pillepich et al. 2018) andMillenniumTNG (Pakmor et al.
+2023) simulations appear to deviate appreciably from a pure
+power law (Sorini et al. 2024a). In these cases, either a dif-
+ferent model for the gas density profile should be adopted,
+or the radial range of the profiles should be restricted such
+that the trend of the gas density profile is still well approxi-
+mated by a power law. Indeed, we re-iterate that our model
+for the gas density profile is not derived from first principles.
+It is simply a useful empirical fitting formula that effectively
+captures the evolution of the gas density profiles in the dif-
+ferentSimbavariants, and facilitates the interpretation of the
+effect of feedback mechanisms on the gas distribution within
+haloes. A comprehensive comparison between the numerical
+gasdensityprofilesfrom Simbaandothersimulationswiththe
+predictions of physically motivated analytical models would
+add more depth to this study. We leave this investigation for
+future work.
+6. CONCLUSIONS AND PERSPECTIVES
+We used several variants of theSimba hydrodynamic cos-
+mologicalsimulationtostudytheimpactofdifferentfeedback
+prescriptionsonthetheradialgasdensityprofilesofhaloesin
+thetotalmassrange 1011− 1014 M⊙,from 𝑧= 4to𝑧= 0. The
+main result of this work is a universal analytical fitting for-
+mulathataccuratelydescribestheevolutionofthegasdensity
+profiles in all runs considered.
+Wefindthatatallredshiftsconsidered,theaveragegasden-
+sity profile at any given mass is well described by a power
+law within the halocentric distance range where we trust the
+numericalconvergeofourresults(Figure1). Thegasdistribu-
+tionwithinhaloescanthusbedescribedwithtwoparameters,
+namely the normalisation and slope of the profile. For each
+fixed halo mass, the redshift evolution of both the slope and
+normalisationparametersarealsodescribedwithapowerlaw
+(Figure 2-3). We thus study the mass dependence of the pa-
+rametersregulatingtheredshiftevolutionofthenormalisation
+and slope of the gas density profiles, and find that:
+1. When AGN-jet feedback is activated, the present-day
+slope of the gas density profile in galaxy groups and
+clusters (total halo mass𝑀200c ≳ 1013 M⊙) decreases,
+meaning that the gas density declines less steeply with
+the distance from the centre of the halo (Figure 4).
+2. AGN-jet feedback induces a stronger redshift evolution
+of the slope of the gas density profile in galaxy groups
+and clusters, which is otherwise weak even in the pres-
+ence of AGN radiative winds (Figure 4).
+3. The inclusion of AGN-jet feedback strongly decreases
+the normalisation of the gas density profile at𝑧 = 0
+in haloes with mass1011.5 M⊙ < 𝑀200c < 1013.5 M⊙,
+hence lowering their gas mass fraction (Figure 5). This
+follows from the evacuation of gas from haloes due to
+the action of AGN jets, in line with previous findings
+(e.g. Sorini et al. 2022). In the same halo mass range,
+runs that include AGN-jet exhibit an opposite trend in
+the redshift evolution of the normalisation of the gas
+densityprofilewithrespecttothe Simbavariantswhere
+this feedback mode is deactivated.
+4. Through a rigorous information criterion, we provide a
+universal fitting formula polynomial fitting formula for
+the mass dependence of the parameters describing the
+redshift evolution of both the slope and normalisation
+of the gas density profiles (equations 4-9; Tables 2-3).
+Agoodness-of-fit testofour predictionsforthe average
+gas density profile of haloes within different redshift
+and mass bins yields a reduced𝜒2 better than unity,
+confirming the accuracy of our model (Figure 7).
+5. Our predictions for the slope and normalisation of the
+gas density profiles pass an even more stringent test,
+where we compare them with the same quantities mea-
+sured directly from the simulations, on a halo-by-halo
+basis. Weobtainthat,inallruns,theaveragedifference
+
+--- Page 18 ---
+18 D. Sorini et al.
+between the measured and predicted quantities is con-
+sistentwiththevarianceinherentinthesampleofhaloes
+considered (Figure 6). This highlights the considerable
+robustness of our simple fitting formulae.
+We provide the parameters of all best-fit functions, so that
+they can be straightforwardly applied to semi-analytic mod-
+els, and dark-matter-only or feedback-free hydrodynamic cos-
+mological simulations alike, in order to mimic the effect of
+feedbackmodelsfollowingthe Simbaprescriptionsonthegas
+distribution within haloes. Further work is required to verify
+whether other state-of-the-art cosmological simulations (e.g.
+Schaye et al. 2023; Pakmor et al. 2023) exhibit power-law gas
+density profiles within certain distances from the centre of
+haloes,orwhethertheyfavourmorecomplexmodels. Wewill
+explore this issue in future work.
+From the observational side, instruments such as MUSE
+(Bacon et al. 2010) and surveys such as eROSITA (Merloni
+etal.2024) recentlyprovidedhigh-qualitydataon thesurface
+brightness profile around galaxies of different mass and red-
+shift (e.g. Galbiati et al. 2023, 2024; Pensabene et al. 2024;
+Zhang et al. 2024). Subject to appropriate assumptions, these
+measurementscanbeconvertedintocorrespondinggasdensity
+profiles, and can thus be utilised to constrain the predictions
+of cosmological simulations such asSimba. Our work serves
+therefore as a starting point towards this direction, which we
+will pursue meticulously in future work.
+ACKNOWLEDGEMENTS
+We thank the anonymous reviewer for helpful comments.
+DS thanks Rachel Somerville, Shy Genel, Fred Jennings,
+John Peacock and the members of theSimba collaboration
+for helpful discussions, and is grateful for the support from
+the Post-Covid Recovery Fund of Durham University for es-
+sential travel connected to the completion of this work. This
+work was supported by collaborative visits funded by the
+Cosmology and Astroparticle Student and Postdoc Exchange
+Network (CASPEN). DS and SB acknowledge funding from
+a UK Research & Innovation (UKRI) Future Leaders Fel-
+lowship [grant number MR/V023381/1]. RD acknowledges
+support from the Wolfson Research Merit Award program of
+the U.K. Royal Society. DAA acknowledges support by NSF
+grant AST-2108944, NASA grant ATP23-0156, STScI grants
+JWST-GO-01712.009-AandJWST-AR-04357.001-A,Simons
+FoundationAwardCCA-1018464,andCottrellScholarAward
+CS-CSA-2023-028 by the Research Corporation for Science
+Advancement. We acknowledge theytteam for development
+and support ofyt. Throughout this work, DS was supported
+by the European Research Council, under grant no. 670193,
+bytheSTFCconsolidatedgrantno. RA5496,andbytheSwiss
+National Science Foundation (SNSF) Professorship grant no.
+202671. This work used the DiRAC@Durham facility man-
+aged by the Institute for Computational Cosmology on behalf
+of the STFC DiRAC HPC Facility, with equipment funded by
+BEIScapitalfundingviaSTFCcapitalgrantsST/K00042X/1,
+ST/P002293/1, ST/R002371/1 and ST/S002502/1, Durham
+UniversityandSTFCoperationsgrantST/R000832/1. DiRAC
+is part of the National e-Infrastructure. This work made ex-
+tensive use of the NASA Astrophysics Data System and of
+the astro-ph preprint archive at arXiv.org. For the purpose of
+open access, the author has applied a Creative Commons At-
+tribution(CCBY)licencetoanyAuthorAcceptedManuscript
+version arising from this submission.
+DATA AVAILABILITY
+The simulation data of all runs except for No-vjet-cap are
+publicly available2. The output of the No-vjet-cap run and
+the derived data underlying this article will be shared upon
+reasonable request to the corresponding author.
+REFERENCES
+Akaike H., 1974, IEEE Transactions on Automatic Control, 19, 716
+Allen S. W., Evrard A. E., Mantz A. B., 2011, ARA&A, 49, 409
+Almgren A. S., Bell J. B., Lĳewski M. J., Lukić Z., Van Andel E., 2013,
+ApJ, 765, 39
+Amodeo S., et al., 2021, Phys. Rev. D, 103, 063514
+Amon A., et al., 2022, Phys. Rev. D, 105, 023514
+Angelinelli M., Ettori S., Dolag K., Vazza F., Ragagnin A., 2022, A&A, 663,
+L6
+Angelinelli M., Ettori S., Dolag K., Vazza F., Ragagnin A., 2023, A&A, 675,
+A188
+Anglés-Alcázar D., Özel F., Davé R., 2013, ApJ, 770, 5
+Anglés-Alcázar D., Özel F., Davé R., Katz N., Kollmeier J. A., Oppenheimer
+B. D., 2015, ApJ, 800, 127
+Anglés-Alcázar D., Davé R., Faucher-Giguère C.-A., Özel F., Hopkins P. F.,
+2017a, MNRAS, 464, 2840
+Anglés-Alcázar D., Faucher-Giguère C.-A., Kereš D., Hopkins P. F.,
+Quataert E., Murray N., 2017b, MNRAS, 470, 4698
+Appleby S., Davé R., Kraljic K., Anglés-Alcázar D., Narayanan D., 2020,
+MNRAS, 494, 6053
+Appleby S., Davé R., Sorini D., Storey-Fisher K., Smith B., 2021, MNRAS,
+507, 2383
+Arrigoni Battaia F., Hennawi J. F., Prochaska J. X., Cantalupo S., 2015, ApJ,
+809, 163
+Arrigoni Battaia F., Hennawi J. F., Prochaska J. X., Oñorbe J., Farina E. P.,
+Cantalupo S., Lusso E., 2019, MNRAS, 482, 3162
+Arrigoni Battaia F., Obreja A., Costa T., Farina E. P., Cai Z., 2023, ApJ, 952,
+L24
+Ayromlou M., Nelson D., Pillepich A., 2023, MNRAS, 524, 5391
+Bacon R., et al., 2010, in McLean I. S., Ramsay S. K., Takami H., eds, SPIE
+Vol. 7735, SPIE, Ground-based and Airborne Instrumentation for
+Astronomy III. p. 773508 (arXiv:2211.16795), doi:10.1117/12.856027
+Bogdán Á., et al., 2015, ApJ, 804, 72
+Bondi H., 1952, MNRAS, 112, 195
+Booth C. M., Schaye J., 2013, Scientific Reports, p. 1738
+2 http://simba.roe.ac.uk
+Borrow J., Anglés-Alcázar D., Davé R., 2020, MNRAS, 491, 6102
+Bradley L., Davé R., Cui W., Smith B., Sorini D., 2022, arXiv e-prints, p.
+arXiv:2203.15055
+Capelo P. R., Natarajan P., Coppi P. S., 2010, MNRAS, 407, 1148
+Christiansen J. F., Davé R., Sorini D., Anglés-Alcázar D., 2020, MNRAS,
+499, 2617
+Cole S., Aragon-Salamanca A., Frenk C. S., Navarro J. F., Zepf S. E., 1994,
+MNRAS, 271, 781
+Crain R. A., van de Voort F., 2023, ARA&A, 61, 473
+Cui W., et al., 2018, MNRAS, 480, 2898
+Davé R., Anglés-Alcázar D., Narayanan D., Li Q., Rafieferantsoa M. H.,
+Appleby S., 2019, MNRAS, 486, 2827
+Delgado A. M., et al., 2023, MNRAS, 526, 5306
+Euclid Collaboration et al., 2022, A&A, 662, A112
+Farina E. P., Falomo R., Treves A., 2011, MNRAS, 415, 3163
+Farina E. P., Falomo R., Decarli R., Treves A., Kotilainen J. K., 2013,
+MNRAS, 429, 1267
+Farina E. P., Falomo R., Scarpa R., Decarli R., Treves A., Kotilainen J. K.,
+2014, MNRAS, 441, 886
+Galbiati M., Fumagalli M., Fossati M., Lofthouse E. K., Dutta R., Prochaska
+J. X., Murphy M. T., Cantalupo S., 2023, MNRAS, 524, 3474
+Galbiati M., Dutta R., Fumagalli M., Fossati M., Cantalupo S., 2024, A&A,
+690, A7
+Gebhardt M., et al., 2024, MNRAS, 529, 4896
+Ghirardini V., et al., 2021, ApJ, 910, 14
+Haardt F., Madau P., 2012, ApJ, 746, 125
+Habouzit M., et al., 2021, MNRAS, 503, 1940
+Habouzit M., et al., 2022, MNRAS, 509, 3015
+Hadzhiyska B., et al., 2024, arXiv e-prints, p. arXiv:2407.07152
+Harker G., Cole S., Helly J., Frenk C., Jenkins A., 2006, MNRAS, 367, 1039
+Hennawi J. F., Prochaska J. X., 2007, ApJ, 655, 735
+Hernquist L., Springel V., 2003, MNRAS, 341, 1253
+Hopkins P. F., 2015, MNRAS, 450, 53
+Hopkins P. F., Quataert E., 2011, MNRAS, 415, 1027
+Hopkins P. F., et al., 2018, MNRAS, 480, 800
+Jennings F. J., Babul A., Dave R., Cui W., Rennehan D., 2024, arXiv
+e-prints, p. arXiv:2407.14415
+
+--- Page 19 ---
+A universal fitting formula for gas density profiles 19
+Johnson S. D., Chen H.-W., Mulchaey J. S., 2015a, MNRAS, 449, 3263
+Johnson S. D., Chen H.-W., Mulchaey J. S., 2015b, MNRAS, 452, 2553
+Johnson S., Chen H.-W., Mulchaey J. S., 2016, in American Astronomical
+Society Meeting Abstracts. p. 109.03
+Kauffmann G., Colberg J. M., Diaferio A., White S. D. M., 1999, MNRAS,
+303, 188
+Khrykin I. S., Sorini D., Lee K.-G., Davé R., 2024, MNRAS, 529, 537
+Krumholz M. R., Gnedin N. Y., 2011, ApJ, 729, 36
+Lacey C. G., et al., 2016, MNRAS, 462, 3854
+Li Z., Gao H., Wei J.-J., Yang Y.-P., Zhang B., Zhu Z.-H., 2019, ApJ, 876,
+146
+Li Q., et al., 2023, MNRAS, 523, 1228
+Ludlow A. D., Schaye J., Bower R., 2019, MNRAS, 488, 3663
+Lukić Z., Stark C. W., Nugent P., White M., Meiksin A. A., Almgren A.,
+2015, MNRAS, 446, 3697
+Lyskova N., Churazov E., Khabibullin I. I., Burenin R., Starobinsky A. A.,
+Sunyaev R., 2023, MNRAS, 525, 898
+Madhavacheril M. S., et al., 2020, Phys. Rev. D, 102, 023534
+Mathews W. G., Prochaska J. X., 2017, ApJ, 846, L24
+McDonald M., et al., 2017, ApJ, 843, 28
+Merloni A., et al., 2024, A&A, 682, A34
+Moser E., et al., 2022, ApJ, 933, 133
+Muratov A. L., Kereš D., Faucher-Giguère C.-A., Hopkins P. F., Quataert E.,
+Murray N., 2015, MNRAS, 454, 2691
+Navarro J. F., Frenk C. S., White S. D. M., 1997, ApJ, 490, 493
+Ni Y., et al., 2023, ApJ, 959, 136
+Oppenheimer B. D., Davé R., 2006, MNRAS, 373, 1265
+Pakmor R., et al., 2023, MNRAS, 524, 2539
+Pallottini A., Gallerani S., Ferrara A., 2014, MNRAS, 444, L105
+Pandey S., et al., 2023, MNRAS, 525, 1779
+Pandya V., et al., 2020, ApJ, 905, 4
+Pandya V., et al., 2023, ApJ, 956, 118
+Pensabene A., et al., 2024, A&A, 684, A119
+Perna M., Lanzuisi G., Brusa M., Mignoli M., Cresci G., 2017, A&A, 603,
+A99
+Pillepich A., et al., 2018, MNRAS, 473, 4077
+Planck Collaboration et al., 2016, A&A, 594, A13
+PowerC.,NavarroJ.F.,JenkinsA.,FrenkC.S.,WhiteS.D.M.,SpringelV.,
+Stadel J., Quinn T., 2003, MNRAS, 338, 14
+Prochaska J. X., Zheng Y., 2019, MNRAS, 485, 648
+Prochaska J. X., et al., 2013, ApJ, 776, 136
+RahmatiA.,PawlikA.H.,Raičevi `cM.,SchayeJ.,2013,MNRAS,430,2427
+RubinK.H.R.,HennawiJ.F.,ProchaskaJ.X.,SimcoeR.A.,MyersA.,Lau
+M. W., 2015, ApJ, 808, 38
+Rudie G. C., et al., 2012, ApJ, 750, 67
+Rudie G. C., Steidel C. C., Shapley A. E., Pettini M., 2013, ApJ, 769, 146
+Scharré L., Sorini D., Davé R., 2024, MNRAS, 534, 361
+Schaye J., et al., 2023, MNRAS, 526, 4978
+Schmidt M., 1959, ApJ, 129, 243
+Secco L. F., et al., 2022, Phys. Rev. D, 105, 023515
+Smith B. D., et al., 2017, MNRAS, 466, 2217
+Somerville R. S., Davé R., 2015, ARA&A, 53, 51
+Sorini D., Peacock J. A., 2021, MNRAS, 508, 5802
+Sorini D., Oñorbe J., Hennawi J. F., Lukić Z., 2018, ApJ, 859, 125
+Sorini D., Davé R., Anglés-Alcázar D., 2020, MNRAS, 499, 2760
+Sorini D., Davé R., Cui W., Appleby S., 2022, MNRAS, 516, 883
+Sorini D., Bose S., Pakmor R., Hernquist L., Springel V., Hadzhiyska B.,
+Hernández-Aguayo C., Kannan R., 2024a, MNRAS,
+Sorini D., Dave R., Angles-Alcazar D., 2024b, in EAS2024. p. 709
+Steidel C. C., Erb D. K., Shapley A. E., Pettini M., Reddy N., Bogosavljević
+M., Rudie G. C., Rakic O., 2010, ApJ, 717, 289
+Stern J., Hennawi J. F., Prochaska J. X., Werk J. K., 2016, ApJ, 830, 87
+Stern J., Fielding D., Faucher-Giguère C.-A., Quataert E., 2019, MNRAS,
+488, 2549
+Stinson G. S., et al., 2015, MNRAS, 454, 1105
+Suginohara T., Ostriker J. P., 1998, ApJ, 507, 16
+Sunyaev R. A., Zeldovich Y. B., 1970, Ap&SS, 7, 3
+Sunyaev R. A., Zeldovich Y. B., 1972, Comments on Astrophysics and
+Space Physics, 4, 173
+Teyssier R., 2002, A&A, 385, 337
+Thomas N., Davé R., Anglés-Alcázar D., Jarvis M., 2019, MNRAS, 487,
+5764
+Tillman M. T., et al., 2023, AJ, 166, 228
+Turner M. L., Schaye J., Steidel C. C., Rudie G. C., Strom A. L., 2014,
+MNRAS, 445, 794
+Vidal-García A., Plat A., Curtis-Lake E., Feltre A., Hirschmann M.,
+Chevallard J., Charlot S., 2024, MNRAS, 527, 7217
+Villaescusa-Navarro F., et al., 2021, ApJ, 915, 71
+Vogelsberger M., et al., 2014, MNRAS, 444, 1518
+Wang Y., He P., 2024, MNRAS, 528, 3797
+Yang T., Cai Y.-C., Cui W., Davé R., Peacock J. A., Sorini D., 2022,
+MNRAS, 516, 4084
+Yang T., Davé R., Cui W., Cai Y.-C., Peacock J. A., Sorini D., 2024,
+MNRAS, 527, 1612
+Zhang Y., et al., 2024, A&A, 690, A267
+APPENDIX
+A. CONVERGENCE TESTS
+The purpose of this section is to test the numerical conver-
+gence of the main results of our work. In Figure 8 we analyse
+the halo mass dependence of the𝜂0,𝛽, log𝐴0 and𝛼 parame-
+ters,forthefiducialSimba-50simulationsanditsvariantwith
+either different volume or mass resolution (see 1).
+The upturn of the present-day slope of the gas density pro-
+file,𝜂0,atthehigher-massendoccursatalargermassscalein
+theSimba-100simulationratherthanintheSimba-50run. We
+find similar results for the downturn observed in the𝛽 param-
+eter, which regulates the redshift evolution of the slope of the
+gas density profile. Such features are therefore dependent on
+theboxsizeofthesimulation,presumablyreflectingthehigher
+statistics of cluster-size haloes that can be probed with larger
+volumes. Up to a halo mass of𝑀200c ≲ 1013.8, the Simba-50
+and Simba-100 simulations provide consistent results for the
+present-day slope of the gas density profile. We can therefore
+numerically trust our results up to this mass scale. For the𝛽
+parameter, theresultsarefairlyindependentontheboxsizeis
+achievedupto 𝑀200c ≲ 1013.4 M⊙. Thereisgoodconvergence
+withrespecttomassresolutionovertheentirehalomassrange
+probedbytheSimba-25andSimba-HighResboxes,sinceboth
+these runs generally provide consistent results within the sta-
+tistical error.
+Regarding the parameters regulating the evolution of the
+normalisation, log𝐴0and𝛼,theresultsareindependentonthe
+box size (for runs with at least50ℎ−1 cMpc per side, which
+are the ones of interest in this work) over the entire mass
+range considered. There is good convergence with respect
+to the mass resolution for the𝛼 parameter, whereas the two
+25 ℎ−1 cMpc boxes provide statistically different results for
+log𝐴0 for𝑀200c ≲ 1012.3 M⊙. For these masses, the Simba-
+HighRes run exhibits an almost constant offset of∼ 0.2 dex
+with respect to the Simba-25 run. Thus, when predicting
+log𝐴0usingourfittingformula,itmightbenecessarytoeither
+correct it by a factor of∼ 1.6, or to include the corresponding
+systematic error in any consideration that follows. The gas
+massfractionderivedfromthenormalisationparameter log𝐴
+may thus be biased by the same factor, especially for𝑀200c ≲
+1012.3 M⊙. We did not include any correction factor in our
+assessment of the accuracy of the model (Figure 6) because
+in that case we were always comparing the fitting formula
+derivedfroma 50ℎ−1 cMpcrunwiththenumericaldatafrom
+that same run.
+The sub-optimal numerical convergence is caused by the
+resolution-dependence of the feedback prescriptions. Since
+the underlying feedback parameters are not re-tuned for every
+run in the suite of simulations, poor convergence with respect
+tomassresolutioncanbeexpectedforseveralgalaxyandhalo
+properties. At lower resolution, the conditions for outflows
+recoupling with the surrounding gas elements (see § 2.1) are
+typically met at larger distances from the galaxy centre. Out-
+flows then push gas farther into the CGM and hence recycle
+less material due to purely numerical effects. This reduces
+thegasmassfractionatlowerresolution,diminishingthenor-
+malisationofthegasdensityprofileaccordingly. Theeffectis
+moreevidentatlowerhalomassesbecausetheycontainfewer
+resolution elements.
+
+--- Page 20 ---
+20 D. Sorini et al.
+11.0 11.5 12.0 12.5 13.0 13.5 14.0 14.5 15.0
+log(M200c/M⊙)
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+η0
+11.0 11.5 12.0 12.5 13.0 13.5 14.0 14.5 15.0
+log(M200c/M⊙)
+□1.0
+□0.5
+0.0
+0.5
+1.0
+β
+Simba-HighRes
+Simba-25
+Simba-50
+Simba-100
+11.0 11.5 12.0 12.5 13.0 13.5 14.0 14.5 15.0
+log(M200c/M⊙)
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+log A0 = log(ρR 0/ρc)
+11.0 11.5 12.0 12.5 13.0 13.5 14.0 14.5 15.0
+log(M200c/M⊙)
+□1.5
+□1.0
+□0.5
+0.0
+0.5
+1.0
+α
+Simba-HighRes
+Simba-25
+Simba-50
+Simba-100
+Fig. 8.—Top panels: Convergence tests for the parameters of the best-fit power law to the redshift evolution of the slope of the gas density profile at any fixed
+totalhalomass,givenbyequation(4). Thedatapoints,horizontalandverticalbars,andshadedregions,havethesamemeaningasinFigure4. Theresultsforthe
+parametersarewellconvergedwithrespecttomassresolution,butlargerboxespredictanupturn(downturn)ofthe 𝜂0 (𝛽)parameteratlargerhalomasses. Bottom
+panels: Same as in the upper panels, but for the parameters regulating the redshift evolution of the normalisation of the slope of the gas density profile at any
+fixed total halo mass, as per equation (5). The results are well converged with respect to the simulation volume and mass resolution, except that higher-resolution
+simulations predict a∼ 1.6 times larger present-day normalisation.
+
+--- Page 21 ---
+A universal fitting formula for gas density profiles 21
+To summarise, except for thelog𝐴0 parameter, our results
+are generally robust to changes in both the box size and the
+mass resolution over the halo mass range considered. The
+fitting formula forlog𝐴0 can still be utilised, as long as one
+bears in mind the associated offset due to the limited mass
+resolution.
+B. AKAIKE’S INFORMATION CRITERION
+In § 4, we explained that we determined the degree of the
+polynomials fitting the halo mass dependence of the𝜂0, 𝛽,
+log𝐴0 and 𝛼 parameters via Akaike’s information criterion
+(AIC; Akaike 1974).
+This methodology establishes an order for the quality of
+various models in representing a given data set, aiming to
+reduce the loss of information without causing overfitting. If
+bL represents the maximised likelihood value for a specific
+model, and𝑘 the number of free parameters, the AIC value is
+given by:
+AIC= 2𝑘− 2 ln bL+ 2𝑘(𝑘+ 1)
+𝑛−𝑘− 1 , (B1)
+where the final term provides an adjustment for small sam-
+ple sizes𝑛. The optimal model is the one with the lowest
+AIC value. If the smallest value among the evaluated models
+is AICmin, then any model isexp[( AIC− AICmin)/2] times
+less likely to minimise information loss compared to the best
+model.
+Foreachparameter,wederivethepolynomialfunctionswith
+degree 1≤ deg≤ 10that provide the best fit to the numerical
+data. The data sets and corresponding best-fit polynomials
+for the parameters describing the evolution of the slope and
+normalisation of the gas density profiles are shown in Fig-
+ure 9 and Figure 10, respectively. For all runs, we compute
+themaximumlikelihoodforeachpolynomialmodelgiventhe
+data, assuming independence of the data points. The expec-
+tation values are determined by using the fitting function on
+the median halo mass within each bin. For each data set,
+the variances are set to be the maximum between the sta-
+tistical error derived from the power-law fit in each bin (via
+equation 4 or equation 5) and the scatter due to cosmic vari-
+ance. Subsequently, we substitute the maximum likelihood
+into equation (B1). The degree of the polynomial that yields
+theminimumAICvalueisindicatedinsideeachpanelofFig-
+ures 9-10. These are the optimal models whose parameters
+are reported in Tables 2-3.
+ThispaperwasbuiltusingtheOpenJournalofAstrophysics
+LATEX template. The OJA is a journal which provides fast and
+easypeerreviewfornewpapersinthe astro-phsectionofthe
+arXiv, making the reviewing process simpler for authors and
+referees alike. Learn more athttp://astro.theoj.org.
+
+--- Page 22 ---
+22 D. Sorini et al.
+0
+1
+2
+3η0
+No-feedback
+Best: deg 5
+No-AGN
+Best: deg 4
+No-jet
+Best: deg 7
+deg=1
+deg=2
+deg=3
+deg=4
+deg=5
+deg=6
+deg=7
+deg=8
+deg=9
+deg=10
+0
+1
+2
+3η0
+No-X-ray
+Best: deg 7
+Simba-50
+Best: deg 7
+Var-vjet-cap
+Best: deg 8
+□0.4
+□0.2
+0.0
+0.2
+0.4
+0.6
+β
+Best: deg 4
+ Best: deg 4
+ Best: deg 6
+11 12 13 14
+log(M200c/M⊙)
+□0.4
+□0.2
+0.0
+0.2
+0.4
+0.6
+β
+Best: deg 6
+11 12 13 14
+log(M200c/M⊙)
+Best: deg 6
+11 12 13 14
+log(M200c/M⊙)
+Best: deg 8
+Fig. 9.—Results of the Akaike information criterion (AIC) test for the parameters of the power-law fit to the redshift evolution of the slope of the gas density
+profile at any fixed mass. For eachSimba 50ℎ−1 cMpc run, the upper and lower panels shows the𝜂0 and𝛽 parameters, respectively, as defined in equation (4).
+Theblackpointsrepresentthevalueoftheparametersobtainedfromfittingtheaveragegasdensityprofileineachtotalhalomassbin. Thepointsareplottedatthe
+medianhalomassineachbin,whichisdefinedbytheboundariesofthehorizontallines. Theverticalerrorbarsshowthestatisticalerrorontheparametersarising
+fromthefittingprocedure,whiletheshadedgreyregionrepresentsthescatterduetocosmicvariance. Ineverypanel,differentlinescorrespondtopolynomialfits
+tothedatapointsofincreasinglyhigherdegree,followingthecolourcodingreportedinthelegendinsidetheupper-rightpanel. Thedegreeofthebestpolynomial
+fit according to the AIC test is written inside every panel.
+
+--- Page 23 ---
+A universal fitting formula for gas density profiles 23
+□0.5
+0.0
+0.5
+1.0
+1.5
+log A0 = log(ρR 0/ρc)
+No-feedback
+Best: deg 4
+No-AGN
+Best: deg 2
+No-jet
+Best: deg 4
+deg=1
+deg=2
+deg=3
+deg=4
+deg=5
+deg=6
+deg=7
+deg=8
+deg=9
+deg=10
+□0.5
+0.0
+0.5
+1.0
+1.5
+log A0 = log(ρR 0/ρc)
+No-X-ray
+Best: deg 4
+Simba-50
+Best: deg 4
+Var-vjet-cap
+Best: deg 6
+□1.5
+□1.0
+□0.5
+0.0
+0.5
+1.0
+α
+Best: deg 2
+ Best: deg 5
+ Best: deg 3
+11 12 13 14
+log(M200c/M⊙)
+□1.5
+□1.0
+□0.5
+0.0
+0.5
+1.0
+α
+Best: deg 4
+11 12 13 14
+log(M200c/M⊙)
+Best: deg 4
+11 12 13 14
+log(M200c/M⊙)
+Best: deg 4
+Fig. 10.—As in Figure 9, but for the parameters of the power-law fit to the redshift evolution of the normalisation of the gas density profile at any fixed mass,
+given by equation (5).

@@ -294,6 +294,20 @@ time.
   the shipped lock (which lacks osx-64).
 - Also fixed: `serve-desc.sh` lacked the executable bit (chmod +x applied).
 
+### 26. Research mode: final tool-call count exceeds `--max-tool-calls` in every run **[GH#10]** — open
+
+- Found 2026-10-20 (pm-combo, v0.3.18). The final `[run] done (..., tool
+  calls F, ...)` line exceeds the `--max-tool-calls B` budget in 11 of 12
+  research runs on record (v0.3.16 + v0.3.18, both backends): overages +1
+  to +8, never under. Today's combo: B=50, F=53 (+3 = exactly the 3
+  parallel workers).
+- Mechanism: check-then-call race — workers check remaining budget before
+  dispatching, so up to `--workers` in-flight calls land after the counter
+  crosses the limit. Wave 2 today started at 29 calls with 21 remaining and
+  consumed 24.
+- Low severity (cost-control softening, not correctness). Filed as
+  HEP-KE/hep-genesis-releases#10 with the full 12-run evidence table.
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -383,6 +397,11 @@ Clean run — no flags.
 
 
 ## 2026-10-20-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-20-pm-combo — 3 pass / 0 flagged
 
 Clean run — no flags.
 

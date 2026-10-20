@@ -1,0 +1,564 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Transcript: Hydrostatic Mass Bias and Emulated Cluster Profile Evolution Between $z=0$ and $z=0.4987$}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-combo-cluster-profiles}
+\date{2026-10-20}
+\begin{document}
+\maketitle
+\noindent\textit{\small The conversation verbatim, generated mechanically from the session record.}
+\vspace{1em}
+
+
+
+\appendix
+\section{Conversation transcript}
+\label{app:transcript}
+The exchange verbatim (assistant text as shown to the user; tool calls summarized by name --- see the tool-call log for arguments and results).
+\subsection*{User \small(2026-10-20 14:31:28)}
+Survey recent work on hydrostatic mass bias in galaxy clusters. Use the hydrodynamics emulator to predict CGD (gas density) and CTP (temperature) profiles at two redshifts and discuss how profile shape evolution affects mass reconstruction.
+
+\subsection*{Assistant \small(research mode, 2026-10-20 14:31:28)}
+\textit{Plan:}\begin{enumerate}
+  \item (closed) Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles at two redshifts for a fiducial parameter set. Derive the log-slopes d ln n\_gas/d ln r and d ln T/d ln r at 0.5, 1 and 2 R500c, and from them a hydrostatic mass estimate and b\_HSE at each redshift.
+  \item (closed) Build a cited literature baseline on hydrostatic mass bias and its redshift and feedback dependence, with quotable numbers to compare against the emulator results.
+  \item (blocked) Test how robust the profile-shape-driven bias evolution is to the emulator's astrophysical (feedback) and cosmological parameters. Estimate the non-thermal pressure fraction needed to reconcile M\_HSE with the true mass.
+  \item (closed) Test the mass dependence of the profile-slope-driven HSE bias, groups versus clusters, at both redshifts. This lets the FLAMINGO result (2409.07849) of groups rising and clusters falling with z be compared directly.
+  \item (closed) Test whether the change in M\_HSE/M500 between z=0 and z=0.4987 at the midpoint parameters is statistically robust. Cross-check s\_n + s\_T against the emulator's own pressure profile (CPP), propagate the T(R500)/T500 error, and restate the result in the FLAMINGO sign convention.
+  \item (closed) Extract quantitative literature benchmarks from the full texts already downloaded. Use them to compare the z=0 emulator slopes with X-COP and FLAMINGO, and to compute the Nelson et al. non-thermal correction at R500c. Also search once for documentation of the HACC profile mass selection and temperature weighting.
+\end{enumerate}
+\textit{Tool calls:} \texttt{list\_sterile\_nu\_skills}, \texttt{list\_observables}, \texttt{list\_agent\_files}, \texttt{list\_input\_files}, \texttt{list\_datasets}, \texttt{list\_files}, \texttt{get\_dispatch}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{web\_search}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{get\_arxiv\_metadata}, \texttt{list\_observables}, \texttt{describe\_parameters}, \texttt{list\_observables}, \texttt{describe\_parameters}, \texttt{predict\_observable}, \texttt{download\_arxiv\_full\_text}, \texttt{read\_text\_file}, \texttt{download\_arxiv\_full\_text}, \texttt{download\_arxiv\_full\_text}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{post\_dead\_end}, \texttt{read\_text\_file}, \texttt{post\_question}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{download\_arxiv\_full\_text}, \texttt{read\_arxiv\_chunk}, \texttt{read\_arxiv\_chunk}, \texttt{read\_arxiv\_chunk}, \texttt{read\_arxiv\_chunk}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{cite}, \texttt{cite}, \texttt{cite}, \texttt{post\_finding}, \texttt{cite}, \texttt{get\_arxiv\_metadata}, \texttt{plot\_observable\_comparison}, \texttt{plot\_observable\_comparison}, \texttt{post\_finding}, \texttt{post\_question}, \texttt{post\_finding}, \texttt{list\_files}, \texttt{read\_arxiv\_chunk}, \texttt{describe\_parameters}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_arxiv\_chunk}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{cite}, \texttt{read\_arxiv\_chunk}, \texttt{plot\_observable\_comparison}, \texttt{plot\_observable\_comparison}, \texttt{post\_finding}, \texttt{post\_question}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_dead\_end}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_question}\par
+\textbf{Survey} --- 52 tools on 5 servers, 7 read-only probes, 14 papers found.
+
+Simulations and observations agree that X-ray/SZ hydrostatic (HSE) masses come out too low. Simulations typically give b of about 0.1-0.2, mostly from non-thermal pressure (turbulence, bulk motions, rotation) and from mergers. FLAMINGO (2409.07849) finds the median bias grows from about -0.1 on group scales to about -0.2 on cluster scales. At fixed true mass, HSE masses rise with redshift for groups and fall for clusters, and the scatter grows with redshift. The bias also depends on feedback strength and on how well the density and temperature profiles are fitted. Merger studies (1112.3659, 2511.10730) show the bias changes over time, with transient spikes after major mergers. Earlier simulation work (1306.3993, 1308.6589, 1404.4636) finds the non-thermal pressure fraction rising with radius and redshift, because higher-z clusters are accreting faster. Observationally, X-COP clusters out to R200 (1805.00035, 1805.00034, 2112.07554) show low non-thermal support (about 6\% at R500) and a small bias in relaxed systems. Profile shape matters because the HSE mass depends on the log-slopes d ln n\_gas/d ln r and d ln T/d ln r, not on amplitudes. Simba shows feedback changes gas-density slopes as a function of mass and redshift (2409.05815), so slope evolution between redshifts feeds directly into how the bias evolves. Warning: none of my tools (search\_arxiv, web\_search, search\_arxiv\_abstracts, get\_arxiv\_metadata) is a hydrodynamics emulator, and my searches found no tool or paper using the names CGD/CTP, so I could not produce the requested profile predictions.
+
+Quantities worth checking: Log-slopes d ln n\_gas/d ln r and d ln T/d ln r at 0.5, 1 and 2 R500c, at both redshifts; M\_HSE(\textless{}r) = -(k\_B T r / G mu m\_p)(dln n/dln r + dln T/dln r), compared with the emulator's true M500c, giving b\_HSE at each redshift; Change in b\_HSE between the two redshifts at fixed true mass, compared with FLAMINGO (bias grows in magnitude with z on cluster scales); Profiles scaled self-similarly (n/E(z)\textasciicircum{}2, T/T500) to separate shape evolution from plain amplitude scaling; Pressure-gradient contribution compared with the T(R500) contribution to the scatter; Sensitivity of the bias to the choice of fitting function (e.g. Vikhlinin density and temperature models) and to fit residuals.
+
+\textbf{Plan} --- 4 lines of investigation:
+
+\begin{enumerate}
+  \item Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles at two redshifts for a fiducial parameter set. Derive the log-slopes d ln n\_gas/d ln r and d ln T/d ln r at 0.5, 1 and 2 R500c, and from them a hydrostatic mass estimate and b\_HSE at each redshift. --- This is the direct deliverable. The HSE mass depends on the logarithmic slopes of the density and temperature profiles, so the emulator's profile shapes at two epochs show how shape evolution alone shifts the reconstructed mass.
+  \item Build a cited literature baseline on hydrostatic mass bias and its redshift and feedback dependence, with quotable numbers to compare against the emulator results. --- The task asks for a survey. The interpretation of d-01 needs verified published values: the FLAMINGO b(z, M) trends, the X-COP non-thermal fraction and universal profiles, the Nelson et al. non-thermal pressure fits, and the Simba density-slope evolution.
+  \item Test how robust the profile-shape-driven bias evolution is to the emulator's astrophysical (feedback) and cosmological parameters. Estimate the non-thermal pressure fraction needed to reconcile M\_HSE with the true mass. --- The bias depends on feedback through the gas-density slopes. Varying the emulator parameters checks whether the redshift trend found in d-01 is generic or tied to one model, and connects it to the FLAMINGO and Simba feedback results.
+  \item Test the mass dependence of the profile-slope-driven HSE bias, groups versus clusters, at both redshifts. This lets the FLAMINGO result (2409.07849) of groups rising and clusters falling with z be compared directly. --- The FLAMINGO comparison listed in the brief is mass-dependent. A single fiducial mass bin cannot test whether the redshift trend differs in sign or size between group and cluster scales. None of the current directions varies mass. (added by the critic)
+Critic's view: revise --- The calls do not fit the 13-call budget. Planned calls are list\_observables, describe\_parameters, 4 predict\_observable, list\_agent\_files, up to 4 load\_table\_data, preview, describe, 2 overlays and 2 plot\_prediction, which is about 18. Cut preview and describe\_dataset, use one plot\_prediction or none, and load only when outputs are files. Leave about 2 calls in reserve.; b\_HSE needs a true mass, and that has to come from the emulator definition, not from assumption. Check whether CGD and CTP are stacked in M500c bins and whether radii are already scaled by the true R500c. If so, b\_HSE at r = R500c(true) is well defined. If not, report only M\_HSE(z\_high)/M\_HSE(z\_low), as already planned. Also record whether CTP is mass-weighted, emission-weighted or spectroscopic. The bias differs by that choice, and FLAMINGO and X-COP use spectroscopic-like temperatures.; Check that 0.5, 1 and 2 R500c lie inside the emulator's radial range and grid. If 2 R500c is outside, say so rather than extrapolating. Differencing the upper and lower band edges does not give a valid slope uncertainty, because band edges are not correlated realisations. Label it a crude bound, or difference adjacent bins and report the spread. No tool computes derivatives, so show every input value and every step of the arithmetic so a reader can verify it..
+
+\end{enumerate}
+\textbf{Wave 1} --- now exploring, in parallel: Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles at two redshifts for a fiducial parameter set. Derive the log-slopes d ln n\_gas/d ln r and d ln T/d ln r at 0.5, 1 and 2 R500c, and from them a hydrostatic mass estimate and b\_HSE at each redshift.; Build a cited literature baseline on hydrostatic mass bias and its redshift and feedback dependence, with quotable numbers to compare against the emulator results.; Test the mass dependence of the profile-slope-driven HSE bias, groups versus clusters, at both redshifts. This lets the FLAMINGO result (2409.07849) of groups rising and clusters falling with z be compared directly..
+
+\textbf{Blocked --- Test the mass dependence of the profile-slope-driven HSE bias, groups versus clusters, at both redshifts. This lets the FLAMINGO result (2409.07849) of groups rising and clusters falling with z be compared directly..} (The HACC CGD/CTP/CPP emulators have no halo-mass parameter or mass bins. Each prediction is one profile for an undocumented mass selection, so separate group-scale (1e13.5 Msun) and cluster-scale (1e14.5-15 Msun) profiles cannot be produced. Redshift coverage for these profiles also stops at z = 0.4987. Unblocking needs either documentation of the mass selection behind the profiles (q-06) or a different emulator or dataset that resolves mass.) I could not test mass dependence because the emulator has no mass input. list\_observables (tc-261020\_1-w1-d-04-20) and describe\_parameters (tc-261020\_1-w1-d-04-21) show that CGD, CTP and CPP take only redshift and 7 parameters: kappa\_w, e\_w, M\_seed, v\_kin, epsilon\_kin, omega\_m and sigma\_8. One test prediction (CGD at z=0 with fiducial mid-range parameters; file /Users/nramachandra/hep-genesis-testing/projects/ramp-combo-cluster-profiles/runs/261020\_143128/CGD\_z0.0000\_prediction.csv, tc-261020\_1-w1-d-04-25 and -27) returned a single 19-bin profile of rho\_gas/rho\_crit against r/R500c from 0.0154 to 2.74. The file has no mass column or mass bins. The cluster-profile emulators are also trained only for z = 0 to 0.4987, so a z of about 1 comparison is not possible either. From that test profile alone, the z=0 density log-slope near R500c, taken by finite difference between r/R500c = 0.866 (35.08) and 1.155 (16.86), is ln(16.862/35.076)/ln(1.1548/0.8660) = -0.7325/0.2878, about -2.55. This is one radius at one redshift for a single unknown mass, so it says nothing about mass dependence. I made no group or cluster predictions, slope sums or overlay plot, and I made no comparison with FLAMINGO. Dead end x-01 and question q-06 are posted.
+
+\textbf{Finding:} FLAMINGO (Braspenning et al. 2024, arXiv:2409.07849): fiducial median b\_HSE = (M\_HSE,500c - M500c)/M500c goes from about -0.1 (groups) to about -0.2 (clusters). Scatter at fixed true mass is smallest, sigma(b) about 0.1, at M500c \textasciitilde{} 1e14 Msun. At fixed true mass, HSE masses rise with z for groups and fall with z for clusters, and the scatter grows. Models with lower gas fractions give more-biased group masses and less-biased cluster masses. The bias does not depend on the fitting function, but it does depend on fit quality: poorer fits give a stronger bias. The scatter comes from differences in pressure gradient, not from T(R500c).
+
+\textbf{Finding:} X-COP (Eckert et al. 2018, arXiv:1805.00034), 13 nearby clusters with XMM+Planck: median non-thermal pressure fraction \textasciitilde{}6\% at R500 and \textasciitilde{}10\% at R200. This is lower than hydrodynamical simulations predict. With the Planck mass calibration, the gas fractions imply 1-b = 0.85 +/- 0.05 for SZ masses, with some evidence for a mass-dependent bias.
+
+\textbf{Finding:} Nelson, Lau \& Nagai 2014 (arXiv:1404.4636): the non-thermal pressure fraction profile is universal across redshift when radii are scaled to the mean matter density (R200m), not to the critical density. It depends strongly on mass accretion rate, and the non-thermal pressure is mainly radial. A fitting formula for f\_nth(r/R200m) is given; parameter values are not yet extracted.
+
+\textbf{Finding:} Simba (Sorini et al. 2024, arXiv:2409.05815), six feedback variants, 1e11 \textless{} M200c \textless{} 1e14 Msun, 0 \textless{} z \textless{} 4: gas-density profiles follow a power law. At fixed halo mass, slope and amplitude depend only weakly on redshift. With AGN jets on, haloes above M200c \textasciitilde{} 1e13 Msun have shallower (gentler) density profiles. A universal fitting formula for slope(M, z) and amplitude(M, z) is provided.
+
+\textbf{Finding:} HACC emulator at design-midpoint parameters (kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, eps\_kin=0.61, omega\_m=0.1375, sigma\_8=0.8). Profiles are only available for z\textless{}=0.4987, so the pair used is z=0 and z=0.4987. CGD is rho\_gas/rho\_crit(z) and CTP is T/T500, on 19 log bins (0.015-2.74 R500c). Centred log-slopes, with 1-sigma errors from the GP std assuming independent bins. At z=0: s\_n = -1.86+-0.10, -2.55+-0.16, -3.13+-0.07 and s\_T = -0.27+-0.03, -0.58+-0.06, -1.12+-0.05 at 0.49, 1.0 and 2.05 R500c. At z=0.4987: s\_n = -1.87+-0.10, -2.74+-0.10, -2.93+-0.06 and s\_T = -0.35+-0.06, -0.50+-0.14, -1.54+-0.11. T(R500)/T500 is 0.592 at z=0 and 0.518 at z=0.4987. Assuming kT500 = G mu m\_p M500/(2 R500), M\_HSE(R500)/M500 = -(T/T500)(s\_n+s\_T)/2. This gives 0.925+-0.05 (b\_HSE = 0.075) at z=0 and 0.840+-0.045 (b\_HSE = 0.16) at z=0.4987, a ratio of 0.91.
+
+\textbf{Finding:} Barranco-Llorca et al. 2025 (arXiv:2511.10730), AMR cluster mergers at 0 \textless{}= z \textless{}= 1.5: at z=0 the HSE bias correlates only mildly with dynamical state. During a major merger the bias dips sharply negative around the merger time, then shows a transient positive peak, then slowly returns to its pre-merger level. This is driven mainly by changes in the gas-density morphology and dynamics, not by thermodynamics, and it shows weak dependence on mass ratio and impact parameter.
+
+\textbf{Finding:} Comparison overlays of the HACC emulator profiles at z=0 and z=0.4987 (midpoint parameters). In CGD (rho\_gas/rho\_crit(z)) the two redshifts agree within about 3\% over 0.2-0.9 R500c. At z=0.4987 the density is about 6\% lower at 1.15 R500c and about 13-14\% lower at 1.5-2.05 R500c, then converges again at 2.74 R500c, and the core (r\textless{}0.1 R500c) is about 15-50\% lower. In CTP (T/T500), z=0.4987 sits 7-13\% below z=0 from 0.15 R500c to 1.15 R500c (12\% lower at R500c itself), and the gap widens to 30\% by 2.74 R500c.
+
+\textbf{Completed --- Build a cited literature baseline on hydrostatic mass bias and its redshift and feedback dependence, with quotable numbers to compare against the emulator results..} Partly done. The literature baseline is limited to what the paper abstracts say. Four papers were added to references.bib with verbatim quotes checked by cite (tc-...-48 to -51); the success criterion was at least six, so this falls short. The file is /Users/nramachandra/hep-genesis-testing/projects/ramp-combo-cluster-profiles/runs/261020\_143128/references.bib.
+
+Established values, posted as findings:
+
+(f-001, tc-40) FLAMINGO, 2409.07849:
+
+\begin{itemize}
+  \item The median bias b\_HSE = (M\_HSE,500c - M500c)/M500c goes from about -0.1 for groups to about -0.2 for clusters.
+  \item The scatter is smallest near M500c \textasciitilde{} 1e14 Msun, at sigma(b) about 0.1.
+  \item At fixed true mass, HSE masses rise with redshift for groups and fall for clusters, and the scatter grows with redshift.
+  \item Feedback models with lower gas fractions give more-biased group masses and less-biased cluster masses.
+  \item The bias does not depend on which fitting function is used, but poorer fits give a stronger bias.
+  \item The scatter comes from differences in the pressure gradient, not from the temperature at R500c.
+\end{itemize}
+(f-002, tc-41) X-COP, 1805.00034:
+
+\begin{itemize}
+  \item The non-thermal pressure fraction is about 6\% at R500 and about 10\% at R200.
+  \item With the Planck mass calibration, 1-b = 0.85 +/- 0.05.
+\end{itemize}
+(f-003, tc-42) Nelson, Lau and Nagai 2014, 1404.4636:
+
+\begin{itemize}
+  \item The non-thermal pressure fraction profile is the same at all redshifts when radius is scaled to R200m (mean matter density), not to the critical density.
+  \item It depends strongly on how fast the cluster is accreting mass.
+  \item The fitted parameter values were not extracted.
+\end{itemize}
+(f-004, tc-43) Simba, 2409.05815:
+
+\begin{itemize}
+  \item Gas-density profiles follow a power law. At fixed mass, the slope and amplitude depend only weakly on redshift (0 \textless{} z \textless{} 4).
+  \item Turning on AGN jets makes the density profile shallower for M200c above about 1e13 Msun.
+  \item Implication for d-01: changes in the bias with redshift should come mainly from the temperature slope and mass scaling, not from the density slope.
+\end{itemize}
+(f-006, tc-54) Merger study, 2511.10730: during a major merger the bias dips sharply negative, then peaks briefly positive, then slowly returns to its pre-merger level. This comes mainly from changes in the gas-density structure. This result is from the abstract only and was not added with cite.
+
+Full texts of 2409.07849, 1805.00034, 1404.4636 and 2409.05815 are saved as .txt files in the run directory.
+
+Still open (q-07):
+
+\begin{itemize}
+  \item The numerical fit parameters for f\_nth in Nelson et al.
+  \item The FLAMINGO bias values for each mass bin and redshift, and the figure numbers.
+  \item The X-COP results from 1805.00035 and the universal profiles in 1805.00042, and the Simba slope-fit coefficients.
+  \item No figures were extracted with get\_paper\_figures.
+  \item Shi-Komatsu (1507.04338) was not reviewed.
+\end{itemize}
+\textbf{Completed --- Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles at two redshifts for a fiducial parameter set. Derive the log-slopes d ln n\_gas/d ln r and d ln T/d ln r at 0.5, 1 and 2 R500c, and from them a hydrostatic mass estimate and b\_HSE at each redshift..} This direction is done except for one item: the separate plot\_prediction figure with an uncertainty band for each observable was not made, because the tool budget ran out. The redshift pair is z=0 vs z=0.4987, not z=0 vs z=1, because the CGD and CTP profiles only go up to z=0.4987. The emulator has no fiducial parameter set, so I used the midpoint of every design range: kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, eps\_kin=0.61, omega\_m=0.1375, sigma\_8=0.8. The profiles are already self-similarly scaled: CGD is rho\_gas/rho\_crit(z) and CTP is T/T500, on 19 logarithmic bins from 0.015 to 2.74 R500c. So 2 R500c is inside the grid (this answers q-02), and step 7 needed no extra rescaling. The emulator does not give the halo-mass bin, a true M500c, the T500 definition, or whether T is mass-weighted or spectroscopic-like, so q-01 and q-03 stay open.
+
+Prediction files (in /Users/nramachandra/hep-genesis-testing/projects/ramp-combo-cluster-profiles/runs/261020\_143128/): CGD\_z0.0000\_prediction.csv, CGD\_z0.4987\_prediction.csv, CTP\_z0.0000\_prediction.csv, CTP\_z0.4987\_prediction.csv.
+
+Log-slopes are centred finite differences in ln r over neighbouring bins centred at 0.49, 1.00 and 2.05 R500c. The 1-sigma errors use the emulator's standard deviation and treat bins as independent.
+
+\begin{itemize}
+  \item z=0: s\_n = -1.86+-0.10, -2.55+-0.16, -3.13+-0.07; s\_T = -0.27+-0.03, -0.58+-0.06, -1.12+-0.05.
+  \item z=0.4987: s\_n = -1.87+-0.10, -2.74+-0.10, -2.93+-0.06; s\_T = -0.35+-0.06, -0.50+-0.14, -1.54+-0.11.
+\end{itemize}
+At R500 the total slope s\_n+s\_T is -3.13 at z=0 and -3.24 at z=0.4987, the same within the errors (about +-0.16 each). The clear shape change is the temperature slope at 2 R500, which steepens by about 3.6 sigma. T(R500)/T500 falls from 0.592 at z=0 to 0.518 at z=0.4987.
+
+Hydrostatic mass: I assumed mu=0.59 and the convention kT500 = G mu m\_p M500/(2 R500), which gives M\_HSE(R500)/M500 = -(T/T500)(s\_n+s\_T)/2. This gives 0.925+-0.05 (b\_HSE about 0.075) at z=0 and 0.840+-0.045 (b\_HSE about 0.16) at z=0.4987, a ratio of 0.91. The larger bias at z=0.4987 comes mainly from the 12\% lower temperature at R500, not from a change in slopes. The absolute b\_HSE values depend on the T500 convention; the ratio between redshifts is the more reliable number.
+
+Comparison plots: Figure 9 (CGD\_comparison.png) and Figure 10 (CTP\_comparison.png), same directory. Density at z=0.4987 agrees with z=0 within about 3\% over 0.2-0.9 R500c and is 13-14\% lower at 1.5-2.05 R500c. Temperature at z=0.4987 is 7-13\% lower over 0.15-1.15 R500c and 30\% lower at 2.74 R500c.
+
+Findings posted: f-005 and f-007.
+
+\textbf{Critic, wave 1} --- continue: 6 findings stand up to the evidence, 1 questioned ('HACC emulator at design-midpoint parameters (kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, e': The CSV excerpts quoted as evidence (tc-35/37/38/39) show only the first six innermost bins (r \textless{} 0.09 R500c). The values used for the slopes at 0.49, 1.0 and 2.05 R500c, and T(R500)/T500 = 0.592 and 0.518, are not visible. d-04 independently reproduces only the z=0 density slope at R500 (-2.55). The arithmetic is internally consistent: 0.592*3.13/2 = 0.926, 0.518*3.24/2 = 0.839, and the stated errors follow from the slope errors. The interpretive part is not supported, however. (1) The quoted errors omit the T(R500) uncertainty. (2) The z=0 vs z=0.4987 difference in M\_HSE/M500 is 0.085 +- 0.067 (about 1.3 sigma), so 'larger bias at higher z' is not significant. (3) Absolute b\_HSE rests on an assumed T500 convention and an undocumented mass selection, which may differ between redshifts. (4) Treating bins as independent ignores GP covariance.).
+
+Issues: The redshift change in M\_HSE/M500 (0.925 vs 0.840) is about 1.3 sigma once errors are combined, and T(R500)/T500 errors are not propagated. The summary's statement that the larger bias at z=0.4987 comes from the 12\% lower T(R500) needs a significance test before it enters the final discussion. Re-quote the actual bin values at 0.49, 1.0 and 2.05 R500c as evidence.; Sign convention mismatch. f-005 reports b\_HSE as positive (1 - M\_HSE/M), while FLAMINGO (f-001) uses (M\_HSE - M)/M, which is negative. Harmonise the convention before comparing the two. Also note that if the profile stack uses a fixed mass threshold, the mean mass is lower at z=0.4987, so T/T500 and slope differences may partly reflect selection rather than evolution (q-06).; The critique c-01 suggestion to cross-check s\_n + s\_T against d ln P/d ln r from CPP was not done. Neither was a smooth-fit derivative (q-04). Finite differences of GP means with assumed independent errors are a weak basis for the 3.6-sigma s\_T claim at 2 R500c..
+
+\textbf{Next steps after wave 1} --- This is the final wave, with 21 calls. Carried-over d-03 runs first and must stay within about 9 calls. It should vary only one feedback parameter (kappa\_w or v\_kin) to its two design extremes, predicting CGD and CTP at z=0 and z=0.4987 (8 predicts), and recompute the slopes and M\_HSE/M500 ratio. It should reuse the d-01 midpoint outputs, skip fGas unless calls remain, and leave the f\_nth correction to the literature direction. d-04 is closed because its blocker remains: the emulator has no mass input and that is recorded as dead end x-01. The literature direction can only report whether documentation of the mass selection exists; it cannot remove that limitation. Two new directions are added. The first is a robustness check of the contested f-005, priority 1, about 5 calls. It cross-checks the slopes against CPP, propagates the T(R500) error, tests significance and harmonises the sign convention with FLAMINGO. The second is a cross-check against the literature, about 6 calls, using the full texts already downloaded to extract quoted FLAMINGO and Nelson numbers, compute the f\_nth correction and look up the HACC definitions. The task does not ask for facility runs, and every emulator call is a fast local call, so no HPC dispatch is needed.
+
+New lines of investigation: Test whether the change in M\_HSE/M500 between z=0 and z=0.4987 at the midpoint parameters is statistically robust. Cross-check s\_n + s\_T against the emulator's own pressure profile (CPP), propagate the T(R500)/T500 error, and restate the result in the FLAMINGO sign convention.; Extract quantitative literature benchmarks from the full texts already downloaded. Use them to compare the z=0 emulator slopes with X-COP and FLAMINGO, and to compute the Nelson et al. non-thermal correction at R500c. Also search once for documentation of the HACC profile mass selection and temperature weighting..
+
+\textbf{Wave 2} --- now exploring, in parallel: Test how robust the profile-shape-driven bias evolution is to the emulator's astrophysical (feedback) and cosmological parameters. Estimate the non-thermal pressure fraction needed to reconcile M\_HSE with the true mass.; Test whether the change in M\_HSE/M500 between z=0 and z=0.4987 at the midpoint parameters is statistically robust. Cross-check s\_n + s\_T against the emulator's own pressure profile (CPP), propagate the T(R500)/T500 error, and restate the result in the FLAMINGO sign convention.; Extract quantitative literature benchmarks from the full texts already downloaded. Use them to compare the z=0 emulator slopes with X-COP and FLAMINGO, and to compute the Nelson et al. non-thermal correction at R500c. Also search once for documentation of the HACC profile mass selection and temperature weighting..
+
+\textbf{Finding:} Using eps\_kin (kinetic AGN feedback efficiency, range 0.02-1.2) as the feedback lever, with the other parameters at the design midpoint (kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, omega\_m=0.1375, sigma\_8=0.8), the HACC emulator produced CGD and CTP profiles at z=0 and z=0.4987 for eps\_kin=0.02 and 1.2. They are plotted against the d-01 midpoint (eps\_kin=0.61, z=0) in Figure 21 (CGD) and Figure 22 (CTP). The numerical slopes s\_n+s\_T at R500c have NOT yet been extracted from these files.
+
+\textbf{Finding:} Nelson, Lau \& Nagai 2014 (arXiv:1404.4636, Eq. 7, cited verbatim in references.bib) fit P\_rand/P\_tot(r) = 1 - A\{1+exp[-((r/R200m)/B)\textasciicircum{}gamma]\} with A=0.452+-0.001, B=0.841+-0.008, gamma=1.628+-0.019, valid to about 10\% over 0.1-1.5 R200m out to z=1.5 (non-radiative ART runs, mass-weighted T and sigma). Evaluated at R500c: x = r/R200m = 0.5, 0.55 and 0.6 gives f\_nth = 0.254, 0.274 and 0.294, with 1/(1-f\_nth) = 1.34, 1.38 and 1.42. Assumption, computed by hand not with a tool: R500c is about 0.5-0.6 R200m, nearer 0.5 at z=0 and nearer 0.55-0.6 at z=0.5 because Omega\_m(z) is higher. Because the profile is redshift-universal in r/R200m, the z dependence enters only through this radius conversion.
+
+\textbf{Finding (preliminary):} Applying the Nelson et al. f\_nth at R500c (0.25-0.29) as a multiplicative factor 1/(1-f\_nth) = 1.34-1.42 to the emulator values M\_HSE/M500 = 0.925 (z=0) and 0.840 (z=0.4987) from f-005 gives 1.24-1.31 at z=0 and 1.16-1.19 at z=0.4987. That is a 16-31\% overcorrection. To reconcile the emulator directly, f\_nth would need to be only about 0.075 (z=0) and 0.16 (z=0.4987). These values are closer to the X-COP estimate (about 6\% at R500, f-002) than to the non-radiative Nelson fit. So either the emulator's T500 convention or its temperature weighting already absorbs part of the bias, or the HACC profiles carry less non-thermal pressure than the ART non-radiative runs.
+
+\textbf{Finding:} FLAMINGO (arXiv:2409.07849) full text, Sec. 3.2-3.4 and Figs. 1, 2, 3 and 5:
+
+\begin{itemize}
+  \item For 1e13.75 \textless{} M500c \textless{} 1e14.25 Msun, all five profile methods converge to a median b\_HSE of about -0.1.
+  \item The FLAMINGO calibration assumed a constant b of -0.257, taken from weak lensing, which agrees with the predictions for the most massive clusters.
+  \item Fig. 2: volume-weighted profiles give a significantly smaller and less mass-dependent bias than X-ray-weighted ones, and mass-weighted profiles fall in between. The authors conclude that for M500c \textgreater{}\textgreater{} 1e13 Msun most of the bias comes from X-rays being a biased tracer of the gas.
+  \item Fig. 5 (bias vs redshift, z = 0-1.5): as a function of true mass, the bias curves steepen with increasing redshift, while at fixed M\_HSE they are almost unchanged except at z=1.5.
+  \item Scatter grows to sigma about 0.35 at 5e14 Msun for fgas+2sigma.
+\end{itemize}
+\textbf{Blocked --- Test how robust the profile-shape-driven bias evolution is to the emulator's astrophysical (feedback) and cosmological parameters. Estimate the non-thermal pressure fraction needed to reconcile M\_HSE with the true mass..} (The tool budget ran out before I could load the 8 prediction CSVs and compute the finite-difference slopes and HSE ratios. The next step is to run load\_table\_data and the slope calculation on the d03\_epskin\_lo/ and d03\_epskin\_hi/ files.) Partly done. The predictions and comparison plots for the feedback test exist, but I did not read the numbers out of them, so none of the slope or mass results asked for are available yet. The feedback lever I chose is eps\_kin (kinetic AGN feedback efficiency), whose allowed range is 0.02 to 1.2 (tc-...-61). This is a judgement call: the emulator does not say which parameter controls the density slopes. The other parameters stayed at the midpoints used in d-01 (kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, omega\_m=0.1375, sigma\_8=0.8). At the low and high eps\_kin values I ran 8 predict\_observable calls, CGD and CTP at z=0 and z=0.4987 (tc-...-71 to -78). The CSVs are in /Users/nramachandra/hep-genesis-testing/projects/ramp-combo-cluster-profiles/runs/261020\_143128/d03\_epskin\_lo/ and /d03\_epskin\_hi/. Two overlay plots compare these 4 runs per observable with the d-01 midpoint profile (eps\_kin=0.61, z=0): Figure 21 (d03\_plots\_cgd/CGD\_comparison.png, tc-...-81) and Figure 22 (d03\_plots\_ctp/CTP\_comparison.png, tc-...-82). I did not run fGas. I did not work out the slopes s\_n+s\_T at R500c, T/T500, or M\_HSE/M500 for the feedback runs, so I cannot yet say whether feedback changes the slopes more or less than redshift does. For the same reason I have no required non-thermal fraction to compare with X-COP (about 6\% at R500) or with Nelson et al. As a reference point only, d-01's midpoint values (M\_HSE/M500 = 0.925 at z=0 and 0.840 at z=0.4987) would need f\_nth(R500c) of about 7.5\% and 16\% to give b=0, using f\_nth $\approx$ 1 - M\_HSE/M500. These are not feedback results. Posted finding f-008 and question q-08, which records the remaining work.
+
+\textbf{Finding:} I checked the pressure slope from CPP (P/P500, midpoint parameters) against s\_n+s\_T from CGD and CTP, using centred finite differences with the same bin pairs and independent GP errors. At R500 they agree within 0.4 sigma. At 0.49 R500 they differ by 1.3 sigma (z=0) and 2.4 sigma (z=0.4987). At 2.05 R500 they disagree strongly, by 14 sigma (z=0) and 11 sigma (z=0.4987).
+
+\begin{longtable}{@{}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}@{}}
+\toprule
+\textbf{Radius} & \textbf{z} & \textbf{s\_P (CPP)} & \textbf{s\_n+s\_T} & \textbf{Difference} \\ \midrule \endhead
+0.49 R500 & 0 & -1.981+-0.042 & -2.133+-0.104 & 1.3 sigma \\
+0.49 R500 & 0.4987 & -1.874+-0.088 & -2.218+-0.117 & 2.4 sigma \\
+1.00 R500 & 0 & -3.052+-0.113 & -3.128+-0.171 & 0.37 sigma \\
+1.00 R500 & 0.4987 & -3.232+-0.154 & -3.243+-0.172 & 0.05 sigma \\
+2.05 R500 & 0 & -2.877+-0.042 & -4.249+-0.086 & 14.4 sigma \\
+2.05 R500 & 0.4987 & -1.815+-0.207 & -4.463+-0.125 & 10.9 sigma \\
+\bottomrule\end{longtable}
+So CPP is not the product of the CGD and CTP profiles at large radius.
+
+\textbf{Finding:} I propagated the T(R500)/T500 GP error into M\_HSE/M500 = -(T/T500) s/2.
+
+\textbf{Inputs:}
+
+\begin{itemize}
+  \item T(R500)/T500 is the geometric mean of the 0.866 and 1.155 R500 bins: 0.5916+-0.0047 at z=0 and 0.5181+-0.0101 at z=0.4987.
+\end{itemize}
+\textbf{Results with s = s\_n+s\_T:}
+
+\begin{itemize}
+  \item z=0: 0.925+-0.051.
+  \item z=0.4987: 0.840+-0.048.
+  \item Difference: 0.085+-0.070, which is 1.2 sigma.
+\end{itemize}
+\textbf{Results with s = s\_P from CPP (independent second estimate):}
+
+\begin{itemize}
+  \item z=0: 0.903+-0.034.
+  \item z=0.4987: 0.837+-0.043.
+  \item Difference: 0.066+-0.055, which is 1.2 sigma.
+\end{itemize}
+\textbf{In the FLAMINGO convention, b = (M\_HSE-M500)/M500:}
+
+\begin{itemize}
+  \item n+T route: b = -0.075+-0.051 (z=0) and -0.160+-0.048 (z=0.4987), so Delta b = -0.085+-0.070.
+  \item CPP route: b = -0.097+-0.034 and -0.163+-0.043, so Delta b = -0.066+-0.055.
+\end{itemize}
+The direction of the trend matches FLAMINGO's cluster-scale result, where bias becomes more negative with z. However, it is not statistically significant: both routes give about 1.2 sigma.
+
+\textbf{Completed --- Extract quantitative literature benchmarks from the full texts already downloaded. Use them to compare the z=0 emulator slopes with X-COP and FLAMINGO, and to compute the Nelson et al. non-thermal correction at R500c. Also search once for documentation of the HACC profile mass selection and temperature weighting..} Partly done: the Nelson et al. benchmark is extracted, cited and applied, and FLAMINGO results were read from the full text. Three things remain open. (a) The FLAMINGO quotes were not added to references.bib with cite. (b) The search for HACC mass-selection and temperature-weighting documentation was not run, so q-01, q-03 and q-06 remain open. (c) The X-COP 1805.00042 slope comparison was not done. Dead end x-02 records (b) and (c).
+
+(1) f-009: Nelson, Lau \& Nagai 2014 (arXiv:1404.4636) is cited verbatim in /Users/nramachandra/hep-genesis-testing/projects/ramp-combo-cluster-profiles/runs/261020\_143128/references.bib (tc-...-79). Their Eq. 7 is f\_nth = 1 - A\{1+exp[-((r/R200m)/B)\textasciicircum{}gamma]\}, with A=0.452+-0.001, B=0.841+-0.008 and gamma=1.628+-0.019. It is accurate to about 10\% over 0.1-1.5 R200m out to z=1.5, and it is redshift-universal when radius is scaled to R200m. I assumed R500c is about 0.5-0.6 R200m (about 0.5 at z=0, about 0.55-0.6 at z=0.5). That gives f\_nth = 0.254 / 0.274 / 0.294 and 1/(1-f\_nth) = 1.34 / 1.38 / 1.42 at x = 0.5 / 0.55 / 0.6. These values are hand arithmetic, not tool output.
+
+(2) f-010: applying this correction to the emulator values M\_HSE/M500 = 0.925 (z=0) and 0.840 (z=0.4987) from f-005 gives 1.24-1.31 and 1.16-1.19. That overcorrects by 16-31\%. The f\_nth needed to reconcile the emulator is about 0.075 at z=0 and 0.16 at z=0.4987, closer to the X-COP value of about 6\% at R500. Confidence is low because the result depends on the T500 convention.
+
+(3) f-011: from the FLAMINGO full text (2409.07849), Sec. 3.2-3.4 and Figs. 1, 2, 3 and 5:
+
+\begin{itemize}
+  \item In the 1e13.75-1e14.25 Msun bin, all profile methods converge to b of about -0.1.
+  \item The calibration assumed a constant b = -0.257.
+  \item Fig. 2: volume-weighted profiles give a much smaller and less mass-dependent bias than X-ray-weighted ones, with mass-weighted profiles in between. FLAMINGO attributes most of the bias to X-ray weighting.
+  \item Fig. 5: at fixed true mass, b(M) steepens with z (z = 0-1.5), while it stays almost unchanged at fixed M\_HSE except at z=1.5.
+  \item Values for each mass bin and redshift are only plotted, not tabulated, in the text I read.
+  \item If the HACC CTP is mass-weighted, FLAMINGO implies a smaller bias than -0.2, which is consistent with the emulator's 0.075-0.16.
+\end{itemize}
+\textbf{Completed --- Test whether the change in M\_HSE/M500 between z=0 and z=0.4987 at the midpoint parameters is statistically robust. Cross-check s\_n + s\_T against the emulator's own pressure profile (CPP), propagate the T(R500)/T500 error, and restate the result in the FLAMINGO sign convention..} The redshift change in M\_HSE/M500 is not statistically robust: it is about 1.2 sigma whichever way the slope is computed. I predicted CPP (P/P500) at the d-01 midpoint parameters (tc-...-62, -63). The files are CPP\_z0.0000\_prediction.csv and CPP\_z0.4987\_prediction.csv in /Users/nramachandra/hep-genesis-testing/projects/ramp-combo-cluster-profiles/runs/261020\_143128/. The CGD, CTP and CPP bin values were read verbatim from the CSVs (tc-...-64 to -67, -69, -70). Slopes are centred finite differences over the same bin pairs as d-01 (0.365/0.649, 0.866/1.155 and 1.540/2.738 R500c), with GP errors treated as independent.
+
+\textbf{Pressure-slope cross-check (f-012).} s\_P from CPP compared with s\_n+s\_T from CGD and CTP:
+
+\begin{itemize}
+  \item 0.49 R500, z=0: -1.981+-0.042 vs -2.133+-0.104, a 1.3 sigma difference.
+  \item 0.49 R500, z=0.4987: -1.874+-0.088 vs -2.218+-0.117, 2.4 sigma.
+  \item 1.00 R500, z=0: -3.052+-0.113 vs -3.128+-0.171, 0.37 sigma.
+  \item 1.00 R500, z=0.4987: -3.232+-0.154 vs -3.243+-0.172, 0.05 sigma.
+  \item 2.05 R500, z=0: -2.877+-0.042 vs -4.249+-0.086, 14 sigma.
+  \item 2.05 R500, z=0.4987: -1.815+-0.207 vs -4.463+-0.125, 11 sigma.
+\end{itemize}
+CPP agrees with the density and temperature profiles at R500 but is much shallower beyond it. So at large radius CPP is not CGD x CTP, which points to a different averaging, weighting or halo sample (q-09).
+
+\textbf{Mass ratio and bias (f-013).} T(R500)/T500, taken as the geometric mean of the two bins either side of R500, is 0.5916+-0.0047 at z=0 and 0.5181+-0.0101 at z=0.4987. With that error propagated:
+
+\begin{longtable}{@{}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}@{}}
+\toprule
+\textbf{Slope used} & \textbf{z=0 M\_HSE/M500} & \textbf{z=0.4987 M\_HSE/M500} & \textbf{Difference} & \textbf{Significance} \\ \midrule \endhead
+s\_n+s\_T & 0.925+-0.051 & 0.840+-0.048 & 0.085+-0.070 & 1.2 sigma \\
+s\_P (CPP) & 0.903+-0.034 & 0.837+-0.043 & 0.066+-0.055 & 1.2 sigma \\
+\bottomrule\end{longtable}
+In the FLAMINGO convention, b = (M\_HSE-M500)/M500:
+
+\begin{itemize}
+  \item From s\_n+s\_T: b = -0.075+-0.051 at z=0 and -0.160+-0.048 at z=0.4987, so Delta b = -0.085+-0.070.
+  \item From CPP: b = -0.097+-0.034 and -0.163+-0.043, so Delta b = -0.066+-0.055.
+\end{itemize}
+The bias becomes more negative with redshift, the same direction FLAMINGO finds for clusters, but the trend is not significant.
+
+\textbf{Caveats:}
+
+\begin{itemize}
+  \item The finite-difference errors assume the bins are independent; correlated GP errors would change them.
+  \item The kT500 = G mu m\_p M500/(2 R500) convention sets the absolute b values.
+  \item The mass selection behind the profiles is undocumented (q-06). If it is a fixed mass threshold, part of the redshift trend could be a selection effect.
+\end{itemize}
+\textbf{Still open:} q-09, the origin of the CPP versus CGD x CTP mismatch beyond R500. No figures were made in this direction.
+
+\textbf{Critic, wave 2} --- continue: 3 findings stand up to the evidence, 3 questioned ('Nelson, Lau \& Nagai 2014 (arXiv:1404.4636, Eq. 7, cited verbatim in references.bib) fit P\_': None of the quoted excerpts contains Eq. 7 or the values A=0.452, B=0.841, gamma=1.628. tc-68 shows only Figure 2/beta-axis text that mentions 'Eq 7', tc-60 shows the simulation section, and tc-79 only confirms that a citation was added. The arithmetic f\_nth(0.5/0.55/0.6) = 0.254/0.274/0.294 does follow from the stated parameters. However, the R500c/R200m = 0.5-0.6 conversion is untooled hand arithmetic. It also ignores the emulator cosmology: omega\_m=0.1375 is probably omega\_m h\textasciicircum{}2, not Omega\_m. For a typical NFW halo at z=0, R500c/R200m is closer to 0.45-0.5.; 'Applying the Nelson et al. f\_nth at R500c (0.25-0.29) as a multiplicative factor 1/(1-f\_nt': The method is incorrect. Including non-thermal pressure gives M\_tot/M\_HSE = [1/(1-f)] * [1 + (d ln(1/(1-f))/d ln r)/s\_P], not the bare factor 1/(1-f). Because f\_nth rises with radius, the bare factor overstates the correction, so the claimed '16-31\% overcorrection' is inflated by construction. The same simplification sits behind the 'required f\_nth \textasciitilde{} 1 - M\_HSE/M500'. The finding also inherits the unverified parameters from f-009, and none of the cited evidence (two Nelson text chunks and two d-01 CTP CSVs) contains the derived numbers.; 'FLAMINGO (arXiv:2409.07849) full text, Sec. 3.2-3.4 and Figs. 1, 2, 3 and 5:
+
+\begin{itemize}
+  \item For 1e13.75': The only excerpt, tc-80 (chars 30000-45000), discusses cubic-spline scatter and the Barnes et al. comparison. It does not contain the -0.1 convergence in the 1e13.75-1e14.25 bin, the b=-0.257 calibration, the Fig. 2 weighting comparison or the Fig. 5 redshift statement. The quotes were not recorded with cite (d-06 admits this). The claims are plausible, but they are not supported by the quoted evidence.).
+\end{itemize}
+Issues: The feedback robustness test, the main open robustness question, has produced files but no numbers. Until the slopes and M\_HSE/M500 are extracted for eps\_kin=0.02 and 1.2, there is no evidence on whether Delta b(z) is larger or smaller than the feedback-induced spread. f-008 is supported only as a record of the runs.; The quoted CSV excerpts end at the first \textasciitilde{}7 bins (r \textless{} 0.09 R500c), before the 0.365-2.738 R500c bins used for the slopes. The values are internally consistent: s\_n+s\_T reproduces d-01 exactly, and the errors add in quadrature correctly. Even so, the specific bin values should be quoted. The 14-sigma and 11-sigma CPP mismatch at 2.05 R500 is suspicious, as is the CPP slope at that radius flattening from -2.88 to -1.82 with z. Possible causes are \textless{}P\textgreater{} != \textless{}rho\textgreater{}\textless{}T\textgreater{} under halo-to-halo scatter or clumping, a different halo sample per emulator, or emulator edge effects near the 2.74 R500c grid boundary.; The 1.2-sigma significance treats GP errors as independent across bins and across redshifts. The z=0 and z=0.4987 predictions come from the same emulator, so correlated errors could raise or lower the significance substantially. Also, T(R500)/T500 = 0.59 is low compared with observed universal profiles (X-COP, roughly 0.8-0.9 at R500). This suggests that the emulator's T500 normalisation or temperature weighting differs from the kT500 = G mu m\_p M500/(2R500) convention assumed. That would shift every absolute b value..
+
+Stopping after wave 2: budget reached (2/2 waves used). Writing the report from the board.
+
+\textit{Research report:}\par
+\subsubsection*{Hydrostatic mass bias and profile-shape evolution: a literature baseline and HACC-emulator test at z = 0 and z = 0.4987}
+\subsubsection*{Abstract}
+This report combines a survey of hydrostatic-equilibrium (HSE) mass bias in galaxy clusters with a test using a HACC-based hydrodynamics emulator. The emulator was used to predict gas-density (CGD) and temperature (CTP) profiles at the midpoint of its design space, at z = 0 and z = 0.4987.
+
+The pairing differs from the intended z = 0 vs z = 1 because the cluster-profile emulators stop at z = 0.4987. The log-slopes of the profiles at R500c barely change between the two redshifts:
+
+\begin{itemize}
+  \item s\_n + s\_T = -3.13 at z = 0.
+  \item s\_n + s\_T = -3.24 at z = 0.4987.
+\end{itemize}
+The main change is in the temperature normalisation, with T(R500)/T500 falling from 0.592 to 0.518. Under an assumed T500 convention this gives:
+
+\begin{itemize}
+  \item M\_HSE/M500 = 0.925 $\pm$ 0.051 at z = 0 and 0.840 $\pm$ 0.048 at z = 0.4987.
+  \item In the FLAMINGO sign convention, b = -0.075 and -0.160, so $\Delta$b = -0.085 $\pm$ 0.070.
+\end{itemize}
+The bias becomes more negative with redshift, as FLAMINGO finds for clusters. The trend is only about 1.2$\sigma$, both from the density-plus-temperature route and from the emulator's own pressure profile.
+
+The pressure profile agrees with the density and temperature slopes at R500 but is far shallower at 2 R500. This indicates that the three emulated profiles are not mutually consistent at large radius.
+
+Three further limits apply:
+
+\begin{itemize}
+  \item A feedback-robustness test was run but not reduced to numbers.
+  \item The emulator exposes no halo mass, so the FLAMINGO group-versus-cluster comparison could not be done.
+  \item The absolute bias values depend on an undocumented T500 and temperature-weighting convention.
+\end{itemize}
+\subsubsection*{Background}
+\textbf{Bias magnitude in simulations.} Hydrodynamical simulations consistently find that HSE masses from X-ray and SZ data underestimate the true mass. The FLAMINGO study (arXiv:2409.07849) defines b\_HSE = (M\_HSE,500c - M500c)/M500c and reports the following:
+
+\begin{itemize}
+  \item The median bias goes from about -0.1 for groups to about -0.2 for clusters.
+  \item The scatter is smallest near M500c \textasciitilde{} 10\textasciicircum{}14 Msun, with $\sigma$(b) $\approx$ 0.1. It grows to about 0.35 at 5$\times$10\textasciicircum{}14 Msun in the fgas+2$\sigma$ variant.
+  \item At fixed true mass, HSE masses rise with redshift for groups and fall with redshift for clusters, and the scatter grows with z.
+  \item Feedback models with lower gas fractions give more-biased group masses and less-biased cluster masses.
+  \item The bias does not depend on which fitting function is used, but poorer fits give a stronger bias.
+  \item The scatter comes from differences in the pressure gradient, not from T(R500c).
+\end{itemize}
+From the FLAMINGO full text:
+
+\begin{itemize}
+  \item In the 10\textasciicircum{}13.75--10\textasciicircum{}14.25 Msun bin, all five profile methods converge to b $\approx$ -0.1.
+  \item The FLAMINGO calibration assumed a constant b = -0.257.
+  \item Volume-weighted profiles give a much smaller and less mass-dependent bias than X-ray-weighted ones, with mass-weighted profiles in between. The authors attribute most of the bias at M500c ? 10\textasciicircum{}13 Msun to X-rays being a biased tracer of the gas.
+  \item As a function of true mass, b(M) steepens with redshift over z = 0--1.5. At fixed M\_HSE it is nearly unchanged except at z = 1.5.
+\end{itemize}
+\textbf{Non-thermal pressure.} Nelson, Lau \& Nagai (arXiv:1404.4636) give a fit to the non-thermal pressure fraction:
+
+f\_nth = 1 - A\{1 + exp[-((r/R200m)/B)\textasciicircum{}$\gamma$]\}, with A = 0.452 $\pm$ 0.001, B = 0.841 $\pm$ 0.008 and $\gamma$ = 1.628 $\pm$ 0.019.
+
+The fit comes from non-radiative ART runs using mass-weighted T and $\sigma$. It is accurate to about 10\% over 0.1--1.5 R200m out to z = 1.5, and it is universal in redshift when radii are scaled to R200m. The fraction depends strongly on the mass accretion rate.
+
+\textbf{Observations.} The X-COP sample (arXiv:1805.00034) of 13 nearby clusters gives:
+
+\begin{itemize}
+  \item A median non-thermal fraction of about 6\% at R500 and about 10\% at R200, lower than simulations predict.
+  \item 1 - b = 0.85 $\pm$ 0.05 with the Planck calibration, with some evidence for a mass-dependent bias.
+\end{itemize}
+\textbf{Gas-density slopes.} Simba (arXiv:2409.05815) finds that gas-density profiles follow power laws whose slope and amplitude depend only weakly on redshift at fixed mass over 0 \textless{} z \textless{} 4. AGN jets flatten the profiles above M200c \textasciitilde{} 10\textasciicircum{}13 Msun. This suggests that any redshift evolution of the bias should come from the temperature rather than the density slope.
+
+\textbf{Mergers.} A recent merger study (arXiv:2511.10730, abstract only) finds that the bias dips sharply negative during a major merger, then peaks briefly positive, then relaxes back. This is driven mainly by changes in the gas-density structure rather than by thermodynamics.
+
+\textbf{Relevance to this test.} The HSE mass depends on the log-slopes d ln n/d ln r and d ln T/d ln r and on T itself, not on the density amplitude. Profile-shape evolution therefore enters the bias directly.
+
+Other papers identified but not read in detail are:
+
+\begin{itemize}
+  \item arXiv:1112.3659 (merger-driven bias evolution).
+  \item arXiv:1306.3993 and arXiv:1308.6589 (methods for computing the bias, and its origin).
+  \item arXiv:1507.04338 (Shi--Komatsu analytic non-thermal model).
+  \item arXiv:1608.04388 (mass-modelling framework).
+  \item arXiv:1805.00035, arXiv:1805.00042 and arXiv:2112.07554 (X-COP mass and universal profiles, and non-thermal tracing).
+  \item arXiv:2010.00619 (CAMELS). Note that the emulator used here is HACC-based, not CAMELS-based.
+\end{itemize}
+\subsubsection*{Results}
+\paragraph{Emulator set-up}
+The emulator's CGD, CTP and CPP (pressure) profiles take seven inputs plus redshift. The inputs, set to the midpoints of their design ranges, are:
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{Parameter} & \textbf{Description} & \textbf{Midpoint used} \\ \midrule \endhead
+kappa\_w & AGN wind coupling & 3 \\
+e\_w & AGN wind energy fraction & 0.6 \\
+M\_seed & Black-hole seed mass & 1.3 \\
+v\_kin & Kinetic feedback parameter & 0.65 \\
+eps\_kin & Kinetic AGN feedback efficiency & 0.61 \\
+omega\_m & Matter density & 0.1375 \\
+sigma\_8 & Power-spectrum normalisation & 0.8 \\
+\bottomrule\end{longtable}
+There is no fiducial parameter set, so the midpoints were used. The profiles have these properties:
+
+\begin{itemize}
+  \item They are already self-similarly scaled: CGD is $\rho$\_gas/$\rho$\_crit(z), CTP is T/T500 and CPP is P/P500.
+  \item Each covers 19 logarithmic bins from 0.0154 to 2.74 R500c, so 2 R500c lies inside the grid.
+  \item Each profile is for a single, undocumented halo selection. There is no mass column and no true M500c.
+  \item The cluster profiles cover only z $\leq$ 0.4987.
+\end{itemize}
+\paragraph{Profile shape change between z = 0 and z = 0.4987}
+[[FIGURE 9]]
+
+Figure 9 overlays CGD at the two redshifts. The density at z = 0.4987 behaves as follows relative to z = 0:
+
+\begin{itemize}
+  \item It agrees within about 3\% over 0.2--0.9 R500c.
+  \item It is about 6\% lower at 1.15 R500c and 13--14\% lower at 1.5--2.05 R500c.
+  \item It converges again at 2.74 R500c.
+\end{itemize}
+The core (r \textless{} 0.1 R500c) appears 15--50\% lower at z = 0.4987. The emulator uncertainty there is very large: the innermost bin is 1018 $\pm$ 689 at z = 0.4987 against 2154 $\pm$ 258 at z = 0. The core difference should therefore be treated as not significant.
+
+[[FIGURE 10]]
+
+Figure 10 overlays CTP. Relative to z = 0, the temperature at z = 0.4987 is:
+
+\begin{itemize}
+  \item 7--13\% lower over 0.15--1.15 R500c.
+  \item 12\% lower at R500c itself.
+  \item About 30\% lower at 2.74 R500c.
+\end{itemize}
+\paragraph{Log-slopes and the HSE mass ratio}
+Slopes are centred finite differences in ln r over neighbouring bins centred at 0.49, 1.00 and 2.05 R500c. The errors come from the emulator's Gaussian-process standard deviation, assuming independent bins.
+
+\begin{longtable}{@{}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}@{}}
+\toprule
+\textbf{Radius (R500c)} & \textbf{s\_n (z=0)} & \textbf{s\_n (z=0.4987)} & \textbf{s\_T (z=0)} & \textbf{s\_T (z=0.4987)} \\ \midrule \endhead
+0.49 & -1.86 $\pm$ 0.10 & -1.87 $\pm$ 0.10 & -0.27 $\pm$ 0.03 & -0.35 $\pm$ 0.06 \\
+1.00 & -2.55 $\pm$ 0.16 & -2.74 $\pm$ 0.10 & -0.58 $\pm$ 0.06 & -0.50 $\pm$ 0.14 \\
+2.05 & -3.13 $\pm$ 0.07 & -2.93 $\pm$ 0.06 & -1.12 $\pm$ 0.05 & -1.54 $\pm$ 0.11 \\
+\bottomrule\end{longtable}
+As a check, the z = 0 density slope near R500c follows directly from the CSV values. Between r/R500c = 0.866 (35.08) and 1.155 (16.86), ln(16.862/35.076)/ln(1.1548/0.8660) $\approx$ -2.55.
+
+At R500c the slopes barely change with redshift:
+
+\begin{itemize}
+  \item s\_n + s\_T = -3.13 $\pm$ 0.17 at z = 0 and -3.24 $\pm$ 0.17 at z = 0.4987, consistent within errors.
+  \item The density slope does not evolve significantly at any of the three radii, in line with the Simba expectation.
+  \item The clearest shape change is the steepening of the temperature slope at 2 R500c, nominally about 3.6$\sigma$. This rests on finite differences of emulator means with independent errors and has not been checked against a smooth fit.
+\end{itemize}
+\textbf{Mass ratio.} T(R500)/T500 was taken as the geometric mean of the 0.866 and 1.155 R500c bins, giving 0.5916 $\pm$ 0.0047 at z = 0 and 0.5181 $\pm$ 0.0101 at z = 0.4987. The HSE mass ratio uses $\mu$ = 0.59 and the convention kT500 = G $\mu$ m\_p M500/(2 R500), so that M\_HSE(R500)/M500 = -(T/T500)(s\_n + s\_T)/2. This gives:
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{Quantity} & \textbf{z = 0} & \textbf{z = 0.4987} \\ \midrule \endhead
+M\_HSE/M500 & 0.925 $\pm$ 0.051 & 0.840 $\pm$ 0.048 \\
+b (FLAMINGO convention) & -0.075 $\pm$ 0.051 & -0.160 $\pm$ 0.048 \\
+\bottomrule\end{longtable}
+The ratio between redshifts is 0.91. Because the slope sum barely changes, the larger bias at z = 0.4987 comes mainly from the 12\% lower temperature at R500, not from profile shape. The absolute b values depend on the assumed T500 convention. The critic flagged two problems with this result: the significance had to be tested, and the sign convention initially differed from FLAMINGO's. Both are addressed in the next subsection.
+
+\paragraph{Pressure-profile cross-check and significance}
+The emulator's own pressure profile gives an independent slope s\_P, compared here with s\_n + s\_T over the same bin pairs.
+
+\begin{longtable}{@{}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}@{}}
+\toprule
+\textbf{Radius} & \textbf{z} & \textbf{s\_P (CPP)} & \textbf{s\_n + s\_T} & \textbf{Difference} \\ \midrule \endhead
+0.49 R500 & 0 & -1.981 $\pm$ 0.042 & -2.133 $\pm$ 0.104 & 1.3$\sigma$ \\
+0.49 R500 & 0.4987 & -1.874 $\pm$ 0.088 & -2.218 $\pm$ 0.117 & 2.4$\sigma$ \\
+1.00 R500 & 0 & -3.052 $\pm$ 0.113 & -3.128 $\pm$ 0.171 & 0.37$\sigma$ \\
+1.00 R500 & 0.4987 & -3.232 $\pm$ 0.154 & -3.243 $\pm$ 0.172 & 0.05$\sigma$ \\
+2.05 R500 & 0 & -2.877 $\pm$ 0.042 & -4.249 $\pm$ 0.086 & 14.4$\sigma$ \\
+2.05 R500 & 0.4987 & -1.815 $\pm$ 0.207 & -4.463 $\pm$ 0.125 & 10.9$\sigma$ \\
+\bottomrule\end{longtable}
+The routes agree at R500, so the R500 mass estimate is robust to which route is used. Beyond R500 the pressure profile is not the product of the density and temperature profiles.
+
+With the T(R500)/T500 error propagated, the two routes give:
+
+\begin{longtable}{@{}p{0.160\textwidth}p{0.160\textwidth}p{0.160\textwidth}p{0.160\textwidth}p{0.160\textwidth}p{0.160\textwidth}@{}}
+\toprule
+\textbf{Slope used} & \textbf{z=0 M\_HSE/M500} & \textbf{z=0.4987 M\_HSE/M500} & \textbf{Difference} & \textbf{$\Delta$b (FLAMINGO convention)} & \textbf{Significance} \\ \midrule \endhead
+s\_n + s\_T & 0.925 $\pm$ 0.051 & 0.840 $\pm$ 0.048 & 0.085 $\pm$ 0.070 & -0.085 $\pm$ 0.070 & 1.2$\sigma$ \\
+s\_P (CPP) & 0.903 $\pm$ 0.034 & 0.837 $\pm$ 0.043 & 0.066 $\pm$ 0.055 & -0.066 $\pm$ 0.055 & 1.2$\sigma$ \\
+\bottomrule\end{longtable}
+From the pressure route, b = -0.097 $\pm$ 0.034 at z = 0 and -0.163 $\pm$ 0.043 at z = 0.4987. Both routes give a bias that becomes more negative with redshift, the same direction as FLAMINGO for clusters, but neither is statistically significant.
+
+The quoted errors treat bins and redshifts as independent. Correlated emulator errors could move the significance in either direction.
+
+\paragraph{Feedback sensitivity (incomplete)}
+The feedback test used kinetic AGN efficiency eps\_kin, varied to the ends of its range (0.02 and 1.2) with the other parameters held at their midpoints. Choosing eps\_kin was a judgement call, because the emulator does not indicate which parameter controls the slopes. CGD and CTP were predicted at both redshifts for both values.
+
+[[FIGURE 21]]
+
+[[FIGURE 22]]
+
+Figures 21 (CGD) and 22 (CTP) each overlay five profiles: the midpoint (eps\_kin = 0.61) at z = 0, and eps\_kin = 0.02 and 1.2 at both redshifts. The slopes, T/T500 and M\_HSE/M500 for these runs were not extracted. It therefore cannot yet be said whether feedback moves the bias more or less than the redshift change does. The fGas observable was not run.
+
+\paragraph{Non-thermal correction}
+The Nelson et al. fit was evaluated at R500c assuming R500c $\approx$ 0.5--0.6 R200m (about 0.5 at z = 0 and 0.55--0.6 at z = 0.5). This conversion and the evaluation were done by hand, not with a tool. The results are:
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{x = r/R200m} & \textbf{f\_nth} & \textbf{Correction factor 1/(1 - f\_nth)} \\ \midrule \endhead
+0.50 & 0.254 & 1.34 \\
+0.55 & 0.274 & 1.38 \\
+0.60 & 0.294 & 1.42 \\
+\bottomrule\end{longtable}
+Applying these factors to the emulator ratios gives 1.24--1.31 at z = 0 and 1.16--1.19 at z = 0.4987, an overcorrection of 16--31\%.
+
+Reconciling the emulator directly would need f\_nth $\approx$ 1 - M\_HSE/M500 $\approx$ 0.075 at z = 0 and 0.16 at z = 0.4987. These are closer to the X-COP value of about 6\% than to the non-radiative Nelson fit. This conclusion relies on the hand-derived R500c--R200m mapping and on the assumed T500 convention, so it is low confidence and has not been independently verified.
+
+\subsubsection*{Discussion}
+\textbf{Where profile shape matters.} Profile-shape evolution between z = 0 and z $\approx$ 0.5 has little effect on the HSE mass reconstruction at R500c:
+
+\begin{itemize}
+  \item The density slope is stable, as Simba (arXiv:2409.05815) predicts.
+  \item The total slope changes by only about 0.1.
+  \item The apparent increase in bias with redshift is carried by the temperature normalisation, T(R500)/T500.
+\end{itemize}
+Shape evolution does matter at 2 R500c, where the temperature slope steepens. At that radius, however, the emulated pressure profile disagrees with density times temperature by more than 10$\sigma$. Any outskirts mass reconstruction from these emulators is therefore currently unreliable. Possible causes include:
+
+\begin{itemize}
+  \item ?P? $\neq$ ?$\rho$??T? under halo-to-halo scatter or clumping.
+  \item Different halo samples or weightings behind each emulator.
+  \item Edge effects near the 2.74 R500c grid boundary.
+\end{itemize}
+The flattening of the pressure slope with redshift at 2.05 R500c, from -2.88 to -1.82, deserves caution for the same reasons.
+
+\textbf{Comparison with FLAMINGO.} The direction of $\Delta$b matches FLAMINGO's cluster-scale trend (arXiv:2409.07849). The magnitude cannot be compared quantitatively, for three reasons:
+
+\begin{itemize}
+  \item The halo mass behind the emulated profiles is unknown.
+  \item The temperature weighting (mass-weighted or spectroscopic-like) is undocumented.
+  \item The subgrid models in HACC, FLAMINGO and Simba differ.
+\end{itemize}
+FLAMINGO's weighting result offers one possible reconciliation. If CTP is mass-weighted, FLAMINGO would predict a bias smaller in magnitude than -0.2, compatible with the emulator's -0.075 to -0.16.
+
+\textbf{Possible confounds.} Two effects could mimic or distort the redshift trend:
+
+\begin{itemize}
+  \item \textbf{Selection.} If the emulator's stack uses a fixed mass threshold, the mean mass is lower at z = 0.4987, and part of the trend could be a selection effect.
+  \item \textbf{Normalisation.} The critic noted that T(R500)/T500 $\approx$ 0.59 is low compared with observed universal profiles, which the critic put at roughly 0.8--0.9 at R500 for X-COP. This hints that the emulator's T500 normalisation differs from the assumed convention, which would shift every absolute b.
+\end{itemize}
+\textbf{Non-thermal pressure.} The non-radiative Nelson et al. fraction overcorrects the emulator masses. The implied required fraction is closer to the X-COP observation (arXiv:1805.00034). Possible explanations are:
+
+\begin{itemize}
+  \item The emulator's convention or weighting already absorbs part of the bias.
+  \item HACC haloes carry less non-thermal support than non-radiative ART runs.
+\end{itemize}
+These cannot be distinguished without the emulator documentation.
+
+\textbf{Dead ends.}
+
+\begin{itemize}
+  \item \textbf{Group versus cluster mass dependence.} The emulator has no mass input and returns one profile per call, so group-scale and cluster-scale profiles could not be produced. The z $\approx$ 1 comparison was also impossible.
+  \item \textbf{Documentation search and X-COP benchmark.} The search for HACC mass-selection and temperature-weighting documentation, and the X-COP universal-profile slope benchmark (arXiv:1805.00042), were not attempted because the tool budget ran out. They are not intrinsically blocked.
+\end{itemize}
+\subsubsection*{Limitations}
+\textbf{What the emulator does not provide.}
+
+\begin{itemize}
+  \item There is no true M500c and no mass selection, so absolute biases rest on an assumed kT500 convention. Only the redshift ratio (0.91) is relatively convention-independent.
+  \item The temperature weighting is unknown. This matters because FLAMINGO shows the bias depends strongly on weighting.
+  \item Redshift coverage stops at z = 0.4987, so z = 1 was not tested.
+\end{itemize}
+\textbf{How slopes and errors were computed.}
+
+\begin{itemize}
+  \item Slopes are finite differences of emulator means with independent-bin errors.
+  \item No smooth-function fit (for example a Vikhlinin-type model) was tried.
+  \item Correlated emulator errors were not modelled.
+  \item The 3.6$\sigma$ temperature-slope change and the 1.2$\sigma$ bias change are therefore uncertain in significance.
+\end{itemize}
+\textbf{Incomplete analyses.} The feedback runs exist but were not analysed, and fGas was never predicted. No plots with uncertainty bands were made for individual predictions.
+
+\textbf{Literature coverage.}
+
+\begin{itemize}
+  \item The baseline rests on four papers recorded with verbatim quotes, short of the six targeted.
+  \item The FLAMINGO numbers taken from the full text were not recorded with quotes, and its per-mass-bin b(z) values are only plotted, not tabulated.
+  \item The merger result is from the abstract only.
+  \item arXiv:1805.00035, arXiv:1805.00042, arXiv:1507.04338 and the Simba fit coefficients were not extracted.
+\end{itemize}
+\textbf{Non-thermal correction.} The R500c-to-R200m conversion used for it was assumed and computed by hand.
+
+\subsubsection*{Open directions}
+\begin{enumerate}
+  \item Extract s\_n + s\_T, T/T500 and M\_HSE/M500 at R500c from the existing eps\_kin = 0.02 and 1.2 profiles to test whether the feedback-induced shift exceeds the 0.085 redshift change.
+  \item Search for HACC profile documentation (halo-mass selection, T500 definition, temperature weighting) to turn the relative bias into an absolute one and to test the selection explanation.
+  \item Diagnose why the emulated pressure profile is much shallower than density times temperature beyond R500, and decide which is the correct input for outskirts HSE masses.
+  \item Refit the profiles with smooth analytic models and propagate correlated emulator errors to re-assess the significance of the temperature-slope steep
+\end{enumerate}
+\end{document}

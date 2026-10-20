@@ -1,0 +1,924 @@
+Title: Hydrodynamic Simulation of Non-thermal Pressure Profiles of Galaxy Clusters
+Authors: Kaylea Nelson, Erwin T. Lau, Daisuke Nagai
+Year: 2014
+arXiv ID: 1404.4636
+
+============================================================
+
+--- Page 1 ---
+ACCEPTED TO APJ: J ULY 14, 2014
+Preprint typeset using LATEX style emulateapj v. 5/2/11
+HYDRODYNAMIC SIMULATION OF NON-THERMAL PRESSURE PROFILES OF GALAXY CLUSTERS
+KAYLEA NELSON 1,3 , ERWIN T. LAU2,3 , AND DAISUKE NAGAI 1,2,3
+1Department of Astronomy, Yale University, New Haven, CT 06520, U.S.A.; kaylea.nelson@yale.edu
+2Department of Physics, Yale University, New Haven, CT 06520, U.S.A.
+3Yale Center for Astronomy & Astrophysics, Yale University, New Haven, CT 06520, U.S.A.
+ACCEPTED TO APJ: July 14, 2014
+ABSTRACT
+Cosmological constraints from X-ray and microwave observations of galaxy clusters are subjected to sys-
+tematic uncertainties. Non-thermal pressure support due to internal gas motions in galaxy clusters is one of
+the major sources of astrophysical uncertainties. Using a mass-limited sample of galaxy clusters from a high-
+resolution hydrodynamical cosmological simulation, we characterize the non-thermal pressure fraction proﬁle
+and study its dependence on redshift, mass, and mass accretion rate. We ﬁnd that the non-thermal pressure frac-
+tion proﬁle is universal across redshift when galaxy cluster radii are deﬁned with respect to the mean matter
+density of the universe instead of the commonly used critical density. We also ﬁnd that the non-thermal pres-
+sure is predominantly radial, and the gas velocity anisotropy proﬁle exhibits strong universality when galaxy
+cluster radii are deﬁned with respect to the mean matter density of the universe. However, we ﬁnd that the non-
+thermal pressure fraction is strongly dependent on the mass accretion rate of the galaxy cluster. We provide
+ﬁtting formulae for the universal non-thermal pressure fraction and velocity anisotropy proﬁles of gas in galaxy
+clusters, which should be useful in modeling astrophysical uncertainties pertinent to using galaxy clusters as
+cosmological probes.
+Subject headings: cosmology: theory – galaxies: clusters: general – methods: numerical
+1. INTRODUCTION
+Clusters of galaxies are the largest gravitationally bound
+objects in the universe and therefore trace the growth of large
+scale structure. In recent years, X-ray and microwave obser-
+vations have enabled detailed studies of the structure and evo-
+lution of galaxy clusters and signiﬁcantly improved the use of
+these systems as powerful cosmological probes (Allen et al.
+2011, for a review). However, current cluster-based cosmo-
+logical constraints are limited by systematic uncertainties as-
+sociated with cluster astrophysics. Controlling these astro-
+physical uncertainties is therefore critical for exploiting the
+full statistical power of ongoing and upcoming cluster sur-
+veys, such as Planck1 and eROSITA2.
+One of the main challenges in using clusters as cosmolog-
+ical probes lies in the accurate determination of their masses.
+Cluster mass estimates from X-ray and Sunyaev-Zel’dovich
+(SZ) observations are based on the assumption that cluster gas
+is in hydrostatic equilibrium with their gravitational poten-
+tial, but there have been inconsistencies between the hydro-
+static mass and the mass estimated from gravitational lensing
+(e.g., Zhang et al. 2010; Mahdavi et al. 2013; von der Lin-
+den et al. 2014; Applegate et al. 2014). Hydrodynamical sim-
+ulations suggest that this hydrostatic mass bias arises from
+non-thermal pressure support in clusters that is not accounted
+for in current X-ray and SZ cluster mass measurements (e.g.,
+Evrard et al. 1996; Rasia et al. 2006; Nagai et al. 2007b; Pif-
+faretti & Valdarnini 2008). Simulations also suggest that ac-
+counting for the non-thermal pressure support can recover the
+cluster mass to within a few percent (e.g., Rasia et al. 2004;
+Lau et al. 2009; Nelson et al. 2012, 2014). To date, it has been
+widely assumed that the bias in hydrostatic mass is constant
+with redshift and mass, but it is unclear whether this assump-
+1 http://www.rssd.esa.int/index.php?project=planck
+2 http://www.mpe.mpg.de/eROSITA
+tion is valid. For upcoming cluster surveys, which will detect
+clusters out to z≈ 1.5, it is necessary to characterize the mass
+and redshift dependence of the mass bias and its impact on
+cosmological inferences.
+Non-thermal pressure can also affects the interpretation of
+the angular power spectrum of the thermal SZ signal, origi-
+nated from the inverse Compton scattering of the CMB pho-
+tons off hot electrons in galaxy clusters. The amplitude of
+the angular power spectrum of the thermal SZ signal ( C𝓁) is
+very sensitive to the amplitude of matter density ﬂuctuations
+(σ8) as C𝓁∝σ8 7−8 (Komatsu & Seljak 2002). Non-thermal
+pressure is one of the main astrophysical uncertainties since
+most of the thermal SZ signal comes from integrated ther-
+mal pressure from the hot gas in the intracluster and intra-
+group medium at large radii, where the level of non-thermal
+pressure is comparable to that of thermal pressure, and where
+the energy injection from stars and active galactic nuclei are
+expected to be subdominant. The inclusion of non-thermal
+pressure support can change the amplitude of the thermal
+SZ power spectrum by as much as 60% (Shaw et al. 2010;
+Battaglia et al. 2010; Trac et al. 2011), signiﬁcantly affect-
+ing its constraint on σ8. Since the thermal SZ angular power
+spectrum gets contributions from galaxy groups and clusters
+in a wide range of redshifts and mass, a proper understanding
+of the mass and redshift dependence of the non-thermal pres-
+sure support is critical for using the SZ power spectrum and
+its high-order moment counterparts (Bhattacharya et al. 2012;
+Hill & Sherwin 2013) as cosmological probes.
+The upcoming ASTRO-H mission, equipped with high-
+resolution X-ray spectrometer, will measure internal gas mo-
+tions in galaxy clusters from doppler broadening of emission
+lines (Takahashi et al. 2010). However, due to its limited
+sensitivity, the ASTRO-H measurements of the non-thermal
+pressure will be limited to only the inner regions of nearby
+massive clusters, and it will be difﬁcult to extend these mea-
+arXiv:1404.4636v3  [astro-ph.CO]  16 Aug 2014
+
+--- Page 2 ---
+2 Nelson, Lau, & Nagai
+surements to the outer regions or high-redshift clusters where
+the effects of non-thermal pressure are expected to be more
+signiﬁcant.
+In the absence of observational constraints, hydrodynam-
+ical cosmological simulations can serve as guides for char-
+acterizing the effects of non-thermal pressure, particularly at
+large cluster radii and at high redshifts. In this paper we build
+upon previous works (Shaw et al. 2010; Battaglia et al. 2012)
+by examining the non-thermal pressure fraction for a mass-
+limited sample of highly resolved massive galaxy clusters in
+a wide range of mass, redshifts and dynamical states. We
+show that the mean non-thermal pressure fraction as well as
+the gas velocity anisotropy proﬁles exhibit remarkable univer-
+sality with redshift and mass, when the cluster mass is deﬁned
+with respect to the mean mass density of the universe, instead
+of the critical density. We also ﬁnd that these proﬁles show
+cluster-to-cluster scatter which depends primarily on the mass
+accretion rate of the clusters, which only affects the normal-
+ization of the proﬁles. We present ﬁtting formulae for these
+universal proﬁles. These formulae should useful for charac-
+terizing the effects of non-thermal pressure on the hydrostatic
+mass bias, incorporating their effects in semi-analytic mod-
+els of thermal SZ power spectrum, and calibrating analytical
+models of the non-thermal pressure proﬁles of clusters (e.g.,
+Shi & Komatsu 2014).
+The paper is organized as follows. In Section 2 we give
+an overview of the different mass deﬁnitions and describe our
+dynamical state proxy; in Section 3 we describe our simula-
+tions of galaxy cluster formation; in Section 4 we present our
+ﬁndings; and ﬁnally we offer our conclusions and discussions
+in Section 5.
+2. THEORETICAL OVERVIEW
+2.1. Cluster Mass Deﬁnitions
+Galaxy clusters form at the intersections of large-scale ﬁl-
+amentary structures in the universe. As such, they have no
+well-deﬁned physical edge, and we must adopt some conven-
+tion for determining a boundary for the systems and their en-
+closed mass. The common approach is to deﬁne the boundary
+of a cluster as a sphere enclosing an average matter density
+equal to some chosen reference overdensity, ∆ref, times some
+reference background density,ρref. The mass of the cluster is
+then
+M∆ref≡ 4π
+3 ∆refρref(z)r3
+∆ref (1)
+where r∆ref is the cluster radius. The two common choices of
+the background densityρref are the critical density,ρc(z), and
+the mean matter density,ρm(z),
+ρc(z) = 3H2
+0
+8πG
+(
+Ωm(1 + z)3 + ΩΛ
+)
+, (2)
+ρm(z) = 3H2
+0
+8πG Ωm(1 + z)3. (3)
+in the standard ΛCDM spatially ﬂat cosmological model. The
+reference overdensity, ∆ref, is usually chosen to be a number
+close to 18π2≈ 180, correspond to the virial overdensity un-
+der the spherical collapse model in the Einstein-deSitter uni-
+verse where Ωm = 1− ΩΛ = 1. In the more realistic ﬂat ΛCDM
+universe, the virial overdensity is not constant and varies with
+redshift (e.g., Bryan & Norman 1998).
+Conventionally ρc(z) has been adopted as the reference
+background density for the cluster mass deﬁnition: ρref =
+ρc(z), with ∆ref = ∆c = 500 or 200. This is a convenient choice
+because it depends only on the critical density and does not re-
+quire additional prior knowledge of Ωm. ∆c = 500 has been
+most widely used in analyzing Chandra and XMM-Newton
+clusters, since it corresponds to the radius where these ob-
+servatories can reliably measure gas density and temperature
+proﬁles of the intracluster medium (ICM). ∆c = 200 is also
+widely used since it is close to the virial overdensity in the
+spherical collapse model at z = 0.
+A recent work by Diemer & Kravtsov (2014) demonstrates
+that while dark matter density proﬁles with halos deﬁned
+with respect to the critical density ρc(z) exhibit more self-
+similar behavior in their inner regions, adopting the refer-
+ence density to be the mean matter densityρref =ρm(z) results
+in a more self-similar density proﬁle in the outskirts, where
+the clusters are more sensitive to the recent mass accretion.
+Since gas motions are driven by mass accretion and are more
+signiﬁcant in the outer regions of clusters, the non-thermal
+pressure fraction proﬁle is expected to be more self-similar
+when scaled with r∆m. In this paper, we compare the non-
+thermal pressure fraction proﬁle as well as the gas velocity
+anisotropy proﬁle using two different mass deﬁnitions based
+on ∆c = 200 and ∆m = 200. For reference, r500c≈ 0.37 r200m
+and r200c≈ 0.58 r200m for our sample at z = 0.
+2.2. Mass Accretion Rate
+We use the mass accretion rate of galaxy clusters to identify
+their dynamical state at z = 0. Following Diemer & Kravtsov
+(2014) we use the quantity Γ as a proxy of mass accretion
+rate, such that
+Γ200m≡ ∆log(M200m(a))/∆log(a), (4)
+where M200m(a) is the mass of the cluster or its most massive
+progenitor measured at expansion factor a. Γ is computed
+from the difference of each respective quantity between z = 0
+and z = 0.5. The most massive progenitor of each cluster is
+tracked and identiﬁed using merger trees as described in Nel-
+son et al. (2012). A higher Γ means the halo experiences a
+greater physical mass accretion between z = 0 and z = 0.5. We
+note that this deﬁnition of mass accretion naturally accounts
+for physical mass accretion and isolates effects of pseudo evo-
+lution in cluster mass (due to evolution of the background ref-
+erence density ρref(z), see Diemer et al. 2013), since we are
+comparing the increase in halo mass between two ﬁxed red-
+shifts.
+Also note that the choice of the redshift z = 0.5 is arbitrary,
+and in fact Γ is not the only (or necessarily the best) way of
+characterizing the mass accretion rate. We will explore al-
+ternative methods for quantifying the mass accretion rate in
+future work. For now, we adopt this deﬁnition to aid compar-
+ison between our results and the N-body results of Diemer &
+Kravtsov (2014).
+3. SIMULATIONS
+3.1. Hydrodynamical Simulations of Galaxy Clusters
+We analyze simulated massive galaxy clusters presented
+previously in Nelson et al. (2014). We refer the reader to that
+paper for more details. We brieﬂy summarize the relevant pa-
+rameters below.
+In this work we analyze a high-resolution cosmological
+simulation of 65 galaxy clusters in a ﬂat ΛCDM model with
+WMAP ﬁve-year ( WMAP5) cosmological parameters: Ωm =
+1 − ΩΛ = 0.27, Ωb = 0.0469, h = 0.7 andσ8 = 0.82, where the
+
+--- Page 3 ---
+Non-thermal Pressure Proﬁles of Galaxy Clusters 3
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200c
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+z=0.0
+z=0.5
+z=1.0
+z=1.5
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+our fit (eq 5)
+FIG. 1.— Redshift dependence of the proﬁle of non-thermal pressure fraction Prand/Ptotal, with radius scaled with respect to r200c (left) and r200m (right). The
+shaded regions denote the 1-σ scatter around mean at z = 0. Our ﬁtting formula is over plotted in the dashed line.
+Hubble constant is deﬁned as 100h km s−1 Mpc−1 andσ8 is the
+mass variance within spheres of radius 8h−1 Mpc. The simula-
+tion is performed using the Adaptive Reﬁnement Tree (ART)
+N-body+gas-dynamics code (Kravtsov 1999; Kravtsov et al.
+2002; Rudd et al. 2008), which is an Eulerian code that uses
+adaptive reﬁnement in space and time and non-adaptive re-
+ﬁnement in mass (Klypin et al. 2001) to achieve the dynamic
+ranges necessary to resolve the cores of halos formed in self-
+consistent cosmological simulations. The simulation volume
+has a comoving box length of 500 h−1 Mpc, resolved using a
+uniform 5123 grid and 8 levels of mesh reﬁnement, implying
+a maximum comoving spatial resolution of 3.8h−1 kpc.
+Galaxy clusters are identiﬁed in the simulation using a vari-
+ant of the method described in Tinker et al. (2008) (see Nelson
+et al. (2014) for a more detailed description of this method).
+We selected clusters with M500c≥ 3× 1014h−1M⊙ and re-
+simulated the regions, deﬁned as 5× rvir, surrounding the se-
+lected clusters with higher resolution. The resulting simula-
+tion has effective mass resolution of 2048 3 surrounding the
+selected clusters, allowing a corresponding dark matter par-
+ticle mass of 1.09× 109 h−1M⊙. The current simulation only
+models gravitational physics and non-radiative hydrodynam-
+ics. As shown in Lau et al. (2009), the exclusion of cool-
+ing and star formation have negligible effect (less than a few
+percent) on the total contribution of gas motions to the non-
+thermal pressure support for r≥ 0.2r500c, the radial range we
+focus on in this work. We show that our results are insensitive
+to dissipative physics in Appendix B.
+To study the evolution of the non-thermal pressure frac-
+tion, we extract halos from four redshift outputs: z =
+0.0,0.5,1.0,1.5. At each redshift we apply an additional
+mass-cut to ensure mass-limited samples at all epochs. The
+mass-cuts and resulting sample sizes are as follows: 65
+clusters with M200m≥ 6× 1014h−1M⊙ at z = 0, 48 clusters
+with M200m≥ 2.5× 1014h−1M⊙ at z = 0.5, 42 clusters with
+M200m≥ 1.3× 1014h−1M⊙ at z = 1.0, and 42 clusters with
+M200m≥ 7× 1013h−1M⊙ at z = 1.5.
+3.2. Computing the Non-thermal Pressure Fraction
+The non-thermal pressure fraction is deﬁned as
+Prand
+Ptotal
+= Prand
+Prand + Ptherm
+= σ2
+gas
+σ2gas + (3kT/µmp) (5)
+where k is the Boltzmann constant, mp is the proton mass,µ =
+0.59 is the mean molecular weight for the fully ionized ICM,
+σgas and T are the mass-weighted 3D velocity dispersion and
+mass-weighted temperature of the gas averaged over spherical
+radial shells, respectively.
+To compute spherically averaged proﬁles of the mass-
+weighted 3D velocity dispersion and mass-weighted temper-
+ature we divide the analysis region for each cluster into 99
+spherical logarithmic bins from 10h−1kpc to 10h−1Mpc in the
+radial direction from the cluster center, which is deﬁned as
+the position with the maximum binding energy. Our results
+are insensitive to the exact choice of binning. We follow the
+procedure presented in Zhuravleva et al. (2013), and we refer
+the reader to it for the details of the procedure and its impact
+on the non-thermal pressure measurements. Brieﬂy, for each
+radial bin we exclude contribution from gas that lies in the
+high-density tail in the gas distribution, which remove small-
+scale ﬂuctuations in the non-thermal pressure due to gas sub-
+structures while preserving the proﬁles of the global ICM. In
+addition, we smooth the proﬁles by applying the Savitzky-
+Golay ﬁlter used in Lau et al. (2009).
+In computing the gas velocity dispersion, we ﬁrst choose
+the rest frame of the system to be the center-of-mass velocity
+of the total mass interior to each radial bin. We rotate the co-
+ordinate system for each radial bin such that the z-axis aligns
+with the axis of the total gas angular momentum of that bin.
+We then compute mean ⟨vi⟩ and mean-square gas velocities
+⟨v2
+i⟩ weighted by the mass of each gas cell. The velocity dis-
+persion is computed as σi =
+√
+⟨v2
+i⟩ −⟨vi⟩2 for both the radial
+
+--- Page 4 ---
+4 Nelson, Lau, & Nagai
+and tangential velocity componentsσr andσt. The 3D veloc-
+ity dispersion is simplyσgas =
+√
+(σ2r +σ2t )/3.
+4. RESULTS
+4.1. Universality with Redshift
+In Figure 1 we present the non-thermal pressure fraction
+proﬁle, Prand/Ptotal(r), averaged for our cluster sample at four
+redshifts z = 0.0,0.5,1.0,1.5. In the two panels we show the
+evolution of the proﬁles normalized using two different halo
+radii r200c and r200m on the left and right, respectively. The
+shaded regions depict the 1- σ scatter around the mean for
+z = 0. The scatter is comparable at all redshifts and has been
+omitted for clarity. For r200c, there is a strong redshift evo-
+lution of both the shape and normalization of Prand/Ptotal. At
+low redshift, the non-thermal pressure fraction is ≈ 10% in
+the inner regions of the clusters, increasing up to > 40% out-
+side of r> r200c. At higher redshift, the non-thermal pressure
+systematically constitutes a larger fraction of the total pres-
+sure support in the systems. Moreover, the proﬁle increases
+with radius more rapidly, reaching up to ≈ 45% of the total
+pressure at r200c at z = 1.5, twice the fraction at z = 0.
+In the right panel, we again show the redshift evolution of
+Prand/Ptotal, however, this time normalizing the proﬁles using
+the halo radius r200m. When the halo radius is deﬁned with the
+mean background density of the universe, the radial depen-
+dence of Prand/Ptotal remains, with≈ 10% non-thermal pres-
+sure support in the core rising steadily to r = r200m where the
+pressure fraction ﬂattens out to ≈ 50% pressure support in
+the cluster outskirts. However, the very strong redshift depen-
+dence seen usingr200c as the halo radius has completely disap-
+peared. The universality we ﬁnd in our non-thermal pressure
+fraction is in agreement with the very weak redshift depen-
+dence Battaglia et al. (2012) show in their non-thermal pres-
+sure fraction proﬁle, also scaled with r200m.
+The simple reason behind this universality withr200m is that
+the non-thermal pressure fraction is sensitive to the mass ac-
+cretion rate of the clusters. The rate at which mass is accret-
+ing depends on the physical density contrast between the halo
+and the mean background density, precisely the quantity used
+in the deﬁnition of r200m. We will provide a more detailed ex-
+planation of this redshift universality in our follow-up paper.
+4.2. Dependence on Mass and Mass Accretion Rate
+In order to characterize the scatter in the non-thermal pres-
+sure fraction proﬁle, we examine the mass and dynamical
+state dependence of the proﬁle. In Figure 2, we divide the
+sample into three equal sized mass bins at z = 0, shown in
+red, green and blue from lowest mass to highest mass sub-
+samples, respectively. We ﬁnd no systematic dependence on
+mass in the proﬁle. However, it is worth noting that our sam-
+ple only encompasses the massive end of the cluster popula-
+tion with M200m≥ 6× 1014h−1M⊙ or M200c≥ 4× 1014h−1M⊙
+correspondingly.
+In the left panel of Figure 3, we investigate the dynamical
+state dependence of the non-thermal pressure fraction atz = 0.
+The mean proﬁles are shown for three equal sized Γ bins,
+shown in red, green, and blue lines from the most slowly to
+most rapidly accreting systems, respectively. The high Γ sub-
+sample has systematically higher non-thermal pressure frac-
+tion at all radii by 5% − 15% than the most slowly accreting
+subsample. This is consistent with previous works which also
+ﬁnd signiﬁcantly larger fractions of non-thermal pressure in
+merging or unrelaxed systems (Vazza et al. 2011; Nelson et al.
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+z =0
+8.51 ×1014 <M200m[M ⊙ h−1 ] <2.34 ×1015
+7.13 ×1014 <M200m[M ⊙ h−1 ] <8.51 ×1014
+6.11 ×1014 <M200m[M ⊙ h−1 ] <7.13 ×1014
+FIG. 2.— Mass dependence of Prand/Ptotal proﬁle at z = 0. The sample has
+been divided into three equal sized mass bins as denoted in the legend, shown
+in blue, green and red lines from most massive to least massive subsamples.
+The shaded regions denote the 1-σ scatter around the mean in the most mas-
+sive bin.
+2012). Given the small mass dependence seen in Figure 2, the
+small amount of scatter in the Prand/Ptotal proﬁle in Figure 1 is
+likely dominated by the range of dynamical states of the clus-
+ters in the sample. Note, however, that the main differences
+are in the amplitude of the non-thermal pressure fraction, and
+we see very little change in the slope of the proﬁle.
+4.3. Velocity Anisotropy
+In our deﬁnition of Prand in Equation (5), we assume the gas
+velocities in the galaxy clusters are isotropic. In this section
+we explore the relative importance of the radial and tangential
+components in the non-thermal pressure fraction by examin-
+ing the velocity anisotropy parameterβ,
+β(r) = 1− σ2
+t (r)
+2σ2r (r), (6)
+where a positive (negative) value of β indicates more radial
+(tangential) motion. In Figure 4, we examine the redshift evo-
+lution of the anisotropy with the cluster radius scaled with
+respect to r200c (left panel) and r200m (right panel). Similar to
+the Prand/Ptotal proﬁle, the proﬁle scaled with respect to criti-
+cal density shows signiﬁcant redshift dependence. The proﬁle
+scaled with respect to mean matter density, on the other hand,
+shows universality across the radial range of 0.3 ≲ r/r200m ≲
+1.5. The gas velocities are slightly radial in the inner regions
+(e.g.,β≈ 0.1 at r = 0.2r200m) and becomes increasingly radial,
+reachingβ≈ 0.6 around r = r200m.
+In the cluster outskirts, the anisotropy decreases as the gas
+motions become more isotropic again. The apparent drop in
+β is partly due to our deﬁnition of the velocity anisotropy in
+Equation (6), in which we neglected the contributions from
+coherent motions in both radial and tangential directions. At
+large radii, there is a coherent radial motion toward the cluster
+center (e.g., see Figure 1 in Lau et al. 2009), causing σr (rep-
+
+--- Page 5 ---
+Non-thermal Pressure Proﬁles of Galaxy Clusters 5
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+z =0
+0.56 < Γ < 1.69
+1.69 < Γ < 2.68
+2.68 < Γ < 4.24
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+renormalized using ¯Γ
+FIG. 3.— Dynamical state dependence of the Prand/Ptotal proﬁles at z = 0. The sample has been divided into three equal sized mass accretion rate bins as denoted
+in the legend, shown in red, green and blue from most slowly to most rapidly accreting clusters. In the right panel the proﬁles have been renormalized by the ratio
+of Eq 7 to Eq 8 for the mean Γ value in each bin, respectively, in order to remove the dynamical state dependence. The shaded regions denote the 1- σ scatter in
+the most relaxed bin.
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200c
+0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+β
+z=0.0
+z=0.5
+z=1.0
+z=1.5
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+β
+our fit
+FIG. 4.— Redshift dependence of the proﬁle of velocity anisotropy, with radius scaled with respect to r200c (left) and r200m (right). The shaded regions denote
+the 1-σ scatter around the mean at z = 0.
+resenting the random radial motions) and henceβ to decrease
+with radius.
+4.4. Fitting Formulae
+In this section, we provide ﬁtting formulae for the univer-
+sal non-thermal pressure fraction and gas velocity anisotropy
+proﬁles discussed in the previous sections. By using r200m for
+the halo radius, our universal non-thermal pressure proﬁle is
+well-described by the following ﬁtting formula,
+Prand
+Ptotal
+(r) = 1− A
+{
+1 + exp
+[
+−
+(r/r200m
+B
+)γ]}
+(7)
+where the best ﬁt parameters are A = 0.452± 0.001, B =
+0.841± 0.008, andγ = 1.628± 0.019. This formula provides
+a good description of the mean proﬁle with the accuracy of
+about 10% in the radial range of 0 .1≤ r/r200m≤ 1.5 out to
+
+--- Page 6 ---
+6 Nelson, Lau, & Nagai
+z = 1.5. The best ﬁt line is plotted in the right panel of Fig-
+ure 1. In the Appendix, we also supply the adjusted ﬁtting
+formula for the scaling of radii with respect to critical. De-
+spite using r∆c, we are still able to provide an accurate ﬁt out
+to z = 1, since the formula is based on the universal r∆m pro-
+ﬁle.
+As shown in the left panel of Figure 3, the varied mass ac-
+cretion histories of the clusters in our sample is a major source
+of scatter in the non-thermal pressure fraction proﬁle. To ac-
+count for the mass accretion rate, we provide a correction fac-
+tor for the normalization of our ﬁtting formula at z = 0 using
+Γ as a parameter,
+Prand
+Ptotal
+(r;z = 0)
+= 1 − (0.509 − 0.026Γ200m)
+{
+1 + exp
+[
+−
+(r/r200m
+B
+)γ]}
+,
+(8)
+where we keep our best ﬁt parameters B = 0.841 and γ =
+1.628 obtained earlier by ﬁtting in the radial range of 0 .1≤
+r/r200m≤ 1.5. We use the best ﬁt A (Equation (7)) values for
+the proﬁles of each of the 65 clusters in our sample, withB and
+γ ﬁxed at our best ﬁt values, to determine the function ofΓ. In
+the right panel of Figure 3, we show the same three Γ bins as
+in the left panel but renormalized using Equation (8), ﬁt using
+the mean Γ value in each bin respectively. While there is some
+residual variation in the slope of the proﬁle for different mass
+accretion bins, including this normalization correction factor
+decreases the scatter at r200m from 0.067 to 0.053, leading to
+1-σ agreement between the adjusted proﬁles.
+Previous attempts to characterize the non-thermal pressure
+fraction have used the r200c (or r500c) as the cluster radius and
+therefore have included an additional factors to account for
+its strong redshift evolution (Shaw et al. 2010) and mass de-
+pendence (Battaglia et al. 2012). We have conﬁrmed that the
+r200c proﬁles for our data are well ﬁt by their ﬁtting formulae
+at z = 0.0 in Appendix A.
+Lastly, we provide a ﬁtting formula for the universal gas ve-
+locity anisotropy proﬁle shown in the right panel of Figure 4.
+We adopt the following ﬁtting formula,
+β(r) = (r/rt)−a
+(1 + (r/rt)b)c/b, (9)
+ﬁt between 0.2≤ r/r200m≤ 1.5, where the best ﬁt param-
+eters are rt = 1.083± 0.028, a = 2.643± 0.211, b = −5.637±
+0.183 and c = −4.090± 0.169. The proﬁle is well ﬁt with the
+accuracy of about 20% between 0 .3≤ r/r200m≤ 1.3 out to
+z = 1.5, with the exception of z = 0.5, which is only a robust
+ﬁt for r≤ r200m.
+5. SUMMARY AND DISCUSSION
+In this work we presented the redshift and mass inde-
+pendent non-thermal pressure fraction proﬁle using a mass-
+limited, cosmologically representative sample of 65 massive
+galaxy clusters from a high resolution hydrodynamical cos-
+mological simulation. This result is relevant in accounting for
+the systematic effects of non-thermal pressure on X-ray and
+microwave measurements of galaxy clusters and cosmologi-
+cal inferences based on these measurements.
+We found that the mean non-thermal pressure fraction pro-
+ﬁle exhibits remarkable universality in redshift and mass
+when we deﬁne the size of cluster halos using the mean matter
+density of the universe, instead of the critical density. How-
+ever, we also showed that there is strong dependence in the
+non-thermal pressure fraction proﬁle on the halo’s mass ac-
+cretion rate: clusters that are rapidly accreting have an overall
+higher non-thermal pressure fraction. As such, the mass ac-
+cretion rate is a major source of systematic scatter in the mean
+non-thermal pressure fraction proﬁle.
+A robust and quantitative proxy for measuring mass accre-
+tion rate is therefore needed to account for this effect, es-
+pecially with the upcoming multi-wavelength cluster surveys
+where statistical errors will be considerably smaller than sys-
+tematic uncertainties arising from our ignorance of cluster as-
+trophysics. We note that the current method of characterizing
+the mass accretion rate using the fractional mass increase be-
+tween z = 0 and z = 0.5 is by no means unique, and can only
+be applied to z = 0 clusters. Future work should focus on de-
+veloping quantitative measures of the mass accretion rate of
+halos that can be applied to halos across a wide range of red-
+shifts, and relate these measures to observable proxies of the
+dynamical states of clusters.
+We found no systematic mass dependence in the univer-
+sal non-thermal pressure fraction proﬁle. But given that our
+sample contains only massive clusters, the independence in
+mass should be checked with sample of lower mass halos.
+Since slowly accreting halos have smaller non-thermal pres-
+sure fraction, we expect that lower mass groups and galaxies,
+which should experience less physical mass accretion than
+high mass clusters, to have lower non-thermal pressure frac-
+tion proﬁle. However, we note that smaller mass halos are
+more susceptible to non-gravitational physics (such as gas
+cooling and energy injections from stars and active galactic
+nuclei) which can inﬂuence the net accretion rate into and
+within the halos in a non-trivial way.
+We found that the gas velocity is predominantly radial, with
+the velocity anisotropy parameter increasing from ≈ 0.1 to
+≈ 0.6 from 0.2r200m to r200m. Moreover, we found that the
+velocity anisotropy proﬁle is also universal across redshift
+when halos are deﬁned using the mean matter density, indi-
+cating that gas velocity anisotropy is also a self-similar quan-
+tity. This result can be useful since the velocity anisotropy
+cannot be easily measured in observations, as we can only
+measure line-of-sight velocities from Doppler width measure-
+ments, e.g., with the upcoming ASTRO-H in the near future.
+Measurements of gas motions tangential to the line-of-sight
+are possible with resonant scattering but difﬁcult (e.g., Zhu-
+ravleva et al. 2011).
+We provided ﬁtting formulae for the universal non-thermal
+pressure fraction and gas velocity anisotropy proﬁles that
+work remarkably well within r200m and out to redshift z = 1.5.
+One application of our ﬁtting formulas is the recovery of to-
+tal mass of relaxed clusters by accounting for the hydrostatic
+mass bias. The effect of velocity anisotropy should be in-
+cluded in the mass recovery, since the formalism for the full
+mass recovery depends on the relative contribution of the ra-
+dial and tangential components of the non-thermal pressure
+(Rasia et al. 2004; Lau et al. 2009). We note that while non-
+thermal pressure motions due to random gas motions are not
+the only contribution to the hydrostatic mass bias, the other
+mass terms due to coherent gas rotation and radial gas acceler-
+ation contribute typically only a few percent to the total mass
+bias, and as such are subdominant to the non-thermal pres-
+sure due to gas motions (Suto et al. 2013; Lau et al. 2013).
+Another application of the ﬁtting formula is the assessment
+of systematic uncertainties in the thermal SZ power spectrum
+
+--- Page 7 ---
+Non-thermal Pressure Proﬁles of Galaxy Clusters 7
+due to non-thermal pressure. The universal, redshift indepen-
+dent proﬁle provided here should make the implementation of
+non-thermal pressure support in the modeling of the thermal
+SZ power spectrum robust and straightforward.
+While our current simulation does not include radiative
+cooling, star formation or energy feedback from stars and/or
+active galactic nuclei, we have examined the effect of these
+additional physics on the non-thermal pressure fraction and
+gas velocity anisotropy in group and cluster size halos taken
+from Nagai et al. (2007a) and found no systematic depen-
+dence on gas physics in the radial range of 0 .1 ≲ r/r200m ≲
+1.5. We note, however, that our simulation does not model
+plasma effects which can amplify gas turbulence and pro-
+vide extra non-thermal pressure support (e.g., Parrish et al.
+2012). Physical viscosity, on the other hand, can decrease the
+level of gas turbulence which lowers the non-thermal pres-
+sure support. The results presented in this paper based on hy-
+drodynamical simulations serve as baseline for further studies
+of these effects. Magnetic ﬁelds and cosmic rays can also
+provide additional non-thermal pressure (e.g., Laganá et al.
+2010). However, their contributions are expected to be small.
+The typical magnetic ﬁeld strength of ≲ 10µG in the ICM
+corresponds to magnetic pressure fraction of ≲ 1%. Simi-
+larly, the ratio of the cosmic ray pressure to total pressure is
+constrained to ≲ 1%, set by the γ-ray observations of Fermi-
+LAT (Fermi-LAT Collaboration 2013). It is important to note,
+however, that the constraints on the contribution from cosmic
+rays assume that the cosmic ray distribution follows that of the
+thermal ICM and, therefore, a ﬂattened distribution of cosmic
+rays could result in an increased contribution to the ICM en-
+ergy (e.g., Zandanel & Ando 2014)
+The upcoming ASTRO-H mission will measure gas mo-
+tions in galaxy clusters and should provide observational con-
+straints on the level of the non-thermal pressure fraction in
+these systems. However, the observational constraints will be
+limited to inner regions ( ≲ r2500c≈ 0.2r200m) of nearby mas-
+sive clusters, due to the lack of sensitivities in low-density
+regions in cluster outskirts. Extending these measurements
+to the outskirts or high-redshift clusters must await the next
+generation of X-ray missions, such as SMART-X3 and/or
+Athena+4. Alternatively, kinematic SZ effect can probe in-
+ternal gas motions of electrons in galaxy clusters (Inogamov
+& Sunyaev 2003; Nagai et al. 2003). Since the SZ signal
+is independent of redshift and linearly proportional to gas
+density (unlike X-ray emission which is proportional to gas
+density squared), measurements of the kSZ effect with high-
+resolution, multifrequency radio telescopes, such as CCAT 5,
+might enable characterization of the non-thermal pressure in
+the outer regions of high-redshift clusters.
+Previous works have used the deﬁnition of cluster mass nor-
+malized with respect to the critical density of the universe. In
+this work, we argue that an alternative deﬁnition based on the
+mean mass density of the universe is a preferred choice for the
+non-thermal pressure proﬁle as well as velocity anisotropy of
+gas in clusters. It would be interesting to check whether other
+gas properties exhibit similar universality when the cluster
+proﬁles are normalized with respect to the mean mass density.
+We will investigate these issues in our next paper and explore
+their implications for understanding the evolution cluster gas
+structure and their application to cosmology.
+We thank Nick Battaglia, Eiichiro Komatsu, and the anony-
+mous referee for comments on the manuscript. This work was
+supported in part by NSF grant AST-1009811, NASA ATP
+grant NNX11AE07G, NASA Chandra grants GO213004B
+and TM4-15007X, the Research Corporation, and by the fa-
+cilities and staff of the Yale University Faculty of Arts and
+Sciences High Performance Computing Center.
+REFERENCES
+Allen, S. W., Evrard, A. E., & Mantz, A. B. 2011, ARA&A, 49, 409
+Applegate, D. E., von der Linden, A., Kelly, P. L., et al. 2014, MNRAS, 439,
+48
+Battaglia, N., Bond, J. R., Pfrommer, C., & Sievers, J. L. 2012, ApJ, 758, 74
+Battaglia, N., Bond, J. R., Pfrommer, C., Sievers, J. L., & Sijacki, D. 2010,
+ApJ, 725, 91
+Bhattacharya, S., Habib, S., Heitmann, K., & Vikhlinin, A. 2013, ApJ, 766,
+32
+Bhattacharya, S., Nagai, D., Shaw, L., Crawford, T., & Holder, G. P. 2012,
+ApJ, 760, 5
+Bryan, G. L., & Norman, M. L. 1998, ApJ, 1, 80
+Diemer, B., & Kravtsov, A. V . 2014, ApJ, in press, arXiv:1401.1216
+Diemer, B., More, S., & Kravtsov, A. V . 2013, ApJ, 766, 25
+Fermi-LAT Collaboration. 2013, ApJ, in press, arXiv:1308.5654
+Evrard, A. E., Metzler, C. A., & Navarro, J. F. 1996, ApJ, 469, 494
+Hill, J. C., & Sherwin, B. D. 2013, Phys. Rev. D, 87, 023527
+Hu, W., & Kravtsov, A. V . 2003, ApJ, 584, 702
+Inogamov, N. A., & Sunyaev, R. A. 2003, Astron. Lett., 29, 791
+Klypin, A., Kravtsov, A. V ., Bullock, J. S., & Primack, J. R. 2001, ApJ, 554,
+903
+Komatsu, E., & Seljak, U. 2002, MNRAS, 336, 1256
+Kravtsov, A. V . 1999, PhD thesis, New Mexico State Univ.
+Kravtsov, A. V ., Klypin, A., & Hoffman, Y . 2002, ApJ, 571, 563
+Laganá, T. F., de Souza, R. S., & Keller, G. R. 2010, A&A, 510, A76
+Lau, E. T., Kravtsov, A. V ., & Nagai, D. 2009, ApJ, 705, 1129
+Lau, E. T., Nagai, D., & Nelson, K. 2013, ApJ, 777, 151
+Mahdavi, A., Hoekstra, H., Babul, A., et al. 2013, ApJ, 767, 116
+Nagai, D., Kravtsov, A. V ., & Kosowsky, A. 2003, ApJ, 587, 524
+Nagai, D., Kravtsov, A. V ., & Vikhlinin, A. 2007a, ApJ, 668, 1
+Nagai, D., Vikhlinin, A., & Kravtsov, A. V . 2007b, ApJ, 655, 98
+Nelson, K., Lau, E. T., Nagai, D., Rudd, D. H., & Yu, L. 2014, ApJ, 782, 107
+Nelson, K., Rudd, D. H., Shaw, L., & Nagai, D. 2012, ApJ, 751, 121
+Parrish, I. J., McCourt, M., Quataert, E., & Sharma, P. 2012, MNRAS, 419,
+L29
+Piffaretti, R., & Valdarnini, R. 2008, A&A, 491, 71
+Rasia, E., Tormen, G., & Moscardini, L. 2004, MNRAS, 351, 237
+Rasia, E., Ettori, S., Moscardini, L., et al. 2006, MNRAS, 369, 2013
+Rudd, D. H., Zentner, A. R., & Kravtsov, A. V . 2008, ApJ, 672, 19
+Shaw, L. D., Nagai, D., Bhattacharya, S., & Lau, E. T. 2010, ApJ, 725, 1452
+Shi, X., & Komatsu, E. 2014, MNRAS, submitted, arXiv:1401.7657
+Suto, D., Kawahara, H., Kitayama, T., et al. 2013, ApJ, 767, 79
+Takahashi, T., Mitsuda, K., Kelley, R., et al. 2010, in Society of
+Photo-Optical Instrumentation Engineers (SPIE) Conference Series, ed.
+M. Arnaud, S. S. Murray, & T. Takahashi, V ol. 7732, 77320Z,
+arXiv:1010.4972
+Tinker, J., Kravtsov, A. V ., Klypin, A., et al. 2008, ApJ, 688, 709
+Trac, H., Bode, P., & Ostriker, J. P. 2011, ApJ, 727, 94
+Vazza, F., Brunetti, G., Gheller, C., Brunino, R., & Brüggen, M. 2011, A&A,
+529, A17
+von der Linden, A., Mantz, A., Allen, S. W., et al. 2014, MNRAS,
+submitted, arXiv:1402.2670
+Zandanel, F., & Ando, S. 2014, MNRAS, 440, 663
+Zhang, Y .-Y ., Okabe, N., Finoguenov, A., et al. 2010, ApJ, 711, 1033
+Zhuravleva, I., Churazov, E., Kravtsov, A., et al. 2013, MNRAS, 428, 3274
+Zhuravleva, I. V ., Churazov, E. M., Sazonov, S. Y ., Sunyaev, R. A., & Dolag,
+K. 2011, Astron. Lett., 37, 141
+3 http://smart-x.cfa.harvard.edu/
+4 http://athena2.irap.omp.eu/
+5 http://www.ccatobservatory.org
+
+--- Page 8 ---
+8 Nelson, Lau, & Nagai
+0.5 1.0 1.5 2.0 2.5 3.0
+r/r500c
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+z=0.0
+z=0.5
+z=1.0
+z=1.5
+our fit
+0.5 1.0 1.5 2.0 2.5 3.0
+r/r500c
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6Prand/Ptot
+z=0.0, M200c =6.20 ×1014
+z=1.0, M200c =2.08 ×1014
+Shaw+ 10
+Battaglia+ 12
+FIG. 5.— Left: Prand/Ptotal proﬁles for scale radii with respect to critical density, r500c. The ﬁgure shows the redshift dependence across four redshifts,
+z = 0.0,0.5,1.0,1.5 in blue, green, red and cyan lines, respectively. The mean proﬁles for our sample are shown in the solid lines and the shaded regions denote
+the 1-σ scatter around the mean at z = 0. The scatter for the other redshifts is comparable and has been omitted for clarity. The dotted lines depict our converted
+ﬁtting formula. Right: Comparison of the Shaw et al. (2010) (dotted) and Battaglia et al. (2012) (dashed) ﬁtting formulas with our data at z = 0 and z = 1, blue
+and red lines respectively. The shaded regions denote the 1-σ scatter around mean at each redshift.
+APPENDIX
+A. FITTING THE NON-THERMAL PRESSURE FRACTION PROFILE WITH RESPECT TO CRITICAL DENSITY
+To date, it has been common to use the critical density to deﬁne the radius and mass of galaxy clusters. We therefore provide a
+conversion for our ﬁtting formula for the universal non-thermal pressure proﬁle deﬁned respect to the mean mass density of the
+universe, so that it can easily be used with alternative deﬁnitions of halos’ radius and mass based on the critical density. This
+conversion method is adapted from Appendix C in Hu & Kravtsov (2003). The converted ﬁtting formula is expressed as
+Prand
+Ptotal
+= 1 − A
+{
+1 + exp
+[
+−
+(ηr/r200m
+B
+)γ]}
+(A1)
+where A, B, andγ are the best ﬁt parameters given in Section 4.4. The conversion factorη is given by
+η = c200m
+(
+1√
+a0 f 2p + (3/4)2 + 2 f
+)
+(A2)
+where c200m≡ r200m/rs is the concentration parameter, and
+f = ln(1 + c200m) − c200m/(1 + c200m)
+c3
+200m
+( ∆c
+200
+E(z)2
+Ωm(1 + z)3
+)
+, (A3)
+p = a1 + a2 ln f + a3 (ln f )2. (A4)
+Here ∆c is the chosen overdensity with respect to the critical density of the universe,E(z)≡ H(z)/H(z = 0) =
+√
+Ωm(1 + z)3 + ΩΛ is
+the normalized Hubble parameter for a ﬂat cosmology, and a0 = 0.5116, a1 = −1.285/3, a2 = −3.13× 10−3 and a3 = −3.52× 10−5.
+In left panel of Figure 5, we show how our ﬁtting formula recovers the non-thermal pressure fraction measured from simulations
+at four different redshifts, z = 0.0,0.5,1.0,1.5. To convert between r200m and r500c we use the mean concentration at each redshift
+bin as calculated from concentration-mass relation in Bhattacharya et al. (2013). We ﬁnd excellent agreement between our ﬁt and
+our data in the redshift range of 0≤ z≤ 1. At z = 1.5 our conversion underestimates the true proﬁle out to 2r500c.
+Previous attempts to describe the non-thermal pressure proﬁle used the scale radiusr500c. In right panel of Figure 5 we compare
+our sample to the ﬁtting formula from Battaglia et al. (2012) (dashed line) and Shaw et al. (2010) (dotted line) at two redshifts,
+z = 0.0 and z = 1.0, shown in the blue and red lines, respectively. The Shaw et al. (2010) ﬁtting formula slightly underestimates
+our results at z = 0. At z = 1.0, the ﬁt has approximately the same slope as ours between r = 0.5r500c and r = 1.5r500c, but
+underestimates the pressure fraction slightly at r ≲ 2.2r500c and overestimates the fraction at the larger radii. The deviation in
+
+--- Page 9 ---
+Non-thermal Pressure Proﬁles of Galaxy Clusters 9
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+Prand/Ptot
+NR
+CSF
+0.2 0.4 0.6 0.8 1.0 1.2 1.4
+r/r200m
+−0.4
+−0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+β(r)
+NR
+CSF
+FIG. 6.— Left: Prand/Ptotal proﬁles for the 16 clusters taken from Nagai et al. (2007a). Right: The gas velocity anisotropy proﬁles β for the same set of clusters.
+The red lines correspond to clusters simulated with non-radiative (NR) physics, and blue lines correspond to the same clusters simulated with radiative cooling,
+star formation and supernova feedback (CSF). The shaded regions indicate 1-σ scatter around the mean.
+Shaw et al. (2010) is likely due to the fact that their cluster sample was small (only 16) and heterogeneous. The Battaglia et al.
+(2012) ﬁtting formula adopts the redshift dependence from Shaw et al. (2010) and adds an additional factor to account for the
+mass dependence which they calibrate using a larger sample of simulated clusters atz = 0. At z = 0, this additional factor results in
+a slight overestimate of the non-thermal pressure fraction out to r = 2r500c. At z = 1, their ﬁt shows the same redshift dependence
+as Shaw et al. (2010), but with a lower normalization due to the mass dependence factor, which was only calibrated at z = 0.
+B. EFFECTS OF DISSIPATIVE PHYSICS ON THE NON-THERMAL PRESSURE FRACTION AND GAS VELOCITY ANISOTROPY
+In this section we examine the effect of dissipative physics on the non-thermal pressure fraction and gas velocity anisotropy
+in group and cluster sized systems. We compare proﬁles for the set of 16 clusters from Nagai et al. (2007a), simulated with two
+different gas physics: non-radiative (NR) physics; and with radiative cooling, star formation, and supernova feedback (CSF). In
+Figure 6 we show the mean proﬁles of the non-thermal pressure fraction Prand/Ptotal and the gas velocity anisotropy β for the
+clusters at z = 0. There is no systematic dependence on gas physics in the radial range of 0 .1 ≲ r/r200m ≲ 1.5. The proﬁles
+between the two runs are consistent between each other within 1-σ. The addition of dissipative physics has little effect on both
+the non-thermal pressure fraction and the gas velocity anisotropy in this radial range.
