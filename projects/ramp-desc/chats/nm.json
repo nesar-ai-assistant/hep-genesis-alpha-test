@@ -116,6 +116,121 @@
           "calls": 3
         }
       }
+    },
+    {
+      "id": "c9355ce2bd04",
+      "role": "user",
+      "content": "Simulate shear+density maps (nside 64, f_sky 0.3), measure 3x2pt bandpowers with NaMaster in linear bins of width 20, show measured spectra against input theory.",
+      "ts": "2026-10-20T17:04:58",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "60bead2f0bae",
+      "role": "assistant",
+      "content": "I already ran this exact setup in the previous turn (run `261019_172546`). I'll run it again in the current run directory with the same settings (seed 0), so the result is reproduced and the files are saved here as well.\n\nI ran the simulation and the NaMaster measurement again in the current run directory. The bin-averaged measured spectra land within about 10% of the input theory: Figure 25 shows the simulated maps, and Figure 31 overlays the measured bandpowers on the theory averaged over each bin. With the same seed (0), the numbers match last turn's run (`261019_172546`) exactly, so the result reproduces.\n\n**Setup**\n- **Cosmology:** \u03a9_m = 0.30, \u03c38 = 0.81, h = 0.67, halofit for the nonlinear power spectrum.\n- **Source bin (src0, shear):** Gaussian n(z) with mean z 0.9 and width 0.25. Density 8 galaxies/arcmin\u00b2, shape noise \u03c3_e = 0.26.\n- **Lens bin (lens0, density):** Gaussian n(z) with mean z 0.5 and width 0.1. Bias 1.6, density 4 galaxies/arcmin\u00b2.\n- **Maps:** nside 64 with a sharp-edged (unapodized) polar-cap mask covering f_sky = 0.2995, plus white noise.\n- **Bins:** edges at \u2113 = 2, 22, 42, 62, 82, 102, 129, giving six bandpowers at \u2113_eff \u2248 11.5, 31.5, 51.5, 71.5, 91.5 and 115. The maximum \u2113 defaulted to 2\u00b7nside = 128, so the last bin is 27 wide rather than 20. Above that limit, bandpowers are biased by the pixel size.\n- **Noise:** the expected noise level was subtracted from the two auto-spectra.\n\n**Measured vs. input theory, averaged over the six bins** (C_\u2113 is dimensionless)\n\n| Spectrum | Measured | Theory | Ratio |\n|---|---|---|---|\n| Shear EE (src0 \u00d7 src0) | 1.45e-8 | 1.42e-8 | 1.02 |\n| Shear \u00d7 density (lens0 \u00d7 src0) | 2.76e-7 | 3.03e-7 | 0.91 |\n| Density (lens0 \u00d7 lens0) | 1.56e-5 | 1.69e-5 | 0.93 |\n\n**Caveats**\n- **No error bars yet:** at these low multipoles with f_sky 0.3, the random scatter in each bin should be roughly 5\u201315%. That's a rough estimate I didn't compute here. A 7\u20139% offset in the averages is therefore consistent with a single random sky, but it can't be quantified without a covariance.\n- **Mask leakage:** because the mask edge is sharp, some power leaks between neighbouring multipoles and from E-modes into B-modes. I didn't check whether the B-mode spectra (EB/BE/BB/TB) are consistent with zero. Smoothing the mask edge by a few degrees (`apodize_deg`) would reduce the leakage.\n- **B-modes in the file:** the sacc file has 7 data types, including the B-mode pieces. Those need to be dropped before it goes into a likelihood.\n\nThe natural next step for a quantitative test: compute a TJPCov covariance, drop the B-modes, then evaluate \u03c7\u00b2 with firecrown at the input cosmology.\n\nFiles are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/`:\n- `namaster_32676c.sacc`\n- `namaster_cls_32676c.npz`\n- `namaster_cls_32676c.json`\n- `namaster_src0_src0.csv`\n- `namaster_lens0_src0.csv`\n- `namaster_lens0_lens0.csv`\n- `sim_theory_cls.csv`\n- `sim_fields.json`\n- `sim_maps.png`\n- `namaster_cls_32676c.png`\n\n[Tool ledger \u2014 exact record of this turn]\n- namaster_simulate_maps ok \u2014 nside 64, f_sky 0.2995, lmax 191, seed 0, noise on; figure: Figure 25 (sim_maps.png); fields_json /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json; theory /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv\n- namaster_compute_cls ok (computed_on local, 0.1 s) \u2014 linear nlb 20, ell_min 2, lmax 128, 6 bins, ell_eff [11.5, 31.5, 51.5, 71.5, 91.5, 115]; means EE 1.4478e-8, TE 2.7553e-7, TT 1.5646e-5; theory_binned in namaster_cls_32676c.json; figure: Figure 31 (namaster_cls_32676c.png); sacc /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_32676c.sacc (7 data types, windows included)",
+      "ts": "2026-10-20T17:04:58",
+      "tool_calls": [
+        {
+          "id": "tooluse_FHebBoDevVIj6i9BmYOvBi",
+          "tool": "namaster_simulate_maps",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454",
+            "tracers": [
+              {
+                "name": "src0",
+                "kind": "shear",
+                "z_mean": 0.9,
+                "z_sigma": 0.25,
+                "n_gal_arcmin2": 8,
+                "sigma_e": 0.26
+              },
+              {
+                "name": "lens0",
+                "kind": "density",
+                "z_mean": 0.5,
+                "z_sigma": 0.1,
+                "bias": 1.6,
+                "n_gal_arcmin2": 4
+              }
+            ],
+            "nside": 64,
+            "f_sky": 0.3,
+            "seed": 0,
+            "add_noise": true
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_mask.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_nz_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_nz_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_src0_Q.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_src0_U.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_lens0.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_maps.png\"\n  ],\n  \"message\": \"Simulated 2 tracer maps at nside 64 (lmax 191, f_sky 0.299, with noise, cosmology Om=0.300, sigma8=0.81, h=0.67). Next: namaster_compute_cls(fields_json='sim_fields.json').\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 191,\n    \"f_sky\": 0.2994791666666667,\n    \"tracers\": [\n      \"src0\",\n      \"lens0\"\n    ],\n    \"fields_json\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json\",\n    \"theory_cls_csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv\",\n    \"mask\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_mask.fits\",\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"seed\": 0,\n    \"noise\": true\n  }\n}\n[1 figure(s) displayed to the user as Figure 25 (sim_maps.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_mask.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_nz_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_nz_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_src0_Q.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_src0_U.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_lens0.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_maps.png\"\n  ],\n  \"message\": \"Simulated 2 tracer maps at nside 64 (lmax 191, f_sky 0.299, with noise, cosmology Om=0.300, sigma8=0.81, h=0.67). Next: namaster_compute_cls(fields_json='sim_fields.json').\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 191,\n    \"f_sky\": 0.2994791666666667,\n    \"tracers\": [\n      \"src0\",\n      \"lens0\"\n    ],\n    \"fields_json\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json\",\n    \"theory_cls_csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv\",\n    \"mask\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_mask.fits\",\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"seed\": 0,\n    \"noise\": true\n  }\n}\n[1 figure(s) displayed to the user as Figure 25 (sim_maps.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "850c6a215297",
+            "a63eaa7acec9",
+            "3b0265b7bd05",
+            "a4d5af6a997f",
+            "78b037560d26",
+            "91baf6cdcc91",
+            "7aaa181f12b6",
+            "f761ff060cf0",
+            "03968213fb08"
+          ]
+        },
+        {
+          "id": "tooluse_4PWoKYLQ43r7sRaRm78wea",
+          "tool": "namaster_compute_cls",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454",
+            "fields_json": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json",
+            "binning": {
+              "scheme": "linear",
+              "nlb": 20,
+              "ell_min": 2
+            },
+            "theory_csv": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv",
+            "pairs": "all"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.npz\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_src0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_32676c.sacc\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.json\"\n  ],\n  \"message\": \"3 pair(s), 6 bandpowers (ell 2-129, nside 64) on local in 0.1 s; f_sky,eff {'src0': 0.2995, 'lens0': 0.2995}; sacc namaster_32676c.sacc with 7 data types.\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 128,\n    \"n_bins\": 6,\n    \"ell_eff\": [\n      11.499999999999996,\n      31.499999999999993,\n      51.499999999999986,\n      71.49999999999999,\n      91.49999999999997,\n      115.00000000000009\n    ],\n    \"ell_edges\": [\n      2,\n      22,\n      42,\n      62,\n      82,\n      102,\n      129\n    ],\n    \"fields\": {\n      \"src0\": {\n        \"spin\": 2,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 2.1412903477845348e-10,\n        \"apodize_deg\": 0.0\n      },\n      \"lens0\": {\n        \"spin\": 0,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 6.335178543741226e-9,\n        \"apodize_deg\": 0.0\n      }\n    },\n    \"pairs\": [\n      {\n        \"a\": \"src0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"EE\",\n          \"EB\",\n          \"BE\",\n          \"BB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_src0_src0.csv\",\n        \"first_component_mean\": 1.4477953657794844e-8,\n        \"theory_binned\": [\n          3.2341190967441876e-8,\n          2.0263362854274444e-8,\n          1.2494699366195306e-8,\n          8.67853230106963e-9,\n          6.451024882215997e-9,\n          4.794906763392039e-9\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"TE\",\n          \"TB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_src0.csv\",\n        \"first_component_mean\": 2.7552519638691557e-7,\n        \"theory_binned\": [\n          4.804172229397567e-7,\n          4.756552333010361e-7,\n          3.127529040601838e-7,\n          2.316624601859047e-7,\n          1.814995067363255e-7,\n          1.33310119177746e-7\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"lens0\",\n        \"components\": [\n          \"TT\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_lens0.csv\",\n        \"first_component_mean\": 0.00001564567452219015,\n        \"theory_binned\": [\n          0.000025335963082371408,\n          0.000026830634865885603,\n          0.000017718534124897755,\n          0.000013174927788663169,\n          0.000010579804182622263,\n          7.736536863472613e-6\n        ]\n      }\n    ],\n    \"sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_32676c.sacc\",\n    \"sacc_entries\": [\n      [\n        \"galaxy_shear_cl_ee\",\n        \"src0\",\n        \"src0\",\n        \"EE\"\n      ],\n      [\n        \"galaxy_shear_cl_eb\",\n        \"src0\",\n        \"src0\",\n        \"EB\"\n      ],\n      [\n        \"galaxy_shear_cl_be\",\n        \"src0\",\n        \"src0\",\n        \"BE\"\n      ],\n      [\n        \"galaxy_shear_cl_bb\",\n        \"src0\",\n  ",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.npz\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_src0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_32676c.sacc\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.json\"\n  ],\n  \"message\": \"3 pair(s), 6 bandpowers (ell 2-129, nside 64) on local in 0.1 s; f_sky,eff {'src0': 0.2995, 'lens0': 0.2995}; sacc namaster_32676c.sacc with 7 data types.\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 128,\n    \"n_bins\": 6,\n    \"ell_eff\": [\n      11.499999999999996,\n      31.499999999999993,\n      51.499999999999986,\n      71.49999999999999,\n      91.49999999999997,\n      115.00000000000009\n    ],\n    \"ell_edges\": [\n      2,\n      22,\n      42,\n      62,\n      82,\n      102,\n      129\n    ],\n    \"fields\": {\n      \"src0\": {\n        \"spin\": 2,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 2.1412903477845348e-10,\n        \"apodize_deg\": 0.0\n      },\n      \"lens0\": {\n        \"spin\": 0,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 6.335178543741226e-9,\n        \"apodize_deg\": 0.0\n      }\n    },\n    \"pairs\": [\n      {\n        \"a\": \"src0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"EE\",\n          \"EB\",\n          \"BE\",\n          \"BB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_src0_src0.csv\",\n        \"first_component_mean\": 1.4477953657794844e-8,\n        \"theory_binned\": [\n          3.2341190967441876e-8,\n          2.0263362854274444e-8,\n          1.2494699366195306e-8,\n          8.67853230106963e-9,\n          6.451024882215997e-9,\n          4.794906763392039e-9\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"TE\",\n          \"TB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_src0.csv\",\n        \"first_component_mean\": 2.7552519638691557e-7,\n        \"theory_binned\": [\n          4.804172229397567e-7,\n          4.756552333010361e-7,\n          3.127529040601838e-7,\n          2.316624601859047e-7,\n          1.814995067363255e-7,\n          1.33310119177746e-7\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"lens0\",\n        \"components\": [\n          \"TT\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_lens0.csv\",\n        \"first_component_mean\": 0.00001564567452219015,\n        \"theory_binned\": [\n          0.000025335963082371408,\n          0.000026830634865885603,\n          0.000017718534124897755,\n          0.000013174927788663169,\n          0.000010579804182622263,\n          7.736536863472613e-6\n        ]\n      }\n    ],\n    \"sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_32676c.sacc\",\n    \"sacc_entries\": [\n      [\n        \"galaxy_shear_cl_ee\",\n        \"src0\",\n        \"src0\",\n        \"EE\"\n      ],\n      [\n        \"galaxy_shear_cl_eb\",\n        \"src0\",\n        \"src0\",\n        \"EB\"\n      ],\n      [\n        \"galaxy_shear_cl_be\",\n        \"src0\",\n        \"src0\",\n        \"BE\"\n      ],\n      [\n        \"galaxy_shear_cl_bb\",\n        \"src0\",\n        \"src0\",\n        \"BB\"\n      ],\n      [\n        \"galaxy_shearDensity_cl_e\",\n        \"src0\",\n        \"lens0\",\n        \"TE\"\n      ],\n      [\n        \"galaxy_shearDensity_cl_b\",\n        \"src0\",\n        \"lens0\",\n        \"TB\"\n      ],\n      [\n        \"galaxy_density_cl\",\n        \"lens0\",\n        \"lens0\",\n        \"TT\"\n      ]\n    ],\n    \"windows_in_sacc\": true,\n    \"computed_on\": \"local\",\n    \"elapsed_s\": 0.1,\n    \"n_workspaces\": 3\n  }\n}\n[1 figure(s) displayed to the user as Figure 31 (namaster_cls_32676c.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "c3716b63cd4d",
+            "25f0f92d05a0",
+            "ad4bfc2d2031",
+            "31b82bf37bb2",
+            "97ee6439d4c5",
+            "e0d24ea2c75b",
+            "09f92da64e2f"
+          ]
+        }
+      ],
+      "artifact_ids": [
+        "850c6a215297",
+        "a63eaa7acec9",
+        "3b0265b7bd05",
+        "a4d5af6a997f",
+        "78b037560d26",
+        "91baf6cdcc91",
+        "7aaa181f12b6",
+        "f761ff060cf0",
+        "03968213fb08",
+        "c3716b63cd4d",
+        "25f0f92d05a0",
+        "ad4bfc2d2031",
+        "31b82bf37bb2",
+        "97ee6439d4c5",
+        "e0d24ea2c75b",
+        "09f92da64e2f"
+      ],
+      "usage": {
+        "quick": {
+          "input": 182138,
+          "cached": 119375,
+          "output": 2801,
+          "reasoning": 0,
+          "calls": 3
+        }
+      }
     }
   ],
   "artifacts": [
@@ -277,6 +392,166 @@
       "tool": "namaster_compute_cls",
       "server": "serve-desc.sh",
       "figure": 16,
+      "caption": ""
+    },
+    {
+      "id": "850c6a215297",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_theory_cls.csv",
+      "name": "sim_theory_cls.csv",
+      "kind": "csv",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 17,
+      "caption": ""
+    },
+    {
+      "id": "a63eaa7acec9",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_mask.fits",
+      "name": "sim_mask.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 18,
+      "caption": ""
+    },
+    {
+      "id": "3b0265b7bd05",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_nz_src0.csv",
+      "name": "sim_nz_src0.csv",
+      "kind": "csv",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 19,
+      "caption": ""
+    },
+    {
+      "id": "a4d5af6a997f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_nz_lens0.csv",
+      "name": "sim_nz_lens0.csv",
+      "kind": "csv",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 20,
+      "caption": ""
+    },
+    {
+      "id": "78b037560d26",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_src0_Q.fits",
+      "name": "sim_src0_Q.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 21,
+      "caption": ""
+    },
+    {
+      "id": "91baf6cdcc91",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_src0_U.fits",
+      "name": "sim_src0_U.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 22,
+      "caption": ""
+    },
+    {
+      "id": "7aaa181f12b6",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_lens0.fits",
+      "name": "sim_lens0.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 23,
+      "caption": ""
+    },
+    {
+      "id": "f761ff060cf0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_fields.json",
+      "name": "sim_fields.json",
+      "kind": "text",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 24,
+      "caption": ""
+    },
+    {
+      "id": "03968213fb08",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/sim_maps.png",
+      "name": "sim_maps.png",
+      "kind": "image",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 25,
+      "caption": ""
+    },
+    {
+      "id": "c3716b63cd4d",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.npz",
+      "name": "namaster_cls_32676c.npz",
+      "kind": "other",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 26,
+      "caption": ""
+    },
+    {
+      "id": "25f0f92d05a0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_src0_src0.csv",
+      "name": "namaster_src0_src0.csv",
+      "kind": "csv",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 27,
+      "caption": ""
+    },
+    {
+      "id": "ad4bfc2d2031",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_src0.csv",
+      "name": "namaster_lens0_src0.csv",
+      "kind": "csv",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 28,
+      "caption": ""
+    },
+    {
+      "id": "31b82bf37bb2",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_lens0_lens0.csv",
+      "name": "namaster_lens0_lens0.csv",
+      "kind": "csv",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 29,
+      "caption": ""
+    },
+    {
+      "id": "97ee6439d4c5",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_32676c.sacc",
+      "name": "namaster_32676c.sacc",
+      "kind": "other",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 30,
+      "caption": ""
+    },
+    {
+      "id": "e0d24ea2c75b",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.png",
+      "name": "namaster_cls_32676c.png",
+      "kind": "image",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 31,
+      "caption": ""
+    },
+    {
+      "id": "09f92da64e2f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170454/namaster_cls_32676c.json",
+      "name": "namaster_cls_32676c.json",
+      "kind": "text",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 32,
       "caption": ""
     }
   ],

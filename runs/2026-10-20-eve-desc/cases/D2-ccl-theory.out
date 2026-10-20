@@ -1,0 +1,19 @@
+I still can't give you either number from CCL. I checked again: `describe_desc_tool_family('ccl')` returns the same error as last time, "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'", and it exposes no tools. None of the tools this server offers computes comoving distance or P(k) directly.
+
+- **chi(z=1), vanilla cosmology:** not computed. A hand calculation (not CCL) gives about 3450 Mpc. That uses flat LCDM with Omega_m = 0.30 and h = 0.67: (c/H0) × ∫₀¹ dz/E(z) ≈ 4474.5 Mpc × 0.771. Your ~3300 Mpc expectation is the value for h ≈ 0.70. With h = 0.67 the answer should come out about 4% higher.
+- **Nonlinear halofit P(k = 1 h/Mpc, z = 0.5):** not computed. I won't quote a value without a tool producing it.
+
+**To get both numbers:**
+1. Restore the `tools/ccl` module in the environment that `serve-desc.sh` starts, then restart the server. I can then run both calculations in one step.
+2. If you'd rather not wait, I can try a workaround through the firecrown or augur tools, which use pyccl internally. They don't output chi(z) or P(k) directly, so they can't give these two numbers as asked. Tell me if you want me to try anyway.
+Loading MCP servers…
+[10/20/26 17:01:39] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/20/26 17:01:45] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+Tokens: 115K in (57K cached) · 793 out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/ccl.json

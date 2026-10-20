@@ -1,0 +1,174 @@
+Both covariances are positive definite. The chi2 at the input cosmology is **45.55 for 36 points (chi2/n = 1.27)** with TJPCov and 44.54 (chi2/n = 1.24) with plain Knox, so the result barely depends on which one you use.
+
+One caveat first: there was still no earlier NaMaster sacc on disk (`namaster.sacc` was not found in this run directory), so I made a new measurement and ran everything on that. I used the test setup proposed last turn:
+- **Maps:** nside 128 with a binary polar-cap mask, vanilla LCDM (Ω_m = 0.30, σ8 = 0.81, h = 0.67), seed 0, noise included.
+- **src0 (shear):** z = 0.9, n_gal = 8 arcmin⁻², σ_e = 0.26.
+- **lens0 (density):** z = 0.5, bias 1.6, n_gal = 4 arcmin⁻².
+- **Bandpowers:** 12 linear bins from ℓ = 20 to 257, measured with NaMaster with bandpower windows (Figure 15). I dropped the B-modes, leaving 36 points: shear-shear, shear-density and density-density.
+
+If you meant a different file, give me the path and I'll rerun the same steps on it.
+
+## Inputs to the covariance
+- **f_sky from the mask:** f_sky,eff = 0.2487 (about 10,260 deg²). Because the mask is binary, the raw and effective values are the same (Figure 18).
+- **n_gal:** src0 8, lens0 4 arcmin⁻²; σ_e = 0.26.
+- **Galaxy bias:** lens0 1.6, the value used in the simulation.
+
+## TJPCov compared with Knox
+
+| | Knox | TJPCov |
+|---|---|---|
+| Total S/N | 108.5 | 109.7 |
+| Condition number | 1.94e9 | 1.87e9 |
+| Minimum eigenvalue | 2.67e-21 | 2.62e-21 |
+| Positive definite | yes | yes |
+| Largest off-diagonal correlation | 0.778 | 0.778 |
+
+- TJPCov's error bars are about 1.1% smaller than Knox's. The median ratio σ_TJPCov / σ_Knox is 0.989 for each spectrum type, and the full range is 0.972–0.993.
+- The correlation structure is essentially the same: the largest difference between the two correlation matrices is 0.007 (Figure 27).
+- The 1% offset most likely comes from how the two handle the bin widths (Knox derived widths of 16.7–19.9 from the windows). I haven't checked this.
+- Neither covariance accounts for mode coupling from the mask. Both scale by f_sky only, and the mask is not apodized. A FourierGaussianNmt covariance would be the more exact comparison for these bandpowers.
+
+## chi2 at the input cosmology
+Computed with vanilla LCDM and lens0 bias = 1.6, the true values. I switched off all other systematics, since the simulation has none.
+
+| Spectrum | chi2 alone, TJPCov | chi2 alone, Knox |
+|---|---|---|
+| Shear-shear (src0-src0) | 12.5 / 12 | 12.2 / 12 |
+| Shear-density (src0-lens0) | 10.6 / 12 | 10.4 / 12 |
+| Density-density (lens0-lens0) | 6.9 / 12 | 6.8 / 12 |
+| **Total** | **45.55 / 36** | **44.54 / 36** |
+
+Under TJPCov the RMS pull is 0.91 and the largest single pull is 2.6σ (Figure 33). Each spectrum on its own is consistent with its number of points. The total sits about 1.1σ above 36, which by my estimate is a probability of about 13%. That points to correlations between the spectra or a normal noise fluctuation in this one realization, not a bias in the covariance. Averaging chi2 over several seeds would show which.
+
+The main files are in `runs/261020_170533/`:
+- TJPCov config: `tjpcov_config_088b8b.yaml`
+- Sacc with the TJPCov covariance: `namaster_e3a064_firecrown_tjpcov_d29c1e.hdf5`
+- Sacc with the Knox covariance: `namaster_e3a064_firecrown_gausscov.hdf5`
+- Covariance comparison (σ ratio per point): `namaster_e3a064_firecrown_gausscov_vs_namaster_e3a064_firecrown_tjpcov_d29c1e_sigma_ratio.csv`
+- Likelihood configs: `nmt_tjpcov_ea28f5.yaml` and `nmt_knox_ac4842.yaml`
+
+[Tool ledger — exact record of this turn]
+- sacc_inspect: error, namaster.sacc not found in runs/261020_170533
+- namaster_simulate_maps: ok, sim_fields.json, sim_mask.fits, sim_theory_cls.csv; f_sky 0.2487; Figure 9
+- namaster_compute_cls: ok, namaster_e3a064.sacc, 12 bandpowers ell 20-257, windows present; Figure 15
+- namaster_mask_properties: ok, f_sky,eff 0.2487, 10259.5 deg^2; Figure 18
+- sacc_prepare_for_firecrown: ok, namaster_e3a064_firecrown.hdf5, 36 points, B-modes dropped
+- tjpcov_generate_config: ok, tjpcov_config_088b8b.yaml
+- sacc_attach_gaussian_covariance (Knox): ok, namaster_e3a064_firecrown_gausscov.hdf5, S/N 108.5, PD, cond 1.94e9
+- tjpcov_compute_covariance: ok, namaster_e3a064_firecrown_tjpcov_d29c1e.hdf5, S/N 109.7, PD, cond 1.87e9, min eig 2.62e-21; Figure 25
+- tjpcov_compare_covariances: ok, median sigma ratio 0.989 (all types), range 0.972-0.993, max corr diff 0.0067; Figure 27
+- firecrown_build_likelihood x2: ok, nmt_tjpcov_ea28f5.yaml, nmt_knox_ac4842.yaml, n_data 36
+- firecrown_compute_loglike TJPCov: chi2 45.547, chi2/n 1.265, max pull 2.61; Figure 33
+- firecrown_compute_loglike Knox: chi2 44.538, chi2/n 1.237
+Loading MCP servers…
+[10/20/26 17:05:35] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] sacc_inspect {"sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster.sacc", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_17053
+[10/20/26 17:05:43] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_inspect -> ok: Error executing tool sacc_inspect: sacc file not found: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster.sacc
+[tool] namaster_simulate_maps {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "tracers": [{"name": "src0", "kind": "shear", "z_mean": 0.9, "z_sigma": 0.25, "n_gal_arcmin2": 8, "sigma
+[10/20/26 17:05:52] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/20/26 17:05:54] INFO     Sigma is 0.000000 arcmin (0.000000 sphtfunc.py:1743
+                             rad)                                               
+                    INFO     -> fwhm is 0.000000 arcmin         sphtfunc.py:1744
+                    INFO     0.0 180.0 -180.0 180.0              projaxes.py:558
+                    INFO     The interval between parallels is   projaxes.py:668
+                             30 deg -0.00'.                                     
+                    INFO     The interval between meridians is   projaxes.py:671
+                             60 deg -0.00'.                                     
+                    INFO     Warning: UserWarning: Ignoring        server.py:723
+                             specified arguments in this call                   
+                             because figure with num: 1 already                 
+                             exists                                             
+[tool] namaster_simulate_maps -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/sim_theory_cls.csv",     "/Users/nramac
+[tool] namaster_compute_cls {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "fields_json": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/sim_fields
+[10/20/26 17:06:00] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+                    INFO     NSIDE = 128                         fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 128                         fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 128                         fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 128                         fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     NSIDE = 128                         fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+[tool] namaster_compute_cls -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster_cls_e3a064.npz",     "/Users/n
+[tool] namaster_mask_properties {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "mask_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/sim_mask.fit
+[10/20/26 17:06:01] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+                    INFO     NSIDE = 128                         fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+                    INFO     0.0 180.0 -180.0 180.0              projaxes.py:558
+                    INFO     The interval between parallels is   projaxes.py:668
+                             30 deg -0.00'.                                     
+                    INFO     The interval between meridians is   projaxes.py:671
+                             60 deg -0.00'.                                     
+[10/20/26 17:06:02] INFO     Warning: UserWarning: Ignoring        server.py:723
+                             specified arguments in this call                   
+                             because figure with num: 1 already                 
+                             exists                                             
+[tool] namaster_mask_properties -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/sim_mask_mask_stats.json",     "/Users/
+[tool] sacc_prepare_for_firecrown {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster_e3a
+[10/20/26 17:06:06] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_prepare_for_firecrown -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster_e3a064_firecrown.hdf5"   ],   
+[tool] tjpcov_generate_config {"cov_types": ["FourierGaussianFsky"], "f_sky": 0.24869791666666666, "galaxy_bias": {"lens0": 1.6}, "n_gal": {"src0": 8, "lens0": 4}, "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ra
+[10/20/26 17:06:14] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tjpcov_generate_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/tjpcov_config_088b8b.yaml"   ],   "mess
+[tool] sacc_attach_gaussian_covariance {"f_sky": 0.24869791666666666, "galaxy_bias": {"lens0": 1.6}, "n_gal": {"src0": 8, "lens0": 4}, "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "sacc_pat
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_attach_gaussian_covariance -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster_e3a064_firecrown_gausscov.hdf5
+[tool] tjpcov_compute_covariance {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/tjpcov_config_088b8b.yaml", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/run
+[10/20/26 17:06:18] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+Computing independent covariance blocks
+Rank None: ('src0', 'src0'), ('src0', 'src0')
+Rank None: ('src0', 'src0'), ('src0', 'lens0')
+Rank None: ('src0', 'src0'), ('lens0', 'lens0')
+Rank None: ('src0', 'lens0'), ('src0', 'lens0')
+Rank None: ('src0', 'lens0'), ('lens0', 'lens0')
+Rank None: ('lens0', 'lens0'), ('lens0', 'lens0')
+Building the covariance: placing blocks in their place
+('src0', 'src0') ('src0', 'src0')
+('src0', 'src0') ('src0', 'lens0')
+('src0', 'src0') ('lens0', 'lens0')
+('src0', 'lens0') ('src0', 'lens0')
+('src0', 'lens0') ('lens0', 'lens0')
+('lens0', 'lens0') ('lens0', 'lens0')
+[tool] tjpcov_compute_covariance -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster_e3a064_firecrown_tjpcov_d29c1e
+[tool] tjpcov_compare_covariances {"label_a": "Knox", "label_b": "TJPCov", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "sacc_a": "/Users/nramachandra/hep-genesis-testing/projects/ramp
+[10/20/26 17:06:28] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tjpcov_compare_covariances -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/namaster_e3a064_firecrown_gausscov_vs_n
+[tool] firecrown_build_likelihood {"name": "nmt_tjpcov", "nc_per_bin": [], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/r
+[10/20/26 17:06:29] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_build_likelihood -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/nmt_tjpcov_ea28f5.yaml",     "/Users/nr
+[tool] firecrown_build_likelihood {"name": "nmt_knox", "nc_per_bin": [], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ram
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_build_likelihood -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/nmt_knox_ac4842.yaml",     "/Users/nram
+[tool] firecrown_compute_loglike {"cosmology": {"preset": "vanilla"}, "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/nmt_tjpcov_ea28f5.yaml", "nuisance": {"lens0_bias": 1.6}, "output
+[10/20/26 17:06:35] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/theory_vs_data_db351a.csv",     "/Users
+[tool] firecrown_compute_loglike {"cosmology": {"preset": "vanilla"}, "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/nmt_knox_ac4842.yaml", "nuisance": {"lens0_bias": 1.6}, "output_d
+[10/20/26 17:06:37] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261020_170533/theory_vs_data_cde78c.csv"   ],   "mess
+Tokens: 580K in (505K cached) · 6.9K out · 9 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/cov.json

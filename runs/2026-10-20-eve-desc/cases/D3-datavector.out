@@ -1,0 +1,40 @@
+`ccl_lsst_srd_nz` still can't be used: I checked the CCL tool family again and it fails to load on this server (`No module named 'tools.ccl'`). So I didn't recompute anything. Last turn I built the file with augur instead, which uses the same LSST Y1 SRD n(z) tables and pyccl, and that file covers your request.
+
+**File:** `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261019_172123/augur_y1_3x2pt_l20_2000_14dd28/fiducial_datavector.sacc`
+
+**How it was made**
+- **Cosmology and binning:** DESC SRD fiducial cosmology (Eisenstein-Hu + halofit), 20 log-spaced ell bands with edges 20–2000.
+- **Galaxy samples:** source density 10 arcmin⁻², lens density 18 arcmin⁻², sigma_e = 0.26, f_sky = 0.3.
+- **Spectra plot:** Figure 7. The total S/N is about 1574.
+
+**sacc_inspect results**
+- **Tracers:** 10, all NZ type, with 500 z samples each over z = 0–3.5. The names already follow the firecrown convention.
+  - src0–src4 are galaxy_shear, with mean z of 0.25, 0.46, 0.65, 0.92 and 1.53.
+  - lens0–lens4 are galaxy_density, with mean z of 0.32, 0.51, 0.70, 0.90 and 1.09.
+- **Data types:** 540 points, harmonic space. The ell values are band centres from 22.4 to 1782.5, and there are no bandpower windows.
+
+  | Data type | Pairs | Points |
+  |---|---|---|
+  | galaxy_shear_cl_ee | 15 | 300 |
+  | galaxy_shearDensity_cl_e | 7 (SRD pairs) | 140 |
+  | galaxy_density_cl | 5 (auto-spectra only) | 100 |
+
+- **Covariance: present.** This differs from a bare CCL output, because augur attaches one automatically. It is a full 540×540 matrix and positive definite, with smallest eigenvalue 1.9e-23, condition number about 1e13 and largest correlation 0.88. It is only a simple Gaussian estimate (augur's `gaus_internal`: no super-sample or non-Gaussian terms). That's fine for a forecast, but a publication-grade covariance would need TJPCov. The correlation-matrix plot is Figure 21.
+- **Scale cuts:** the file keeps all 540 points. The SRD scale cut on the lens side (kmax = 0.202 Mpc⁻¹) is only applied inside the likelihood, where it leaves 457 points.
+
+If you need the native `ccl_lsst_srd_nz` route, the CCL tool module has to be installed on the server first. If you just want a different cosmology, binning, or the output re-run into the current run directory, I can regenerate it in seconds.
+
+[Tool ledger — exact record of this turn]
+- describe_desc_tool_family (serve-desc.sh) ok — args {"family": "ccl"}; result: "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'"
+- Results reported above are reused from the previous turn's ledger (augur_generate_forecast_config, augur_generate_synthetic_datavector, sacc_inspect in runs/261019_172123); nothing was recomputed.
+Loading MCP servers…
+[10/20/26 17:01:56] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/20/26 17:02:05] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+Tokens: 120K in (60K cached) · 1.8K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/dv.json

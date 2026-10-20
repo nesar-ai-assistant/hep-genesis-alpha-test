@@ -308,6 +308,28 @@ time.
 - Low severity (cost-control softening, not correctness). Filed as
   HEP-KE/hep-genesis-releases#10 with the full 12-run evidence table.
 
+### 27. Quick mode: MCP tool results silently truncated at 20,000 chars, no marker **[GH#11]** — open
+
+- Found 2026-10-20 (eve-desc, v0.3.18; also present in 2026-10-19-eve-desc
+  case D6). `txpipe_validate_pipeline` returns 27 per-stage dry-run commands;
+  the model sees only the first ~7 and reports "the response was cut off
+  partway through the eighth". Server-side result is complete — verified in
+  desc_mcp_server source (full list in tool metadata, no server truncation).
+- Hard evidence from the persisted chat record
+  (`projects/ramp-desc/chats/txp.json`): `raw` length exactly 20,000, ends
+  mid-token inside command 8, no truncation marker.
+- Root cause: `hep_genesis/agent/quick.py` `_execute()` → `"raw":
+  text[:20_000]` fed to the model via `ToolMessage(content=rec["raw"][:40_000])`
+  with no marker. Research mode appends `[... N more chars in the ledger]`
+  (nodes.py:199); quick mode has no equivalent. Same unmarked slice in
+  `agent/research/tools.py:147` (compensated downstream, but the stored
+  `raw` is still silently clipped).
+- Consequence: the model misreports tool output as fact ("only 7 of 27
+  commands") or believes data doesn't exist. Caught twice in DESC battery D6;
+  judge heuristic can't see it (rc=0, substantive output → PASS).
+- Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/11
+  with the exact code lines and both run transcripts as evidence.
+
 ---
 
 ## Run log (auto-appended by harness)
@@ -402,6 +424,11 @@ Clean run — no flags.
 
 
 ## 2026-10-20-pm-combo — 3 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-20-eve-desc — 10 pass / 0 flagged
 
 Clean run — no flags.
 
