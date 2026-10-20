@@ -254,6 +254,12 @@ time.
   exclusion verdicts return no limit values.
 - Flagged for the sterile-nu-bbn server repo; report has full details
   (research-results/2026-10-19/ramp-combo-lyman-wdm/).
+- 2026-10-20-am-core (v0.3.18) reconfirmation: 6-point DW grid scan
+  (1–50 keV, sin²2θ=3×10⁻⁹) shows f ∝ m_s^0.80 exactly (constant to 4
+  digits across the QCD transition) and Ω_s h² ∝ m_s^1.8, linear in
+  sin²2θ — consistent with the fitted-power-law diagnosis above. The
+  agent itself noted the constant exponent implies a fitted power law
+  rather than a production-equation solve.
 
 ### 24. DESC MCP server: `tools.ccl` module listed in pyproject.toml but never created **[local, Nesar's server]** — open
 
