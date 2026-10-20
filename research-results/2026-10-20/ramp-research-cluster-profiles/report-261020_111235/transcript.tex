@@ -1,0 +1,501 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Transcript: Redshift Evolution of Emulated Cluster Gas Profile Shapes and the Hydrostatic Mass Bias}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-research-cluster-profiles}
+\date{2026-10-20}
+\begin{document}
+\maketitle
+\noindent\textit{\small The conversation verbatim, generated mechanically from the session record.}
+\vspace{1em}
+
+
+
+\appendix
+\section{Conversation transcript}
+\label{app:transcript}
+The exchange verbatim (assistant text as shown to the user; tool calls summarized by name --- see the tool-call log for arguments and results).
+\subsection*{User \small(2026-10-20 11:01:47)}
+Survey recent work on hydrostatic mass bias in galaxy clusters. Use the hydrodynamics emulator to predict CGD (gas density) and CTP (temperature) profiles at two redshifts and discuss how profile shape evolution affects mass reconstruction.
+
+\subsection*{Assistant \small(research mode, 2026-10-20 11:01:47)}
+\textit{Plan:}\begin{enumerate}
+  \item (closed) Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles for a fiducial cluster-mass halo at two redshifts (low, e.g. z=0, and high, e.g. z=1). From these profiles, derive the logarithmic slopes and the hydrostatic (HSE) mass profile, and quantify how the change in profile shape with redshift alters the reconstructed mass.
+  \item (closed) Test how robust the emulated profile shapes and the HSE mass are to feedback (AGN and SN) parameters and to halo mass, at the same two redshifts, and check whether the emulated profiles depart from self-similarity.
+  \item (closed) Produce a literature survey of recent results on hydrostatic mass bias, with verified quotes, so the emulator results can be placed in context: the size of the bias, its redshift and mass trends, non-thermal pressure, and observational constraints.
+  \item (blocked) Synthesis: apply the non-thermal pressure correction to the emulated HSE masses, and compare the corrected and uncorrected b\_HSE and the scaled low-z profiles with FLAMINGO, X-COP and SPT benchmarks.
+  \item (closed) Put the headline fiducial numbers on tool provenance and settle the f-004, f-005 and f-008 conflicts. Load the four fiducial CSVs (CGD and CTP at z=0 and z=0.4987), show every bin from 0.3 to 2.74 R500, and recompute the R500 slopes, t(R500), M\_HSE,500c/M500 and the shape-only shift. Use one stated error convention and the FLAMINGO sign convention.
+  \item (closed) Limited feedback-robustness check. Using the existing d02\_agnmin and d02\_agnmax CTP predictions, measure how much t(R500) and the temperature slope move across the kinetic-AGN extremes. Compare that spread with the z=0 to z=0.4987 shift in the fiducial profiles.
+\end{enumerate}
+\textit{Tool calls:} \texttt{list\_agent\_files}, \texttt{list\_input\_files}, \texttt{list\_datasets}, \texttt{list\_files}, \texttt{get\_dispatch}, \texttt{list\_observables}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{web\_search}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv\_abstracts}, \texttt{get\_arxiv\_metadata}, \texttt{get\_arxiv\_metadata}, \texttt{describe\_parameters}, \texttt{list\_observables}, \texttt{list\_observables}, \texttt{describe\_parameters}, \texttt{get\_arxiv\_metadata}, \texttt{get\_arxiv\_metadata}, \texttt{get\_arxiv\_metadata}, \texttt{list\_files}, \texttt{get\_arxiv\_metadata}, \texttt{get\_arxiv\_metadata}, \texttt{download\_arxiv\_full\_text}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{read\_arxiv\_chunk}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{cite}, \texttt{cite}, \texttt{cite}, \texttt{cite}, \texttt{cite}, \texttt{cite}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{plot\_observable\_comparison}, \texttt{plot\_observable\_comparison}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{predict\_observable}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_question}, \texttt{post\_dead\_end}, \texttt{load\_table\_data}, \texttt{load\_table\_data}, \texttt{load\_table\_data}, \texttt{load\_table\_data}, \texttt{load\_table\_data}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{read\_text\_file}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_dead\_end}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_dead\_end}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_finding}, \texttt{post\_dead\_end}\par
+\textbf{Survey} --- 34 tools on 3 servers, 6 read-only probes, 16 papers found.
+
+Hydrostatic-equilibrium (HSE) masses come out systematically low. In simulations the bias (1-b) is about 0.8-0.9. FLAMINGO (2409.07849) finds a median b\_HSE of about -0.1 for groups and -0.2 for clusters. At fixed true mass, HSE masses rise with redshift for groups and fall for clusters, and the scatter grows with redshift. The bias also depends on AGN and stellar feedback strength and on how well the analytic density and temperature profiles fit. Non-thermal motions (turbulence, bulk flows, rotation) and mergers are found to cause most of the bias: Nelson et al. (1306.3993, 1308.6589), Rasia/Lau-type merger studies (1112.3659, 2511.10730), and analytic non-thermal pressure models (1507.04338). Observationally, X-COP (1805.00035, 1805.00034) finds small non-thermal pressure fractions and HSE masses consistent with b of about 0.1-0.2 out to R200. Gas-fraction analyses of Planck-ESZ clusters (2204.12823) show a sample-dependent redshift trend in B that is degenerate with Omega\_m, and the CMB plus cluster counts value of B about 0.6 remains in tension with B about 0.8. For the emulator part: HSE mass depends on the logarithmic slopes, M\_HSE(\textless{}r) = -(k\_B T r / G mu m\_p)(dln n/dln r + dln T/dln r). So mass reconstruction is sensitive to how the shapes of the density (CGD) and temperature (CTP) profiles change with redshift, not just to their normalisations. In particular, profiles steepen in the outskirts and depart from self-similarity at high accretion rate (1411.5361, 1404.6250).
+
+Quantities worth checking: Logarithmic slopes dln n\_gas/dln r and dln T/dln r at 0.5 R500, R500 and R200 at both redshifts; HSE mass profile M\_HSE(\textless{}r) from emulated n and T, with M\_HSE,500c compared between the two redshifts; Relative change in M\_HSE caused by shape change alone (profiles rescaled by E(z) and the self-similar T500 vs. full emulated profiles); Departure from self-similar scaling: n\_gas/(rho\_crit(z) f\_b) and T/T500 against r/R500; Sensitivity of M\_HSE to the analytic fitting form (e.g. Vikhlinin density, generalized temperature model) and to goodness of fit, following FLAMINGO; Response of profile slopes and M\_HSE to feedback parameters (AGN, SN) at fixed halo mass.
+
+\textbf{Plan} --- 4 lines of investigation:
+
+\begin{enumerate}
+  \item Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles for a fiducial cluster-mass halo at two redshifts (low, e.g. z=0, and high, e.g. z=1). From these profiles, derive the logarithmic slopes and the hydrostatic (HSE) mass profile, and quantify how the change in profile shape with redshift alters the reconstructed mass. --- This is the core emulator deliverable. HSE mass depends on T(r) times the sum of the logarithmic slopes of n and T, so the shapes of the profiles, not only their normalisations, set the reconstructed mass. Comparing the two redshifts separates shape evolution from self-similar rescaling.
+  \item Test how robust the emulated profile shapes and the HSE mass are to feedback (AGN and SN) parameters and to halo mass, at the same two redshifts, and check whether the emulated profiles depart from self-similarity. --- The brief and FLAMINGO report that the bias depends on feedback strength and on mass (groups versus clusters show opposite redshift trends). A single fiducial run cannot show whether the redshift trend in shape-driven mass bias is robust.
+  \item Produce a literature survey of recent results on hydrostatic mass bias, with verified quotes, so the emulator results can be placed in context: the size of the bias, its redshift and mass trends, non-thermal pressure, and observational constraints. --- The task asks for a survey, and the emulator numbers need comparison benchmarks: FLAMINGO's b\_HSE values, Nelson et al.'s comparison of fitted-profile and direct-gradient HSE masses, X-COP's non-thermal pressure fractions, the redshift evolution of SPT temperature profiles, and the B tension from Planck clusters.
+  \item Synthesis: apply the non-thermal pressure correction to the emulated HSE masses, and compare the corrected and uncorrected b\_HSE and the scaled low-z profiles with FLAMINGO, X-COP and SPT benchmarks. --- Two reproducible analyses in the brief are not assigned to any direction: the f\_nth-corrected mass and the comparison with X-COP and SPT in scaled radius. Without them, the shape-evolution result is never tied to the literature benchmarks. (added by the critic)
+Critic's view: revise --- None of the listed tools does arbitrary arithmetic on arrays. The finite-difference slopes, M\_HSE(\textless{}r), the E(z) rescaling and the error propagation would all be computed by hand from the printed arrays, so they cannot be checked. Fix this in one of two ways: (a) if predict\_observable writes an output file, load it with load\_table\_data so the agent can quote the exact grid values used; or (b) report the radial grid points and the values used for each difference explicitly, so a reader can redo the arithmetic. Slopes from a coarse emulator grid are noisy, so state the grid spacing near each target radius.; Several definitions are assumed but not checked against the emulator. Confirm from describe\_parameters and list\_observables: (1) whether CGD and CTP are indexed by a halo-mass bin; (2) whether radius is given in r/R500, r/R200 or physical units; (3) whether CTP is mass-weighted or spectroscopic-like. If the profiles are stacks over a mass bin, 'emulator input M500 as M\_true' is not well defined; use the bin centre and say so. R200 at 0.5-1x R500 extrapolation can fall outside the emulated radial range. Drop R200 if the grid does not reach it.; Two items are missing. First, the f\_nth correction (a reproducible analysis in the brief) is defined in d-03 but never applied. Add a step that uses the d-03 f\_nth formula, or add a placeholder for it, and note that d-01 depends on d-03. Second, the brief asks for sensitivity to the analytic fitting form (Vikhlinin density, generalized temperature model) and for Nelson's fitted-profile versus direct-gradient comparison. Nonlinear fitting is not possible with these tools. State this as out of scope, or at most compare a direct finite-difference slope with a smoothed or wider-baseline slope as a crude stand-in..
+
+\end{enumerate}
+\textbf{Wave 1} --- now exploring, in parallel: Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles for a fiducial cluster-mass halo at two redshifts (low, e.g. z=0, and high, e.g. z=1). From these profiles, derive the logarithmic slopes and the hydrostatic (HSE) mass profile, and quantify how the change in profile shape with redshift alters the reconstructed mass.; Test how robust the emulated profile shapes and the HSE mass are to feedback (AGN and SN) parameters and to halo mass, at the same two redshifts, and check whether the emulated profiles depart from self-similarity.; Produce a literature survey of recent results on hydrostatic mass bias, with verified quotes, so the emulator results can be placed in context: the size of the bias, its redshift and mass trends, non-thermal pressure, and observational constraints..
+
+\textbf{Finding:} Nelson, Lau \& Nagai 2014 (arXiv:1404.4636) give a redshift-universal non-thermal pressure fraction f\_nth(r) = P\_rand/P\_tot = 1 - A\{1 + exp[-((r/r200m)/B)\textasciicircum{}gamma]\} with A = 0.452 +/- 0.001, B = 0.841 +/- 0.008, gamma = 1.628 +/- 0.019. The fit is accurate to about 10\% over 0.1 \textless{}= r/r200m \textless{}= 1.5 and out to z = 1.5. It gives about 10\% in the core rising to about 50\% near r200m; there is no systematic mass dependence for M200m \textgreater{}= 6e14 Msun/h, and rapidly accreting clusters are 5-15\% higher. The thermal-only HSE mass is corrected as M\_tot = M\_HSE,th + extra term from d(f\_nth P\_tot)/dr, i.e. P\_tot = P\_th/(1-f\_nth). This is ready for d-01/d-04.
+
+\textbf{Finding:} Benchmark table (verified quotes in references.bib). (1) FLAMINGO (2409.07849): median b\_HSE = (M\_HSE-M500c)/M500c of about -0.1 for groups and -0.2 for clusters; the scatter is smallest, about 0.1, at M500c \textasciitilde{} 1e14 Msun; at fixed true mass M\_HSE rises with z for groups and falls for clusters, and the scatter grows; the bias is insensitive to the analytic profile form but sensitive to goodness of fit, and it depends on feedback. (2) X-COP (1805.00034): median f\_nth about 6\% at R500 and about 10\% at R200; 1-b = 0.85 +/- 0.05 for Planck SZ masses; the B about 0.6 needed by CMB plus counts is excluded. (3) Wicker+22 (2204.12823): 3.8 sigma evidence for z-dependence of B with a Planck Omega\_m prior; the result is sample-dependent and degenerate with Omega\_m; B about 0.8. (4) SPT (1404.6250): clusters at 0.6\textless{}z\textless{}1.2 are about 40\% cooler in the inner (r\textless{}0.1R500) and outer (r\textgreater{}R500) scaled temperature than clusters at 0.3\textless{}z\textless{}0.6; minimal pressure evolution outside the core. (5) Lau+13 (1306.3993): the summation and averaging (Euler/Jeans) bias methods are equivalent; the acceleration term is small inside but non-negligible in the outskirts of massive accreting clusters.
+
+\textbf{Completed --- Produce a literature survey of recent results on hydrostatic mass bias, with verified quotes, so the emulator results can be placed in context: the size of the bias, its redshift and mass trends, non-thermal pressure, and observational constraints..} Six papers are cited with validated verbatim quotes in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-cluster-profiles/runs/261020\_110147/references.bib: 2409.07849, 1306.3993, 1805.00034, 2204.12823, 1404.6250 and 1404.4636. Of these, only 1404.4636 was downloaded and read in full text (/Users/nramachandra/hep-genesis-testing/projects/ramp-research-cluster-profiles/runs/261020\_110147/1404.4636.txt). The other five quotes and all benchmark values below come from abstracts retrieved with get\_arxiv\_metadata.
+
+Non-thermal pressure correction for d-01/d-04 (finding f-001, Eq. 7 of Nelson, Lau \& Nagai 2014, arXiv:1404.4636): f\_nth(r) = P\_rand/P\_tot = 1 - A\{1 + exp[-((r/r200m)/B)\textasciicircum{}gamma]\}, with A = 0.452 +/- 0.001, B = 0.841 +/- 0.008 and gamma = 1.628 +/- 0.019. The fit is accurate to about 10\% over 0.1-1.5 r200m and holds out to z = 1.5. It does not depend on redshift when radius is scaled by r200m; in r200c scaling it does depend strongly on redshift. The fraction is about 10\% in the core and about 50\% near r200m, with no clear mass dependence in the paper's sample (M200m \textgreater{}= 6e14 Msun/h at z = 0). Rapidly accreting clusters sit 5-15\% higher. To apply it, take P\_tot = P\_th/(1 - f\_nth) and use P\_tot in the HSE equation.
+
+Benchmark table (finding f-002):
+
+\begin{itemize}
+  \item FLAMINGO (2409.07849): median b\_HSE of about -0.1 for groups and -0.2 for clusters. The scatter is smallest, about 0.1, at M500c \textasciitilde{} 1e14 Msun. At fixed true mass, HSE masses rise with redshift for groups and fall for clusters, and the scatter grows with redshift. The bias does not depend on the choice of analytic profile form but does depend on how well the profiles fit, and on feedback strength.
+  \item X-COP (1805.00034): median f\_nth of about 6\% at R500 and about 10\% at R200. For Planck SZ masses, 1-b = 0.85 +/- 0.05. The B of about 0.6 required by CMB plus cluster counts is excluded.
+  \item Wicker et al. 2022 (2204.12823): 3.8 sigma evidence that B depends on redshift when a Planck prior on Omega\_m is assumed. The trend depends on the cluster sample and is degenerate with Omega\_m; the amplitude is B of about 0.8.
+  \item SPT (1404.6250): clusters at 0.6 \textless{} z \textless{} 1.2 are about 40\% cooler than those at 0.3 \textless{} z \textless{} 0.6 in scaled temperature, both inside 0.1 R500 and beyond R500. Pressure profiles show little evolution outside the core.
+  \item Lau et al. 2013 (1306.3993): the summation and averaging methods of computing the bias give the same result. The gas-acceleration term is small in the interior but non-negligible in the outskirts of massive, accreting clusters.
+\end{itemize}
+Not done because the tool budget ran out: no figures were extracted (so there are no figure numbers), the 2023-2025 search including 2511.10730 was not run, and 1805.00035, 1308.6589, 1411.5361 and 1507.04338 were not read or cited.
+
+\textbf{Finding:} The HACC CGD and CTP emulators output scaled profiles, rho\_gas/rho\_crit(z) and T/T500, on 19 log-spaced bins in r/R500c from 0.0154 to 2.74. Both are trained only for z = 0 to 0.4987, so z=1 is unavailable and the high redshift used is z=0.4987. The halo mass bin and the T500 convention are not reported by the tool.
+
+\textbf{Finding:} Finite-difference log slopes in ln-space (grid spacing 0.2878). At z=0: dln rho/dln r = -1.86, -2.54, -2.93 and dln T/dln r = -0.27, -0.58, -0.91 at r/R500 = 0.49, 1.0, 1.54. At z=0.4987: dln rho/dln r = -1.87, -2.74, -3.10 and dln T/dln r = -0.35, -0.51, -1.07. The 1-sigma uncertainty at R500 is about 0.10-0.16 on the density slope and 0.05-0.14 on the temperature slope.
+
+\textbf{Finding:} The HSE mass is M\_HSE(\textless{}x R500)/M500 = -(x t/2)(s\_n + s\_T), assuming kT500 = G mu m\_p M500/(2 R500) and mu=0.59. With this, M\_HSE/M500 = 0.41, 0.93+-0.05, 1.27 at z=0 and 0.38, 0.84+-0.05, 1.22 at z=0.4987, at r/R500 = 0.49, 1.0, 1.54. The implied b\_HSE,500c is 0.075 at z=0 and 0.16 at z=0.4987. The convention-independent shape-only shift in M\_HSE,500c from z=0 to z=0.4987 is -9.2\% +- about 8\%.
+
+\textbf{Finding:} Comparison plots of the emulated profiles at z=0 and z=0.4987 (fiducial parameters) are in Figure 6 (CGD) and Figure 7 (CTP). Scaled density agrees within about 2\% over 0.2-0.9 R500 but is about 13\% lower at 1.5 R500 at z=0.4987. Scaled temperature is lower at z=0.4987 at all radii above 0.03 R500: by 12\% at R500 and by 30\% at 2.7 R500.
+
+\textbf{Completed --- Use the HACC hydro emulator to predict CGD (gas density) and CTP (temperature) profiles for a fiducial cluster-mass halo at two redshifts (low, e.g. z=0, and high, e.g. z=1). From these profiles, derive the logarithmic slopes and the hydrostatic (HSE) mass profile, and quantify how the change in profile shape with redshift alters the reconstructed mass..} Direction d-01 is done, but at z=0.4987, not z=1: the emulator's CGD and CTP profiles only go up to that redshift. The derived numbers below were computed by hand from the four emulator files and were not run in a tool. The headline: reading R500 at the bins either side of 1.0 R500, the hydrostatic mass M\_HSE,500c is 9.2\% +- about 8\% lower at z=0.4987 than at z=0. This difference comes from profile shape alone and is only about 1.2 sigma.
+
+Inputs: the profiles are already scaled. CGD gives rho\_gas/rho\_crit(z) and CTP gives T/T500, on 19 log-spaced bins in r/R500c from 0.0154 to 2.74. The tool does not report the halo mass bin or how T500 is defined. Parameters were set to the centre of the design range: kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, eps\_kin=0.61, omega\_m=0.1375, sigma\_8=0.8. Because the profiles are scaled, rescaling the z=0 profiles self-similarly to z=0.4987 leaves them unchanged, so any difference between the redshifts is shape evolution only.
+
+Files, all in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-cluster-profiles/runs/261020\_110147/:
+
+\begin{itemize}
+  \item Predictions with GP mean and std: CGD\_z0.0000\_prediction.csv, CGD\_z0.4987\_prediction.csv, CTP\_z0.0000\_prediction.csv, CTP\_z0.4987\_prediction.csv
+  \item Plots: CGD\_comparison.png (Figure 6) and CTP\_comparison.png (Figure 7)
+\end{itemize}
+Profile comparison:
+
+\begin{itemize}
+  \item Density: within about 2\% between redshifts over 0.2-0.9 R500, and 13\% lower at z=0.4987 at 1.54 R500.
+  \item Temperature: lower at z=0.4987 at all radii above 0.03 R500, by 12\% at R500 and 30\% at 2.7 R500.
+\end{itemize}
+Log slopes (z=0 / z=0.4987), from finite differences between neighbouring bins:
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{r/R500} & \textbf{dln rho/dln r} & \textbf{dln T/dln r} \\ \midrule \endhead
+0.49 & -1.86 / -1.87 & -0.27 / -0.35 \\
+1.0 & -2.54 / -2.74 & -0.58 / -0.51 \\
+1.54 (taken as R200) & -2.93 / -3.10 & -0.91 / -1.07 \\
+\bottomrule\end{longtable}
+At R500 the 1-sigma uncertainties are about 0.10-0.16 on the density slope and 0.05-0.14 on the temperature slope, treating adjacent bins as independent. The density slope is used as the n slope (constant mu). R200 is assumed to be about 1.5 R500, as for an NFW profile with concentration about 4.
+
+Hydrostatic mass: M\_HSE(\textless{}x R500)/M500 = -(x t/2)(s\_n + s\_T), where t = T/T500 and s\_n, s\_T are the two slopes. This assumes kT500 = G mu m\_p M500/(2 R500), with mu = 0.59, and takes the true mass to be the input M500.
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{r/R500} & \textbf{M\_HSE/M500, z=0} & \textbf{M\_HSE/M500, z=0.4987} \\ \midrule \endhead
+0.49 & 0.41 & 0.38 \\
+1.0 & 0.93 +- 0.05 & 0.84 +- 0.05 \\
+1.54 & 1.27 & 1.22 \\
+\bottomrule\end{longtable}
+The implied b\_HSE,500c is 0.075 at z=0 and 0.16 at z=0.4987. These absolute values depend on the assumed T500 definition. The ratio between redshifts depends only on self-similar T500 scaling at fixed M500.
+
+Shape-only shift: the -9.2\% breaks down into the scaled temperature at R500 falling from 0.592 to 0.518 (-12.4\%), partly offset by the slope sum steepening from -3.13 to -3.24 (+3.7\%). The lower mass at higher redshift agrees in sign with FLAMINGO's finding that HSE masses fall with redshift for clusters (q-05). These are thermal-only hydrostatic masses with no non-thermal pressure included.
+
+I did not load the statistical-analysis skill, because the CSV headers state the scaling of both outputs.
+
+\textbf{Finding:} Emulator facts for d-02. CGD and CTP come out already scaled: rho\_gas/rho\_crit and T/T500 on 19 log bins of r/R500, spanning 0.015 to 2.74. Halo mass is not an input. Both profiles exist only for z = 0 to 0.4987, so z = 0.4987 is the high-redshift point. The AGN controls are kappa\_w (2 to 4), e\_w (0.2 to 1), M\_seed (0.6 to 2) x 10\textasciicircum{}6 Msun, v\_kin (0.1 to 1.2) x 10\textasciicircum{}4 km/s and eps\_kin (0.02 to 1.2) x 10. There is no separate SN or stellar-feedback parameter.
+
+\textbf{Finding:} At z = 0 with fiducial parameters (kappa\_w = 3, e\_w = 0.6, M\_seed = 1.3, v\_kin = 0.65, eps\_kin = 0.61, omega\_m = 0.1375, sigma\_8 = 0.8), finite differences between the r/R500 = 0.866 and 1.155 bins (geometric midpoint 1.00) give dln rho\_gas/dln r = -2.55 +/- 0.16 and dln T/dln r = -0.58 +/- 0.06 at R500. At 0.5 R500 the slopes are -1.98 and -0.31. T/T500 at R500 is 0.59, so M\_HSE(R500) = 1.85 +/- 0.3 in units of k\_B T500 R500/(G mu m\_p). This equals 0.93 M500 only if T500 is defined as G mu m\_p M500/(2 R500).
+
+\textbf{Finding:} CGD and CTP predictions exist at z = 0 and z = 0.4987 for five parameter sets, but have not been analysed yet. The sets are: fiducial; kinetic-AGN minimum (v\_kin = 0.1, eps\_kin = 0.02); kinetic-AGN maximum (v\_kin = 1.2, eps\_kin = 1.2); wind minimum (kappa\_w = 2, e\_w = 0.2); and wind maximum (kappa\_w = 4, e\_w = 1). The files are in runs/261020\_110147/\{d02\_fid, d02\_agnmin, d02\_agnmax, d02\_windmin, d02\_windmax\}/C\{GD,TP\}\_z\{0.0000,0.4987\}\_prediction.csv. The fiducial z = 0 files are in the top-level run directory.
+
+\textbf{Blocked --- Test how robust the emulated profile shapes and the HSE mass are to feedback (AGN and SN) parameters and to halo mass, at the same two redshifts, and check whether the emulated profiles depart from self-similarity..} (The tool budget ran out after the predictions were made but before the variant CSVs could be read and compared, so slopes, M\_HSE changes, plots and the self-similarity test were not done. The halo-mass test cannot be done with this emulator because mass is not an input.) Not finished: none of the d-02 success criteria are met yet. The predictions exist but only the fiducial z=0 profiles have been analysed.
+
+What the emulator offers (f-007):
+
+\begin{itemize}
+  \item CGD comes out as rho\_gas/rho\_crit and CTP as T/T500. Both are on 19 log-spaced bins of r/R500 from 0.015 to 2.74.
+  \item Halo mass is not an input, so group-versus-cluster mass bins cannot be tested with this tool (dead end x-01).
+  \item The profiles exist only for z = 0 to 0.4987, so z = 0.4987 is the high-redshift point.
+  \item The tool describes all five subgrid parameters as AGN parameters: kappa\_w and e\_w (wind) and M\_seed, v\_kin and eps\_kin (kinetic). It lists no separate SN feedback parameter, so the wind extremes were used as a stand-in for the SN test. This needs checking against the HACC emulator paper.
+\end{itemize}
+Fiducial run (f-008): z=0 with kappa\_w=3, e\_w=0.6, M\_seed=1.3, v\_kin=0.65, eps\_kin=0.61, omega\_m=0.1375, sigma\_8=0.8.
+
+\begin{itemize}
+  \item At R500, finite differences between the 0.866 and 1.155 bins give dln rho\_gas/dln r = -2.55 +/- 0.16 and dln T/dln r = -0.58 +/- 0.06.
+  \item At 0.5 R500 the slopes are about -1.98 and -0.31. T/T500 at R500 is 0.59.
+  \item M\_HSE(R500) = 1.85 +/- 0.3 in units of k\_B T500 R500/(G mu m\_p). This equals 0.93 M500 only if the emulator defines T500 = G mu m\_p M500/(2 R500), which is unconfirmed.
+  \item I computed these by hand from the CSV. The errors treat neighbouring bins as independent and are probably too large.
+\end{itemize}
+Predictions not yet read (f-009): CGD and CTP at z=0 and z=0.4987 for five parameter sets:
+
+\begin{itemize}
+  \item fiducial (d02\_fid; the z=0 fiducial files are in the top-level run directory)
+  \item kinetic-AGN minimum, v\_kin=0.1, eps\_kin=0.02 (d02\_agnmin)
+  \item kinetic-AGN maximum, v\_kin=1.2, eps\_kin=1.2 (d02\_agnmax)
+  \item wind minimum, kappa\_w=2, e\_w=0.2 (d02\_windmin)
+  \item wind maximum, kappa\_w=4, e\_w=1 (d02\_windmax)
+\end{itemize}
+The files are in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-cluster-profiles/runs/261020\_110147/\{d02\_fid, d02\_agnmin, d02\_agnmax, d02\_windmin, d02\_windmax\}/C\{GD,TP\}\_z\{0.0000,0.4987\}\_prediction.csv.
+
+Still open (q-06):
+
+\begin{itemize}
+  \item R500 slopes and the change in M\_HSE for each feedback variant at both redshifts
+  \item whether the z = 0 to 0.5 change in profile shape is larger or smaller than the feedback spread
+  \item comparison plots with plot\_observable\_comparison
+  \item the self-similarity check against the GP uncertainty band
+\end{itemize}
+\textbf{Critic, wave 1} --- continue: 5 findings stand up to the evidence, 4 questioned ('Nelson, Lau \& Nagai 2014 (arXiv:1404.4636) give a redshift-universal non-thermal pressure ': The only full-text evidence (tc-261020\_1-w1-d-03-34, chars 14000-26000) covers the simulation setup. It does not contain Eq. 7 or the fitted values A = 0.452, B = 0.841, gamma = 1.628. The excerpt also gives the sample selection as M500c \textgreater{}= 3e14 h\textasciicircum{}-1 Msun, while the claim says M200m \textgreater{}= 6e14 Msun/h; this was not reconciled. tc-41 only records a citation. The fit parameters must be shown from the chunk that contains Eq. 7 before d-04 uses them.; 'Finite-difference log slopes in ln-space (grid spacing 0.2878). At z=0: dln rho/dln r = -1': The slopes were computed by hand, not by a tool. The quoted CSV excerpts are cut off at r/R500 of about 0.09, so none of the bins used (0.49, 0.866, 1.155, 1.54) are visible. The values also disagree with f-008, which uses the same z=0 fiducial data: f-004 gives -1.86 and -0.27 at 0.49 R500, f-008 gives -1.98 and -0.31 at 0.5 R500.; 'The HSE mass is M\_HSE(\textless{}x R500)/M500 = -(x t/2)(s\_n + s\_T), assuming kT500 = G mu m\_p M500/': This rests on the unverified slopes in f-004 and on hand arithmetic. The +-0.05 error on M\_HSE/M500 at R500 conflicts with f-008: there, the same z=0 quantity is 1.85 +- 0.3 in k\_B T500 R500/(G mu m\_p) units, which is +-0.15 in M500 units, three times larger. With the f-008 error, the -9.2\% shift is below 0.5 sigma, not 1.2 sigma. The sign convention is also inconsistent. f-005 reports b\_HSE as +0.075 and +0.16, but FLAMINGO defines b\_HSE = (M\_HSE - M)/M, which is negative. The comparison with the -0.1 to -0.2 benchmark needs a stated convention.; 'At z = 0 with fiducial parameters (kappa\_w = 3, e\_w = 0.6, M\_seed = 1.3, v\_kin = 0.65, eps': The values were computed by hand. The R500-adjacent bins (0.866 and 1.155) do not appear in the quoted excerpts. The 0.5 R500 slopes and the M\_HSE uncertainty are inconsistent with f-004 and f-005, which use the same input files.).
+
+Issues: The headline result is the shape-only -9.2\% shift in M\_HSE,500c, but its significance is not established. It comes from hand finite differences across two bins, and the same quantity carries an error of +-0.05 in f-005 but +-0.15 in f-008. The GP y\_std at z=0.4987 is also several times larger than at z=0 in the excerpted inner bins (CGD std/mean about 0.68 versus 0.12), so the outskirt errors at z=0.4987 may be underestimated too. The calculation needs to be scripted, with uncertainties propagated from the GP, for example by sampling profiles within y\_std or using the GP covariance if it is available.; The claim that CGD and CTP stop at z = 0.4987 is not visible in tc-21 or tc-20. Those excerpts show only the GSMF redshift list, which runs to z of about 1.75. This limit forces a departure from the task's two-redshift design, so the per-observable CGD/CTP redshift list should be quoted directly.; M\_HSE at 1.54 R500 exceeds M500 (1.27 and 1.22), which is expected. However, R200c is not 1.5 R500 for every concentration, and no tool converts radii to r200m. The f\_nth correction in d-04 needs r200m at each redshift, and r200m/R500c changes noticeably between z = 0 and 0.5 through Omega\_m(z). This must be handled explicitly..
+
+\textbf{Next steps after wave 1} --- One wave and 10 tool calls remain, and no Python tool is available, so the plan focuses on what can be checked by tool. The open direction d-04 runs first. Its non-thermal correction depends on verifying Eq. 7 of 1404.4636 with a single read\_arxiv\_chunk call (about 2 calls). It must also handle the r/R500c to r/r200m conversion explicitly at each redshift, by hand, with concentration varied between 3 and 6. The first new direction addresses the critic's high-severity issue: it puts the fiducial slopes and M\_HSE on displayed tool output, explains the conflicting error bars, and adopts the FLAMINGO sign convention (about 5 calls). The second new direction replaces the blocked d-02, which is closed because the full five-variant analysis cannot fit the budget. It keeps the essential robustness test: whether the redshift shape shift exceeds the kinetic-AGN feedback spread, judged through the temperature term that dominates M\_HSE (about 3 calls). The critic's fit-based (Vikhlinin) comparison, the 1000-sample Monte Carlo and the wind-variant analysis are not feasible without scripting and should be reported as limitations. The task does not ask for facility runs, so none is scheduled.
+
+New lines of investigation: Put the headline fiducial numbers on tool provenance and settle the f-004, f-005 and f-008 conflicts. Load the four fiducial CSVs (CGD and CTP at z=0 and z=0.4987), show every bin from 0.3 to 2.74 R500, and recompute the R500 slopes, t(R500), M\_HSE,500c/M500 and the shape-only shift. Use one stated error convention and the FLAMINGO sign convention.; Limited feedback-robustness check. Using the existing d02\_agnmin and d02\_agnmax CTP predictions, measure how much t(R500) and the temperature slope move across the kinetic-AGN extremes. Compare that spread with the z=0 to z=0.4987 shift in the fiducial profiles..
+
+\textbf{Wave 2} --- now exploring, in parallel: Synthesis: apply the non-thermal pressure correction to the emulated HSE masses, and compare the corrected and uncorrected b\_HSE and the scaled low-z profiles with FLAMINGO, X-COP and SPT benchmarks.; Put the headline fiducial numbers on tool provenance and settle the f-004, f-005 and f-008 conflicts. Load the four fiducial CSVs (CGD and CTP at z=0 and z=0.4987), show every bin from 0.3 to 2.74 R500, and recompute the R500 slopes, t(R500), M\_HSE,500c/M500 and the shape-only shift. Use one stated error convention and the FLAMINGO sign convention.; Limited feedback-robustness check. Using the existing d02\_agnmin and d02\_agnmax CTP predictions, measure how much t(R500) and the temperature slope move across the kinetic-AGN extremes. Compare that spread with the z=0 to z=0.4987 shift in the fiducial profiles..
+
+\textbf{Finding:} CTP across the kinetic-AGN extremes (v\_kin=0.1, eps\_kin=0.02 vs v\_kin=1.2, eps\_kin=1.2; other parameters fiducial). At R500, t is the geometric mean of the 0.866 and 1.155 bins and the slope is ln(t2/t1)/0.2877. AGN-min: t(R500)=0.565, dlnT/dlnr=-0.617 at z=0; t=0.490, slope=-0.589 at z=0.4987. AGN-max: t=0.600, slope=-0.573 at z=0; t=0.526, slope=-0.621 at z=0.4987. The feedback spread in t(R500) is 6.0\% at z=0 and 7.1\% at z=0.4987. The slope spread is 0.04 at z=0 and 0.03 at z=0.4987, and its sign reverses between the two redshifts.
+
+\textbf{Finding:} Redshift shift compared with kinetic-AGN spread. Approximation: dln n/dln r is held at the fiducial d-01 value (-2.54 at z=0, -2.74 at z=0.4987) for both variants, and M\_HSE $\propto$ t(s\_n+s\_T). On that basis, the z=0 to 0.4987 change in ln t(R500) is -0.144 for AGN-min and -0.132 for AGN-max. The fiducial value from d-01 is -0.134. This is about twice the AGN spread in ln t at fixed z (0.060 at z=0, 0.071 at z=0.4987), so the redshift drop in scaled temperature is robust to kinetic-AGN feedback. For M\_HSE,500c the picture is different. The shape-only redshift shift is -9.0\% (AGN-min) or -5.6\% (AGN-max) in ln M, against the fiducial -9.2\%. The AGN-max minus AGN-min difference at fixed z is +4.6\% at z=0 and +8.1\% at z=0.4987. These are of the same size, so the M\_HSE redshift shift cannot be cleanly separated from kinetic-feedback uncertainty. The GP y\_std on t(R500) is about 1\% at z=0 and 2-3\% at z=0.4987, so the AGN spread in t is about 4 sigma at z=0 and about 2 sigma at z=0.4987.
+
+\textbf{Completed --- Limited feedback-robustness check. Using the existing d02\_agnmin and d02\_agnmax CTP predictions, measure how much t(R500) and the temperature slope move across the kinetic-AGN extremes. Compare that spread with the z=0 to z=0.4987 shift in the fiducial profiles..} I read the four kinetic-AGN CTP files with read\_text\_file (tc-...-90 to -93). Their paths are runs/261020\_110147/d02\_agnmin/CTP\_z\{0.0000,0.4987\}\_prediction.csv and runs/261020\_110147/d02\_agnmax/CTP\_z\{0.0000,0.4987\}\_prediction.csv. load\_table\_data could not be used because it fails on the CSV header row (dead end x-02). All derived numbers below are hand calculations from the tool-returned bin values. t(R500) is the geometric mean of the 0.866 and 1.155 R500 bins, and the slope is ln(t2/t1)/0.2877.
+
+Results (f-010), as t(R500) and dlnT/dlnr:
+
+\begin{itemize}
+  \item AGN-min (v\_kin=0.1, eps\_kin=0.02): 0.565 and -0.617 at z=0; 0.490 and -0.589 at z=0.4987.
+  \item AGN-max (v\_kin=1.2, eps\_kin=1.2): 0.600 and -0.573 at z=0; 0.526 and -0.621 at z=0.4987.
+  \item The AGN spread in t(R500) is 6.0\% at z=0 and 7.1\% at z=0.4987.
+  \item The slope spread is only 0.03-0.04, and its sign reverses between the two redshifts.
+\end{itemize}
+Comparison (f-011):
+
+\begin{itemize}
+  \item Temperature: the z=0 to 0.4987 change in ln t(R500) is -0.144 (AGN-min) and -0.132 (AGN-max), against -0.134 fiducial. This is about twice the AGN spread in ln t at fixed z, so the redshift cooling in scaled temperature is robust to kinetic-AGN feedback. The GP y\_std on t(R500) is about 1\% at z=0 and 2-3\% at z=0.4987.
+  \item Hydrostatic mass: I held the density slope at the fiducial d-01 values (-2.54 at z=0, -2.74 at z=0.4987; f-004, contested). On that basis the shape-only shift in ln M\_HSE,500c is -9.0\% (AGN-min) and -5.6\% (AGN-max). The AGN-max minus AGN-min difference at fixed z is +4.6\% at z=0 and +8.1\% at z=0.4987. The M\_HSE redshift shift is therefore about the same size as the kinetic-AGN spread and cannot be cleanly separated from it to first order.
+\end{itemize}
+Not done: the wind variants (d02\_windmin, d02\_windmax), the variant CGD density profiles and density slopes (the full density analysis), the M\_seed variation, and comparison plots.
+
+\textbf{Finding:} Fiducial R500 inputs recomputed from the four fiducial CSVs, using finite differences between the 0.866 and 1.155 R500 bins (dln x = 0.2878). At z=0: s\_rho = -2.545, s\_T = -0.583, sum = -3.128, t(R500) = 0.5916 (geometric mean), giving M\_th/M500 = (t/2)\textbar{}sum\textbar{} = 0.925. At z=0.4987: s\_rho = -2.738, s\_T = -0.505, sum = -3.243, t = 0.5181, giving M\_th/M500 = 0.840. In the FLAMINGO convention, uncorrected b\_HSE = (M\_HSE - M500)/M500 = -0.075 (z=0) and -0.160 (z=0.4987). The shape-only shift is -9.2\%. This reproduces f-004 and f-005.
+
+\textbf{Finding (preliminary):} Nelson+14 f\_nth correction at R500, using A=0.452, B=0.841, gamma=1.628 and P\_tot = P\_th/(1-f). The formula is M\_tot/M500 = (t/2)/(1-f) * [-(s\_n+s\_T) + dln(1-f)/dln r], with dln(1-f)/dln r = -gamma*u*e\textasciicircum{}-u/(1+e\textasciicircum{}-u) and u = (r/R200m/B)\textasciicircum{}gamma. For the radius conversion I assumed an NFW profile with c200c=4 and Omega\_m=0.3, which gives R500c = 0.652 R200c. R200m is 1.69 R200c at z=0 (Omega\_m(z)=0.30) and 1.265 R200c at z=0.4987 (Omega\_m(z)=0.59), so R200m/R500c = 2.60 and 1.94. At z=0: R500 = 0.385 R200m, f\_nth = 0.207 and dln(1-f)/dln r = -0.196, so M\_tot/M500 = 0.3728 \textit{ 2.932 = 1.093. At z=0.4987: R500 = 0.515 R200m, f\_nth = 0.260 and dln(1-f)/dln r = -0.285, so M\_tot/M500 = 0.3500 } 2.958 = 1.035. The corrected b\_HSE is +0.09 (z=0) and +0.035 (z=0.4987), which overcorrects. The correction factor M\_tot/M\_th is 1.18 at z=0 and 1.23 at z=0.4987, and the corrected redshift shift is -5.3\% instead of -9.2\%. If R200m/R500c is held at 2.60 at both redshifts, the shift stays at -9.2\%. So the redshift dependence of the correction comes entirely from the assumed evolution of R200m/R500c.
+
+\textbf{Finding:} Benchmark comparison. The redshift trend of the thermal HSE mass is set by profile shape: the scaled T at R500 drops 12.4\%, partly offset by a 3.7\% steepening of the slope sum. This matches the sign of FLAMINGO's quoted cluster trend, where hydrostatic masses decrease with redshift at fixed true mass. The Nelson f\_nth correction changes the size of the trend only through the assumed R200m/R500c evolution, reducing it from -9.2\% to -5.3\%. Feedback cannot yet be ranked because d-06 is pending. On SPT, the emulator cools by 12\% at R500 and 30\% at 2.7 R500 between z=0 and 0.5, while SPT reports about 40\% cooler scaled temperatures for 0.6\textless{}z\textless{}1.2 than for 0.3\textless{}z\textless{}0.6. The redshift bins do not overlap, so this is qualitative only. No X-COP T/T500 or scaled-density values were quoted, so no profile comparison with X-COP was made.
+
+\textbf{Finding:} The fiducial R500 numbers now trace to tool output (tc-...-94 to -97, all bins shown). I differenced ln y between the r/R500 = 0.866 and 1.155 bins, whose geometric midpoint is 1.000, with spacing dln r = 0.2878, and took t(R500) as the geometric mean of the two bins. At z=0: dln rho/dln r = -2.545, dln T/dln r = -0.583, t = 0.592 and M\_HSE,500c/M500 = 0.925, so b\_HSE = (M\_HSE - M500)/M500 = -0.075. At z=0.4987: -2.738, -0.505, t = 0.518, M\_HSE/M500 = 0.840 and b\_HSE = -0.160. The mass assumes kT500 = G mu m\_p M500/(2 R500), so the absolute values depend on the T500 convention.
+
+\textbf{Finding:} Error bracket on the fiducial numbers, using the GP y\_std. Upper bound (adjacent bins independent, density and temperature independent): z=0 slopes -2.545+-0.155 and -0.583+-0.055, M\_HSE/M500 = 0.925+-0.049; z=0.4987 slopes -2.738+-0.100 and -0.505+-0.135, M\_HSE/M500 = 0.840+-0.047. Lower bound (adjacent bins fully correlated): slope errors 0.007/0.002 at z=0 and 0.022/0.025 at z=0.4987; M\_HSE/M500 = 0.925+-0.010 and 0.840+-0.018. The shape-only shift M\_HSE,500c(z=0.4987)/M\_HSE,500c(z=0) - 1 = -9.2\%. Its error is +-7.0\% (1.3 sigma) for independent bins and +-2.1\% (4.3 sigma) for fully correlated bins. f-008's +-0.3 in T500 units (+-0.15 M500) overstates the error: the independent-bin error is +-0.10 in T500 units (+-0.05 M500).
+
+\textbf{Finding:} The -1.86 vs -1.98 conflict at about 0.5 R500 comes from different bin pairs. At z=0, the central difference about the 0.487 bin (bins 0.365 and 0.649, spacing 0.5756) gives dln rho/dln r = -1.863 and dln T/dln r = -0.271 (f-004). The one-sided pair 0.487-0.649 (midpoint 0.562 R500) gives -1.981 and -0.306 (f-008). The pair 0.365-0.487 (midpoint 0.422) gives -1.745. The central difference at 0.487 at z=0.4987 gives -1.872 and -0.345. With these, M\_HSE(\textless{}0.487 R500)/M500 = 0.408 (z=0) and 0.382 (z=0.4987). Central differences at the 1.54 bin (1.155-2.054) give -2.929/-0.912 with t = 0.430 and M/M500 = 1.272 at z=0, and -3.097/-1.072 with t = 0.380 and M/M500 = 1.221 at z=0.4987.
+
+\textbf{Blocked --- Synthesis: apply the non-thermal pressure correction to the emulated HSE masses, and compare the corrected and uncorrected b\_HSE and the scaled low-z profiles with FLAMINGO, X-COP and SPT benchmarks..} (The tool budget ran out. The FLAMINGO -0.1/-0.2, X-COP f\_nth 6\% and 1-b = 0.85, and Planck B \textasciitilde{}0.6/0.8 values come from abstracts and have no verbatim cite() quotes in references.bib (dead end x-03). No X-COP profile values were quoted, plot\_observable\_comparison was not run, and the feedback spread from d-06 is still pending.) I computed corrected and uncorrected b\_HSE at both redshifts, but not every benchmark number has a cite() quote, the X-COP profile comparison was not done and no comparison plot was made. Inputs are the four fiducial CSVs in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-cluster-profiles/runs/261020\_110147/ (CGD and CTP at z=0 and z=0.4987) and references.bib. All arithmetic below was done by hand from the CSV values, not run in a tool.
+
+\begin{enumerate}
+  \item Uncorrected (thermal-only) mass at R500 (f-012). Slopes are finite differences between the 0.866 and 1.155 R500 bins. At z=0: density slope -2.545, temperature slope -0.583, T/T500 = 0.592, so M\_HSE/M500 = 0.925 and b\_HSE = -0.075. At z=0.4987: density slope -2.738, temperature slope -0.505, T/T500 = 0.518, so M\_HSE/M500 = 0.840 and b\_HSE = -0.160. b\_HSE follows the FLAMINGO convention, (M\_HSE - M500)/M500. The mass shift from z=0 to z=0.4987 due to profile shape alone is -9.2\%. The absolute values assume kT500 = G mu m\_p M500/(2 R500), which the tool does not confirm.
+\end{enumerate}
+\begin{enumerate}
+  \item Non-thermal-corrected mass (f-013). I used the Nelson+14 f\_nth formula (A=0.452, B=0.841, gamma=1.628) with P\_tot = P\_th/(1 - f\_nth), so M\_tot/M500 = (t/2)/(1-f) * [-(s\_n + s\_T) + dln(1-f)/dln r]. To convert radii I assumed an NFW profile with c200c=4 and Omega\_m=0.3, giving R200m/R500c = 2.60 at z=0 and 1.94 at z=0.4987. f\_nth at R500 is 0.207 at z=0 and 0.260 at z=0.4987. M\_tot/M500 is 1.093 at z=0 and 1.035 at z=0.4987, so corrected b\_HSE is +0.09 and +0.035. This overcorrects: the mass ends up above M500. f\_nth of about 21-26\% at R500 is well above the X-COP median of about 6\% at R500. The correction raises the mass by a factor of 1.18 at z=0 and 1.23 at z=0.4987, and shrinks the redshift shift to -5.3\%. That reduction comes entirely from the assumed change in R200m/R500c with redshift.
+\end{enumerate}
+\begin{enumerate}
+  \item Which effect dominates the redshift trend (f-014). Profile shape dominates: the scaled temperature at R500 falls 12.4\%, partly offset by a 3.7\% steeper slope sum. The non-thermal correction changes the size of the trend only through the radius-conversion assumption. Feedback cannot be ranked yet because d-06 is still pending. The lower HSE mass at higher redshift agrees in sign with FLAMINGO's cluster trend (quote in references.bib).
+\end{enumerate}
+\begin{enumerate}
+  \item SPT comparison. The emulated temperature falls by 12\% at R500 and 30\% at 2.7 R500 between z=0 and 0.5. SPT finds clusters at 0.6\textless{}z\textless{}1.2 about 40\% cooler than at 0.3\textless{}z\textless{}0.6 (quote in references.bib). The redshift ranges do not overlap, so this is only qualitative. No X-COP T/T500 or scaled-density values were ever quoted, so I made no X-COP profile comparison.
+\end{enumerate}
+\begin{enumerate}
+  \item Limitations: no test of sensitivity to the analytic fitting form; no direct-gradient versus fitted-profile comparison; the profiles are a stacked mass bin of unknown mass; the temperature weighting and T500 definitions are unknown; and the c200c=4 conversion between R200m and R500c is an assumption.
+\end{enumerate}
+\textbf{Completed --- Put the headline fiducial numbers on tool provenance and settle the f-004, f-005 and f-008 conflicts. Load the four fiducial CSVs (CGD and CTP at z=0 and z=0.4987), show every bin from 0.3 to 2.74 R500, and recompute the R500 slopes, t(R500), M\_HSE,500c/M500 and the shape-only shift. Use one stated error convention and the FLAMINGO sign convention..} All four fiducial CSVs were read in full with read\_text\_file (tc-...-94 to -97), so every bin from 0.015 to 2.74 R500, with mean and y\_std, now appears in tool output. load\_table\_data cannot be used on these files because it fails on the CSV header (dead end x-04). Files: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-cluster-profiles/runs/261020\_110147/C\{GD,TP\}\_z\{0.0000,0.4987\}\_prediction.csv. Slopes are finite differences in ln y versus ln r on a grid with spacing 0.2878. The derived numbers were computed by hand from those values; no tool calculated them.
+
+Results at R500, from the 0.866 and 1.155 bins (geometric midpoint 1.000):
+
+\begin{itemize}
+  \item z=0: dln rho/dln r = -2.545, dln T/dln r = -0.583, t(R500) = 0.592, M\_HSE,500c/M500 = 0.925, b\_HSE = -0.075.
+  \item z=0.4987: dln rho/dln r = -2.738, dln T/dln r = -0.505, t(R500) = 0.518, M\_HSE,500c/M500 = 0.840, b\_HSE = -0.160.
+  \item b\_HSE uses the FLAMINGO sign convention, (M\_HSE - M500)/M500. The absolute values assume kT500 = G mu m\_p M500/(2 R500), which the tool does not confirm.
+\end{itemize}
+At the 0.487 bin, central difference over 0.365 and 0.649:
+
+\begin{itemize}
+  \item z=0: -1.863 and -0.271, M/M500 = 0.408.
+  \item z=0.4987: -1.872 and -0.345, M/M500 = 0.382.
+  \item The -1.98 in f-008 is the one-sided pair 0.487-0.649, so it is the slope at 0.562 R500, not 0.5 R500.
+\end{itemize}
+At the 1.54 bin:
+
+\begin{itemize}
+  \item z=0: -2.929 and -0.912, M/M500 = 1.272.
+  \item z=0.4987: -3.097 and -1.072, M/M500 = 1.221.
+\end{itemize}
+Errors are linear propagation of the GP y\_std, bracketed two ways:
+
+\begin{itemize}
+  \item Adjacent bins independent (upper bound): M\_HSE/M500 = 0.925 +- 0.049 at z=0 and 0.840 +- 0.047 at z=0.4987.
+  \item Adjacent bins fully correlated (lower bound): 0.925 +- 0.010 and 0.840 +- 0.018.
+  \item The +-0.3 in T500 units (+-0.15 M500) in f-008 overstates the error; the independent-bin value is +-0.10 in T500 units, i.e. +-0.05 M500.
+\end{itemize}
+Shape-only shift in M\_HSE,500c from z=0 to z=0.4987: -9.2\%. Significance is 1.3 sigma (+-7.0\%) with independent bins and 4.3 sigma (+-2.1\%) with fully correlated bins. The real GP covariance between bins is unknown, so the true significance lies between these bounds.
+
+Findings f-015, f-016 and f-017 replace f-004, f-005 and f-008.
+
+Still open: the GP covariance between bins (a Monte Carlo would need a Python tool), the emulator's T500 definition, and the slope at R200 under a proper R200/R500 conversion (1.54 R500 is still assumed to be R200).
+
+\textbf{Critic, wave 2} --- continue: 6 findings stand up to the evidence, 2 questioned ('Redshift shift compared with kinetic-AGN spread. Approximation: dln n/dln r is held at the': The arithmetic checks out from the f-010 t values and the fiducial density slopes (for example AGN-min 0.893 to 0.815 gives -9.1\%, AGN-max 0.935 to 0.883 gives -5.7\%). Two problems remain. First, the density slope is held at the fiducial values even though the d02\_agnmin and d02\_agnmax CGD files exist and were never read, so the M\_HSE part is not a measurement of the feedback response. Second, the conclusion compares the redshift shift (-9.2\%) with the fixed-z offset between variants (4.6-8.1\%). That mixes a change in absolute bias with a change in the differential trend. The relevant robustness number is the spread of the shift itself across variants, -5.6\% to -9.0\%. That spread says the sign of the trend is robust and its size carries roughly a +-2\% feedback systematic. It does not support 'cannot be cleanly separated'.; 'Benchmark comparison. The redshift trend of the thermal HSE mass is set by profile shape: ': It says 'feedback cannot yet be ranked because d-06 is pending', but d-06 closed in this same wave with f-010 and f-011, so that statement is out of date. The FLAMINGO redshift-trend quote and the SPT \textasciitilde{}40\% quote are said to be 'in references.bib', but the quoted excerpt of tc-...-89 cuts off at the FLAMINGO author line and does not contain either quote. The d-04 block reason also says FLAMINGO values lack verbatim cite() quotes. The benchmark agreement is therefore not shown in the evidence.).
+
+Issues: Every evidence excerpt for f-010, f-012, f-015, f-016 and f-017 stops at the 0.0866 R500 bin. The 0.365, 0.487, 0.649, 0.866, 1.155, 1.54 and 2.054 bins the claims rely on are never shown. The tool calls are full-file reads and the hand arithmetic is internally consistent, so I accept the findings. Future findings should quote the specific rows they use.; The Nelson correction takes c200c=4 and Omega\_m=0.3 at both redshifts. Concentration at fixed mass falls with redshift, which changes R500c/R200c and therefore R200m/R500c. Since f-013 shows that the entire redshift dependence of the correction comes from this ratio, the -5.3\% corrected shift depends strongly on the assumption. The emulator's own cosmology (omega\_m=0.1375, presumably Omega\_m h\textasciicircum{}2) was also not used.; The overcorrection (f\_nth of 21-26\% at R500 against X-COP's \textasciitilde{}6\%) partly reflects Nelson+14's mass-selected sample of massive clusters (M200m \textgreater{}= 6e14 Msun/h) and its random-gas-motion definition. Before calling the emulator 'overcorrected', check that comparison against an X-COP-calibrated f\_nth (2112.07554 or 1805.00034)..
+
+Stopping after wave 2: budget reached (2/2 waves used). Writing the report from the board.
+
+\textit{Research report:}\par
+\subsubsection*{Shape evolution of emulated cluster gas profiles and its effect on hydrostatic mass bias, z = 0 to z = 0.5}
+\subsubsection*{Abstract}
+We surveyed recent work on hydrostatic-equilibrium (HSE) mass bias in galaxy clusters. We then used the HACC hydrodynamics emulator to predict scaled gas-density (CGD) and temperature (CTP) profiles at z = 0 and z = 0.4987. The task asked for z = 1, but the emulator's CGD and CTP profiles only run to z = 0.4987.
+
+Because the profiles are already scaled, any difference between the two redshifts is shape evolution alone. Using finite-difference slopes across the bins either side of R500, the thermal-only HSE mass at fixed true mass is:
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{} & \textbf{z = 0} & \textbf{z = 0.4987} \\ \midrule \endhead
+M\_HSE,500c/M500 & 0.925 & 0.840 \\
+b\_HSE (FLAMINGO sign convention) & -0.075 & -0.160 \\
+\bottomrule\end{longtable}
+The shape-only shift in M\_HSE,500c is -9.2\%. Its significance lies between 1.3 sigma and 4.3 sigma, depending on the unknown correlation of emulator errors between bins. The shift is driven by a 12.4\% drop in scaled temperature at R500, partly offset by a 3.7\% steepening of the slope sum. Its sign matches FLAMINGO's cluster-scale trend.
+
+The redshift drop in scaled temperature is robust to the kinetic-AGN parameters. The resulting mass shift, however, is of the same size as the kinetic-AGN spread. A Nelson et al. non-thermal pressure correction overcorrects the masses, and its redshift dependence comes entirely from an assumed radius conversion.
+
+All derived quantities were computed by hand from tool-returned emulator values, not by a script. The absolute bias values also depend on an unconfirmed T500 convention.
+
+\subsubsection*{Background}
+\textbf{Size and trends of the bias in simulations.} FLAMINGO (arXiv:2409.07849) defines b\_HSE = (M\_HSE,500c - M500c)/M500c. It finds a median b\_HSE of about -0.1 for groups and about -0.2 for clusters. The scatter is smallest, about 0.1, at M500c \textasciitilde{} 1e14 Msun. The paper also states: ''At a fixed true mass, the hydrostatic masses increase (decrease) with redshift on group (cluster) scales, and the scatter increases''. The bias is insensitive to the analytic profile form but sensitive to goodness of fit and to feedback strength. The verbatim quote on the redshift trend is stored in the bibliography. The -0.1/-0.2 amplitudes come from the abstract and have no verbatim quote.
+
+\textbf{Methods.} Lau, Nagai and Nelson (arXiv:1306.3993) show that the summation and averaging (Euler/Jeans) methods of computing the bias are equivalent. The gas-acceleration term is small in the interior but not negligible in the outskirts of massive, accreting clusters.
+
+\textbf{Non-thermal pressure.} Nelson, Lau and Nagai (arXiv:1404.4636) is the only paper read in full text. It gives a redshift-universal fit for the non-thermal pressure fraction:
+
+f\_nth = P\_rand/P\_tot = 1 - A\{1 + exp[-((r/r200m)/B)\textasciicircum{}gamma]\}
+
+\begin{itemize}
+  \item Parameters: A = 0.452 +/- 0.001, B = 0.841 +/- 0.008, gamma = 1.628 +/- 0.019.
+  \item Accuracy: about 10\% over 0.1-1.5 r200m, valid out to z = 1.5.
+  \item Behaviour: f\_nth is about 10\% in the core and about 50\% near r200m. There is no systematic mass dependence for M200m \textgreater{}= 6e14 Msun/h. Rapidly accreting clusters lie 5-15\% higher.
+  \item The redshift dependence seen with r200c scaling ''has completely disappeared'' when radius is scaled by r200m.
+\end{itemize}
+Other papers in the survey brief were not read and are cited here only as the brief's pointers: arXiv:1308.6589, arXiv:1112.3659, arXiv:2511.10730 and arXiv:1507.04338 on merger and non-thermal origins of the bias; arXiv:1411.5361 on accretion-driven steepening of outskirt slopes.
+
+\textbf{Observations.}
+
+\begin{itemize}
+  \item X-COP (arXiv:1805.00034, abstract only) finds median f\_nth of about 6\% at R500 and about 10\% at R200, with 1-b = 0.85 +/- 0.05 for Planck SZ masses. It excludes the B of about 0.6 required by CMB plus cluster counts. Its verbatim quote is ''We find that hydrostatic masses require little correction''.
+  \item Wicker et al. (arXiv:2204.12823) find 3.8 sigma evidence for a redshift-dependent B under a Planck Omega\_m prior. The trend is sample-dependent and degenerate with Omega\_m, and the amplitude is B of about 0.8.
+  \item SPT (arXiv:1404.6250) finds that clusters at 0.6 \textless{} z \textless{} 1.2 are ''slightly (\textasciitilde{}40\%) cooler'' in scaled temperature, both inside 0.1 R500 and beyond R500, than clusters at 0.3 \textless{} z \textless{} 0.6. Pressure evolves little outside the core.
+\end{itemize}
+\subsubsection*{Results}
+\paragraph{Emulator configuration}
+The CGD and CTP outputs are already scaled: rho\_gas/rho\_crit(z) and T/T500. They are given on 19 log-spaced bins in r/R500c from 0.0154 to 2.74, with log spacing dln r = 0.2878. Each bin has a GP mean and standard deviation (y\_std).
+
+The emulator has seven inputs:
+
+\begin{itemize}
+  \item Five subgrid parameters, all described by the tool as AGN controls:
+  \item wind: kappa\_w (2-4), e\_w (0.2-1);
+  \item black-hole seed mass: M\_seed (0.6-2, in units of 10\textasciicircum{}6 Msun);
+  \item kinetic feedback: v\_kin (0.1-1.2, in units of 10\textasciicircum{}4 km/s), eps\_kin (0.02-1.2, in units of 10).
+  \item Two cosmology parameters: omega\_m and sigma\_8.
+\end{itemize}
+Halo mass is not an input. There is no separate stellar or SN feedback parameter. The tool reports neither the halo mass selection nor the T500 definition.
+
+The fiducial run uses kappa\_w = 3, e\_w = 0.6, M\_seed = 1.3, v\_kin = 0.65, eps\_kin = 0.61, omega\_m = 0.1375 and sigma\_8 = 0.8. One check could not be made: the critic noted that the tool excerpts shown display only the stellar mass function's redshift list, which extends to about z = 1.75. The z = 0.4987 ceiling for CGD and CTP is therefore not directly visible in the quoted output.
+
+The prediction files are in \texttt{runs/\allowbreak{}261020\_\allowbreak{}110147/\allowbreak{}} under the project directory, named \texttt{C\{GD,\allowbreak{}TP\}\allowbreak{}\_\allowbreak{}z\{0.0000,\allowbreak{}0.4987\}\allowbreak{}\_\allowbreak{}prediction.csv}.
+
+\paragraph{Profile comparison between redshifts}
+[[FIGURE 6]]
+
+Figure 6 compares the fiducial scaled gas density at z = 0 and z = 0.4987. The two agree within about 2\% over 0.2-0.9 R500. At 1.54 R500 the density is about 13\% lower at z = 0.4987, so the outskirts are steeper at higher redshift.
+
+[[FIGURE 7]]
+
+Figure 7 compares the fiducial scaled temperature. It is lower at z = 0.4987 at all radii above 0.03 R500: by 12\% at R500 and by 30\% at 2.7 R500.
+
+The GP uncertainty is much larger at z = 0.4987 in the inner density bins: y\_std/mean is about 0.68 at z = 0.4987 against about 0.12 at z = 0 in the innermost bin.
+
+\paragraph{Logarithmic slopes and HSE mass}
+Slopes are finite differences in ln y versus ln r. The HSE mass is
+
+M\_HSE(\textless{}x R500)/M500 = -(x t/2)(s\_n + s\_T)
+
+where t = T/T500 and s\_n, s\_T are the density and temperature slopes. This assumes kT500 = G mu m\_p M500/(2 R500) with mu = 0.59, and it treats the density slope as the n slope (constant mu).
+
+All four fiducial files were read in full. The numbers below were then recomputed by hand from those values.
+
+\begin{longtable}{@{}p{0.137\textwidth}p{0.137\textwidth}p{0.137\textwidth}p{0.137\textwidth}p{0.137\textwidth}p{0.137\textwidth}p{0.137\textwidth}@{}}
+\toprule
+\textbf{r/R500} & \textbf{Bins used} & \textbf{z} & \textbf{dln rho/dln r} & \textbf{dln T/dln r} & \textbf{t} & \textbf{M\_HSE/M500} \\ \midrule \endhead
+0.487 & central, 0.365-0.649 & 0 & -1.863 & -0.271 & -- & 0.408 \\
+0.487 & central, 0.365-0.649 & 0.4987 & -1.872 & -0.345 & -- & 0.382 \\
+1.000 & 0.866-1.155 & 0 & -2.545 & -0.583 & 0.592 & 0.925 \\
+1.000 & 0.866-1.155 & 0.4987 & -2.738 & -0.505 & 0.518 & 0.840 \\
+1.54 (taken as R200) & central, 1.155-2.054 & 0 & -2.929 & -0.912 & 0.430 & 1.272 \\
+1.54 (taken as R200) & central, 1.155-2.054 & 0.4987 & -3.097 & -1.072 & 0.380 & 1.221 \\
+\bottomrule\end{longtable}
+An earlier value of -1.98 for the density slope ''at 0.5 R500'' was a one-sided difference over the 0.487-0.649 pair. It therefore measures the slope at 0.562 R500. The 0.365-0.487 pair gives -1.745. With the bin pair stated, the discrepancy is resolved.
+
+The density slope steepens with redshift at R500 and beyond. At R500 the temperature slope flattens with redshift, while at 1.54 R500 it steepens.
+
+Treating 1.54 R500 as R200 assumes an NFW profile with concentration about 4.
+
+\paragraph{Implied bias, shape-only shift and error bracket}
+If the true mass is taken as M500, the uncorrected bias is b\_HSE = -0.075 at z = 0 and -0.160 at z = 0.4987. These absolute values depend on the T500 convention. The ratio between redshifts depends only on self-similar T500 scaling at fixed M500, because the profiles are already scaled.
+
+The shape-only change is M\_HSE,500c(z = 0.4987)/M\_HSE,500c(z = 0) - 1 = -9.2\%. It breaks down as:
+
+\begin{itemize}
+  \item the scaled temperature at R500 falls from 0.592 to 0.518 (-12.4\%);
+  \item the slope sum steepens from -3.128 to -3.243 (+3.7\%).
+\end{itemize}
+The errors come from linear propagation of the GP y\_std, bracketed two ways:
+
+\begin{longtable}{@{}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}p{0.192\textwidth}@{}}
+\toprule
+\textbf{Assumption about adjacent bins} & \textbf{M\_HSE/M500, z = 0} & \textbf{M\_HSE/M500, z = 0.4987} & \textbf{Error on the -9.2\% shift} & \textbf{Significance} \\ \midrule \endhead
+Independent (upper bound) & 0.925 +/- 0.049 & 0.840 +/- 0.047 & +/- 7.0\% & 1.3 sigma \\
+Fully correlated (lower bound) & 0.925 +/- 0.010 & 0.840 +/- 0.018 & +/- 2.1\% & 4.3 sigma \\
+\bottomrule\end{longtable}
+Under the independent-bin assumption, the R500 slope errors are:
+
+\begin{itemize}
+  \item z = 0: +/- 0.155 (density) and +/- 0.055 (temperature);
+  \item z = 0.4987: +/- 0.100 and +/- 0.135.
+\end{itemize}
+The true GP covariance between bins is unknown, so the true significance lies inside this bracket.
+
+An earlier error of +/- 0.15 M500 (+/- 0.3 in units of k\_B T500 R500/(G mu m\_p)) overstated the uncertainty. The independent-bin value is +/- 0.05 M500 (+/- 0.10 in those units).
+
+\paragraph{Kinetic-AGN feedback robustness}
+The CTP predictions were read at the kinetic-AGN extremes, with all other parameters at fiducial values:
+
+\begin{longtable}{@{}p{0.240\textwidth}p{0.240\textwidth}p{0.240\textwidth}p{0.240\textwidth}@{}}
+\toprule
+\textbf{Variant} & \textbf{z} & \textbf{t(R500)} & \textbf{dln T/dln r} \\ \midrule \endhead
+AGN-min (v\_kin = 0.1, eps\_kin = 0.02) & 0 & 0.565 & -0.617 \\
+AGN-min & 0.4987 & 0.490 & -0.589 \\
+AGN-max (v\_kin = 1.2, eps\_kin = 1.2) & 0 & 0.600 & -0.573 \\
+AGN-max & 0.4987 & 0.526 & -0.621 \\
+\bottomrule\end{longtable}
+At fixed redshift:
+
+\begin{itemize}
+  \item The AGN spread in t(R500) is 6.0\% at z = 0 and 7.1\% at z = 0.4987. The GP y\_std on t(R500) is about 1\% at z = 0 and 2-3\% at z = 0.4987, so this spread is about 4 sigma and about 2 sigma respectively.
+  \item The spread in temperature slope is only 0.03-0.04, and its sign reverses between the two redshifts.
+\end{itemize}
+The redshift change in ln t(R500) is -0.144 for AGN-min and -0.132 for AGN-max, against -0.134 for the fiducial run. This is about twice the AGN spread at fixed redshift (0.060 and 0.071 in ln t). The scaled-temperature cooling with redshift is therefore robust to kinetic-AGN feedback.
+
+The mass comparison is weaker. It was contested by the critic because the variant density profiles were not read: the density slope was held at the fiducial values of -2.54 (z = 0) and -2.74 (z = 0.4987) for both variants.
+
+\begin{itemize}
+  \item On that basis, the shape-only shift in ln M\_HSE,500c is -9.0\% for AGN-min and -5.6\% for AGN-max.
+  \item The AGN-max minus AGN-min difference at fixed redshift is +4.6\% at z = 0 and +8.1\% at z = 0.4987.
+  \item To first order, the M\_HSE redshift shift is the same size as the kinetic-AGN spread and cannot be cleanly separated from it.
+\end{itemize}
+\paragraph{Non-thermal pressure correction}
+The Nelson et al. (arXiv:1404.4636) f\_nth was applied with P\_tot = P\_th/(1 - f\_nth), giving
+
+M\_tot/M500 = (t/2)/(1-f) * [-(s\_n+s\_T) + dln(1-f)/dln r].
+
+Converting R500c to r200m required assumptions not supplied by the emulator: an NFW profile with c200c = 4 and Omega\_m = 0.3. These give R500c = 0.652 R200c and R200m/R500c = 2.60 at z = 0 and 1.94 at z = 0.4987.
+
+\begin{longtable}{@{}p{0.320\textwidth}p{0.320\textwidth}p{0.320\textwidth}@{}}
+\toprule
+\textbf{} & \textbf{z = 0} & \textbf{z = 0.4987} \\ \midrule \endhead
+f\_nth at R500 & 0.207 & 0.260 \\
+dln(1-f)/dln r & -0.196 & -0.285 \\
+M\_tot/M500 & 1.093 & 1.035 \\
+Corrected b\_HSE & +0.09 & +0.035 \\
+Correction factor M\_tot/M\_th & 1.18 & 1.23 \\
+\bottomrule\end{longtable}
+The correction overshoots: the corrected masses exceed M500. The implied f\_nth of 21-26\% at R500 is well above the X-COP median of about 6\%. The corrected redshift shift is -5.3\%. If R200m/R500c is held at 2.60 at both redshifts, the shift stays at -9.2\%. The redshift dependence of the correction therefore comes entirely from the assumed radius conversion.
+
+\subsubsection*{Discussion}
+The main result is that profile shape alone, at fixed scaled normalisation, lowers the thermal HSE mass at R500 by about 9\% between z = 0 and z = 0.5. The effect enters mainly through the lower scaled temperature at R500, rather than through the logarithmic slopes. The slopes do steepen in the outskirts at higher redshift. This is qualitatively what arXiv:1411.5361 attributes to higher accretion rates, but here it only partly offsets the temperature drop.
+
+\textbf{Agreement with FLAMINGO.} The emulated mass decreases with redshift, matching the sign of FLAMINGO's cluster-scale trend. The uncorrected z = 0.4987 bias of -0.16 is close to FLAMINGO's cluster median of about -0.2, and the z = 0 value of -0.075 is closer to its group value of about -0.1. The emulator's mass bin is unknown, however, so it cannot be placed on FLAMINGO's group or cluster scale. The absolute bias values also depend on the unconfirmed T500 convention. FLAMINGO's sensitivity to feedback is mirrored here: the kinetic-AGN spread in M\_HSE is comparable to the redshift shift.
+
+\textbf{Comparison with SPT.} The emulated cooling of 12\% at R500 and 30\% at 2.7 R500 points the same way as SPT's roughly 40\% cooler high-redshift clusters. The redshift ranges do not overlap, so the comparison is only qualitative.
+
+\textbf{Non-thermal correction.} Adding the Nelson f\_nth moves the bias from negative to positive, which suggests the correction is too strong for this emulator. The critic noted two caveats:
+
+\begin{itemize}
+  \item the Nelson sample is restricted to massive clusters (M200m \textgreater{}= 6e14 Msun/h) and uses a random-gas-motion definition;
+  \item the fixed-concentration radius conversion ignores the decline of concentration with redshift and does not use the emulator's own cosmology.
+\end{itemize}
+An X-COP-calibrated f\_nth (arXiv:2112.07554 or arXiv:1805.00034) should be tested before concluding that the correction overcorrects. The emulated profiles are thermal-only, so the uncorrected bias reflects shape effects and the mass convention, not non-thermal support.
+
+\textbf{Dead ends.}
+
+\begin{itemize}
+  \item Halo-mass dependence (groups versus clusters) cannot be tested, because mass is not an emulator input and the profiles are stacked in r/R500 for one fixed selection.
+  \item The table loader failed on the CSV header row ''x,y\_mean,y\_std'' (''could not convert string 'x' to float64''). This forced plain-text reads and hand arithmetic.
+  \item Citing the numerical benchmarks verbatim and comparing with X-COP profiles were blocked when the budget ran out. The bibliography has no verbatim quotes for FLAMINGO -0.1/-0.2, X-COP f\_nth 6\% and 1-b = 0.85, or the Planck B values. No X-COP profile values were ever quoted.
+\end{itemize}
+\subsubsection*{Limitations}
+\begin{itemize}
+  \item \textbf{No scripted arithmetic.} Every slope, mass and error was computed by hand from tool-returned bin values. The critic also noted that the excerpts recorded in evidence stop at the 0.0866 R500 bin, so the outer-bin values used were read but are not reproduced in the quoted output.
+  \item \textbf{Unknown bin covariance.} The GP covariance between bins is unknown, so the significance of the -9.2\% shift is bracketed (1.3-4.3 sigma) rather than measured. A Monte Carlo would need a Python tool.
+  \item \textbf{Unconfirmed emulator conventions.} The T500 definition, the temperature weighting and the halo mass selection were not confirmed. This affects all absolute b\_HSE values.
+  \item \textbf{Assumed radii.} R200 was taken as 1.54 R500, and the R200m/R500c conversion assumed c200c = 4 and Omega\_m = 0.3.
+  \item \textbf{Incomplete feedback test.}
+  \item The wind variants were generated but never read; they were the stand-in for SN feedback, which the emulator does not parametrise separately.
+  \item The kinetic-AGN density profiles were not read, so the AGN mass comparison holds the density slope fixed.
+  \item M\_seed was not varied.
+  \item No feedback comparison plots were made.
+  \item \textbf{No fit-based comparison.} No analytic-form fits (Vikhlinin density, generalized temperature model) and no fitted-versus-direct-gradient comparison were done. The tools cannot do nonlinear fitting.
+  \item \textbf{Thin literature coverage.} Only arXiv:1404.4636 was read in full; the other five cited papers are abstract-only. The 2023-2025 search, including arXiv:2511.10730, was not run. arXiv:1805.00035, arXiv:1308.6589, arXiv:1411.5361 and arXiv:1507.04338 were not read. No paper figures were extracted.
+  \item \textbf{Redshift range.} The high-redshift point is z = 0.4987, not z = 1.
+\end{itemize}
+\subsubsection*{Open directions}
+\begin{enumerate}
+  \item Script the slope and HSE-mass calculation with Monte Carlo sampling of the GP profiles, or the GP covariance if available, to pin down the significance of the -9.2\% shape-only shift.
+  \item Read the existing wind-variant and kinetic-AGN CGD files to complete the feedback test with real density slopes, and compare the feedback spread in M\_HSE with the redshift shift at both redshifts.
+  \item Establish the emulator's T500 definition, temperature weighting and halo mass selection from the HACC emulator documentation, so that absolute b\_HSE values can be compared with FLAMINGO's group and cluster medians.
+  \item Redo the non-thermal correction with a redshift-dependent concentration and the emulator cosmology, and compare it against an X-COP-calibrated f\_nth (arXiv:2112.07554, arXiv:1805.00034).
+  \item Compare finite-difference slopes with slopes from analytic-profile fits or wider-baseline smoothed slopes, to test FLAMINGO's goodness-of-fit sensitivity and the method dependence in arXiv:1306.3993.
+  \item Read FLAMINGO in full text to verify the bias amplitudes and the redshift trend for the matching mass range, and add arXiv:2511.10730, arXiv:1411.5361 and arXiv:1805.00035 with verbatim quotes.
+\end{enumerate}
+```json \{''open\_directions'': [ \{''direction\_id'': ''new'', ''goal'': ''Script the slope and HSE-mass calculation with Mon
+
+\end{document}
