@@ -1,0 +1,342 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Viability of keV sterile-neutrino dark matter under BBN and X-ray constraints, 2024--2026}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-combo-sterile-bbn-xray}
+\date{2026-10-21}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+We report a tool-assisted literature study of which regions of the sterile-neutrino dark-matter plane $(m_s,\sin^2 2\theta)$ remain viable once Big Bang nucleosynthesis (BBN) and X-ray constraints are combined. BBN quantities ($Y_p$, D/H, $N_{\rm eff}$), relic densities and radiative-decay rates were computed with a sterile-neutrino BBN/X-ray server. That server's BBN module is a PRyMordial-calibrated fit driven only by $\Delta N_{\rm eff}$. The only production mechanism it models reliably is non-resonant Dodelson--Widrow (DW) production.
+
+On the DW relic line ($\Omega_s h^2=0.12$) the computed $\Delta N_{\rm eff}$ lies between $2.2\times10^{-4}$ and $1.6\times10^{-3}$, with $|\Delta\chi^2_{\rm BBN}|\le0.02$. A $60\times60$ scan of $m_s=1$--$100$ keV places the 95\% BBN limit at $\sin^2 2\theta\simeq8.2\times10^{-8}$ (7 keV) and $1.7\times10^{-8}$ (50 keV), two or more orders of magnitude above the relic line. Linearised alternative error budgets keep the BBN limit 180--3600 times above the relic line. The tool's decay rates agree with the standard radiative formula to about 2\%, and its tabulated limits exclude DW production as all of the dark matter at 7--20 keV.
+
+The 2025 XRISM ten-cluster stack (arXiv:2510.24560) gives $\Gamma<0.97\times10^{-27}$ s$^{-1}$ at $m_s=7.1$ keV. A hand evaluation converts this to $\sin^2 2\theta\lesssim4$--$5\times10^{-10}$, which does not exclude the 3.5 keV line. The surviving full-dark-matter option is resonant (Shi--Fuller) production. Following arXiv:2507.18752 it requires an initial asymmetry $L\gtrsim0.5$, $m_s\gtrsim35$ keV and $\sin^2 2\theta\lesssim10^{-14}$; this finding was flagged as contested on review. A hand inversion of that paper's fitting function puts the low-mass edge at $m_s\approx29$--$37$ keV.
+
+The X-ray and asymmetry edges of the band at 30--60 keV could not be quantified, because the relevant limits exist only as figures that could not be extracted. The BBN effect of the asymmetry itself is not modelled by the tool and was estimated only roughly.
+\end{abstract}
+
+\section{Introduction}
+The user asked for a survey of 2024--2026 arXiv work on sterile-neutrino dark matter, combined with two quantitative constraints, to determine which $(m_s,\sin^2 2\theta)$ regions remain viable. The first constraint is BBN, with $Y_p$ and D/H numbers to be computed using the sterile-neutrino tools. The second is X-ray decay-line limits. Results were to be quantified with tool calls where possible.
+
+The session organised the question into lines of investigation:
+\begin{enumerate}
+\item tool-computed BBN and relic-density constraints across the plane;
+\item conversion of recent X-ray decay-rate limits into $\sin^2 2\theta(m_s)$ upper limits, with a check against the tool;
+\item extraction of the resonant-production (lepton-asymmetry) results that set the lower and low-mass edges of the band;
+\item the structure-formation low-mass edge;
+\item verbatim re-checks of contested numbers;
+\item a band-edge table at 15, 20, 30, 40 and 60 keV;
+\item a robustness test of the BBN conclusion.
+\end{enumerate}
+Items 5 and 6 ended blocked.
+
+One point of record matters at the outset. An initial automatically generated survey summary stated that no sterile-neutrino BBN tools were available and gave a low-mass edge of "$m_s\gtrsim10$ keV". Both statements were later corrected: the tools were used throughout, and the edge revised to roughly 30--37 keV.
+
+\section{Methods}
+All computations ran by local execution.
+
+\paragraph{Sterile-neutrino server.} The sterile-neutrino BBN/X-ray server provided the following tools:
+\begin{itemize}
+\item \texttt{scan\_sterile\_nu\_parameters}: a 60-point-per-axis scan, $m_s=10^3$--$10^5$ eV and $\sin^2 2\theta=10^{-14}$--$10^{-6}$, 3600 points;
+\item \texttt{predict\_sterile\_nu\_grid}: grids of 80, 4, 45 and 10 points;
+\item \texttt{predict\_sterile\_nu}, including its SF mode with a \texttt{lepton\_asymmetry} argument;
+\item \texttt{predict\_sterile\_nu\_xray\_line}, run at selected points;
+\item \texttt{plot\_sterile\_nu\_exclusion} and \texttt{plot\_sterile\_nu\_bbn\_impact}.
+\end{itemize}
+
+According to its self-description, the server's BBN uses a fit to the PRyMordial network (accuracy $<0.3\%$) for $Y_p$, D/H and $^7$Li. A point is excluded when $\Delta\chi^2>3.84$ against the Standard Model (SM). The comparison values are $Y_p=0.2449\pm0.004$ (Aver, Olive \& Skillman 2021) and D/H$=(2.547\pm0.025)\times10^{-5}$. The model is stated to be valid for $m_s\lesssim100$ keV, and MeV-scale decay injection is not modelled.
+
+The server's skill notes give the radiative rate
+\begin{equation}
+\Gamma=1.36\times10^{-32}\,{\rm s^{-1}}\left(\frac{\sin^2 2\theta}{10^{-10}}\right)\left(\frac{m_s}{\rm keV}\right)^5 ,\qquad E_\gamma=m_s/2 .
+\end{equation}
+X-ray fluxes are whole-halo values with $f_{\rm DM}=1$ and no field-of-view cut. Exclusion is judged against tabulated limits matched within 30\% in mass.
+
+\paragraph{Literature.} Papers were found with arXiv abstract search and metadata lookup. Full texts of arXiv:2405.06509, 2510.24560, 2507.18752, 1609.00667 and 2507.20659 were downloaded and read in chunks. Attempts to extract figures from arXiv:1609.00667 (Figs.~7--8) and arXiv:2507.20659 (Fig.~1) failed.
+
+\paragraph{Hand calculations.} Several quantities were obtained by the assistant's hand arithmetic, not by tools:
+\begin{itemize}
+\item XRISM mixing-angle limits from the paper's polynomial fit;
+\item inversion of the arXiv:2507.18752 fitting functions;
+\item the reconstruction of the tool's $\chi^2$ error budget;
+\item linearised alternative error budgets;
+\item the lepton-asymmetry $Y_p$ shift.
+\end{itemize}
+These are labelled as such below. The supplement holds the full tool-call log.
+
+\section{Results}
+
+\subsection{Capabilities of the sterile-neutrino tools}
+The BBN module responds only to $\Delta N_{\rm eff}$. The self-description and an early finding listed Planck $N_{\rm eff}=2.99\pm0.17$ among the exclusion inputs. A later reconstruction (Section~3.3) indicates that the $\chi^2$ in fact uses $Y_p$ and D/H only.
+
+The SF mode is explicitly labelled a heuristic: its $\Delta N_{\rm eff}$ is $0.1\times$ the DW value, "not a resonant-production calculation". At $m_s=7.1$ keV, $\sin^2 2\theta=7\times10^{-11}$ and $L=10^{-3}$ it returned $\Omega_s h^2=432$. The session judged this unphysical and recorded the SF mode as a dead end.
+
+At the arXiv:2507.18752 benchmark ($m_s=37$ keV, $\sin^2 2\theta=1.5\times10^{-14}$, with $L=0.1$, the tool's maximum) the tool gave:
+\begin{itemize}
+\item $\Delta N_{\rm eff}=3.5\times10^{-8}$;
+\item $Y_p=0.24682$ and D/H$=2.443\times10^{-5}$, identical to the SM, with $\Delta\chi^2=0.00$;
+\item $\Gamma=1.42\times10^{-28}$ s$^{-1}$ at $E_\gamma=18.5$ keV;
+\item $\Omega_s h^2=25.1$, about 200 times the observed density.
+\end{itemize}
+The paper's fit instead places this point at the observed density for $L\approx0.7$. The asymmetry itself does not enter the tool's BBN abundances, since there is no $\xi_e$ shift of $n/p$. The tool therefore cannot test published resonant windows on either the BBN or the relic-density side.
+
+\subsection{DW scan of the plane and BBN}
+Of the 3600 scan points, 546 are BBN-excluded and 1740 overclose ($\Omega_s h^2>0.12$). Table~\ref{tab:bbnlim} lists the tool's 95\% BBN upper limits.
+
+\begin{table}[h]
+\centering
+\caption{Tool 95\% BBN upper limits on $\sin^2 2\theta$ from the DW scan.}
+\label{tab:bbnlim}
+\begin{tabular}{lcccccc}
+\toprule
+$m_s$ (keV) & 1 & 7 & 13 & 26 & 50 & 100\\
+\midrule
+$\sin^2 2\theta$ limit & $3.9\times10^{-7}$ & $8.2\times10^{-8}$ & $4.4\times10^{-8}$ & $2.4\times10^{-8}$ & $1.7\times10^{-8}$ & $9.3\times10^{-9}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+
+Figure~\ref{fig:10} shows the resulting DW exclusion plane. As read in the session, the $\Omega_s h^2=0.12$ line descends from $\sin^2 2\theta\approx2.5\times10^{-10}$ at 7.1 keV to $7.6\times10^{-12}$ at 50 keV, with overclosure above it. The BBN-excluded region lies only above $\sim10^{-8}$--$10^{-7}$, so it never reaches the relic line. Below the line, sub-dominant DW sterile neutrinos are allowed down to the X-ray limits; this is a medium-confidence reading of the plot.
+
+The precise relic-line points and their BBN output are given in Table~\ref{tab:relic}. In the 80-point grid, the SM baseline is $Y_p=0.246815$, D/H$=2.4433\times10^{-5}$ and $N_{\rm eff}=3.044$, with absolute $\chi^2=2.77$. At 7.1 keV with $\sin^2 2\theta=3\times10^{-10}$ the tool gives $Y_p=0.246840$ and D/H$=2.44395\times10^{-5}$, indistinguishable from the SM.
+
+The DW free-streaming lengths reported are 151 kpc (7.1 keV), 71.6 kpc (15 keV) and 53.7 kpc (20 keV). At the 20 keV relic point the tool's \texttt{overcloses} flag was set although $\Omega_s h^2$ was reported as 0.12. This appears to be a threshold rounding effect and was not investigated.
+
+\begin{table}[h]
+\centering
+\caption{Tool output on the DW relic line ($\Omega_s h^2=0.12$).}
+\label{tab:relic}
+\begin{tabular}{cccccc}
+\toprule
+$m_s$ (keV) & $\sin^2 2\theta$ & $\Delta N_{\rm eff}$ & $\Delta\chi^2_{\rm BBN}$ & $\Gamma$ (s$^{-1}$) & $E_\gamma$ (keV)\\
+\midrule
+7.1 & $2.545\times10^{-10}$ & $1.6\times10^{-3}$ & $-0.020$ & $6.25\times10^{-28}$ & 3.55\\
+10 & $1.374\times10^{-10}$ & $1.1\times10^{-3}$ & $-0.014$ & $1.87\times10^{-27}$ & 5\\
+20 & $3.946\times10^{-11}$ & $5.6\times10^{-4}$ & $-0.007$ & $1.72\times10^{-26}$ & 10\\
+50 & $7.583\times10^{-12}$ & $2.2\times10^{-4}$ & $-0.003$ & $3.23\times10^{-25}$ & 25\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+BBN begins to exclude only far above the relic line:
+\begin{itemize}
+\item at 7.1 keV near $\sin^2 2\theta\sim10^{-7}$: $\Delta N_{\rm eff}=0.62$, $Y_p=0.2549$, D/H$=2.649\times10^{-5}$, $\Delta\chi^2=5.9$;
+\item at 50 keV near $3\times10^{-8}$: $\Delta N_{\rm eff}=0.88$, $\Delta\chi^2=16.8$.
+\end{itemize}
+A second grid covered $m_s=15,20,30,40,60$ keV and $\sin^2 2\theta=10^{-15}$--$10^{-11}$ (45 points). It showed no BBN exclusion, with $|\Delta\chi^2|\le0.0044$ and $\Delta N_{\rm eff}\le3.4\times10^{-4}$. Only the point at 60 keV, $10^{-11}$ overcloses ($\Omega_s h^2=0.22$). Lifetimes in this grid span $9.45\times10^{23}$--$9.68\times10^{30}$ s.
+
+\subsection{BBN response to $N_{\rm eff}$ and error-budget robustness}
+
+
+
+
+
+
+Figure~\ref{fig:12} shows the tool's $Y_p$ and D/H as functions of $N_{\rm eff}$ alone, with data bands; $m_s$ does not enter. The tool reports:
+\begin{itemize}
+\item SM values $Y_p=0.24682$ and D/H$=2.4433\times10^{-5}$;
+\item slopes $dY_p/dN_{\rm eff}=0.01351$ and $d({\rm D/H}\times10^5)/dN_{\rm eff}=0.3308$;
+\item for one fully thermalised sterile neutrino ($N_{\rm eff}=4.044$), $Y_p=0.2596$, which is $3.7\sigma$ above observation, and D/H$=2.777\times10^{-5}$;
+\item a BBN-only limit $\Delta N_{\rm eff}<0.548$ (95\%).
+\end{itemize}
+This makes the physics of the null result explicit. BBN tests a keV sterile neutrino only through extra radiation, and DW dark matter carries $\Delta N_{\rm eff}\lesssim10^{-3}$, more than two orders of magnitude below the reach.
+
+An early finding stated that the SM D/H was $-4.1\sigma$ from observation. The assistant later reconstructed the error budget from the tool outputs (medium confidence). The tool's $\chi^2$ is reproduced if it uses $Y_p$ and D/H only, with a total D/H error of $\simeq0.065\times10^{-5}$. That implies a theory error of $\simeq0.060\times10^{-5}$ added in quadrature to the observational $0.025\times10^{-5}$.
+
+Under this budget the baseline splits as $\chi^2=0.23\,(Y_p)+2.54\,({\rm D/H})=2.77$. The reconstruction reproduces the tool's values at three points:
+\begin{itemize}
+\item $\Delta\chi^2=-1.14$ at $\Delta N_{\rm eff}=0.161$;
+\item $\Delta\chi^2=5.9$ at $\Delta N_{\rm eff}=0.62$;
+\item $\Delta\chi^2=-0.367$ at $\Delta N_{\rm eff}=0.031$. Including Planck $N_{\rm eff}$ would have given about $-0.21$ here.
+\end{itemize}
+It also reproduces the $\Delta N_{\rm eff}<0.548$ limit. The SM D/H offset is therefore $-1.6\sigma$ against the tool's own budget; $-4.1\sigma$ applies only with the observational error alone. Whether this is a calibration or nuclear-rate choice was left as an open question.
+
+Linearised alternative budgets were built by the assistant from the tool slopes. They use the DW scaling $\Delta N_{\rm eff}=6.18\times10^6\sin^2 2\theta$ at 7.1 keV and $2.95\times10^7\sin^2 2\theta$ at 50 keV, and are collected in Table~\ref{tab:budget}.
+
+\begin{table}[h]
+\centering
+\caption{95\% limits on $\Delta N_{\rm eff}$ under alternative error budgets (assistant's linearised estimates).}
+\label{tab:budget}
+\begin{tabular}{lc}
+\toprule
+Budget & $\Delta N_{\rm eff}$ limit\\
+\midrule
+$Y_p$ only & $<0.455$\\
+Tool default ($Y_p$ + D/H with theory error) & $<0.548$\\
+$Y_p$ + D/H, observational error only (SM $\chi^2=17.4$) & $<0.61$\\
+D/H only, with theory error & $<0.81$\\
+Planck $N_{\rm eff}$ (extreme check only) & $<0.28$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Planck row is only an extreme check, because a keV sterile neutrino is non-relativistic at recombination. In mixing angle the budgets map to:
+\begin{itemize}
+\item $\sin^2 2\theta<4.5\times10^{-8}$--$1.3\times10^{-7}$ at 7.1 keV, which is 180--510 times above the relic line;
+\item $9.5\times10^{-9}$--$2.8\times10^{-8}$ at 50 keV, which is 1250--3600 times above the relic line.
+\end{itemize}
+A direct tool grid agrees. At 50 keV, $\sin^2 2\theta=2.6\times10^{-8}$ ($\Delta N_{\rm eff}=0.766$) is excluded while $10^{-8}$ is allowed. At 7.1 keV, $7.5\times10^{-8}$ is allowed with $\Delta\chi^2=1.83$. The conclusion that BBN does not bind keV DW dark matter through $\Delta N_{\rm eff}$ thus survives every budget tested.
+
+\subsection{X-ray constraints}
+
+\paragraph{Rate normalisation.} The tool's rates lie within about 1.5\% of the analytic form $1.38\times10^{-29}\,{\rm s^{-1}}(\sin^2 2\theta/10^{-7})(m_s/{\rm keV})^5$. That form gives $6.34\times10^{-28}$ s$^{-1}$ at 7.1 keV and $3.27\times10^{-25}$ s$^{-1}$ at 50 keV on the relic line. The NuSTAR Galactic Centre paper (arXiv:1609.00667, Eq.~2) quotes $\Gamma=1.38\times10^{-32}\,{\rm s^{-1}}(\sin^2 2\theta/10^{-10})(m/{\rm keV})^5$. At 20 keV and $10^{-12}$ the tool gives $4.36\times10^{-28}$ s$^{-1}$, against $4.42\times10^{-28}$ s$^{-1}$ from that equation, a 1.4\% difference.
+
+\paragraph{XRISM.} The XRISM Collaboration (arXiv:2510.24560) stacked 3.75 Ms of Resolve data on ten clusters and found no unidentified lines in the 2.5--15 keV band. The abstract quotes a $3\sigma$ limit $\Gamma\sim1.0\times10^{-27}$ s$^{-1}$ for $m_s\sim7.1$ keV. It describes this as 3--4 times below the Hitomi Perseus limit and 5 times above the XMM-Newton stacked detection of Bulbul et al.\ (2014).
+
+The session further recorded a line-flux limit of $0.95\times10^{-6}$ ph cm$^{-2}$ s$^{-1}$, $\Gamma<0.97\times10^{-27}$ s$^{-1}$, and the mixing-angle fit
+\begin{equation}
+\frac{\sin^2 2\theta}{10^{-10}}<4.1\left(\frac{E}{3.55}\right)^{-4} f_1(E),
+\end{equation}
+with $f_1=7.8774-3.5017E+0.59087E^2-0.042245E^3+0.0010943E^4$ ($E$ in keV, valid 2.5--15 keV). These detailed numbers were marked contested. A planned verbatim re-extraction did not happen: the budget ran out, and the chunk read contained only the author list.
+
+The assistant's hand evaluation gives the limits in Table~\ref{tab:xrism}. At 7.1 keV the two routes differ slightly: $3.9\times10^{-10}$ from $\Gamma$ and $4.8\times10^{-10}$ from the polynomial ($f_1=1.18$). At $m_s=7.1$ keV and $\sin^2 2\theta=4\times10^{-10}$ the tool rate is $9.82\times10^{-28}$ s$^{-1}$, within 2\% of the XRISM limit.
+
+The tool lists the 3.5 keV line context as "debated", with best-fit $\sin^2 2\theta=7\times10^{-11}$ and range $(2\times10^{-11},2\times10^{-10})$. The implied rate of $\sim2\times10^{-28}$ s$^{-1}$ sits a factor $\sim5$ below the XRISM limit, so XRISM alone does not exclude the line. The tool's own tabulated limits, NuSTAR M31 (Roach+ 2020) and XMM-Newton blank sky (Dessert+ 2020), flag the same 7.1 keV point at $4\times10^{-10}$ as excluded.
+
+\begin{table}[h]
+\centering
+\caption{XRISM $3\sigma$ upper limits on $\sin^2 2\theta$ (assistant's evaluation of the arXiv:2510.24560 fit; contested inputs).}
+\label{tab:xrism}
+\begin{tabular}{lccccc}
+\toprule
+$m_s$ (keV) & 6 & 7.1 & 8 & 10 & 14\\
+\midrule
+limit & $\sim1.3\times10^{-9}$ & $\sim4$--$5\times10^{-10}$ & $\sim2.3\times10^{-10}$ & $\sim5.7\times10^{-11}$ & $\sim1.2\times10^{-11}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{DW relic line.} The tool's tabulated limits exclude the DW relic points at 7.1 and 10 keV (NuSTAR M31 and XMM blank sky) and at 20 keV (NuSTAR M31). The 50 keV point is "not excluded" only because no tabulated limit lies within 30\% in mass. For the relic points, the whole-halo Milky-Way-centre fluxes range from 11.9 ph s$^{-1}$ cm$^{-2}$ (7.1 keV) to 873 ph s$^{-1}$ cm$^{-2}$ (50 keV). These cannot be compared directly with field-of-view-limited published limits.
+
+\paragraph{NuSTAR Galactic Centre.} arXiv:1609.00667 states that in most of 10--50 keV its limits are the strongest. Near $m_s=20$ keV it improves earlier limits by about an order of magnitude, implying $m_s\lesssim16$ keV in the $\nu$MSM. The session also recorded the paper's flux scaling: $F\approx2.6\times10^{-6}$ cm$^{-2}$ s$^{-1}$ multiplied by $(m/20\,{\rm keV})^4(\sin^2 2\theta/10^{-14})(\Delta\Omega/4\,{\rm deg^2})(J/40\,{\rm GeV\,cm^{-3}\,kpc\,sr^{-1}})$, with $J_{\rm tot}=29$ and $\Delta\Omega_{\rm tot}\approx3.8$ deg$^2$. These details were marked contested and not re-verified. The paper gives its $\sin^2 2\theta$ limits only as curves in Figs.~7--8, so no numerical values at 10, 20 or 40 keV were obtained.
+
+\paragraph{Coverage of the tool's limits.} The tool's tabulated X-ray limits run out at higher masses. Point checks gave:
+\begin{itemize}
+\item 15 keV, $10^{-12}$ ($\Gamma=1.03\times10^{-28}$ s$^{-1}$): excluded by NuSTAR M31 and XMM blank sky;
+\item 20 keV: the boundary lies between $10^{-13}$ (not excluded, $\Gamma=4.36\times10^{-29}$ s$^{-1}$) and $10^{-12}$ (excluded);
+\item 30 keV at $10^{-13}$ and at $10^{-11}$ ($\Gamma=3.31\times10^{-26}$ s$^{-1}$, $E_\gamma=15$ keV), 40 keV at $10^{-14}$, and 60 keV at $10^{-14}$ ($\Gamma=1.06\times10^{-27}$ s$^{-1}$): none flagged.
+\end{itemize}
+The session inferred that the tool has no tabulated limits for line energies above about 10--13 keV ($m_s\gtrsim25$ keV). It therefore cannot reproduce the NuSTAR-GC/INTEGRAL edge at 30--60 keV. This inference was marked contested.
+
+\subsection{Resonant-production windows from the 2024--2026 literature}
+
+\paragraph{No single bound on the asymmetry.} Froustey and Pitrou (arXiv:2405.06509) combined full three-flavour neutrino transport with BBN. Per the session's extraction, they find that "the space of allowed initial asymmetries is generically unbound" with current abundance and CMB data. The stated reasons are that flavour equilibration is not complete in general and that the CMB bound is at least quadratic in the asymmetries. There is thus no single maximum $L$; only for a flavour-universal asymmetry is the bound tight ($\sim10^{-3}$). This finding was marked contested and its verbatim re-check was not performed. arXiv:2502.14960, a quantum-kinetic study of flavour asymmetries, was found by abstract search and states that large flavour asymmetries with almost vanishing total $B-L$ can evade BBN and CMB constraints if oscillations equilibrate flavours.
+
+\paragraph{Shi--Fuller revival.} Vogel et al.\ (arXiv:2507.18752) revive Shi--Fuller production for $L\gtrsim0.5$ at high temperature. The following items were verified verbatim in a later check:
+\begin{itemize}
+\item fitting functions valid for $15\le m_s\le60$ keV and $10^{-15}\le\sin^2 2\theta\le3\times10^{-13}$:
+\begin{equation}
+m_{\rm th}=1.329\,m_s^{1.044}(\sin^2 2\theta)^{0.055}\ {\rm keV},\qquad L=1.865\times10^{-12}\,m_s^{-1.813}(\sin^2 2\theta)^{-1.042},
+\end{equation}
+with average errors 1.3\% and 8.3\%;
+\item the conversion $m_{\rm th,new}\approx0.83\,m_{\rm th,old}+0.36$ keV;
+\item a Lyman-$\alpha$ preference $m_{\rm th}=4.1^{+33.3}_{-1.5}$ keV;
+\item $m_{\rm th}>8.4$ keV (galaxy counts) and $>8.5$ keV (Zelko+, 95\% CL);
+\item exclusion "at much greater than 95\% CL for $L<0.1$";
+\item initial $L$ given at $T=10$ GeV and reduced by a factor 5--10 by 10 MeV;
+\item the summary window $L\gtrsim0.5$, $m_s\gtrsim35$ keV, $\sin^2 2\theta\lesssim10^{-14}$, with X-ray limits from NuSTAR and INTEGRAL/SPI.
+\end{itemize}
+The paper's BBN check uses $L_\mu\approx0.68$ at 20 MeV. Despite the verbatim checks, the underlying findings remain marked contested on the board.
+
+\paragraph{Benchmark arithmetic.} The assistant's own evaluation of the fits at the benchmark ($37$ keV, $1.5\times10^{-14}$) gives $m_{\rm th}=10.0$ keV and $L=0.68$. An earlier finding had quoted 8.6 keV; that value was identified as an arithmetic error.
+
+\paragraph{Low-mass edge.} Inverting the $m_{\rm th}$ fit at $m_{\rm th}=8.5$ keV gives
+\begin{equation}
+m_{s,\min}=\left[\frac{8.5}{1.329(\sin^2 2\theta)^{0.055}}\right]^{1/1.044}\ {\rm keV}.
+\end{equation}
+By hand this is $\approx36.5$ keV at $\sin^2 2\theta=10^{-15}$, $32.3$ keV at $10^{-14}$, $31.6$ keV at $1.5\times10^{-14}$ and $28.6$ keV at $10^{-13}$. The $L=0.5$ contour meets this edge near $m_s\approx31$ keV, $\sin^2 2\theta\approx2.8\times10^{-14}$. At $10^{-14}$ the edge point needs $L\approx1.35$. The session judged this consistent with the paper's rounded "$m_s\gtrsim35$ keV", but the finding is medium-confidence and contested.
+
+\paragraph{Zero-total-asymmetry window.} Akita, Hamaguchi and Ovchynnikov (arXiv:2507.20659; supported finding) assume large flavour asymmetries with $\sum_\alpha L_\alpha=0$, washed out by oscillations at $T_{\rm osc}\sim15$ MeV. Under that assumption the viable $\sin^2 2\theta$ range widens by up to two orders of magnitude for $m_s$ up to 60 keV. Individual $|L_\alpha|\sim0.1$ are allowed, with benchmarks $L_e=-L_\mu=0.1$ and $L_\mu=-L_\tau=0.06$. The largest flavour-universal asymmetry allowed by BBN+CMB is $L_e=L_\mu=L_\tau=10^{-3}$. Their Fig.~1 spans $\sin^2 2\theta=10^{-16}$--$10^{-8}$, and Lyman-$\alpha$ appears there only as an illustrative guide. Its edges could not be read off because figure extraction failed.
+
+\paragraph{Unequal flavour fractions.} Gorbunov, Kalashnikov and Krugan (arXiv:2502.17374) argue, per their abstract, that unequal flavour fractions mitigate BBN limits. They also argue that asymmetry disappearing at intermediate stages gives colder spectra, reopening lighter masses. This paper was not read beyond the abstract.
+
+\subsection{Lepton-asymmetry shift of $Y_p$ (low-confidence estimate)}
+The tool omits the direct effect of the asymmetry on $n/p$. The assistant estimated it using $\Delta Y_p\sim-0.23\,\xi_e$, described as literature-standard, and $\xi\sim1.46L$. The finding is low-confidence and contested; the $L$-to-$\xi$ conversion is convention-dependent at the factor-of-4 level. The estimates are:
+\begin{itemize}
+\item flavour-universal $L=10^{-3}$: $\Delta Y_p\sim-3.4\times10^{-4}$, or $0.08\sigma$, which is negligible;
+\item a $1\sigma$ ($2\sigma$) shift requires a residual $\xi_e\sim0.017$ (0.035);
+\item the arXiv:2507.20659 benchmark without equilibration would give $\Delta Y_p\sim-0.034$, about $8\sigma$.
+\end{itemize}
+The resonant windows are therefore BBN-safe only if the residual $\xi_e$ near 1 MeV stays below $\sim0.03$. Delivering that is the role of flavour equilibration, or of keeping the asymmetry mostly in $L_\mu$. The tool cannot check it.
+
+\section{Discussion}
+The combined picture is as follows.
+
+BBN, as computed with the tools, places no constraint on keV sterile-neutrino dark matter through $\Delta N_{\rm eff}$. The same calculation shows why: the relic-line $\Delta N_{\rm eff}\lesssim1.6\times10^{-3}$ is far below the $\Delta N_{\rm eff}\sim0.5$ reach, under every error budget examined. BBN becomes relevant only indirectly, through the lepton asymmetry needed for resonant production. That effect is outside the tool's model and was estimated only roughly here.
+
+X-ray limits close the DW option as all of the dark matter at 7--20 keV within the tool. The literature cited in the session states the same more broadly. The surviving full-dark-matter region is therefore a resonant band. Its lower mixing edge depends on the assumed asymmetry configuration, and its low-mass edge is set by structure formation via $m_{\rm th}$ mapping.
+
+The viable region depends on the asymmetry scenario:
+\begin{itemize}
+\item Flavour-universal $L\sim10^{-3}$: excluded for full dark matter in 15--60 keV, as stated in the session's report.
+\item Large high-temperature $L\gtrsim0.5$ (arXiv:2507.18752): $m_s\gtrsim30$--$37$ keV and $\sin^2 2\theta\lesssim10^{-14}$.
+\item Zero total asymmetry (arXiv:2507.20659): a widened but unquantified range up to 60 keV.
+\end{itemize}
+
+There is a tension of normalisation in the structure-formation input. The Lyman-$\alpha$ preference ($m_{\rm th}=4.1^{+33.3}_{-1.5}$ keV) encompasses the whole arXiv:2507.18752 window, whereas the galaxy-count and lensing bound ($m_{\rm th}>8.5$ keV) is what pushes the edge to $\sim30$--$37$ keV. The plan's critic noted that more recent structure-formation bounds might be stronger still. The dedicated structure-formation direction was closed and folded into the re-check direction without an independent survey of those bounds.
+
+Several limitations and failures were observed:
+\begin{enumerate}
+\item The tool's SF mode is a heuristic. It produced unphysical relic densities ($\Omega_s h^2=432$ and $25.1$) and ignores $\xi_e$, so it was abandoned.
+\item Figure extraction failed for arXiv:1609.00667 (only Figs.~3--4 were available in HTML) and for arXiv:2507.20659 (no extractable figures). As a result, the NuSTAR/INTEGRAL upper edge and the zero-asymmetry lower edge at 15--60 keV were never quantified, and the per-scenario viable-region table was not built.
+\item The tool has no tabulated X-ray limits for $m_s\gtrsim25$ keV, so it cannot supply the upper edge there.
+\item Verbatim re-extraction of the XRISM, Froustey--Pitrou and NuSTAR numbers was not completed before the budget ran out. A citation call also failed on a quote mismatch caused by line breaks. Those numbers remain contested.
+\item Many quantitative statements are the assistant's hand arithmetic rather than tool output: the XRISM limits, $m_{s,\min}$, the error-budget reconstruction and the $\xi_e$ estimates.
+\item The tool's SM D/H baseline differs from observation by $-1.6\sigma$ to $-4.1\sigma$, depending on the error treatment, and its origin was not established.
+\end{enumerate}
+The reviewing critic's final verdict on the report was "revise".
+
+\section{Conclusions}
+The session established four results. First, with the tool's PRyMordial-calibrated, $\Delta N_{\rm eff}$-only BBN, keV sterile-neutrino dark matter is unconstrained by BBN. The 95\% limits lie at $\sin^2 2\theta\simeq8\times10^{-8}$ (7 keV) to $1.7\times10^{-8}$ (50 keV), far above the DW relic line, and this holds across error budgets. Second, the tool's decay rates match the standard radiative formula to $\lesssim2\%$, and its tabulated X-ray limits exclude DW production as all of the dark matter at 7--20 keV. Third, the XRISM ten-cluster stack bounds $\sin^2 2\theta\lesssim4$--$5\times10^{-10}$ at 7.1 keV by hand evaluation, which does not exclude the 3.5 keV line. Fourth, full-dark-matter viability requires resonant production. The arXiv:2507.18752 window ($L\gtrsim0.5$, $m_s\gtrsim35$ keV, $\sin^2 2\theta\lesssim10^{-14}$; contested) has a hand-derived low-mass edge of 29--37 keV, and the zero-total-asymmetry scenario of arXiv:2507.20659 widens the mixing range in a way not quantified here.
+
+The following directions remained open, in the order the session listed them:
+\begin{enumerate}
+\item Re-extract verbatim the contested numbers (XRISM flux and polynomial, the Froustey--Pitrou "generically unbound" result, the NuSTAR flux formula) and fix the low-mass edge consistently.
+\item Quantify the X-ray upper edge and asymmetry lower edge at 15, 20, 30, 40 and 60 keV. This requires reading the PDF figures of arXiv:1609.00667 (Figs.~7--8) and arXiv:2507.20659 (Fig.~1), and should yield one viable-region table per asymmetry scenario.
+\item Determine the residual $\xi_e$ near 1 MeV reached by the arXiv:2507.18752 and arXiv:2507.20659 benchmarks after flavour equilibration, and check whether it stays below the $\sim0.03$ needed to keep the $Y_p$ shift under $2\sigma$.
+\item Establish whether the tool's SM D/H offset reflects a calibration or nuclear-rate choice, and whether it biases the $\Delta\chi^2$ contours.
+\end{enumerate}
+
+\section*{References}
+\begin{itemize}
+\item arXiv:2507.18752 --- C.~M.~Vogel, H.~García Escudero, J.~Froustey, K.~N.~Abazajian, "Return of the Lepton Number: Sterile Neutrino Dark Matter Production and the Revival of the Shi-Fuller Mechanism" (2025).
+\item arXiv:2507.20659 --- K.~Akita, K.~Hamaguchi, M.~
+\end{itemize}
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/ramp-combo-sterile-bbn-xray}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}ramp-combo-sterile-bbn-xray}}.
+The session produced 11 data files; the supplement lists them.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}

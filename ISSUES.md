@@ -346,9 +346,22 @@ multi-server orchestration; passing is still meaningful (CLI, reasoning,
 replay path), but "PASS" no longer exercises the tool-call path from scratch.
 Judge heuristic can't see this (rc=0, substantive output → PASS).
 - Fix (harness-side, no app bug): rotate chat names per run — append the
-run_id date suffix to chat names in `build_cases()`, e.g. `--chat sbbn-1021`.
-For DESC battery, same: `--chat meta-1021` etc. Not filed upstream —
-harness design, not an app defect.
+  run_id date suffix to chat names in `build_cases()`, e.g. `--chat sbbn-1021`.
+  For DESC battery, same: `--chat meta-1021` etc. Not filed upstream —
+  harness design, not an app defect.
+- Follow-up 2026-10-21: chat names still fixed; am-core 10-21 cases again
+  replayed prior results. Rotate before the next core battery.
+
+### 29. `--report`: first-pass LaTeX compile failure, silently auto-recovered — first occurrence in 10+ report runs **[local observation, app quality]** — open
+
+- Seen 2026-10-21 pm-combo (v0.3.18). C2 report build printed
+  `LaTeX failed to compile — asking the report model to fix its markup…`
+  then compiled successfully on retry. All three PDFs valid (report 10 pp /
+  3,850 words, supplement, transcript).
+- Not seen in any prior report run (2026-10-16..10-21 midday, all clean
+  first-pass compiles), so first-pass failures are rare but the recovery
+  path works. No reproducible trigger; noting for pattern tracking.
+  Not filed upstream (single occurrence, auto-recovered).
 
  ---
 
@@ -459,6 +472,11 @@ Clean run — no flags.
 
 
 ## 2026-10-21-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-21-pm-combo — 3 pass / 0 flagged
 
 Clean run — no flags.
 

@@ -1,0 +1,2660 @@
+Title: Constraints on primordial lepton asymmetries with full neutrino transport
+Authors: Julien Froustey, Cyril Pitrou
+Year: 2024
+arXiv ID: 2405.06509
+
+============================================================
+
+--- Page 1 ---
+N3AS-24-015
+Constraints on primordial lepton asymmetries with full neutrino transport
+Julien Froustey ID ∗
+Department of Physics, University of California Berkeley, Berkeley, California 94720, USA and
+Department of Physics, North Carolina State University, Raleigh, North Carolina 27695, USA
+Cyril Pitrou ID †
+Institut d’Astrophysique de Paris, CNRS UMR 7095,
+Sorbonne Universit´ e, 98 bis Bd Arago, 75014 Paris, France
+Primordial neutrino-antineutrino asymmetries can be constrained through big-bang nucleosynthe-
+sis (BBN) relic abundances and cosmic microwave background (CMB) anisotropies, both observables
+being sensitive to neutrino properties. The latter constraint, which is due to gravitational effects
+from all neutrino flavors, is very minute since it is at least quadratic in the asymmetries. On the con-
+trary, the constraints from primordial abundances presently dominate, although these abundances
+are almost only sensitive to the electron flavor asymmetry. It is generally assumed that neutrino
+asymmetries are sufficiently averaged by flavor oscillations prior to BBN, which allows one to con-
+strain a common primordial neutrino asymmetry at the epoch of BBN. This simplified approach
+suffers two caveats that we deal with in this article, combining a neutrino evolution code and BBN
+calculation throughout the MeV era. First, flavor “equilibration” is not true in general, therefore
+an accurate dynamical evolution of asymmetries is needed to connect experimental observables to
+the primordial asymmetries. Second, the approximate averaging of asymmetries through flavor os-
+cillations is associated to a reheating of the primordial plasma. It is therefore crucial to correctly
+describe the interplay between flavor equilibration and neutrino decoupling, as an energy redistri-
+bution prior to decoupling does not significantly alter the final effective number of neutrino species’
+value. Overall, we find that the space of allowed initial asymmetries is generically unbound when
+using currently available primordial abundances and CMB measurements. We forecast constraints
+using future CMB experiment capabilities, which should reverse this experimental misfortune.
+I. INTRODUCTION
+Neutrinos play a major role in various stages of the his-
+tory of the Universe, for instance through their effect on
+the primordial abundances of elements produced during
+Big Bang Nucleosynthesis (BBN), on the power spectrum
+of Cosmic Microwave Background (CMB) anisotropies,
+or on cosmological structure formation [1]. Consequently,
+the Universe can be seen as a vast “laboratory” for ex-
+ploring neutrino physics. In particular, the phenomenon
+of neutrino flavor oscillations is a direct evidence of the
+need for beyond-the-Standard-Model physics. The effect
+of flavor oscillations on neutrino evolution is particularly
+relevant in the early Universe when one considers non-
+zero asymmetries, i.e., differences between the distribu-
+tions of neutrinos and antineutrinos.
+The lepton asymmetry of the Universe is very loosely
+constrained compared to the baryon asymmetry, ( nb−
+¯nb)/nγ = (6.10± 0.4)× 10−10 [2], where nb (resp. ¯nb) is
+the total number density of baryons (resp. antibaryons),
+and nγ the photon number density. This baryon asym-
+metry is believed to originate from a dynamical process
+(“baryogenesis”). Because of sphaleron processes in the
+very early Universe, one would expect baryon and lep-
+ton asymmetries to be of the same order of magnitude
+(see e.g., [3, 4]). However, many models have been con-
+∗ jfroustey@berkeley.edu
+† pitrou@iap.fr
+structed with a large relic lepton asymmetry compared
+to the baryon asymmetry (e.g., [5–12]). In addition, non-
+zero neutrino asymmetries are promising ways to tackle
+some issues in cosmology: for instance, they allow one to
+relax constraints on the thermalization of sterile neutri-
+nos [13–18]). Extended ΛCDM models including a neu-
+trino chemical potential have also been shown to be able
+to alleviate cosmological tensions [19–23].
+An asymmetry between electron neutrinos and an-
+tineutrinos changes the equilibrium neutron-to-proton
+ratio prior to BBN, which results in modifications of the
+primordial abundances. In addition, the energy density
+of (anti)neutrinos is modified with respect to the stan-
+dard, symmetric case. As a consequence, spectroscopic
+measurements of the primordial abundances and analy-
+sis of CMB anisotropies, which allow one to determine
+the expansion history of the Universe, can be used to
+constrain primordial asymmetries. Several studies have
+therefore evaluated the impact of including non-zero neu-
+trino chemical potentials at the BBN epoch—e.g., [24–
+30]—but ignoring earlier asymmetry evolution.
+This approach is not fully satisfying. Indeed, because
+of flavor oscillations that typically become active for tem-
+peratures T ≤ 10 MeV, the connection between BBN-
+epoch and primordial (i.e., at temperatures ≥ 20 MeV)
+asymmetries is far from obvious [31]. In the last decades,
+major progress has been made toward a precise and ac-
+curate description of neutrino evolution in the MeV age,
+including the effect of flavor oscillations and QED correc-
+tions to the plasma thermodynamics [32–39], which no-
+arXiv:2405.06509v2  [hep-ph]  27 Nov 2024
+
+--- Page 2 ---
+2
+tably led to the standard prediction for the effective num-
+ber of neutrino species, Neff = 3.044.1 These studies did
+not include non-zero asymmetries, which, combined with
+flavor mixing, give rise to collective phenomena called
+“synchronous” oscillations [43–47]. Subsequently, vari-
+ous studies have focused on the impact of flavor oscilla-
+tions on the evolution of asymmetries [48–54], also as-
+sessing the role of the CP -phase [55, 56]. In [57], we de-
+veloped the first three-flavor multi-momentum neutrino
+evolution code with asymmetries that uses the full col-
+lision term, instead of the damping approximation tra-
+ditionally used for numerical efficiency. We showed that
+using the complete collision term is crucial since oscilla-
+tions are “overdamped” when using a damping approxi-
+mation, and asymmetries are not generally equilibrated
+to the same value, hence affecting the connection between
+primordial parameters and cosmological observables.
+We are now in a position to revisit the problem of con-
+straining primordial asymmetries using BBN and CMB
+data, not restricting to equal asymmetries or values set
+directly at the BBN epoch, and using the actual Stan-
+dard Model collision kernel (in the low-energy Fermi ap-
+proximation, valid for temperatures very small compared
+to mW,Z). To this end, we will use the measurements
+of the helium-4 and deuterium primordial abundances,
+along with existing CMB anisotropies and baryon acous-
+tic oscillations (BAO) data. In addition, following the
+strategy of [30], we will forecast how these constraints
+will be tightened with future CMB experiments. Note
+that we will call “primordial” asymmetries the neutrino
+reduced chemical potentials at a temperature∼ 25 MeV,
+regardless of how they were produced. 2
+This paper is organized as follows. In Sec. II, we intro-
+duce the various elements of our numerical and statisti-
+cal analysis: quantum kinetic equations, BBN calculation
+and likelihood construction (additional details are gath-
+ered in Appendix A). In Sec. III, we discuss the physics of
+flavor asymmetry equilibration and the associated ther-
+modynamic effects in an approximate setup, which pro-
+vides additional insight on our numerical methods. Our
+main results on the constraints of primordial asymme-
+tries with current experimental data, in different sub-
+regions of the parameter space, are presented in Sec. IV.
+We forecast the future capabilities of CMB experiments
+with regard to constraining lepton asymmetries in Sec. V.
+Our conclusions are presented in Sec. VI. Useful ther-
+modynamic identities are gathered in Appendix B. In
+Appendix C, we discuss the convergence of our reso-
+1 Recently, QED corrections to the interaction vertices, not con-
+sidered in the calculations of [38, 39], were estimated to reduce
+this number to 3.043 [40]. However, subsequent studies dispute
+this conclusion [41, 42].
+2 In particular, a recent work [58] has shown that, because of a
+chiral plasma instability, any reduced chemical potential|µν|/T
+must be lower than 10 −2 at a temperature of 10 6 GeV — this
+is a tight constraint that can yet be avoided if asymmetries are
+generated below 105 GeV.
+lution scheme for the evolution of (anti)neutrinos. In
+Appendix D, we verify that our conclusions are robust,
+whether the deuterium abundance (which is predicted
+differently by different BBN codes as they use different
+deuterium destruction rates) is included or not.
+Throughout this paper, we work in natural units where
+ℏ =c =kB = 1.
+II. METHODS
+As is customary for the study of neutrino decoupling
+in the early Universe, we use the dimensionless variables
+x≡ me
+Tcm
+, y ≡ p
+Tcm
+, z ≡ Tγ
+Tcm
+, (1)
+withme≃ 0.511 MeV the electron mass,p =|p| the mo-
+mentum amplitude (which corresponds to the energy for
+ultrarelativistic particles like neutrinos), andTγ the pho-
+ton temperature. The comoving temperature Tcm∝a−1,
+with a the scale factor, is the temperature of instanta-
+neously decoupled neutrinos [35]. For vanishing initial
+asymmetries, Tcm differs from the actual temperature of
+neutrinos after decoupling by∼ 0.1 % [38].
+The ensemble of (anti)neutrinos is described by the
+one-body reduced density matrices ϱ(t,p ), ¯ϱ(t,p ) [38, 59,
+60]. Given the homogeneity and isotropy of the early
+Universe, they only depend on the magnitude of neu-
+trino momentap =|p|. They are 3× 3 matrices in flavor
+space; the on-diagonal components generalize the clas-
+sical distribution functions, while off-diagonal elements
+account for flavor coherence. Using comoving variables,
+we write them as functions of x and y.
+For a given flavor α, we characterize the asymmetry
+by the quantity
+ηα≡ nα− ¯nα
+T 3cm
+=
+Z y2dy
+2π2 [ϱαα(x,y )− ¯ϱαα(x,y )]. (2)
+A. Initial distributions
+For Tcm,in = me/xin ∼ 25 MeV, which will be the
+initial temperature we consider, the high collision rates
+maintain neutrinos in flavor eigenstates and at equilib-
+rium, such that ϱ(xin,y ) = diag(f(eq)
+νe ,f (eq)
+νµ ,f (eq)
+ντ ) in the
+flavor basis, where the equilibrium Fermi-Dirac distribu-
+tions read:
+f(eq)
+να ≡ 1
+e(p−µα)/Tα + 1 = 1
+ey/zα−ξα + 1, (3)
+withTα andµα the initial temperature and chemical po-
+tential, with the associated dimensionless quantities:
+zα≡ Tα
+Tcm
+, ξ α≡ µα
+Tα
+. (4)
+
+--- Page 3 ---
+3
+At the temperature Tcm,in, neutrinos are still in thermal
+contact with the electromagnetic plasma and e−e+ anni-
+hilations have not yet started, 3 such that zα = zin≃ 1.
+Antineutrino initial distributions are identical with op-
+posite chemical potentials, ¯ξα =−ξα.
+Given the distributions (3), the initial asymmetries can
+be expressed as:
+ηα,in =z3
+α
+ξα
+6 + ξ3
+α
+6π2
+
+= 1
+6z3
+α ˜ξα, (5)
+where we introduce
+˜ξα≡ξα + ξ3
+α
+π2 , (6)
+a convenient notation for handling the non-linear depen-
+dence of the asymmetry in terms of the reduced chemical
+potential. Throughout this paper, ξα or ˜ξα denote the
+primordial quantities, which enter the equilibrium distri-
+bution (3) atTcm,in∼ 25 MeV. At later times, since neu-
+trino decoupling is an out-of-equilibrium process, neu-
+trino distributions deviate from pure Fermi-Dirac func-
+tions and we cannot rigorously define a chemical poten-
+tial or a temperature.
+A quantity that is still defined throughout the evolu-
+tion via Eq. (2) is ηα, which coincides initially with ˜ξα/6
+(up to theO(10−5) difference between zα and 1) accord-
+ing to Eq. (5). Our definition differs slightly from the one
+in previous literature (e.g., [49–52, 61]), where the more
+physical parametrization ( nα− ¯nα)/nγ ∝ (zα/z)3 ˜ξα is
+used. However, our choice benefits from the fact that the
+processes taking place in the neutrino medium conserve
+the averaged asymmetry
+ˆη ({zα,ξα})≡ 1
+3
+X
+α=e,µ,τ
+ηα. (7)
+Parametrization — We introduce the following
+parametrization of initial degeneracy parameters:
+
+
+
+˜ξav≡
+˜ξe + ˜ξµ + ˜ξτ
+3
+δ ˜ξe≡ ˜ξe− ˜ξav
+e∆≡
+˜ξµ− ˜ξτ
+2
+⇐⇒
+
+
+
+˜ξe = ˜ξav +δ ˜ξe
+˜ξµ = ˜ξav− δ ˜ξe
+2 +e∆
+˜ξτ = ˜ξav− δ ˜ξe
+2 −e∆
+(8)
+In Sec. IV, we explore different sub-spaces of the three-
+dimensional set {˜ξe, ˜ξµ, ˜ξτ}, through specific choices of
+˜ξav, δ ˜ξe and e∆. For instance, equal initial asymmetries
+among all three flavors are described by δ ˜ξe = e∆ = 0.
+3 We take nonetheless into account the very small deviation zin−
+1 = O(10−5) due to the non-fully-relativistic nature of e± at
+Tcm,in.
+B. Neutrino transport
+1. Quantum Kinetic Equations
+We start our calculation atTcm,in = 25 MeV, where we
+specify the set of initial asymmetries {˜ξe, ˜ξµ, ˜ξτ} and the
+value of the baryon density ωb. The initial temperature
+ratio zin = zα is set by solving the energy conservation
+equation ˙ρ+3H(ρ+P ) = 0 with all species coupled, from
+(x = 0,z = 1) to (xin,z in). The density matrix for each
+momentum bin is initialized with the distributions (3).
+We then run our neutrino evolution codeNEVO [38, 57, 62]
+down to a temperature of a few keV. This provides the
+final value of Neff along with the neutrino distributions
+throughout the evolution. NEVO solves the Quantum Ki-
+netic Equations (QKEs) [38, 57, 59, 60, 63]: 4
+∂ϱ(x,y )
+∂x =−i [H0 +Hlep +J,ϱ ] +K, (9a)
+∂ ¯ϱ(x,y )
+∂x = +i [H0 +Hlep−J , ¯ϱ] +K, (9b)
+where the vacuum termH0 is
+H0 = 1
+xH
+1
+Tcm
+×U M2
+2y U†, (10)
+with H the expansion rate, M2 = diag(0, ∆m2
+21, ∆m2
+31)
+the matrix of mass-squared differences, and U the
+Pontecorvo-Maki-Nakagawa-Sakata matrix; the matter
+mean-field HamiltonianHlep reads
+Hlep =− 1
+xHT 5
+cm× 2
+√
+2GFy Elep + Plep
+m2
+W
+, (11)
+with Elep (resp. Plep) the diagonal matrix of charged lep-
+tons’ comoving energy densities (resp. pressures); and the
+self-interaction mean-field is proportional to the neutrino
+asymmetry matrix:
+J = 1
+xHT 3
+cm×
+√
+2GF
+Z y2dy
+2π2 (ϱ− ¯ϱ). (12)
+Note that we neglect a subdominant contribution simi-
+lar to (11) involving the (anti)neutrino energy densities.
+Finally, the collision terms K,K account for scattering
+with charged leptons, scattering between (anti)neutrinos,
+and pair creation/annihilation reactions. The full ex-
+pression of these two-dimensional collision integrals can
+be found in, e.g., [38, 62, 63]. We compute them using
+their complete flavor structure, without any “damping”
+approximation. This is the most time-consuming part of
+the neutrino transport code: given the parameter sweep
+4 Some studies suggest that, in some regimes, a treatment beyond
+the reduced single-particle level could be necessary, see e.g., [64,
+65].
+
+--- Page 4 ---
+4
+we perform in this study, we limit the momentum grid
+size to Ny = 30 points, linearly spaced from ymin = 0.02
+to ymax = 23. This limited energy resolution leads to a
+negligible underestimation of Neff. For instance, for zero
+asymmetries, the absolute difference between Neff|Ny=30
+and Neff|Ny=80 isO(10−4), which is much smaller than
+the precision on Neff of current or future CMB exper-
+iments. The evolution of z is obtained via the energy
+conservation equation, which includes QED corrections
+to the plasma thermodynamics up to order O(e3) [66].
+We restrict to the normal ordering of neutrino masses,
+and take a zero Dirac CP -phase δ in the mixing matrix,
+as it was shown in [57] that, in this situation, having
+δ̸= 0 affects only marginallyNeff or the spectra ofνe, ¯νe,
+which are the parameters affecting CMB and BBN ob-
+servables. All values for the other physical constants and
+mixing parameters are taken from [67].
+Given the increase of frequency of synchronous oscilla-
+tions when the temperature decreases, a solution to make
+the calculation numerically tractable is to use the large
+separation of scales between the oscillation frequencies,
+the collision rate, and the change rate of the Hamilto-
+nian. It allows one to accurately describe neutrino evo-
+lution by averaging oscillations and considering that, at
+each time step, neutrino density matrices are diagonal
+in the basis where the Hamiltonian is diagonal. Adia-
+baticity being satisfied (i.e., the effective mixing angles
+varying slowly compared to the oscillation frequencies),
+it is sufficient to keep track of the three diagonal com-
+ponents of (ϱ, ¯ϱ) in this slowly time-varying basis. One
+can then obtain the components of ϱ in the flavor basis
+by using the instantaneous mixing matrix. The method
+based on this approximation, called “Adiabatic Transfer
+of Averaged Oscillations” (ATAO), was validated in [38]
+for standard neutrino decoupling and extended to include
+lepton asymmetries in [57].
+2. Asymmetry evolution example
+We draw on Fig. 1 an example of result of aNEVO calcu-
+lation, for the initial parameters{˜ξav = 0.1,δ ˜ξe = 0,e∆ =
+2}. The features of asymmetry evolution detailed in [57]
+are recovered: for Tcm∼ 10 MeV, oscillations develop in
+the{µ,τ} subspace, before a conversion with thee flavor
+kicks in for Tcm ∼ 5 MeV. Throughout the evolution,
+the average asymmetry is conserved and remains equal
+to the black dashed line on Fig. 1 (top panel). This is a
+consequence of the structure of the collision terms, which
+satisfy Tr(K−K) = 0. We found that a linearly spaced
+grid in momenta is the best choice to ensure numeri-
+cal stability and the conservation of the average asym-
+metry, contrary to, e.g., the Gauss-Laguerre quadrature
+used in [38]. Collisions are also responsible for the pro-
+gressive damping of the amplitude of collective oscilla-
+tions. At Tcm≃ 2.2 MeV, the solver switches from the
+ATAO scheme using the full Hamiltonian in Eqs. (9a)–
+(9b) (“ATAO-(J±V ) ” scheme in [57]) to effectively aver-
+age the individual oscillations aroundV≡H 0+Hlep only
+(“ATAO-V ” scheme). This is justified by the ∝T−6
+cm in-
+crease of the oscillation frequency: these oscillations are
+so fast that any physical quantity [like the neutron-to-
+proton ratio set by (13)] is only sensitive to their average,
+whose evolution is solely dictated by V and collisions.
+On the bottom panel, the dimensionless photon tem-
+perature z = Tγ/Tcm increases in two stages: the first
+“bump” between Tcm ∼ 10 MeV and Tcm ∼ 1 MeV is
+due to the overall reduction of the asymmetries because
+of flavor mixing (we discuss this process in details in
+Sec. III). The entropy that was “stored” in the neu-
+trino/antineutrino asymmetry is redistributed among all
+species through a common increased temperature. A per-
+fect flavor equilibration would lead to the value zmix,
+showed with a dashed grey line. Although it generally
+slightly overestimates the size of the first increase of z,
+it provides a conservative prediction for the ratio be-
+tweenTγ and Tcm when the neutron-to-proton intercon-
+version reactions freeze out. As we aim to have an accu-
+rate description of neutrino distributions in this period,
+we adjust the transition temperature Ttrans between the
+ATAO-(J±V ) and ATAO-V schemes by rescaling the de-
+fault value ¯Ttrans = 2.2 MeV via Ttrans = ¯Ttrans/zmix. In
+addition, there are particular configurations that lead to
+delayed oscillations, in which case it is crucial to switch
+to an ATAO-V scheme much later. Our code deals with
+this issue by decreasing Ttrans if the evolution is partic-
+ularly “smooth,” which can indicate that there were too
+few oscillations aboveTtrans. This adaptive Ttrans is thus
+in some cases down to 1.0 MeV to ensure the accuracy of
+our results. We demonstrate in Appendix C the need for
+this method to probe the actual features of asymmetry
+mixing.
+The second “bump” in z, for Tcm∼ 0.1 MeV, is due to
+electron-positron annihilations, which mainly reheat pho-
+tons and only marginally neutrinos. During this phase,
+the asymmetries ηα are constant (see top panel); we
+note their values ηBBN
+α . We identify the temperatures
+corresponding to the weak freeze-out of n/p conversion
+(Tγ,FO∼ 0.8 MeV) and the beginning of nucleosynthesis
+(Tγ,Nuc∼ 0.07 MeV). The value of the electron neutrino
+asymmetry at Tγ,FO is key to determine the neutron-
+to-proton ratio at the onset of BBN and then the final
+abundances [68]. Note that, due to the different values
+of z at these two epochs, the ratios Tγ,FO/Tcm,FO and
+Tγ,Nuc/Tcm,Nuc are different.
+C. Big Bang Nucleosynthesis
+The output from NEVO, namely, Neff and (anti)-
+neutrino distributions (thus including the spectral dis-
+tortions incurred in the decoupling process), is used as
+input in the BBN code PRIMAT [27]. This Mathematica
+code computes the primordial abundances of light ele-
+ments up to CNO isotopes in three main steps:
+(i) first, the background thermodynamics are deter-
+
+--- Page 5 ---
+5
+10−1100101
+Tγ (MeV)
+−2
+−1
+0
+1
+2
+6 (nα− ¯nα)/T 3
+cm
+6ˆη
+e
+µ
+τ
+10−1100101
+Tcm (MeV)
+1.0
+1.2
+1.4
+z
+zmix
+Tγ,FO Tγ,Nuc
+FIG. 1. Outputs of neutrino evolution from NEVO, for the initial parameters {˜ξav = 0.1, ˜ξe = 0.1, ˜ξµ− ˜ξτ = 4}. Top:
+neutrino flavor asymmetries. The frequency of synchronous oscillations increases as Tcm decreases. Bottom: comoving photon
+temperature. The first increase in z, for 10 MeV≥Tcm≥ 1 MeV, is due to the (imperfect) mixing of flavors and the associated
+increase in entropy, as explained in Sec. III. The dashed line, denoted zmix, would correspond to perfect flavor equilibration,
+which is not achieved here and highlights the need for an accurate calculation of neutrino evolution. The vertical colored lines
+identify the approximate temperature of neutron-to-proton weak freeze-out (Tγ,FO∼ 0.8 MeV) and the beginning of deuterium
+burning (Tγ,Nuc∼ 0.07 MeV).
+mined [i.e., the function a(Tγ) and inversely] con-
+sistently with NEVO results — neglecting the effect
+of baryonic matter is justified by the very small
+value of the baryon-to-photon ratioηb≃ 6×10−10;
+(ii) second, the weak neutron-to-proton interconversion
+rates are tabulated as a function of temperature,
+including radiative, finite nucleon mass, and weak
+magnetism corrections and also taking into account
+the non-thermal part of electron (anti)neutrino dis-
+tribution functions from NEVO;
+(iii) finally, the network of nuclear reactions along
+with weak interactions interconverting neutrons
+and protons is numerically solved down to a tem-
+perature of 6× 107 K.
+BBN abundances depend on the baryon density pa-
+rameter ωb≡ Ωbh2, with Ωb the baryonic fraction of the
+critical density today, andh =H0/100 km s−1 Mpc−1 the
+present Hubble parameter. ωb is an input parameter in
+PRIMAT. Given the tight constraints obtained by Planck,
+which correspond to a variation range allowed for ωb of
+less than 1 %, we only use the central value from [2],
+ωPRIMAT
+b = 0.02242, in the full PRIMAT calculation, and es-
+timate the abundances forωb̸=ωPRIMAT
+b assuming a linear
+variation.
+Neutrinos and BBN — Cosmological neutrinos influ-
+ence BBN in two ways. The principal effect corresponds
+to the change of the neutron-to-proton ratio, which is set
+by the weak reactions:
+n +νe←→p +e−,
+n←→p +e− + ¯νe,
+n +e+←→p + ¯νe.
+(13)
+If we assume that neutrinos are at equilibrium when the
+above reactions freeze out (which happens for Tγ,FO∼
+0.8 MeV), with degeneracy parameters ξBBN
+α , the elec-
+tron (anti)neutrino chemical potential modifies the equi-
+librium value via:
+nn
+np
+= nn
+np
+
+ξe=0
+×e−ξBBN
+e . (14)
+In addition, the increased energy density compared to
+the ξ = 0 situation leads to a contribution to Neff:
+∆Neff =
+X
+α=e,µ,τ
+"
+30
+7
+ξBBN
+α
+π
+2
++ 15
+7
+ξBBN
+α
+π
+4#
+. (15)
+This formula does not take into account a possible re-
+heating zBBN
+α > 1, a valid assumption if we assume that
+all initial asymmetries are equal, which is virtually the
+
+--- Page 6 ---
+6
+only case when this formula can be applied anyway. For
+a given photon temperature, the increased energy den-
+sity leads to a higher expansion rate, which reduces the
+time left to neutrinos to undergo beta decay between
+weak freeze-out (Tγ,FO) and the onset of nucleosynthe-
+sis (Tγ,Nuc∼ 0.07 MeV). As a consequence, this so-called
+“clock effect” [68–70] leads to a higher neutron-to-proton
+ratio. However, since it scales like ∝ (ξBBN
+α )2, this ef-
+fect is very small and is hidden by the changes given in
+Eq. (14). Note finally that, because of the same clock ef-
+fect, there is less time to destroy deuterium during BBN,
+which results in a slight increase in D /H [68].
+The net effect on helium-4 and deuterium abundances
+coming from an electron (anti)neutrino chemical poten-
+tial during BBN was estimated numerically in [27]:
+Yp
+Yp|ξe=0
+≃e−0.96ξBBN
+e , D/H
+D/H|ξe=0
+≃e−0.53ξBBN
+e . (16)
+In the general case, a quantity such asξBBN
+e is ill-defined,
+notably because neutrinos are not at equilibrium, and
+because neutrino and photon temperatures differ, which
+is not assumed in Eq. (14). However, since neutron-to-
+proton interconversion freeze-out occurs before the re-
+heating due to e−e+ annihilations (see Fig. 1), we can
+estimate an effective ξBBN
+e parameter as:
+ξBBN
+e ∼
+6(ne− ¯ne)
+T 3γ
+
+FO
+=
+6(ne− ¯ne)
+z3T 3cm
+
+FO
+= 6
+hηe
+z3
+i
+FO
+(17)
+= 6
+hηe
+z3
+i
+final
+×
+zfinal
+zFO
+3
+,
+where we used that the comoving asymmetry 6( ne−
+¯ne)/T 3
+cm is constant during the entire BBN epoch (see
+Fig. 1). The ratio of photon temperatures between
+weak freeze-out and after BBN is mostly independent
+of the particular asymmetries: it is set by the elec-
+tron/positron annihilations and is given up to a few per-
+cents byzfinal/zFO≃ (11/4)1/3 [71]. Therefore, this con-
+stant prefactor put aside, the effect on primordial abun-
+dances should be mostly determined by the parameter
+[ηe/z3]final, as will be confirmed in Sec. IV.
+Since helium-4 and deuterium are the only light el-
+ements for which the primordial abundances are well-
+enough experimentally constrained, the output of our
+calculation is the set of quantities {Neff,Y p, D/H} that
+can be compared to experimental values forYp and D/H,
+and to CMB experiment posteriors for ( Neff,Y p).
+D. Likelihood
+As explained above, the input parameters of our cal-
+culation is the set of initial asymmetries{ξα,α =e,µ,τ}
+and the baryon abundance ωb. When combining CMB
+and BBN experimental constraints, we get the likelihood
+[see Eq. (A10) and more generally Appendix A]
+L(ξα,ωb|Cobs
+ℓ ,Y obs
+p , D/Hobs)
+=LCMB
+
+ωb,N code
+eff (ξα),Y p
+code
+(ξα,ωb)
+
+×N
+
+Y obs
+p ;Yp
+code
+(ξα,ωb),σYp
+
+×N
+
+D/Hobs; D/Hcode
+(ξα,ωb),σ D/H
+
+. (18)
+We marginalize over the baryon density, such that the
+final likelihood is given by
+L(ξα) =
+Z
+dωbL(ξα,ωb|Cobs
+ℓ ,Y obs
+p , D/Hobs). (19)
+Since the allowed space parameter for ωb is very narrow
+[see Eqs. (24a) and (26a)], we only use the central value
+in PRIMAT and linearly extrapolate the obtained abun-
+dances, that is
+Yp
+code
+(ξα,ωb)≃Yp
+code
+(ξα,ωPRIMAT
+b )+(ωb−ωPRIMAT
+b ) dY code
+p
+dωb
+
+(ξα,ωPRIMAT
+b )
+,
+(20)
+the derivative on the right-hand side being numerically
+evaluated in PRIMAT for each calculation.
+1. BBN abundances
+Our reference value for the helium-4 abundance is the
+one obtained by Aver et al. [72], while we use the rec-
+ommended deuterium abundance value from Kislitsyn
+et al. [73] (see also [74, 75]), which is slightly smaller
+but consistent with the PDG-recommended value [67] (as
+they use a different selection of available measurements).
+The values read:
+Y obs
+p = 0.2453± 0.0034 [72] , (21)
+D/Hobs = (2.533± 0.024)× 10−5 [73]. (22)
+Recently, the EMPRESS survey [28] of extremely metal-
+poor galaxies obtained a smaller value for Y obs
+p with a
+∼ 1σ difference compared to (21), namely:
+Y obs
+p |EMPRESS = 0.2370+0.0034
+−0.0033 [28]. (23)
+This value would indicate a non-zero lepton asymmetry
+at the epoch of BBN [29, 30]. We will analyze our results
+using either (21) or (23) in the following.
+The deuterium abundance obtained with PRIMAT
+for zero asymmetries is in slight tension with the
+value (22) [76]. This is a feature of PRIMAT, as other
+codes predict, on the contrary, a value for D/H in agree-
+ment with (22) [77, 78]. The difference comes from dif-
+ferent selections of measurements of nuclear data, which
+result in different nuclear rates for the D(d , n)3He and
+D(d, p)3He reactions. Nevertheless, our results are not
+qualitatively modified by this feature — see Appendix D
+for the same analysis as Sec. IV but removing the D /H
+measurement from our likelihood.
+
+--- Page 7 ---
+7
+2. CMB anisotropies
+We approximate the likelihood obtained from CMB
+anisotropies by a normal distribution in the three pa-
+rameters (ωb,N eff,Y p), see Eq. (A9). We must therefore
+provide the means of the former parameters and their
+associated covariance matrix. We use the Markov chain
+Monte Carlo (MCMC) sampler Cobaya [79] to estimate
+the means and covariance matrices from CMB experi-
+ments combined with all available BAO data [80–83]. For
+Planck [2, 84, 85] + BAO, we find the preferred values
+(denoted with “Planck” in the following)
+ωb|Planck = 0.02237± 0.00018, (24a)
+Neff|Planck = 3.02± 0.28, (24b)
+Yp|Planck = 0.244± 0.018, (24c)
+and the covariance matrix
+ΣPlanck =
+
+
+3.25× 10−8 9.88× 10−6 1.03× 10−6
+9.88× 10−6 0.0794 −0.00378
+1.03× 10−6 −0.00378 0 .000342
+
+ .
+(25)
+We also considered the combination of all most recent
+CMB experiments, adding BICEP/Keck [86], ACT [87–
+91] and SPT-3G [92] to Planck+BAO. The means and the
+covariance matrix, denoted “all-CMB” in the following,
+read:
+ωb|all-CMB = 0.02217± 0.00016, (26a)
+Neff|all-CMB = 2.99± 0.24, (26b)
+Yp|all-CMB = 0.235± 0.015, (26c)
+and
+Σall-CMB =
+
+
+2.46× 10−8 8.61× 10−6 6.65× 10−7
+8.61× 10−6 0.0592 −0.00283
+6.65× 10−7 −0.00283 0 .000234
+
+ .
+(27)
+Note that the primordial helium abundance is currently
+much less constrained by CMB experiments compared
+to the spectroscopic measurements [Eqs. (21) and (23)],
+which is expected since the effect of Yp on CMB is tenu-
+ous (it affects the damping tail of the CMB anisotropies
+by modifying the density of free electrons between helium
+and hydrogen recombination [93]).
+III. ASYMMETR Y EQUILIBRA TION AND
+REHEA TING
+Initially large asymmetries do not necessarily lead to
+high values of Neff or to large asymmetries at the epoch
+of BBN. In particular, the “equilibration” of asymmetries
+is associated to a global reheating of all the species that
+are coupled when this equilibration takes place. As per-
+fect flavor equilibration of asymmetries is the standard
+assumption in the literature, we discuss first the conse-
+quences of this ideal situation, which provides a useful
+estimate of the evolution of Tγ/Tcm.
+A. Analytical description
+1. Conservation laws
+If neutrino flavors could fully equilibrate their asym-
+metries while being fully coupled to the electromagnetic
+plasma, their distributions after this equilibration would
+entirely be characterized by the common temperature
+zmix and the common reduced chemical potential ξmix.
+Finding two conserved quantities is sufficient to deter-
+mine their values.
+The first conservation law is exact and is provided by
+the conservation of ˆη defined in Eq. (7). Indeed, we have
+for a given flavor [57]
+dηα
+dx =
+Z y2dy
+2π2
+ 
+−i [H0 +Hlep,ϱ + ¯ϱ]αα +Kαα−Kαα
+
+,
+(28)
+such that 3dˆη/dx =P
+α dηα/dx = 0, since the trace of a
+commutator is zero and Tr(K−K) = 0.
+The second conservation equation corresponds to the
+energy density. In the approximation that electrons and
+positrons are relativistic, that is for temperatures such
+thatx/z≪ 1, all the relevant energy densities redshift as
+T 4
+cm. In that case, ˆρ≡ρtot/T 4
+cm, whereρtot is the sum on
+all energy densities, is a conserved quantity. For a plasma
+made of three (anti)neutrino flavors, photons, electrons,
+and positrons with a shared reduced temperature z =
+ze,µ,τ, the total comoving energy density is given by (see
+Appendix B)
+ˆρ(z,{ξα}) =z4
+"
+43π2
+120 + 1
+4
+X
+α
+
+ξ2
+α + ξ4
+α
+2π2
+#
+. (29)
+If there is a full equilibration in the regime where elec-
+trons and positrons are still relativistic, we can use these
+conservation laws to obtain the shared temperature zmix
+and the shared neutrino chemical potential ξmix, via
+ˆη({zα = 1,ξα}) = ˆη({zmix,ξ mix}),
+ˆρ(z = 1,{ξα}) = ˆρ(zmix,{ξmix}), (30)
+that is,
+1
+3
+X
+α
+˜ξα =z3
+mix ˜ξmix, (31a)
+43π2
+120 + 1
+4
+X
+α
+
+ξ2
+α + ξ4
+α
+2π2
+
+= 43π2
+120 z4
+mix (31b)
++ 3
+4
+
+ξ2
+mix + ξ4
+mix
+2π2
+
+z4
+mix.
+2. Entropy variation
+This full equilibration is a nonreversible process as the
+total comoving entropy is not conserved. Indeed, from
+
+--- Page 8 ---
+8
+the thermodynamic identity
+d
+dT
+ρ +P
+T
+
+= 1
+T
+dρ
+dT +n d
+dT
+µ
+T
+
+, (32)
+valid for each species individually, together with ρ +
+P = 4/3ρ and the conservation of ˆρ when electrons and
+positrons are assumed to be fully relativistic, we obtain
+(using ¯µα = −µα to relate neutrino and antineutrino
+chemical potentials)
+d
+dx
+ 
+stot/T 3
+cm
+
+=−
+X
+α
+ξα
+dηα
+dx . (33)
+Alternatively, this can be obtained from a direct compu-
+tation (see Appendix B for the useful formulae), with
+stot
+T 3cm
+=z3
+ 
+43π2
+90 + 1
+6
+X
+α
+ξ2
+α
+!
+, (34)
+and using the constancy of ˆρ.
+Since dˆη/dx = 0, we can rewrite (33) as
+d
+dx
+ 
+stot/T 3
+cm
+
+=−
+X
+α
+(ξα−ξav) d
+dx(ηα− ˆη), (35)
+with ξav = (P
+αξα)/3. If a given flavor α has a larger
+(resp. smaller) asymmetry than the average, that is
+ξα−ξav > 0 (resp. < 0), the “equilibration” leads to 5 a
+decrease (resp. increase) of ηα− ˆη. Therefore, the right-
+hand side of (35) is positive, which corresponds to an
+increase of the total comoving entropy density.
+3. Special cases
+If the initial asymmetries are small, that is for ξα≃
+˜ξα ≪ 1, then keeping only terms up to order ξ2
+α, the
+postequilibration plasma is characterized by the following
+solution of Eq. (31):
+ξmix≃ 1
+3
+X
+α
+ξα, (36a)
+zmix≃ 1 + 15
+86π2
+ X
+α
+ξ2
+α− 3ξ2
+mix
+!
+. (36b)
+The reheating of the plasma, given by zmix− 1, is there-
+fore very small since it is at least quadratic in theξα. The
+final chemical potential of such a mildly asymmetric neu-
+trino plasma is simply the average of the initial chemical
+potentials. The variation of entropy in that case is
+∆
+ 
+stot/T 3
+cm
+
+= 1
+4
+ 
+1
+3
+X
+α
+ξ2
+α−ξ2
+mix
+!
+, (37)
+5 ξα7−→ηα(ξα) is a monotonically increasing function.
+which vanishes as expected if all initial potentials are
+equal (ξα =ξmix).
+Another interesting case is when chemical potentials
+are large, that is when ξα≫ 1. If the different ξα are
+large but have similar values, equilibration also tends to
+the average chemical potential and no substantial reheat-
+ing of the plasma takes place. However, an interesting
+situation arises when the initial potentials are large, but
+with typically very different values such that the average
+initial asymmetry is small compared to the energy excess.
+This situation is typically realized when
+ X
+α
+ξ4
+α
+!3/4
+≫
+X
+α
+ξ3
+α. (38)
+The final asymmetry when full equilibration has occurred
+is then very small and given by
+ξmix≃ ˜ξmix = 1
+3z3
+mix
+X
+α
+˜ξα =
+˜ξav
+z3
+mix
+≪ 1 (39a)
+z4
+mix≃ 15
+43π4
+X
+α
+ξ4
+α. (39b)
+Note that this occurs even if P
+αξ3
+α is not small, as long
+as the condition (38) is satisfied. In that case, the full
+equilibration can only be realized by a strong energy ex-
+change with the electromagnetic plasma which receives a
+substantial part of the energy excess contained in the ini-
+tially very asymmetric neutrino distributions. This im-
+plies that zmix substantially departs from unity and the
+final asymmetry ˜ξmix ends up being smaller than unity.
+Consequently,Neff does not depart much from its stan-
+dard value without initial asymmetries. As expected, this
+is associated with an important entropy variation
+∆
+ 
+stot/T 3
+cm
+
+≃ 1
+6π
+43
+15
+1/4 X
+α
+ξ4
+α
+!3/4
+. (40)
+B. Numerical examples
+The previous analytical estimates provide a good de-
+scription of the evolution of the asymmetries and the pho-
+ton temperature when equilibration is complete. Such
+an example is represented Fig. 2, which corresponds to
+the initial parameters {˜ξav =−0.3,δ ˜ξe = 1.0,e∆ = 0}.
+One must not be led to believe that e∆ = 0, which is
+the case on Fig. 2 and not on Fig. 1, is a criterion for
+flavor equilibration. This is just a coincidence, and re-
+sults presented hereafter (see, e.g., Figs. 7 and 9) will
+highlight that (in)complete equilibration is a highly non-
+linear problem for which there is no general criterion.
+We represent on Fig. 3 the “fully mixed” parameters
+(zmix,ξ mix) for a range of initial conditions ( ˜ξav,δ ˜ξe =
+0,e∆). The vertical band around ˜ξav ≃ 0 corresponds
+to the second situation discussed above [Eq. (38)]: when
+
+--- Page 9 ---
+9
+10−210−1100101
+Tγ (MeV)
+−0.75
+−0.50
+−0.25
+0.00
+0.25
+0.50
+0.75
+6 (nα − ¯nα)/T 3
+cm
+6ˆη
+e
+µ
+τ
+10−210−1100101
+Tcm (MeV)
+1.0
+1.1
+1.2
+1.3
+1.4
+z
+zmix
+FIG. 2. Evolution of neutrino asymmetries ( Top) and co-
+moving photon temperature ( Bottom) from NEVO for the ini-
+tial parameters{˜ξav =−0.3, ˜ξe = 0.7, ˜∆ = 0}. The equilibra-
+tion of flavor asymmetries being almost total, the amount of
+reheating between 10 MeV and 1 MeV is very well described
+byzmix.
+varying e∆, we see on the bottom panel that ξmix≃ 0, in
+agreement with Eq. (39a), while on the top panel we see
+the rapid dependence of zmix with ξα, consistently with
+Eq. (39b).
+Let us stress again that these limiting results are only
+valid when the equilibration between flavor species is
+complete, and takes place before electrons and positrons
+become nonrelativistic. This is not the case in general:
+equilibration can be incomplete (see for instance Fig. 1),
+or collective oscillations can be delayed (see for instance
+Sec. IV D). Therefore, in general, computing correctly
+neutrino flavor evolution is crucial to adequately con-
+strain the primordial asymmetries, as we shall show in
+the next section. Note that, as explained in Sec. II B, we
+use zmix in the general case to provide an approximate
+rescaling between Tcm and Tγ during the epoch prior to
+the weak freeze-out ofn↔p reactions. This allows us to
+always switch from ATAO-(J±V ) to ATAO-V schemes
+in the same range of Tγ.
+FIG. 3. Dimensionless photon temperature zmix (Top) and
+common degeneracy parameter ξmix (Bottom) after perfect
+flavor equilibration when electrons and positrons are still rel-
+ativistic, given by the solution of Eq. (31). The example point
+shown on Fig. 1 corresponds to the gray cross, with coordi-
+nates (0.1, 2).
+IV. CONSTRAINTS ON PRIMORDIAL
+NEUTRINO ASYMMETRIES
+A full exploration of the three-dimensional space of ini-
+tial asymmetries (ξe,ξµ,ξτ) is out of reach for computa-
+tional reasons. We thus restrict the parameter range, first
+assuming equal asymmetries (the usual assumption made
+in the literature), then generalizing to two-dimensional
+extensions.
+Our various datasets are available on Zenodo [94].
+A. Equal asymmetries
+Based on the generic trend that flavor oscillations tend
+to “equilibrate” asymmetries between the different fla-
+vors, previous studies have often assumed that, through-
+out the range of temperatures of interest, flavor asym-
+metries were equal. With such an assumption, there is a
+
+--- Page 10 ---
+10
+priori no need for a full dynamical calculation and one can
+directly include a neutrino chemical potential in a BBN
+code to assess the change in primordial abundances and
+thus constrain ξ. Note, however, that this neglects the
+small out-of-equilibrium effects that can only be tracked
+with a dynamical calculation and are present in our re-
+sults.
+As a check that our general calculation provides consis-
+tent results with the existing literature, we first present
+the likelihood obtained by assuming, in the initial con-
+ditions of NEVO, ξe =ξµ =ξτ, which corresponds to the
+parameters δ ˜ξe = 0 and e∆ = 0.
+3.044
+3.046
+3.048
+3.050
+3.052
+3.054
+3.056
+3.058
+Neﬀ
+−0.10 −0.05 0.00 0.05 0.10
+˜ξav
+0.23
+0.24
+0.25
+0.26
+0.27
+Abundances
+Yp
+104 × D/H
+FIG. 4. Output from neutrino evolution and BBN calcula-
+tion as a function of the initial degeneracy parameter, equal
+for all three neutrino species. Top: Neff, which varies by
+0.4 % over the range of asymmetries explored. Bottom: pri-
+mordial abundances of helium-4 and deuterium (calculated for
+the fiducial baryon fraction), which follow closely the depen-
+dency (42). Note that the deuterium abundance is multiplied
+by 104 to be plotted in the same range as Yp.
+The output values of Neff and the primordial abun-
+dances Yp and D/H (calculated for the fiducial baryon
+abundance ωPRIMAT
+b = 0.02242) are shown on Fig. 4. The
+associated likelihood, introduced in Sec. II D, is repre-
+sented on Fig. 5. Note that we restrict our study to the
+range ˜ξav∈ [−0.1, 0.1], for which ˜ξav≃ξav up to a rela-
+tive difference of 10−3. The expected dependency of Neff
+on ξav is given by Eq. (15) with ξe =ξµ =ξτ =ξav:
+Neff({ξα =ξav}) =Neff(0) + 90
+7
+ξav
+π
+2
++ 45
+7
+ξav
+π
+4
+.
+(41)
+This expression is drawn as a light blue dotted line on the
+top panel of Fig. 4, which superimposes very well with the
+numerical result (we emphasize however that our results
+include the subdominant effects of the spectral distor-
+tions inherited from neutrino decoupling). Concerning
+the abundances, the dotted lines on the bottom panel
+are fits in the form (16), which read:
+Yp
+Yp|ξe=0
+≃e−0.97ξBBN
+e , D/H
+D/H|ξe=0
+≃e−0.54ξBBN
+e . (42)
+The small coefficient differences between Eqs. (16) and
+(42) can be attributed to the several updates of PRIMAT
+since the publication of [27].
+−0.10 −0.05 0.00 0.05 0.10
+ξav
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+ln (L/Lmax)
+Planck
+all-CMB
+Escudero+ [29]
+FIG. 5. Normalized likelihood as a function of the ini-
+tial reduced chemical potential, equal for all three neutrino
+species. Solid lines correspond to Yp|Aver [Eq. (21)], dashed
+lines toYp|EMPRESS [Eq. (23)]. The colored bands correspond
+to the 68 % intervals obtained in [30], withYp|Aver (green) and
+Yp|EMPRESS (purple), see Eq. (43).
+Our results are consistent with the existing literature.
+In particular, we represent on Fig. 5 the recent con-
+straints obtained by Escudero et al. [30] assuming equal
+asymmetries. They perform different analyses by in-
+putting directly neutrino chemical potentials in a BBN
+calculation for different choices of nuclear rates (follow-
+ing PRIMAT or PArthENoPE) and fixing Neff = 3.044 or
+letting it be a free parameter that is constrained concur-
+rently. Our calculation is different in that regard, as Neff
+is not an external, additional parameter, but it is a con-
+sequence of neutrino decoupling for a given value of ξav.
+However, given the range of values taken by Neff (0.4 %
+variation, see Fig. 4), it is reasonable to compare our con-
+straints with theNeff = 3.044 case in [30]. Therefore, the
+
+--- Page 11 ---
+11
+comparable values are:
+ξ[Escudero+]
+av = 0.004± 0.013 ([30] , Yp|Aver),
+ξ[Escudero+]
+av = 0.034± 0.014 ([30] , Yp|EMPRESS).
+(43)
+These confidence intervals are represented in colored
+bands on Fig. 5. Our results are in good agreement,
+noting that there are a few differences in our implemen-
+tations: (i) we take into account nonthermal effects as-
+sociated to neutrino decoupling, which are enhanced for
+a nonzero lepton asymmetry [61]; (ii) we use a slightly
+different value of the deuterium abundance, viz., (22) in-
+stead of the value from [67]; (iii) we include more recent
+BAO data in our MCMC analysis of CMB experiments.
+All this leads to small differences with [30]. Although as-
+suming equal asymmetries is a very limiting assumption
+that artificially restricts the allowed parameter space, we
+quote, for future reference, our 68 % confidence intervals
+for ξav, using all current CMB experimental data:
+ξav = 0.001± 0.013 ( Yp|Aver),
+ξav = 0.030± 0.013 ( Yp|EMPRESS). (44)
+Therefore, the EMPRESS measurement is indeed con-
+sistent with a nonzero lepton asymmetry at BBN, but
+given the assumptions that lead to this result, one should
+more precisely say that if all neutrino asymmetries are
+supposed equal, the EMPRESS measurement favors a
+nonzero value for this common lepton asymmetry.
+B. Equal νµ and ντ asymmetries
+Since BBN is most sensitive to an electronic neutrino
+chemical potential (through the change in neutron-to-
+proton interconversion rates), it is justified to explore a
+range of values of ˜ξe different from the average by vary-
+ing δ ˜ξe. In addition, we will change the average value of
+the asymmetries and will therefore show our results in
+the plane ( ˜ξav,δ ˜ξe), with a fixed value e∆ = 0, which
+represents a minimal extension of the assumptions of
+Sec. IV A. Such a value can be justified by the fact that
+synchronous flavor oscillations occur for the µ−τ flavors
+earlier thane−µ ande−τ conversions (see, e.g., Fig. 1).
+If such oscillations brought initially different ξµ and ξτ
+to their average value, focusing on scenarios with e∆ = 0
+would be justified. However, this assumption is not true
+in general [53],6 as will be seen when we explore the effect
+of e∆̸= 0 in Sec. IV C.
+The results of our neutrino + BBN calculation on a
+regular grid of asymmetries, with ˜ξav∈ [−0.5, 0.5] and
+δ ˜ξe∈ [−12, 12], is shown on Fig. 6. Generally, Neff in-
+creases with larger initial asymmetries, although the spe-
+cific patterns are hard to predict. It is worth noting that
+6 Note that, ifθ13 = 0 andθ23 =π/4 (maximal mixing), theµ and
+τ flavor distributions are indistinguishable at low temperatures.
+FIG. 6. Results of neutrino evolution and BBN calcu-
+lation (for ωb = ωPRIMAT
+b ) for equal νµ and ντ asymmetries.
+Top: Neff, invariant as expected through the transformation
+(˜ξav, ˜ξe)↔ (−˜ξav,−˜ξe), corresponding to a central symmetry.
+Middle: primordial helium-4 abundance Yp. Bottom: pri-
+mordial deuterium abundance D/H. These abundances share
+similar patterns and are mostly determined by the final elec-
+tron neutrino chemical potential; see Fig. 7.
+a central symmetry, corresponding to the complete sym-
+metry of neutrino evolution under the exchangeνα↔ ¯να
+for all three flavors, is satisfied.
+Such a symmetry does not exist for the primordial
+abundances, since they are mainly modified by asymme-
+tries through the change of neutron-to-proton ratio due
+to the electron neutrino asymmetry during BBN, ξBBN
+e .
+We have shown in Sec. II C that a proxy for this quan-
+tity (which is not properly defined for the true out-of-
+equilibrium evolution of neutrinos) is the final value of
+
+--- Page 12 ---
+12
+FIG. 7. Final electron neutrino asymmetry, showing the
+correlation with the primordial abundances in Fig. 6, as ex-
+pected from Eq. (16) or Eq. (42). The gray band corresponds
+to potential “equal but opposite asymmetries” situations, dis-
+cussed in Sec. IV D. In particular, Fig. 12 shows results on a
+zoomed-in grid around the point identified with a gray cross
+(˜ξav =−0.1, δ ˜ξe = 0.4).
+(ηe/z3). It is represented on Fig. 7 and shows the very
+same patterns as the abundance plots on Fig. 6, con-
+firming our physical understanding of the processes at
+play. We emphasize to the reader that assuming full fla-
+vor equilibration would mean that ηe|final = ηav, thus
+Fig. 7 would be invariant along the y−axis (see bottom
+panel of Fig. 3). This is not at all the case, with compli-
+cated patterns of variation of ηe (and the other asymme-
+tries) which result in the patterns observed on Fig. 6.
+Likelihoods — The result of the statistical analysis
+introduced in Sec. II D is shown on Fig. 8. The re-
+sults of Sec. IV A (e.g., Fig. 5) correspond to the line
+˜ξe− ˜ξav = 0 of the four panels. The case of equal asym-
+metries is not representative of the general allowed space
+ofξα. The shape of the likelihood is highly non-Gaussian
+(preventing the drawing of meaningful 68 %, 95 % con-
+tours), with high asymmetry points — i.e., ξe =O(10)
+— not excluded by our analysis. Using all CMB data
+compared to only Planck’s data reduces the likelihood of
+these large ξ points, but asymmetries of order unity are
+still allowed. As in the restricted case of equal asymme-
+tries, using the EMPRESS measurement of the helium-
+4 abundance pushes the likelihood away from the zero
+asymmetry point (0, 0).
+Comparison of the likelihood (Fig. 8) and physical in-
+put (Fig. 6) patterns shows that the total likelihood is
+mostly determined by the BBN measurements, which
+is expected given the much larger relative uncertainties
+on Neff,Y p from CMB [Eqs. (24) and (26)] compared to
+the percent level spectroscopic measurements of Yp, D/H
+[Eqs. (21)–(23)].
+C. V arying ξµ−ξτ
+We now explore the role of initial differences between
+theµ andτ flavor asymmetries. We assume that initially
+ξe = ξav. The example of Fig. 1, which corresponds to
+such parameters, highlights the need for the dynamical
+evolution of asymmetries, as the final values ofηα cannot
+be straightforwardly obtained from the initial values.
+We run our calculations for initial asymmetries{δ ˜ξe =
+0,e∆ ̸= 0}, equally spaced on the plane ( ˜ξav,e∆), with
+˜ξav∈ [−0.1, 0.1] and e∆∈ [−2, 2]. The proxy for ξBBN
+e on
+this grid of asymmetries, similarly to Fig. 7, is shown on
+Fig. 9, and the likelihood is shown on Fig. 10. Similarly
+to the results of Fig. 8, we see that current experimen-
+tal data do not allow one to set good constraints on the
+asymmetries, as the high likelihood regions extend be-
+yond the explored grid. We expect that high- ˜ξav points
+would be rejected with a better precision on the experi-
+mental determination ofNeff, as will be shown in Sec. V.
+This once again highlights the limitations of assuming
+flavor equilibration: the patterns on Fig. 9 show explic-
+itly that the final asymmetries are not equal in general,
+as there would otherwise be a symmetry via e∆→− e∆.
+We can identify two “high likelihood” regions: the ver-
+tical band ˜ξav≃ 0, and an oblique band (roughly given
+by e∆≃− 0.5 ˜ξav). They correspond to regions where the
+final electron flavor asymmetry is close to zero (see Fig. 9
+and the previous discussion in Sec. IV B). For the vertical
+band, this corresponds to the fact that initially ξe = 0,
+and the value remains small after flavor transformation.
+Regarding the oblique band, these results underline once
+again why a precise neutrino evolution code is needed to
+draw meaningful conclusions. Notably, the final electron
+flavor asymmetry does not follow the patterns of Fig. 3
+(bottom panel), showing that flavor equilibration is not
+satisfied.
+To further illustrate this feature, we identify on Fig. 10
+two points (“Point A” and “Point B,” with ˜ξ(A)
+av = ˜ξ(B)
+av =
+0.07,e∆(A) = +0.3 ande∆(B) =−0.3), which only differ by
+the sign ofe∆, that is, by the exchange (νµ, ¯νµ)↔ (ντ, ¯ντ).
+The time evolution of asymmetries for these two points
+is shown on Fig. 11. The high likelihood for Point B
+compared to Point A is due to the final electron fla-
+vor asymmetry, which is very small for Point B (Fig. 11,
+bottom panel) but not for Point A (Fig. 11, top panel).
+Since, for now, quantities are mostly constrained through
+the primordial abundances and not CMB data, i.e., the
+value ofNeff is poorly constrained, the set of parameters
+{˜ξav,δ ˜ξe,e∆}(B) is allowed. However, a final value ηe≃ 0
+means, by conservation of the average ˆη, that the final
+asymmetries ηµ and ητ can be large if ˜ξav is large. This
+leads to a higher value of Neff, which should be excluded
+by future, more precise, CMB experiments (see Sec. V).
+
+--- Page 13 ---
+13
+FIG. 8. Total likelihood for initial asymmetries in the plane ( ˜ξav,δ ˜ξe), using the Aver et al. value (left panels) or the EMPRESS
+value (right panels) of the helium-4 abundance. The CMB likelihood uses Planck + BAO data (top panels) or all current CMB
+experiments + BAO (bottom panels).
+D. Equal but opposite asymmetries
+The vertical line of high likelihood (˜ξav≃ 0) on Fig. 10,
+which corresponds to initial parameters {ξe = 0,ξµ =
+−ξτ}, is a case of “equal but opposite” (EBO) asymme-
+tries [48, 57]. Such configurations lead to a delayed onset
+of (quasi)synchronous oscillations. 7 For instance, for a
+two-flavor system, the cancellation of the sum of asymme-
+tries prevents synchronous oscillations from happening.
+Only quasi-synchronous oscillations can take place, but
+as they are a higher order effect in∥H0 +Hlep∥/∥J∥ , os-
+cillations are delayed to lower temperatures. Such config-
+urations make dynamical calculations more challenging,
+as we must be certain to follow the evolution until oscil-
+lations are damped enough to get to an ATAO-V regime.
+This is not a problem for the calculations of Sec. IV C: as
+7 The regime of quasi-synchronous oscillations occurs when H0 +
+Hlep is not negligible anymore compared toJ . Due to the differ-
+ent signs in the Hamiltonians of Eqs. (9a) and (9b), the perfect
+synchronicity of neutrino and antineutrino collective oscillations
+is broken, which results in an accelerated frequency for the evo-
+lution of the asymmetry [57].
+oscillations in the{νµ−ντ} subspace usually start around
+Tcm∼ 10 MeV, the delay due to the EBO configurations
+is still readily manageable.
+However, when initially e∆ = 0, conversions can only
+take place with the νe flavor, which occurs for smaller
+temperatures. In the plane ( ˜ξav,δ ˜ξe), with e∆ = 0 (see
+Sec. IV B), this situation arises for initial asymmetries
+satisfying ξµ = ξτ =−ξe. Considering ξ≃ ˜ξ for small
+asymmetries and using the relations (8), we see that these
+“pathological” points are on the line
+δ ˜ξe =−4˜ξav. (45)
+This line is shown as a gray band on Fig. 7. One can see,
+on Figs. 6 and 7, that a few grid points along this line
+show results seemingly with artifacts. We investigate this
+feature by exploring a small region of parameters around
+the point ( ˜ξav,δ ˜ξe) = (−0.1, 0.4) — this point is shown
+with a gray cross on Fig. 7. The results of our neutrino
++ BBN calculation are shown on Fig. 12.
+One can observe, along the line given by Eq. (45),
+apparently peculiar results, which do not seem to fol-
+low the background trend, whether this is for Neff, Yp,
+or D/H. Regarding primordial abundances, the reasons
+come from the coincidence between this line and a range
+
+--- Page 14 ---
+14
+FIG. 9. Final electron neutrino asymmetry in the plane
+(˜ξav, e∆). The patterns show that flavor equilibration is not
+a common result at all, as this plot would then be invariant
+vertically (becauseηe|final would be equal toηav). Two points,
+which only differ by opposite values of e∆, are highlighted by
+crosses and the associated time evolution of asymmetries is
+shown on Fig. 11.
+FIG. 10. Total likelihood in the plane ( ˜ξav, e∆), using all-
+CMB likelihood and the Aver et al. value of the helium
+abundance (21). Large regions are allowed; they correspond
+to final values of the electron flavor asymmetry close to zero
+(see Fig. 9), resulting in primordial abundances only slightly
+modified compared to the zero asymmetry case.
+of parameters that make the final electron flavor asym-
+metry very small. For Neff, this is actually a feature
+of EBO configurations, for which the onset of collective
+oscillations is delayed to lower temperatures compared
+to neighboring configurations. We illustrate this prop-
+erty on Fig. 13, where we compare the time evolution of
+asymmetries for two points (“C1” and “C2”) highlighted
+on Fig. 12, top panel. Point C1 ( ˜ξav =−0.10025,δ ˜ξe =
+−0.2
+−0.1
+0.0
+0.1
+0.2
+0.3
+0.4
+6 (nα − ¯nα)/T 3
+cm
+A: ~∆ = + 0 .3
+˜ξav
+e
+µ
+τ
+100101
+Tcm (MeV)
+−0.2
+−0.1
+0.0
+0.1
+0.2
+0.3
+0.4
+6 (nα − ¯nα)/T 3
+cm
+B: ~∆ = − 0.3
+FIG. 11. Evolution of neutrino asymmetries for the con-
+ditions of points A and B identified on Fig. 10. Initially
+˜ξe = ˜ξav = 0.07, the only difference being the sign of e∆. Top:
+Point A, e∆ = +0.3. The electron flavor asymmetry during
+BBN is large, leading to primordial abundances incompatible
+with measurements. Bottom: Point B, e∆ = −0.3. The fi-
+nal electron flavor asymmetry is close to zero, explaining why
+Point B is in the “allowed” region.
+0.401) is exactly on the line (45), while point C2 ( ˜ξav =
+−0.0991,δ ˜ξe = 0.401) is close to it. The dynamical be-
+havior of the asymmetries is very different in the two
+cases. First, the onset of oscillations, which corresponds
+to the Mikheyev–Smirnov–Wolfenstein (MSW) transi-
+tion from matter-dominated to vacuum-dominated in the
+Hamiltonian “felt” by the asymmetry [57], is delayed
+from C2 ( Tcm ∼ 3 MeV) to C1 ( Tcm ∼ 2 MeV). This
+delay is responsible for the nonadiabaticity of the tran-
+sition experienced by the asymmetry, which results in
+large oscillations for C1. This shows the importance of
+following the full Hamiltonian [ATAO-( J ±V) scheme]
+to low enough temperatures: we represent on Fig. 13
+in solid lines (resp. dashed lines) the evolution using
+Ttrans = 1.2 MeV (resp. Ttrans = 2.2 MeV). For C1, the
+higherTtrans case does not represent accurately the tran-
+sition, although the average values are well described,
+hence a limited impact on the final observables. However,
+for other points where the onset of oscillations would be
+pushed to even lower temperatures, a premature shift
+from ATAO-(J±V ) to ATAO-V may cause some differ-
+ences. This is notably evidenced when we focus on the
+energy density budget between (anti)neutrinos and pho-
+tons.
+
+--- Page 15 ---
+15
+FIG. 12. Results of neutrino evolution and BBN calcu-
+lation for equal νµ and ντ asymmetries, around a point of
+“equal but opposite” asymmetries (see gray cross on Fig. 7).
+For these calculations, the default transition temperature be-
+tween ATAO-(J±V ) and ATAO-V schemes is set at ¯Ttrans =
+1.6 MeV (see Sec. II B). Plotting conventions are the same as
+Fig. 6.
+To depict the transfers of energy due to flavor mixing
+and later reheating by electron-positron annihilations, we
+define the effective number of neutrinos at any tempera-
+ture as
+Neff(Tcm)≡
+P
+α (ρα + ¯ρα)
+7π2
+120T 4cm
+×
+z(0)
+z
+4
+, (46)
+where z(0) is the temperature that photons would have
+−0.3
+−0.2
+−0.1
+0.0
+0.1
+0.2
+0.3
+6 (nα − ¯nα)/T 3
+cm Ttrans = 2.2 MeV
+Ttrans = 1.2 MeV
+C1
+˜ξav
+e
+µ
+τ
+−0.3
+−0.2
+−0.1
+0.0
+0.1
+0.2
+0.3
+6 (nα − ¯nα)/T 3
+cm
+C2
+10−1100101
+Tcm (MeV)
+3.05
+3.06
+3.07
+3.08
+3.09
+3.10
+3.11
+3.12
+Neﬀ
+C1
+C2
+FIG. 13. Neutrino evolution for the conditions of points C1
+and C2 identified on Fig. 12. We consider two transition tem-
+peratures between the ATAO-(J±V ) and ATAO-V schemes in
+NEVO: Ttrans = 2.2 MeV (dashed lines) and Ttrans = 1.2 MeV
+(solid lines). Top: evolution of asymmetries for point C1.
+Middle: evolution of asymmetries for point C2. Bottom: Neff,
+as given by Eq. (46), for each calculation.
+in the instantaneous decoupling approximation, without
+QED corrections, such that z(0)(Tcm ≫ me) = 1 and
+z(0)(Tcm ≪ me) = (11 /4)1/3. It can be obtained, for
+instance, via entropy conservation. The value of (46) for
+Tcm≪me corresponds to the quantityNeff shown on the
+top panels of Figs. 4, 6 and 12.
+This generalized Neff is shown on the bottom panel of
+Fig. 13. Consistently with Fig. 12, Neff|C1 > Neff|C2.
+We interpret this as a consequence of the EBO configu-
+ration: when asymmetries mix, the extra energy density
+contained in (anti)neutrinos is redistributed as a common
+
+--- Page 16 ---
+16
+temperature for (anti)neutrinos, electrons, positrons and
+photons. However, if this partial equilibration occurs
+later, the thermal contact between (anti)neutrinos and
+the electromagnetic plasma is gradually broken and pho-
+tons get, in comparison, a lower share of the redistributed
+energy. This leads to a higher value forNeff. Note, in ad-
+dition, that the final increase due to e−e+ annihilations,
+for Tcm≤ 1 MeV, is almost identical for C1 and C2. For
+the EBO configuration, using a transition temperature
+that is too high (here, 2 .2 MeV, see dashed lines) leads
+to a small error in Neff, which could be even larger in
+other EBO configurations if the onset of oscillations is
+delayed to even further temperatures.
+To conclude, the patterns on the EBO line seen on
+Figs. 6 and 7 are not mere artifacts and are resolved with
+our code. However, due to the computationally challeng-
+ing nature of these configurations, the accuracy of our
+results on such points is lower compared to other config-
+urations. We see, however, that this line is not favored
+by our statistical analysis (see Fig. 8), which makes this
+accuracy loss only marginally relevant.
+V. FORECASTS
+We have seen that, given the current CMB experi-
+ments, primordial neutrino asymmetries are very loosely
+constrained when one does not restrict to equal asym-
+metries for all three flavors. However, the improved ca-
+pabilities of future CMB experiments will provide better
+constraints, which we estimate in this section.
+A. Upcoming CMB experiments
+We focus on two future CMB experiments: the Simons
+Observatory [95, 96], an array of three 0.4-metre small-
+aperture telescopes and one 6-metre large aperture tele-
+scope in the Atacama desert, in the final stages of con-
+struction; and a next-generation project like CMB-Stage
+IV [97, 98]. They notably aim at constraining Neff at the
+percent level.
+We provide forecasts for the capabilities of these tele-
+scopes following the strategy of [30, 99]. We use the base-
+line covariance matrices of Simons Observatory (SO) and
+CMB-Stage IV (CMB-S4):
+ΣSO =
+
+
+5.33× 10−9 5.78× 10−7 1.59× 10−7
+5.78× 10−7 0.0121 −0.000624
+1.59× 10−7 −0.000624 4 .36× 10−5
+
+ ,
+(47)
+ΣCMB-S4 =
+
+
+2.21× 10−9 9.52× 10−7 4.45× 10−8
+9.52× 10−7 0.00656 −0.000293
+4.45× 10−8 −0.000293 1 .85× 10−5
+
+ .
+(48)
+FIG. 14. Forecast of the total likelihood for initial asymme-
+tries in the plane ( ˜ξav,δ ˜ξe), using the Aver et al. value of the
+helium-4 abundance (21). Top: results using the SO covari-
+ance matrix for the CMB likelihood LCMB. Bottom: results
+using the CMB-S4 covariance matrix for LCMB. The central
+values inLCMB are set to the values of Eq. (26).
+B. Improved constraints
+We show on Fig. 14 the likelihood obtained in the plane
+(˜ξav,δ ˜ξe), using the covariance matrices (47) and (48)
+for the CMB likelihood and setting the central values
+ofLCMB to the same values as the ones obtained when
+combining all existing CMB experiments, see Eq. (26).
+Note that, compared to Fig. 8, the span of asymmetries
+is reduced as these upcoming CMB experiments provide
+much tighter constraints on the asymmetries. Some “pe-
+culiar” points, which correspond to EBO configurations
+(see Sec. IV D), can be noticed.
+The zero asymmetry configuration{ξe =ξµ =ξτ = 0}
+would appear to be disfavored. However, this result
+depends largely on the central values adopted for the
+CMB likelihood. In Fig. 14, we have taken the same
+means as the ones currently obtained in CMB experi-
+ments [Eq. (26)]. With these new covariance matrices,
+the standard deviation on each parameter is typically
+reduced by a factor of 10, which makes the future de-
+termination ofYp competitive with current spectroscopic
+measurements. However, the central value (26c) is lower
+than (21) and pushes for nonzero asymmetries, similarly
+to the lower spectroscopic value from EMPRESS (23).
+
+--- Page 17 ---
+17
+FIG. 15. Same as Fig. 14 but setting the central value of Yp
+inLCMB to (21). Vanishing asymmetries are not disfavored
+anymore with this choice.
+As a comparison, we show on Fig. 15 the same results
+as Fig. 14, but setting the central value ofYp in the CMB
+likelihood to the Aver et al. value (21). With this new
+choice, the zero asymmetry configuration is not disfa-
+vored anymore. The shape of the likelihood is different
+between Figs. 14 and 15, but they are still approximately
+Gaussian and closed: future CMB experiments will pro-
+vide significant constraints on primordial neutrino asym-
+metries.
+VI. CONCLUSION
+We have revisited the constraints on cosmological lep-
+ton asymmetries in light of the recent progress on the de-
+termination of mixing parameters and on the numerical
+description of neutrino evolution in the early Universe,
+using a three-flavor multi-momentum code with the full
+neutrino collision term and the BBN code PRIMAT.
+Constraints on asymmetries at the BBN epoch, com-
+monly established in the literature, are not representa-
+tive of the constraints on primordial asymmetries. In
+particular, since total flavor equilibration is not verified
+in general, it is not straightforwardly possible to connect
+initial and final asymmetries, which shows the need for an
+accurate dynamical evolution of (anti)neutrinos through
+the MeV age. Still, our results are consistent with the
+studies that focus on BBN-epoch asymmetries; see the
+constraints (44) obtained by assuming equal primordial
+asymmetries — in which case they do not evolve and
+they match the values at the BBN epoch. For future use,
+we also obtained an updated semianalytical expression of
+the dependence of primordial abundances on the electron
+neutrino chemical potential at BBN [Eq. (42)].
+It is well known that, because of flavor oscillations, a
+large space of primordial asymmetries can be averaged to
+small asymmetries consistent with BBN, but our study
+quantifies this with a reliable code that does not approx-
+imate the collision term, allowing for dedicated future
+studies of particular lepton asymmetry generation mod-
+els. Our main finding is that current CMB experiments
+do not allow one to constrain these primordial asymme-
+tries, with generically unbound domains of the parameter
+space favored by our statistical analysis. This is due to
+the fact that the limits on lepton asymmetries are dom-
+inated by the percent-level measurements of primordial
+abundances, which are compatible with large domains of
+the parameter space that lead to a vanishing final elec-
+tron flavor asymmetry. In other words, the constraints on
+Neff are not strong enough to discard large initial asym-
+metries that lead to a very small ξBBN
+e .
+We highlighted a potential limit of our analysis, which
+corresponds to the cases of “equal but opposite asymme-
+tries.” These peculiar configurations are associated with
+a delay of the onset of collective oscillations, which are
+harder to capture accurately. Although we have shown
+that these specific situations do not challenge our conclu-
+sions, a dedicated study of these configurations, should
+they arise in a specific model of lepton asymmetry gen-
+eration, can readily be carried out.
+Finally, we assessed the potential of future CMB ex-
+periments like the Simons Observatory, which aim at de-
+termining Neff (and Yp) with a precision better by an
+order of magnitude compared to current CMB experi-
+ments. They should be able to “close the contours” and
+provide significant constraints on the primordial asym-
+metries, which will greatly inform models of baryogenesis
+and leptogenesis.
+ACKNOWLEDGMENTS
+We thank Silvia Galli, Karim Benabed, and Ali Rida
+Khalife for their help with statistics and the SPT-3G
+likelihood. We thank Joel Meyers for useful discus-
+sions on the statistical analysis of future CMB experi-
+ments and for providing the baseline covariance matrix
+of the Simons Observatory. We are grateful to Cynthia
+Trendafilova for providing the Fisher matrix for CMB-
+S4 preliminary baseline design configuration. This work
+has made use of the Infinity cluster hosted by the Insti-
+tut d’Astrophysique de Paris. J.F. thanks the Institut
+d’Astrophysique de Paris for its hospitality during var-
+ious stages of this work. J.F. is supported by the Net-
+work for Neutrinos, Nuclear Astrophysics and Symme-
+
+--- Page 18 ---
+18
+tries (N3AS), through the National Science Foundation
+Physics Frontier Center Award No. PHY-2020275.
+Appendix A: Statistical analysis
+The experimental data we are using to constrain neu-
+trino properties are the CMB power spectrum (Cobs
+ℓ ) and
+the primordial abundances (Y obs
+p and D/Hobs). We want
+to determine the probability of the theory parameters
+{ξα,ωb} given these measurements, that is:
+L(ξα,ωb|Cobs
+ℓ ,Y obs
+p , D/Hobs)
+∼P (Cobs
+ℓ ,Y obs
+p , D/Hobs|ξα,ωb), (A1)
+through Bayesian inversion. The final conditional prob-
+ability can be separated between CMB and BBN mea-
+surements, since they are independent.
+Let us start with BBN measurements. The condi-
+tional probability to measure {Y obs
+p , D/Hobs} knowing
+the “true” values {Yp, D/H} is given by the product of
+likelihoods
+P (Y obs
+p , D/Hobs|Yp, D/H) =N (Y obs
+p ;Yp,σYp,obs)
+×N (D/Hobs; D/H,σ D/H,obs), (A2)
+with the Gaussian likelihood being, in general,
+N (Aobs;A,σA) = 1√
+2πσA
+e−(Aobs−A)2/2σ2
+A. (A3)
+We relate this quantity to the theory parameters{ξα,ωb}
+via, for instance for helium-4,
+P (Y obs
+p |ξα,ωb) =
+Z
+dYpP (Y obs
+p |Yp)×P (Yp|ξα,ωb).
+(A4)
+The last conditional probability is actually the output
+from our codes NEVO + PRIMAT. For a given set of theory
+parameters, the final result has a numerical uncertainty
+due mainly to the uncertainties on the nuclear rates and
+the neutron lifetime. This variation is estimated via a
+Monte-Carlo search in PRIMAT, and we findσYp,code/Yp≃
+0.051% and σD/H,code/(D/H)≃ 1.13%. Therefore, the
+overall result for BBN measurements reads
+P (Y obs
+p , D/Hobs|ξα,ωb) =
+Z
+dYpd(D/H)P (Y obs
+p , D/Hobs|Yp, D/H)×P (Yp|ξα,ωb)P (D/H|ξα,ωb) (A5)
+=
+Z
+dYpd(D/H)N (Y obs
+p ;Yp,σYp,obs)×N (D/Hobs; D/H,σ D/H,obs) (A6)
+×N (Yp;Yp
+code
+(ξα,ωb),σYp,code)×N (D/H; D/Hcode
+(ξα,ωb),σ D/H,code)
+=N
+
+Y obs
+p ;Yp
+code
+(ξα,ωb),σYp
+
+×N
+
+D/Hobs; D/Hcode
+(ξα,ωb),σ D/H
+
+(A7)
+where, by convolution of Gaussian distributions, the total standard deviation isσYp =
+q
+σ2
+Yp,obs +σ2
+Yp,code and likewise
+for deuterium.
+Concerning CMB measurements, the CMB likelihood
+is expressed in terms of ωb, Neff, and Yp. The uncer-
+tainties on Neff from NEVO being much smaller than the
+ones on primordial abundances from PRIMAT, we neglect
+them and consider that there is a unique correspondence
+P (Neff|ξα,ωb) = δ(Neff−Ncode
+eff (ξα)). Note in particular
+that the numerical prediction for Neff does not depend
+on the baryon densityωb, since the baryon-to-photon ra-
+tio is too small to have a measurable effect on lepton
+physics. Therefore, we have
+P (Cobs
+ℓ |ξα,ωb) =P (Cobs
+ℓ |ωb,N code
+eff (ξα),Y p
+code
+(ξα,ωb))
+=LCMB
+
+ωb,N code
+eff (ξα),Y p
+code
+(ξα,ωb)
+
+. (A8)
+The CMB likelihood is expressed thanks to the vector
+C = (ωb,N eff,Y p)T and the covariance matrix Σ such
+that:8
+LCMB(ωb,N eff,Y p)
+= 1
+(2π)3/2
+p
+|det Σ|
+e−(C−Cobs)T·Σ−1·(C−Cobs)/2. (A9)
+The central values and covariance matrices are given in
+Eqs. (24)–(27). They are obtained with the MCMC sam-
+pler Cobaya [79]; see Fig. 16.
+We finally express the total likelihood (A1), given by
+the product of individual likelihoods since measurements
+are independent:
+8 Note that the numerical uncertainty on Y code
+p is much smaller
+than the standard deviation of the CMB posterior distribution
+of Yp and is thus neglected here.
+
+--- Page 19 ---
+19
+0.0220 0.0225
+Ω bh2
+0.20
+0.25
+0.30
+Yp
+2.5
+3.0
+3.5
+4.0
+Neﬀ
+2.5 3.0 3.5 4.0
+Neﬀ
+0.20 0.24 0.28
+Yp EMPRESS
+Aver et al.
+Planck + BAO
+All CMB + BAO
+FIG. 16. 68% and 95% contours of the posterior distri-
+bution in the ΛCDM model with additional free parameters
+Neff and Yp. “All CMB + BAO” contours use data from BI-
+CEP/Keck [86], ACT [87–91], and SPT-3G [92] in addition
+to Planck [84] and BAO [83] likelihoods. On the bottom right
+panel, colored bands show the helium-4 abundance measure-
+ments (21) and (23).
+L(ξα,ωb|Cobs
+ℓ ,Y obs
+p , D/Hobs)
+=LCMB
+
+ωb,N code
+eff (ξα),Y p
+code
+(ξα,ωb)
+
+×N
+
+Y obs
+p ;Yp
+code
+(ξα,ωb),σYp
+
+×N
+
+D/Hobs; D/Hcode
+(ξα,ωb),σ D/H
+
+. (A10)
+Appendix B: Thermodynamic quantities
+Let us consider a given species with energy density
+ρ, pressure P , temperature T , number density n, and
+chemical potential µ. Its volume entropy is given by
+s = ρ +P−nµ
+T . (B1)
+In the following, we give useful expressions for the various
+thermodynamic quantities of the relativistic species in
+the early Universe.
+Photons — They have a Bose-Einstein distribution
+with zero chemical potential, hence
+ργ = (zTcm)4π2
+15, (B2a)
+Pγ =ργ/3, (B2b)
+sγ = (zTcm)3 4π2
+45 . (B2c)
+Electrons and positrons — The charged leptons fol-
+low a Fermi-Dirac distribution with two helicity states.
+As long as they are ultrarelativistic ( Tγ≫ me), we can
+neglect the very small asymmetry and we have
+ρe± = (zTcm)4 7π2
+60 , (B3a)
+Pe± =ρe±/3, (B3b)
+se± = (zTcm)3 7π2
+45 . (B3c)
+(Anti)neutrinos — Their equilibrium distributions
+are Fermi-Dirac with only one helicity state, hence the
+total densities (for the sum of neutrinos and antineutri-
+nos with ¯µα =−µα) are
+ρα + ¯ρα = (zαTcm)4
+7π2
+120 + ξ2
+α
+4 + ξ4
+α
+8π2
+
+, (B4a)
+Pα =ρα/3, (B4b)
+sα + ¯sα = (zαTcm)3
+7π2
+90 + ξ2
+α
+6
+
+. (B4c)
+Appendix C: T ransition from the A T AO-(J±V ) to
+the A T AO-V scheme
+As discussed in Sec. II B, we solve the QKEs using dif-
+ferent schemes depending on the temperature. Notably,
+for low enough temperatures, the self-interaction mean-
+field Hamiltonian does not drive the dynamics anymore
+and can be discarded, which corresponds to the switch
+from the ATAO-(J±V ) to the ATAO-V scheme [57]. The
+transition temperature between those schemes, Ttrans, is
+by default ¯Ttrans = 2.2 MeV, but it is adapted in two
+ways. First, it is rescaled by a proxy for the photon
+temperature due to asymmetry equilibration, zmix, in or-
+der to track the same range of Tγ = zTcm, since this
+is the relevant temperature for neutron-to-proton freeze-
+out. Then, it is further decreased for particular cases
+where oscillations are delayed (see Sec. IV D). In this
+Appendix, we show the necessity for such an adaptive
+method, and quantify the errors incurred if the transi-
+tion is made too early.
+To illustrate the impact of the choice ofTtrans, we focus
+on initial asymmetries in the plane ( ˜ξav,δ ˜ξe) with e∆ = 0,
+a situation studied in Sec. IV B. The results of NEVO,
+using the adaptive setting of Ttrans, are shown on Fig. 6,
+and we show how a differentTtrans changes those outputs
+
+--- Page 20 ---
+20
+FIG. 17. Final Neff (top panel) and helium-4 abundance (bottom panel) for initial asymmetries in the plane ( ˜ξav,δ ˜ξe), for
+different transition temperatures Ttrans. The precise results, obtained with the adaptive method, are shown on Fig. 6. The
+point with coordinates (−0.1, 8.0) is shown with a white cross, and it is studied specifically in Figs. 18 and 19.
+on Fig. 17. Generally speaking, a too largeTtrans can lead
+to errors of order 10 % − 20 %. However, this is highly
+dependent on the initial asymmetries: for small values of
+(˜ξav,δ ˜ξe), we see on the top panel that the smaller value
+ofNeff is well described regardless of Ttrans. The “polar”
+regions on Fig. 17 show particular sensitivity to Ttrans,
+as one needs to go below 2 MeV to start discerning the
+patterns found on Fig. 6.
+The trends in variations of Neff and Yp can be under-
+stood by looking at a specific example. We focus in the
+following on the initial asymmetries identified by a white
+cross on Fig. 17: ( ˜ξe = 7.9, ˜ξµ = ˜ξτ =−4.1). The varia-
+tion of the final values ofNeff,Yp and D/H for this initial
+configuration as a function ofTtrans are shown on Fig. 18.
+We observe a convergence of the values when Ttrans ap-
+proaches 1 MeV. If Ttrans is too large, Neff is underes-
+timated while the abundances show a more complicated
+pattern: as Ttrans diminishes, the abundances decrease
+before increasing back until they converge to the actual
+values.
+We interpret the behavior of Neff in the same way
+as in the discussion of Sec. IV D. The mixing of asym-
+metries is associated to a transfer of energy from
+the degenerate sea of (anti)neutrinos to the ensem-
+ble{neutrinos+antineutrinos+electromagnetic plasma}.
+Imposing a higher value of Ttrans artificially makes this
+energy redistribution happen earlier. This can be seen on
+Fig. 19, where we show the time evolution of asymme-
+tries and z: when Ttrans is too high (5 MeV and 3 MeV
+shown on this figure), z gets an unphysical “bump” at
+Ttrans. Now, the higher Ttrans, the more coupled neutri-
+nos are with the electromagnetic plasma, and the less
+neutrinos are comparatively more reheated than pho-
+tons by the mixing of asymmetries. In other words, the
+3.2
+3.3
+3.4
+3.5
+Neﬀ
+Neﬀ
+100101
+Ttrans
+2.2
+2.3
+2.4
+2.5
+2.6
+Abundances
+Yp 104× D/H
+FIG. 18. Final value of Neff and helium-4 and deuterium
+abundances from the initial asymmetries ( ˜ξav =−0.1, δ˜ξe =
+8.0, e∆ = 0.), for different values of the transition temperature
+Ttrans.
+higher Ttrans, the lower Neff as seen on Fig. 18. For
+Ttrans≤ 1.6 MeV,Neff asymptotes to its actual value: as
+
+--- Page 21 ---
+21
+−4
+−2
+0
+2
+4
+6
+8
+6 (nα− ¯nα)/T 3
+cm
+5 × 10−16 × 10−17 × 10−1
+-0.3
+0.0
+0.3
+e
+µ
+τ
+e
+µ
+τ
+e
+µ
+τ
+100101
+Tcm (MeV)
+1.0
+1.1
+1.2
+1.3
+1.4
+z
+Ttrans = 5.0 MeV Ttrans = 3.0 MeV Ttrans = 1.0 MeV
+FIG. 19. Evolution of neutrino asymmetries (top panel) and the photon comoving temperature (bottom panel), for the initial
+configuration ( ˜ξav =−0.1,δ ˜ξe = 8.0, e∆ = 0.). Three different transition temperatures are shown: Ttrans = 5 MeV (dash-dotted
+lines, light shades), Ttrans = 3 MeV (dashed lines, medium shades) and Ttrans = 1 MeV (solid lines, dark shades).
+we can see on Fig. 19, this is because the reduction of the
+asymmetries has been properly described by the ATAO-
+(J±V ) scheme, and we are only left with low-amplitude
+very fast collective oscillations that we average by switch-
+ing to the ATAO-V scheme. Regarding the abundances,
+we see on Fig. 19 (see in particular the inset plot) that
+the final value of ηe first increases with decreasing Ttrans
+(from 5 MeV to 3 MeV), before decreasing to its actual
+value. This is associated to a reduction then a rise in the
+neutron-to-proton ratio, hence a reduction then a rise of
+the abundances, consistently with Fig. 18. We see on this
+example that Ttrans must be below 2 MeV to capture the
+synchronous oscillations and provide the accurate final
+value of ηe.
+In general, various configurations require different val-
+ues of Ttrans, and we extensively checked that our adap-
+tive scheme meets this requirement. There are still par-
+ticularly challenging points corresponding to equal-but-
+opposite configurations, discussed in Sec. IV D.
+Appendix D: Role of deuterium
+Nuclear rates represent a major source of uncertainty
+for the prediction of primordial abundances from BBN. In
+particular, depending on the determination of the rates
+of D(d, n)3He and D(d , p)3He reactions, the deuterium
+abundance calculated for vanishing asymmetries is found
+to be either fully consistent [77, 78] or in mild ten-
+sion [76] with the experimental measurement (22). De-
+tailed studies of the differences between the PArthENoPE
+and PRIMAT codes have confirmed that the disagreement,
+which stems from different methods and data selections
+to obtain the nuclear rates at the BBN scale, can only
+be resolved with future, more accurate, nuclear rate
+measurements [100, 101]. In the meantime, our use of
+PRIMAT comparatively favors configurations with a final
+ξe ≲ 0, such that the deuterium abundance is increased
+toward (22).
+However, this effect is subdominant and does not sig-
+nificantly alter our conclusions: to illustrate the role
+played by the deuterium abundance, we run the same
+analysis as in Sec. IV B but removing the likelihood from
+deuterium measurements. In other words, the likeli-
+hood (18) becomes
+L(ξα,ωb|Cobs
+ℓ ,Y obs
+p ) =LCMB
+
+ωb,N code
+eff (ξα),Y p
+code
+(ξα,ωb)
+
+×N
+
+Y obs
+p ;Yp
+code
+(ξα,ωb),σYp
+
+. (D1)
+The associated results are shown on Fig. 20.
+On the top panel, we see that the space of allowed
+asymmetries is more constrained (compare with Fig. 8,
+bottom left panel) when the deuterium constraints are
+not taken into account. This counterintuitive property is
+
+--- Page 22 ---
+22
+FIG. 20. Likelihood of primordial asymmetries without tak-
+ing into account the measurement of D /H. The helium-4
+abundance value is taken from Aver et al., Eq. (21). Top:
+results in the plane ( ˜ξav,δ ˜ξe), to be compared with Fig. 8
+(bottom left panel). Middle: results in the plane ( ˜ξav, e∆),
+to be compared with Fig. 10. Bottom: forecast of Simons
+Observatory constraints, using Yp|Aver as the central value in
+LCMB, to be compared with Fig. 15 (top panel).
+due to the very non-Gaussian features of the joint likeli-
+hood. In particular, because of the tension between the
+D/H value predicted by PRIMAT at zero asymmetries and
+the measurement (22), regions away from the point (0, 0)
+are favored at a comparable level with the central region.
+In the plane ( ˜ξav,e∆) (Fig. 20, central panel), the high
+likelihood regions are still unbound. Finally, the bottom
+panel is almost indistinguishable from the top panel of
+Fig. 15: it is a consequence of the higher constraining
+power of this future CMB likelihood, which makes the
+mild deuterium tension only marginally relevant.
+Our main conclusion is thus unaffected: the space of
+allowed asymmetries is generically unbound with current
+CMB data, but future experiments should efficiently con-
+strain the possible values of ξα. This nevertheless high-
+lights that future spectroscopic measurements of the deu-
+terium abundance, which will reduce the uncertainty lev-
+els, might play an important role in future constraints
+— which shows how timely better nuclear rate measure-
+ments are, as they could become, by large, the main
+source of uncertainty in the BBN likelihood.
+[1] J. Lesgourgues, G. Mangano, G. Miele and S. Pastor,
+Neutrino Cosmology. Cambridge University Press,
+2013.
+[2] Planck Collaboration, N. Aghanim et al., Planck
+2018 results. VI. Cosmological parameters , Astron.
+Astrophys. 641 (2020) A6 [ 1807.06209]. [Erratum:
+Astron. Astrophys. 652 (2021) C4].
+[3] J. A. Harvey and M. S. Turner, Cosmological baryon
+and lepton number in the presence of electroweak
+fermion number violation , Phys. Rev. D 42 (1990)
+3344.
+[4] H. K. Dreiner and G. G. Ross, Sphaleron erasure of
+primordial baryogenesis, Nucl. Phys. B 410 (1993) 188
+[hep-ph/9207221].
+[5] J. March-Russell, H. Murayama and A. Riotto, The
+Small observed baryon asymmetry from a large lepton
+asymmetry, JHEP 11 (1999) 015 [ hep-ph/9908396].
+[6] J. McDonald, Naturally large cosmological neutrino
+asymmetries in the MSSM , Phys. Rev. Lett. 84 (2000)
+4798 [hep-ph/9908300].
+
+--- Page 23 ---
+23
+[7] A. Pilaftsis and T. E. J. Underwood, Resonant
+leptogenesis, Nucl. Phys. B 692 (2004) 303
+[hep-ph/0309342].
+[8] T. Asaka and M. Shaposhnikov, The νMSM, dark
+matter and baryon asymmetry of the universe , Phys.
+Lett. B 620 (2005) 17 [ hep-ph/0505013].
+[9] L. Canetti, M. Drewes, T. Frossard and
+M. Shaposhnikov, Dark Matter, Baryogenesis and
+Neutrino Oscillations from Right Handed Neutrinos ,
+Phys. Rev. D 87 (2013) 093006 [ 1208.4607].
+[10] J. Ghiglieri and M. Laine, Sterile neutrino dark matter
+via coinciding resonances, JCAP 07 (2020) 012
+[2004.10766].
+[11] M. Kawasaki and K. Murai, Lepton asymmetric
+universe, JCAP 08 (2022) 041 [ 2203.09713].
+[12] D. Borah and A. Dasgupta, Large neutrino asymmetry
+from TeV scale leptogenesis, Phys. Rev. D 108 (2023)
+035015 [2206.14722].
+[13] R. Foot and R. R. Volkas, Reconciling sterile neutrinos
+with big bang nucleosynthesis , Phys. Rev. Lett. 75
+(1995) 4350 [ hep-ph/9508275].
+[14] K. Abazajian, N. F. Bell, G. M. Fuller and Y. Y. Y.
+Wong, Cosmological lepton asymmetry, primordial
+nucleosynthesis, and sterile neutrinos , Phys. Rev. D
+72 (2005) 063004 [ astro-ph/0410175].
+[15] Y.-Z. Chu and M. Cirelli, Sterile neutrinos, lepton
+asymmetries, primordial elements: How much of each? ,
+Phys. Rev. D 74 (2006) 085015 [ astro-ph/0608206].
+[16] S. Hannestad, I. Tamborra and T. Tram,
+Thermalisation of light sterile neutrinos in the early
+universe, JCAP 07 (2012) 025 [ 1204.5861].
+[17] A. Mirizzi, N. Saviano, G. Miele and P. D. Serpico,
+Light sterile neutrino production in the early universe
+with dynamical neutrino asymmetries , Phys. Rev. D
+86 (2012) 053009 [ 1206.1046].
+[18] N. Saviano, A. Mirizzi, O. Pisanti, P. D. Serpico,
+G. Mangano and G. Miele, Multi-momentum and
+multi-flavour active-sterile neutrino oscillations in the
+early universe: role of neutrino asymmetries and
+effects on nucleosynthesis, Phys. Rev. D 87 (2013)
+073006 [1302.1200].
+[19] G. Barenboim, W. H. Kinney and W.-I. Park, Flavor
+versus mass eigenstates in neutrino asymmetries:
+implications for cosmology, Eur. Phys. J. C 77 (2017)
+590 [1609.03200].
+[20] S. Yeung, K. Lau and M. C. Chu, Relic Neutrino
+Degeneracies and Their Impact on Cosmological
+Parameters, JCAP 04 (2021) 024 [ 2010.01696].
+[21] O. Seto and Y. Toda, Hubble tension in lepton
+asymmetric cosmology with an extra radiation , Phys.
+Rev. D 104 (2021) 063019 [ 2104.04381].
+[22] S. Kumar, R. C. Nunes and P. Yadav, Updating
+non-standard neutrinos properties with Planck-CMB
+data and full-shape analysis of BOSS and eBOSS
+galaxies, JCAP 09 (2022) 060 [ 2205.04292].
+[23] S. Yeung, W. Zhang and M.-C. Chu, Resolving the H0
+and S8 tensions with neutrino mass and chemical
+potential, 2403.11499.
+[24] V. Simha and G. Steigman, Constraining The
+Universal Lepton Asymmetry , JCAP 0808 (2008) 011
+[0806.0179].
+[25] M. Shimon, N. J. Miller, C. T. Kishimoto, C. J. Smith,
+G. M. Fuller and B. G. Keating, Using Big Bang
+Nucleosynthesis to Extend CMB Probes of Neutrino
+Physics, JCAP 05 (2010) 037 [ 1001.5088].
+[26] I. M. Oldengott and D. J. Schwarz, Improved
+constraints on lepton asymmetry from the cosmic
+microwave background, Europhys. Lett. 119 (2017)
+29001 [1706.01705].
+[27] C. Pitrou, A. Coc, J.-P. Uzan and E. Vangioni,
+Precision big bang nucleosynthesis with improved
+helium-4 predictions, Phys. Rept. 754 (2018) 1
+[1801.08023].
+[28] A. Matsumoto et al., EMPRESS. VIII. A New
+Determination of Primordial He Abundance with
+Extremely Metal-poor Galaxies: A Suggestion of the
+Lepton Asymmetry and Implications for the Hubble
+Tension, Astrophys. J. 941 (2022) 167 [ 2203.09617].
+[29] A.-K. Burns, T. M. P. Tait and M. Valli, Indications
+for a Nonzero Lepton Asymmetry from Extremely
+Metal-Poor Galaxies, Phys. Rev. Lett. 130 (2023)
+131001 [2206.00693].
+[30] M. Escudero, A. Ibarra and V. Maura, Primordial
+lepton asymmetries in the precision cosmology era:
+Current status and future sensitivities from BBN and
+the CMB, Phys. Rev. D 107 (2023) 035024
+[2208.03201].
+[31] M. J. Savage, R. A. Malaney and G. M. Fuller,
+Neutrino Oscillations and the Leptonic Charge of the
+Universe, Astrophys. J. 368 (1991) 1.
+[32] A. D. Dolgov, S. H. Hansen and D. V. Semikoz,
+Nonequilibrium corrections to the spectra of massless
+neutrinos in the early universe , Nucl. Phys. B 503
+(1997) 426 [ hep-ph/9703315].
+[33] G. Mangano, G. Miele, S. Pastor and M. Peloso, A
+precision calculation of the effective number of
+cosmological neutrinos, Phys. Lett. B 534 (2002) 8
+[astro-ph/0111408].
+[34] G. Mangano, G. Miele, S. Pastor, T. Pinto, O. Pisanti
+and P. D. Serpico, Relic neutrino decoupling including
+flavour oscillations , Nucl. Phys. B 729 (2005) 221
+[hep-ph/0506164].
+[35] E. Grohs, G. M. Fuller, C. T. Kishimoto, M. W. Paris
+and A. Vlasenko, Neutrino energy transport in weak
+decoupling and big bang nucleosynthesis , Phys. Rev. D
+93 (2016) 083522 [ 1512.02205].
+[36] P. F. de Salas and S. Pastor, Relic neutrino decoupling
+with flavour oscillations revisited , JCAP 07 (2016) 051
+[1606.06986].
+[37] K. Akita and M. Yamaguchi, A precision calculation of
+relic neutrino decoupling, JCAP 08 (2020) 012
+[2005.07047].
+[38] J. Froustey, C. Pitrou and M. C. Volpe, Neutrino
+decoupling including flavour oscillations and primordial
+nucleosynthesis, JCAP 12 (2020) 015 [ 2008.01074].
+[39] J. J. Bennett, G. Buldgen, P. F. De Salas, M. Drewes,
+S. Gariazzo, S. Pastor and Y. Y. Y. Wong, Towards a
+precision calculation of Neff in the Standard Model II:
+Neutrino decoupling in the presence of flavour
+oscillations and finite-temperature QED , JCAP 04
+(2021) 073 [ 2012.02726].
+[40] M. Cielo, M. Escudero, G. Mangano and O. Pisanti,
+Neff in the Standard Model at NLO is 3.043 , Phys.
+Rev. D 108 (2023) L121301 [ 2306.05460].
+[41] G. Jackson and M. Laine, QED corrections to the
+thermal neutrino interaction rate , JHEP 05 (2024) 089
+[2312.07015].
+[42] M. Drewes, Y. Georis, M. Klasen, L. P. Wiggering and
+
+--- Page 24 ---
+24
+Y. Y. Y. Wong, Towards a precision calculation of Neff
+in the Standard Model. Part III. Improved estimate of
+NLO contributions to the collision integral , JCAP 06
+(2024) 032 [ 2402.18481].
+[43] S. Samuel, Bimodal coherence in dense selfinteracting
+neutrino gases, Phys. Rev. D 53 (1996) 5382
+[hep-ph/9604341].
+[44] N. F. Bell, R. R. Volkas and Y. Y. Y. Wong, Relic
+neutrino asymmetry evolution from first principles ,
+Phys. Rev. D 59 (1999) 113001 [ hep-ph/9809363].
+[45] S. Pastor, G. G. Raffelt and D. V. Semikoz, Physics of
+synchronized neutrino oscillations caused by
+self-interactions, Phys. Rev. D 65 (2002) 053011
+[hep-ph/0109035].
+[46] K. N. Abazajian, J. F. Beacom and N. F. Bell,
+Stringent Constraints on Cosmological Neutrino
+Antineutrino Asymmetries from Synchronized Flavor
+Transformation, Phys. Rev. D 66 (2002) 013008
+[astro-ph/0203442].
+[47] Y. Y. Y. Wong, Analytical treatment of neutrino
+asymmetry equilibration from flavor oscillations in the
+early universe, Phys. Rev. D 66 (2002) 025015
+[hep-ph/0203180].
+[48] A. D. Dolgov, S. H. Hansen, S. Pastor, S. T. Petcov,
+G. G. Raffelt and D. V. Semikoz, Cosmological bounds
+on neutrino degeneracy improved by flavor oscillations ,
+Nucl. Phys. B 632 (2002) 363 [ hep-ph/0201287].
+[49] S. Pastor, T. Pinto and G. G. Raffelt, Relic density of
+neutrinos with primordial asymmetries , Phys. Rev.
+Lett. 102 (2009) 241302 [ 0808.3137].
+[50] G. Mangano, G. Miele, S. Pastor, O. Pisanti and
+S. Sarikas, Constraining the cosmic radiation density
+due to lepton number with Big Bang Nucleosynthesis ,
+JCAP 03 (2011) 035 [ 1011.0916].
+[51] G. Mangano, G. Miele, S. Pastor, O. Pisanti and
+S. Sarikas, Updated BBN bounds on the cosmological
+lepton asymmetry for non-zero θ13, Phys. Lett. B 708
+(2012) 1 [ 1110.4335].
+[52] E. Castorina, U. Franca, M. Lattanzi, J. Lesgourgues,
+G. Mangano, A. Melchiorri and S. Pastor,
+Cosmological lepton asymmetry with a nonzero mixing
+angle θ13, Phys. Rev. D 86 (2012) 023517 [ 1204.2510].
+[53] G. Barenboim, W. H. Kinney and W.-I. Park,
+Resurrection of large lepton number asymmetries from
+neutrino flavor oscillations , Phys. Rev. D 95 (2017)
+043506 [1609.01584].
+[54] L. Johns, M. Mina, V. Cirigliano, M. W. Paris and
+G. M. Fuller, Neutrino flavor transformation in the
+lepton-asymmetric universe, Phys. Rev. D 94 (2016)
+083505 [1608.01336].
+[55] J. Gava and C. Volpe, CP violation effects on the
+neutrino degeneracy parameters in the Early Universe ,
+Nucl. Phys. B 837 (2010) 50 [ 1002.0981].
+[Corrigendum: Nucl. Phys. B 957 (2020) 115035].
+[56] G. Barenboim and W.-I. Park, Impact of CP-violation
+on neutrino lepton number asymmetries revisited ,
+Phys. Lett. B 765 (2017) 371 [ 1610.02335].
+[57] J. Froustey and C. Pitrou, Primordial neutrino
+asymmetry evolution with full mean-field effects and
+collisions, JCAP 03 (2022) 065 [ 2110.11889].
+[58] V. Domcke, K. Kamada, K. Mukaida, K. Schmitz and
+M. Yamada, New Constraint on Primordial Lepton
+Flavor Asymmetries, Phys. Rev. Lett. 130 (2023)
+261803 [2208.03237].
+[59] G. Sigl and G. Raffelt, General kinetic description of
+relativistic mixed neutrinos, Nucl. Phys. B 406 (1993)
+423.
+[60] C. Volpe, D. V¨ a¨ an¨ anen and C. Espinoza,Extended
+evolution equations for neutrino propagation in
+astrophysical and cosmological environments, Phys.
+Rev. D 87 (2013) 113010 [ 1302.2374].
+[61] E. Grohs, G. M. Fuller, C. T. Kishimoto and M. W.
+Paris, Lepton asymmetry, neutrino spectral distortions,
+and big bang nucleosynthesis , Phys. Rev. D 95 (2017)
+063503 [1612.01986].
+[62] J. Froustey, The Universe at the MeV era : neutrino
+evolution and cosmological observables , Ph.D. thesis,
+Institut d’Astrophysique de Paris, Sorbonne
+Universit´ e, Paris, France, 2022.2209.06672.
+[63] D. N. Blaschke and V. Cirigliano, Neutrino Quantum
+Kinetic Equations: The collision term , Phys. Rev. D
+94 (2016) 033009 [ 1605.09383].
+[64] C. M. Ho, D. Boyanovsky and H. J. de Vega, Neutrino
+oscillations in the early universe: A Real time
+formulation, Phys. Rev. D 72 (2005) 085016
+[hep-ph/0508294].
+[65] A. V. Patwardhan, M. J. Cervia, E. Rrapaj, P. Siwach
+and A. B. Balantekin, Many-Body Collective Neutrino
+Oscillations: Recent Developments , pp. 1–16. Springer
+Nature Singapore, 2023. 2301.00342.
+10.1007/978-981-15-8818-1 126-1.
+[66] J. J. Bennett, G. Buldgen, M. Drewes and Y. Y.
+Wong, Towards a precision calculation of the effective
+number of neutrinos Neff in the Standard Model I: The
+QED equation of state , JCAP 03 (2020) 003
+[1911.04504]. [Addendum: JCAP 03 (2021) A01].
+[67] Particle Data Group Collaboration, R. L.
+Workman et al., Review of Particle Physics , PTEP
+2022 (2022) 083C01.
+[68] J. Froustey and C. Pitrou, Incomplete neutrino
+decoupling effect on big bang nucleosynthesis , Phys.
+Rev. D 101 (2020) 043524 [ 1912.09378].
+[69] S. Dodelson and M. S. Turner, Nonequilibrium
+neutrino statistical mechanics in the expanding
+universe, Phys. Rev. D 46 (1992) 3372.
+[70] B. D. Fields, S. Dodelson and M. S. Turner, Effect of
+neutrino heating on primordial nucleosynthesis , Phys.
+Rev. D 47 (1993) 4309 [ astro-ph/9210007].
+[71] E. W. Kolb and M. S. Turner, The Early Universe ,
+vol. 69 of Frontiers in Physics. Addison-Wesley, 1990,
+10.1201/9780429492860.
+[72] E. Aver, D. A. Berg, K. A. Olive, R. W. Pogge, J. J.
+Salzer and E. D. Skillman, Improving helium
+abundance determinations with Leo P as a case study ,
+JCAP 03 (2021) 027 [ 2010.04180].
+[73] P. A. Kislitsyn, S. A. Balashev, M. T. Murphy,
+C. Ledoux, P. Noterdaeme and A. V. Ivanchik, A New
+Precise Determination of the Primordial Abundance of
+Deuterium: Measurement in the metal-poor sub-DLA
+system at z=3.42 towards quasar J1332+0052 , Mon.
+Not. Roy. Astron. Soc. 528 (2024) 4068 [ 2401.12797].
+[74] R. J. Cooke, M. Pettini and C. C. Steidel, One Percent
+Determination of the Primordial Deuterium
+Abundance, Astrophys. J. 855 (2018) 102
+[1710.11129].
+[75] F. Guarneri et al., Fundamental physics with
+ESPRESSO: a new determination of the D/H ratio
+towards PKS1937-101, Mon. Not. Roy. Astron. Soc.
+
+--- Page 25 ---
+25
+529 (2024) 839 [ 2402.05586].
+[76] C. Pitrou, A. Coc, J.-P. Uzan and E. Vangioni, A new
+tension in the cosmological model from primordial
+deuterium?, Mon. Not. Roy. Astron. Soc. 502 (2021)
+2474 [2011.11320].
+[77] S. Gariazzo, P. F. de Salas, O. Pisanti and
+R. Consiglio, PArthENoPE revolutions, Comput. Phys.
+Commun. 271 (2022) 108205 [ 2103.05027].
+[78] T.-H. Yeh, K. A. Olive and B. D. Fields, The impact of
+new d(p,γ )3He rates on Big Bang Nucleosynthesis ,
+JCAP 03 (2021) 046 [ 2011.13874].
+[79] J. Torrado and A. Lewis, Cobaya: Code for Bayesian
+Analysis of hierarchical physical models , JCAP 05
+(2021) 057 [ 2005.05290].
+[80] F. Beutler, C. Blake, M. Colless, D. H. Jones,
+L. Staveley-Smith, L. Campbell, Q. Parker,
+W. Saunders and F. Watson, The 6dF Galaxy Survey:
+Baryon Acoustic Oscillations and the Local Hubble
+Constant, Mon. Not. Roy. Astron. Soc. 416 (2011)
+3017 [1106.3366].
+[81] A. J. Ross, L. Samushia, C. Howlett, W. J. Percival,
+A. Burden and M. Manera, The clustering of the SDSS
+DR7 main Galaxy sample – I. A 4 per cent distance
+measure at z = 0.15, Mon. Not. Roy. Astron. Soc. 449
+(2015) 835 [ 1409.3242].
+[82] BOSS Collaboration, S. Alam et al., The clustering of
+galaxies in the completed SDSS-III Baryon Oscillation
+Spectroscopic Survey: cosmological analysis of the
+DR12 galaxy sample , Mon. Not. Roy. Astron. Soc. 470
+(2017) 2617 [ 1607.03155].
+[83] eBOSS Collaboration, S. Alam et al., Completed
+SDSS-IV extended Baryon Oscillation Spectroscopic
+Survey: Cosmological implications from two decades of
+spectroscopic surveys at the Apache Point Observatory ,
+Phys. Rev. D 103 (2021) 083533 [ 2007.08991].
+[84] Planck Collaboration, N. Aghanim et al., Planck
+2018 results. V. CMB power spectra and likelihoods ,
+Astron. Astrophys. 641 (2020) A5 [ 1907.12875].
+[85] Planck Collaboration, N. Aghanim et al.
+https://wiki.cosmos.esa.int/
+planck-legacy-archive/images/4/43/Baseline_
+params_table_2018_68pc_v2.pdf, 2019.
+[86] BICEP, Keck Collaboration, P. A. R. Ade et al.,
+Improved Constraints on Primordial Gravitational
+Waves using Planck, WMAP, and BICEP/Keck
+Observations through the 2018 Observing Season ,
+Phys. Rev. Lett. 127 (2021) 151301 [ 2110.00483].
+[87] ACT Collaboration, S. K. Choi et al., The Atacama
+Cosmology Telescope: a measurement of the Cosmic
+Microwave Background power spectra at 98 and 150
+GHz, JCAP 12 (2020) 045 [ 2007.07289].
+[88] ACT Collaboration, S. Aiola et al., The Atacama
+Cosmology Telescope: DR4 Maps and Cosmological
+Parameters, JCAP 12 (2020) 047 [ 2007.07288].
+[89] J. Carron, M. Mirmelstein and A. Lewis, CMB lensing
+from Planck PR4 maps , JCAP 09 (2022) 039
+[2206.07773].
+[90] ACT Collaboration, F. J. Qu et al., The Atacama
+Cosmology Telescope: A Measurement of the DR6
+CMB Lensing Power Spectrum and Its Implications for
+Structure Growth, Astrophys. J. 962 (2024) 112
+[2304.05202].
+[91] ACT Collaboration, M. S. Madhavacheril et al., The
+Atacama Cosmology Telescope: DR6 Gravitational
+Lensing Map and Cosmological Parameters , Astrophys.
+J. 962 (2024) 113 [ 2304.05203].
+[92] SPT-3G Collaboration, L. Balkenhol et al.,
+Measurement of the CMB temperature power spectrum
+and constraints on cosmology from the SPT-3G 2018
+TT, TE, and EE dataset , Phys. Rev. D 108 (2023)
+023510 [2212.05642].
+[93] Planck Collaboration, P. A. R. Ade et al., Planck
+2015 results. XIII. Cosmological parameters , Astron.
+Astrophys. 594 (2016) A13 [ 1502.01589].
+[94] J. Froustey and C. Pitrou, Neutrino asymmetry
+evolution + BBN — Public grids , Dataset available on
+Zenodo, 2024.
+https://doi.org/10.5281/zenodo.11123225.
+[95] Simons Observatory Collaboration, P. Ade et al.,
+The Simons Observatory: Science goals and forecasts ,
+JCAP 02 (2019) 056 [ 1808.07445].
+[96] Simons Observatory Collaboration, M. H. Abitbol
+et al., The Simons Observatory: Astro2020 Decadal
+Project Whitepaper, Bull. Am. Astron. Soc. 51 (2019)
+147 [1907.08284].
+[97] CMB-S4 Collaboration, K. N. Abazajian et al.,
+CMB-S4 Science Book, First Edition , 1610.02743.
+[98] K. Abazajian et al., CMB-S4 Science Case, Reference
+Design, and Project Plan , 1907.04473.
+[99] N. Sabti, J. Alvey, M. Escudero, M. Fairbairn and
+D. Blas, Refined Bounds on MeV-scale Thermal Dark
+Sectors from BBN and the CMB , JCAP 01 (2020) 004
+[1910.01649].
+[100] O. Pisanti, G. Mangano, G. Miele and P. Mazzella,
+Primordial Deuterium after LUNA: concordances and
+error budget, JCAP 04 (2021) 020 [ 2011.11537].
+[101] C. Pitrou, A. Coc, J.-P. Uzan and E. Vangioni,
+Resolving conclusions about the early Universe requires
+accurate nuclear measurements, Nature Rev. Phys. 3
+(2021) 231 [ 2104.11148].
