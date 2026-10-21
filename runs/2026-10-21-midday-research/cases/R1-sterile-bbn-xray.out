@@ -1,0 +1,879 @@
+Created project 'ramp-research-sterile-bbn-xray' at /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray
+
+Run 261021_110150-9328: done (stop:budget: 2/2 waves used)
+
+# Sterile-neutrino dark matter in 2024-2026: combined BBN and X-ray viability of the (m_s, sin^2 2θ) plane
+
+## Abstract
+
+This study surveyed recent arXiv work on keV sterile-neutrino dark matter. It combined tool-computed BBN observables (Yp, D/H, ΔN_eff) with published X-ray decay-line limits to identify which (m_s, sin^2 2θ) regions remain viable.
+
+**BBN is not a useful constraint on keV dark matter without a lepton asymmetry.**
+- Along the non-resonant Dodelson-Widrow (DW) dark-matter line, ΔN_eff is between 1e-4 and 1.1e-2, and the BBN Δχ^2 relative to the Standard Model is below 0.15.
+- The overclosure bound is 40 to about 5000 times stronger than BBN over 1-100 keV.
+
+**DW production cannot supply all of the dark matter.**
+- X-ray limits exclude it. These are NuSTAR, quoted as sin^2 2θ ≲ 1e-12 at 6-40 keV, and INTEGRAL/SPI, quoted as ≲ 3e-14 above 40 keV.
+- Structure formation independently excludes the masses where DW could otherwise survive.
+- At 7.1 keV the XRISM-only verdict depends on which DW relic normalization is used. The server's normalization differs from the published fit by a factor of 10-17 in mixing.
+
+**What survives requires non-oscillation production or very small mixing.**
+- Shi-Fuller resonant production with a lepton asymmetry L ≳ 0.5 at T > 20 MeV is quoted as viable at m_s ≳ 10 keV and sin^2 2θ ≲ 1e-14 (arXiv:2507.18752). The available server cannot test this: it caps L at 0.1.
+- Flavor-dependent asymmetries and reheating production open further regions. Those claims rest on abstracts only.
+
+## Background
+
+The main recent combined analysis is Vogel, Garcia Escudero, Froustey and Abazajian (arXiv:2507.18752, 2025), who revisit Shi-Fuller resonant production. The full text was read, and states:
+- "lepton asymmetries L≳0.5 at high temperatures open significant viable parameter space in the m_s≳10 keV and sin^2(2θ)≲10^-14 regime".
+- That region is compatible with NuSTAR ("sin^2(2θ)≲10^-12 in the 6–40 keV mass range").
+- It is also compatible with INTEGRAL/SPI ("exclude lifetimes below ∼10^20 s at 95% CL [corresponding to sin^2(2θ)≲3×10^-14] in the ≳40 keV mass regime").
+- The structure-formation bounds used are m_th > 8.4 keV (galaxy counts, 95% CL) and m_th > 8.5 keV (counts plus strong lensing). The paper also cites a Lyman-alpha preference of m_th = 4.1 (+33.3/−1.5) keV.
+- The paper states that "the original DW mechanism is ruled out as producing the entirety of the dark matter".
+
+Three further papers were confirmed to exist by metadata lookup. Only their abstracts were read, so their claims are reported here as abstract-level statements without numerical ranges:
+- **Gorbunov, Kalashnikov and Krugan (arXiv:2502.17374, 2025).** Lepton asymmetry spread unequally over flavors can mitigate BBN limits on mixing and mass, through cancellation of flavor asymmetries. The brief notes this works best with inverted ordering. It gives colder spectra that reopen lighter masses.
+- **Gorbunov and Kalashnikov (arXiv:2609.31340, 2026).** A high lepton flavor asymmetry saturates resonant production. The board's summary of the abstract is that this leaves a window of about two decades in sin^2 2θ. The concern that this ID was hallucinated is resolved: the paper is real.
+- **Cline and Xu (arXiv:2601.03346, 2026).** Cold sterile-neutrino dark matter can be produced by inflaton decays during reheating, with branching ratio ≲ 1e-4. This populates mixings too small for oscillation production and below current X-ray limits.
+
+On the X-ray side, two recent papers were found:
+- **XRISM Resolve (arXiv:2510.24560).** This stacked 3.75 Ms on ten clusters over 2.5-15 keV and found no unidentified lines.
+- **NuSTAR stray-light analysis (Krivonos, Barinov, Mukhin and Gorbunov, arXiv:2405.17861).** This used 11 years of data and set 95% CL limits for m_s = 6-40 keV.
+
+Baseline references used:
+- The Abazajian review (arXiv:1705.01837), for the published DW relic fit.
+- Viel et al. (astro-ph/0501562), for the DW-to-thermal mass mapping.
+- Merle (arXiv:1702.08430), as a pre-2024 review.
+
+No citable arXiv source was found for 2024-2026 eROSITA or INTEGRAL/SPI line limits. The eROSITA statement in the brief came from a non-citable web snippet.
+
+## Results
+
+### Tool capabilities and assumptions
+
+The sterile-neutrino server computes Yp, D/H and Li7 from a fit to the PRyMordial BBN network, accurate to better than 0.3%. Its only BBN input is ΔN_eff.
+
+| Item | Server setting |
+|---|---|
+| N_eff validity range | 2.044-6.044 |
+| ω_b h^2 validity range | 0.019-0.0257 |
+| τ_n validity range | 866.4-890.4 s |
+| Mass validity | m_s below about 100 keV; at m_s ≥ 1 MeV decay injection is not modelled |
+| Yp data | 0.2449 ± 0.004 (Aver+ 2021) |
+| D/H data | (2.547 ± 0.025)e-5 (Cooke+ 2018) |
+| N_eff data | Planck 2.99 ± 0.17 |
+| Exclusion rule | Δχ^2 > 3.84 relative to the SM |
+
+The server's data values differ from the brief's Yp = 0.245 ± 0.003 and D/H = (2.53 ± 0.03)e-5.
+
+Two production modes are offered:
+- **DW (non-resonant).**
+- **Shi-Fuller (SF, resonant).** Its ΔN_eff is a heuristic set to 0.1 times the DW value, and its relic density is a fitting formula in L. The lepton asymmetry is not fed into the BBN network.
+
+### BBN versus the DW plane
+
+A 100 × 100 DW scan covered m_s = 1-100 keV and sin^2 2θ = 1e-15 to 1e-6. It showed that BBN excludes only large mixing.
+
+| m_s | BBN exclusion starts above sin^2 2θ = |
+|---|---|
+| 1 keV | 3.5e-7 |
+| 3.7 keV | 1.2e-7 |
+| 7 keV | 8.1e-8 |
+| 13.5 keV | 4.3e-8 |
+| 50 keV | 1.5e-8 |
+| 100 keV | 1e-8 |
+
+The server's Ω_s h^2 = 0.12 contour lies far below these thresholds:
+
+| m_s (keV) | 1 | 2 | 3 | 5 | 7.1 | 10 | 20 | 50 | 100 |
+|---|---|---|---|---|---|---|---|---|---|
+| sin^2 2θ on DM line | 8.7e-9 | 2.5e-9 | 1.2e-9 | 4.8e-10 | 2.55e-10 | 1.37e-10 | 3.9e-11 | 7.6e-12 | 2.2e-12 |
+
+Along this line ΔN_eff is 1e-4 to 1.1e-2 and |Δχ^2_BBN| < 0.15. Overclosure is therefore 40 times (1 keV) to about 5000 times (100 keV) stronger than BBN. The entire DW dark-matter line and everything below it are BBN-allowed.
+
+[[FIGURE 8]]
+
+Figure 8 shows the DW exclusion plot from this scan: the BBN-excluded region at large mixing and the overclosure region, in the (m_s, sin^2 2θ) plane.
+
+Representative points are listed below, with σ values relative to the brief's data.
+
+| Point | ΔN_eff | Yp | D/H | Δχ^2 | Verdict |
+|---|---|---|---|---|---|
+| SM, N_eff = 3.044 | 0 | 0.246815 (+0.6σ) | 2.4433e-5 (−2.9σ) | 0 | baseline |
+| 7.1 keV, 3e-10 | negligible | 0.24684 | 2.4440e-5 | −0.024 | allowed |
+| 1 keV, 3e-7 | 0.387 | 0.25193 (+2.3σ) | 2.5718e-5 (+1.4σ) | 0.44 | allowed |
+| 10 keV, 1e-7 | 0.813 | 0.25730 (+4.1σ) | 2.7145e-5 (+6.2σ) | 13.4 | excluded |
+| 3 keV, 3e-7 | 0.931 | 0.25874 (+4.6σ) | 2.7540e-5 (+7.5σ) | 19.3 | excluded |
+
+The 1 keV point is allowed despite Yp sitting at +2.3σ. The reason is that the SM D/H sits low, so extra radiation improves the D/H fit and offsets the Yp penalty.
+
+[[FIGURE 6]]
+
+Figure 6 shows the server's BBN response to N_eff. From it:
+- BBN alone gives ΔN_eff < 0.548 at 95%.
+- The slopes are dYp/dN_eff = 0.0135 and d(D/H × 1e5)/dN_eff = 0.331.
+
+A separate server cross-check used the BEST short-baseline point (m_s = 1.14 eV, sin^2 2θ = 0.42). It gave:
+- ΔN_eff = 1, Yp = 0.25956, D/H = 2.777e-5 and Δχ^2 = 23.1, so the point is excluded.
+- 6.2σ tension with Planck N_eff, and 33σ at CMB-S4.
+
+### BBN robustness: data baseline and lepton asymmetry
+
+These are analytic results, not server runs. They linearize the slopes above about the server SM values. Bounds are 95% upper limits on ΔN_eff, with Δχ^2 = 3.84 against the SM; values in brackets are against the best fit.
+
+| Data set | Yp only | D/H only | Combined |
+|---|---|---|---|
+| Brief's data | 0.32 | 0.58 [0.44] | 0.47 [0.37] |
+| Server's data | 0.46 | 0.66 [0.46] | 0.61 [0.43] |
+
+The server itself reports 0.548. Because the SM D/H is 2.9σ (brief) to 4.1σ (server) low, D/H alone prefers ΔN_eff ≈ 0.26-0.31. The bound therefore moves by 0.1-0.2 depending on the baseline.
+
+The joint (ΔN_eff, ξ_e) bound used dYp/dξ_e = −0.25, assumed D/H independent of ξ_e, and applied 2-dof Δχ^2 = 5.99.
+
+| Data set | Allowed ΔN_eff | Allowed ξ_e |
+|---|---|---|
+| Brief's data | [0.04, 0.48] | 0.0073 + 0.054 ΔN_eff ± 0.029 |
+| Server's data | [0.13, 0.50] | 0.0077 + 0.054 ΔN_eff ± 0.039 |
+
+Overall this gives |ξ_e| ≲ 0.03-0.06. A positive ξ_e of about 0.03 compensates a ΔN_eff of about 0.5 in Yp. Two caveats affect the ξ_e headroom available to Shi-Fuller scenarios:
+- The SM D/H baseline depends on the choice of d(p,γ)3He rate.
+- Neglecting dD/H/dξ_e biases the joint contour.
+
+### Shi-Fuller tool tests
+
+SF-mode runs at m_s = 10, 20 and 30 keV with sin^2 2θ = 1e-14 gave ΔN_eff ≈ 1e-8 and BBN Δχ^2 = 0. At 20 keV the outputs were Yp = 0.24682 and D/H = 2.4433e-5.
+
+| L | Ω_s h^2 at 10 keV | at 20 keV | at 30 keV |
+|---|---|---|---|
+| 1e-3 | 0.122 | 0.490 | 1.10 |
+| 0.1 | 1.22 | 4.90 | 11.0 |
+
+All of these points are flagged as overclosing. None of this tests the claims of arXiv:2507.18752, for four reasons:
+- The tool caps L at 0.1, while the paper needs L ≳ 0.5.
+- Its SF ΔN_eff is a heuristic.
+- ξ_e does not enter Yp.
+- Its relic density is a fitting formula, not a Boltzmann calculation.
+
+The "BBN-allowed" verdict is trivially true here and is not supporting evidence.
+
+### X-ray decay rate and limits
+
+The server's radiative decay rate agrees with Γ = 1.38e-32 s^-1 (sin^2 2θ/1e-10)(m_s/keV)^5 to within about 1.5%:
+- At 7.1 keV and 1e-10 it gives 2.46e-28 s^-1 (formula 2.49e-28), with E = 3.55 keV and lifetime 4.07e27 s.
+- At 20 keV and 1e-12 it gives 4.36e-28 s^-1 (formula 4.42e-28), with E = 10 keV.
+
+Equation 2 of arXiv:2405.17861 gives 1.36×10^-22 (m_s/keV)^5 sin^2 2θ s^-1, which equals 1.36e-32 s^-1 at sin^2 2θ = 1e-10, consistent with the above. Whole-halo fluxes at 7.1 keV and 1e-10 are:
+- 4.68 ph/s/cm^2 for the Milky Way centre.
+- 6.89e-4 ph/s/cm^2 for M31.
+- 3.55e-5 ph/s/cm^2 for Perseus.
+
+The tool's built-in limits (NuSTAR M31 from Roach+2020, and XMM blank-sky from Dessert+2020) exclude both test points.
+
+**XRISM and the 3.55 keV line.** The XRISM abstract gives a 3σ limit Γ ∼ 1.0e-27 s^-1 at m_s ∼ 7.1 keV. This is "3−4 times lower than the one derived by Hitomi ... but still 5 times higher than the XMM-Newton detection reported by Bulbul et al. (2014)". The line is therefore constrained but not ruled out. Scaling the rate gives sin^2 2θ ≲ 4e-10 at 7.1 keV. This is our conversion, not a quoted value.
+
+**NuSTAR.** arXiv:2405.17861 sets 95% limits for 6-40 keV. Its observed limits are stronger than expected at 8-9 and 23-25 keV, and it reports a known instrumental excess at 40 keV. Two problems prevented reading numerical values from it:
+- Fig. 3 was missing from the HTML rendering.
+- The Fig. 1 image was downloaded but could not be digitized with the available tools.
+
+Per-mass NuSTAR entries therefore rest on the secondary summary in arXiv:2507.18752 (≲ 1e-12 across 6-40 keV).
+
+[[FIGURE 15]]
+
+Figure 15 is the Fig. 1 image retrieved from arXiv:2405.17861. No numbers in this report are read from it.
+
+The resulting limit table is below. It was cross-checked with the server's line tool, and is 95% CL unless noted.
+
+| m_s | Limit on sin^2 2θ | Server check |
+|---|---|---|
+| 7.1 keV | XRISM ≲ 4e-10 (3σ, derived); NuSTAR ≲ 1e-12 | Built-in tables exclude 1e-10 |
+| 10 keV | NuSTAR ≲ 1e-12 | At 1e-12: Γ = 1.36e-29 s^-1, E = 5 keV, lifetime 7.35e28 s; not excluded by the tool's tables |
+| 20 keV | NuSTAR ≲ 1e-12 | Built-in tables exclude 1e-12, so the tool's table is stronger than the summary value here |
+| 40 keV | NuSTAR upper edge (instrumental excess); SPI ≲ 3e-14 above it | none |
+| 50 keV | SPI ≲ 3e-14 | At 3e-14: Γ = 1.28e-27 s^-1, E = 25 keV, lifetime 7.84e26 s (2.48e19 yr); not excluded |
+
+Warning: the SPI quote equates "lifetimes below ∼10^20 s" with sin^2 2θ ≲ 3e-14. That is inconsistent with the computed lifetime of 7.84e26 s at that mixing. The tool's lifetime in years (2.48e19 yr) is close to 1e20, which suggests the quoted unit may be years. If so, the SPI ceiling tightens as m_s^-5 rather than staying flat. This is unresolved without the primary SPI paper.
+
+### DW relic normalization and the thermal-equivalent mass
+
+The server's DW relic density scales as Ω_s h^2 = 0.1 (sin^2 2θ/1e-9)(m_s/3 keV)^1.8. Spot checks:
+- 3 keV at 1e-9 gives 0.100.
+- 10 keV at 1e-9 gives 0.873, a ratio of 8.73, which equals (10/3)^1.8.
+- 1 keV at 1e-8 gives 0.138.
+
+The mass exponent matches the brief's formula, but the normalization is three times higher than the brief's.
+
+The published fit in arXiv:1705.01837, Eq. 37, is
+
+m_s ≈ 3.40 keV (sin^2 2θ/1e-8)^-0.615 (Ω_DM/0.26)^0.5 × 0.527 erfc[−1.15 (T_QCD/170 MeV)^2.15].
+
+Inverted by hand, it places the DM line as follows.
+
+| m_s (keV) | 3 | 7.1 | 10 | 20 | 50 |
+|---|---|---|---|---|---|
+| Published fit | 1.23e-8 | 3.0e-9 | 1.73e-9 | 5.6e-10 | 1.26e-10 |
+| Server (Ω h^2 = 0.119-0.120) | 1.2e-9 | 2.55e-10 | 1.37e-10 | 3.9e-11 | 7.6e-12 |
+
+The QCD-era uncertainty (T_QCD = 150-200 MeV) moves the published line by about +10%/−7%. The published line needs 10-17 times more mixing than the server and 3.4-5.5 times more than the brief's formula. It also differs in shape: Ω ∝ m^2 (sin^2 2θ)^1.23.
+
+At 7.1 keV, measured against XRISM (≲ 4e-10):
+- The server line (2.55e-10) survives.
+- The brief's line (7.65e-10) is excluded.
+- The published line (3.0e-9) is excluded, by about 7.5 times.
+
+Taking the published fit as the reference, XRISM alone excludes DW dark matter at 7.1 keV. Server-based DW statements are not conservative.
+
+**Thermal-equivalent mass.** Using m_s = 4.43 keV (m_th/keV)^(4/3) (Viel et al. 2005; not quoted verbatim from the downloaded text), the DW line maps as follows.
+
+| m_s (keV) | 3 | 7.1 | 10 | 20 | 50 |
+|---|---|---|---|---|---|
+| m_th (keV) | 0.75 | 1.42 | 1.84 | 3.10 | 6.16 |
+
+The structure-formation bounds then translate into mass requirements:
+- Lyman-alpha m_th > 4 (6) keV requires m_s > 28 (48) keV.
+- Satellite counts (m_th > 8.4 keV) require m_s > 76 keV.
+
+At m_s ≥ 28 keV the DW line sits at about 3e-10 (published) or about 1e-11 (server). Both are far above the NuSTAR and SPI ceilings, so the surviving DW mass interval is empty under all three normalizations. This is robust to the 10-30% differ
+Loading MCP servers…
+[10/21/26 11:01:48] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 31 tools
+[run] surveying (waves 0, tool calls 0, 0s)
+[phase] survey
+[tool] survey list_agent_files {}
+[tool] tc-261021_1-w0-survey-1 -> ok: []
+[tool] survey list_input_files {}
+[tool] tc-261021_1-w0-survey-2 -> ok: {
+  "status": "success",
+  "files": [],
+  "usage": "Pass any of these filenames to load_table_data()."
+}
+[tool] survey list_datasets {}
+[tool] tc-261021_1-w0-survey-3 -> ok: {'count': 0, 'datasets': []}
+[tool] survey list_files {}
+[tool] tc-261021_1-w0-survey-4 -> ok: Files in .:
+  - .git
+  - .gitignore
+  - .last-release-seen
+  - ISSUES.md
+  - SCOPE.md
+  - docs
+  - downloads
+  - logs
+  - projects
+  - repor
+[tool] survey get_dispatch {}
+[tool] tc-261021_1-w0-survey-5 -> ok: Dispatch: local execution.
+[tool] survey list_sterile_nu_skills {}
+[10/21/26 11:01:50] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w0-survey-6 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "2 skills. Load one with load_sterile_nu_skill.",
+  "metadata": {
+    "skills": {
+      "kev
+[usage]
+[tool] survey search_arxiv_abstracts {"query": "sterile neutrino dark matter X-ray constraints 3.5 keV line 2024", "max_results": 8}
+[tool] tc-261021_1-w0-survey-7 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[tool] survey search_arxiv_abstracts {"query": "sterile neutrino big bang nucleosynthesis helium deuterium constraints mixing", "max_results": 8}
+[tool] tc-261021_1-w0-survey-8 -> ok: [1706.03138v1] Introduction to Big Bang Nucleosynthesis and Modern Cosmology
+Abstract: Primordial nucleosynthesis remains as one of the pill
+[tool] survey search_arxiv_abstracts {"query": "keV sterile neutrino dark matter parameter space status review", "max_results": 8}
+[tool] tc-261021_1-w0-survey-9 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[usage]
+[tool] survey search_arxiv {"query": "sterile neutrino dark matter X-ray XRISM eROSITA NuSTAR constraints", "max_results": 10, "sort_by": "submittedDate"}
+[tool] tc-261021_1-w0-survey-10 -> ok: Found 10 papers matching query: 'sterile neutrino dark matter X-ray XRISM eROSITA NuSTAR constraints' (source: arXiv API)
+
+Paper 1:
+arXiv ID
+[tool] survey search_arxiv {"query": "sterile neutrino dark matter lepton asymmetry resonant production BBN constraint", "max_results": 10, "sort_by": "submittedDate"}
+[tool] tc-261021_1-w0-survey-11 -> ok: Found 10 papers matching query: 'sterile neutrino dark matter lepton asymmetry resonant production BBN constraint' (source: arXiv API)
+
+Pape
+[usage]
+[tool] survey web_search {"query": "arXiv 2024 2025 sterile neutrino dark matter X-ray limits XRISM eROSITA NuSTAR mixing angle"}
+[tool] tc-261021_1-w0-survey-12 -> ok: Sterile neutrinos offer a minimal and testable explanation for dark matter (DM), with their radiative decay actively searched for in X-ray o
+[tool] survey search_arxiv_abstracts {"max_results": 8, "query": "NuSTAR eROSITA blank sky decaying sterile neutrino limits"}
+[tool] tc-261021_1-w0-survey-13 -> ok: [1606.02684v1] Neutrino Oscillations With Two Sterile Neutrinos
+Abstract: This work estimates the probability of $μ$ to $e$ neutrino oscilla
+[tool] survey search_arxiv_abstracts {"max_results": 8, "query": "Shi-Fuller resonant sterile neutrino dark matter lepton asymmetry Lyman-alpha X-ray"}
+[tool] tc-261021_1-w0-survey-14 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[usage]
+[tool] survey get_arxiv_metadata {"arxiv_id": "2507.18752"}
+[tool] tc-261021_1-w0-survey-15 -> ok: arXiv ID: 2507.18752
+Title: Return of the Lepton Number: Sterile Neutrino Dark Matter Production and the Revival of the Shi-Fuller Mechanism
+[tool] survey get_arxiv_metadata {"arxiv_id": "2502.17374"}
+[tool] tc-261021_1-w0-survey-16 -> ok: arXiv ID: 2502.17374
+Title: Playing with lepton asymmetry at the resonant production of sterile neutrino dark matter
+Authors: Dmitry Gorbuno
+[tool] survey search_arxiv_abstracts {"max_results": 6, "query": "eROSITA Final Equatorial Depth Survey dark matter decay line search"}
+[tool] tc-261021_1-w0-survey-17 -> ok: [0510346v1] The Dark Energy Survey
+Abstract:   We describe the Dark Energy Survey (DES), a proposed optical-near infrared survey of 5000 sq.
+[tool] survey search_arxiv_abstracts {"max_results": 6, "query": "cold sterile neutrino dark matter produced during reheating inflaton decays X-ray"}
+[tool] tc-261021_1-w0-survey-18 -> ok: [2111.06065v2] Implications of time-dependent inflaton decay on reheating and dark matter production
+Abstract: We discuss the production of 
+[usage]
+[brief] Recent work from 2024-2026 that the tools returned is mostly about production mechanisms rather than new X-ray datasets. The main papers revisit Shi-Fuller resonant production with large lepton asymme
+**Survey** — 39 tools on 3 servers, 6 read-only probes, 9 papers found.
+
+Recent work from 2024-2026 that the tools returned is mostly about production mechanisms rather than new X-ray datasets. The main papers revisit Shi-Fuller resonant production with large lepton asymmetries. Vogel, Garcia Escudero, Froustey and Abazajian (arXiv:2507.18752) find that asymmetries L >~ 0.5 at T > 20 MeV are consistent with BBN and CMB, and that they open a viable region at m_s >~ 10 keV and sin^2(2theta) <~ 1e-14. That region is compatible with NuSTAR and INTEGRAL/SPI X-ray limits and with Lyman-alpha inferences of a thermal-equivalent WDM mass m_th ~ 4.1 keV. Gorbunov, Kalashnikov and Krugan (arXiv:2502.17374) show that flavor-dependent asymmetries, which work best with inverted ordering, can cancel the BBN limits on mixing and give colder spectra, which reopens lighter masses at smaller mixing. Two other papers extend the picture but were seen only as abstract snippets: a 2026 paper on cold sterile-neutrino DM from inflaton decays during reheating (arXiv:2601.03346) and a 2026 paper on lepton asymmetry saturating resonant production (arXiv:2609.31340). The overall picture is that standard non-resonant (Dodelson-Widrow) production is excluded by X-ray limits combined with structure formation. What survives sits at very small mixing, roughly sin^2(2theta) <~ 1e-11 to 1e-14 depending on mass, and needs either resonant production with BBN-compatible lepton asymmetry or a non-oscillation mechanism such as reheating or scalar decays. A web snippet (not citable; no arXiv ID found) says eROSITA eFEDS line searches over 1.8-18 keV, and eROSITA diffuse limits more broadly, are now the strongest in their band. Warning: I had no sterile-neutrino BBN tool for Yp or D/H, so none of the BBN statements here are numbers I computed. They come only from paper abstracts and still need to be checked by calculation.
+
+Quantities worth checking: Radiative decay rate Gamma = 1.38e-32 s^-1 (sin^2 2theta / 1e-10) (m_s / keV)^5 and the line energy E = m_s/2, to convert X-ray flux limits into sin^2(2theta) limits; Shift in Yp from Delta N_eff and from a nu_e asymmetry xi_e (roughly dYp/dxi_e ~ -0.25), checked against the measured Yp ~ 0.245 +/- 0.003; D/H as a function of Delta N_eff and eta_b, checked against (2.53 +/- 0.03) x 1e-5; Lepton asymmetry L(m_s, sin^2 2theta) needed for Omega_s h^2 = 0.12 under Shi-Fuller production, compared with the BBN-allowed |xi_e| <~ 0.03 at T < 1 MeV and larger L above 20 MeV; Thermal-equivalent WDM mass m_th for each point, compared with Lyman-alpha bounds (m_th >~ 4-6 keV); Dodelson-Widrow abundance Omega_s h^2 ~ 0.1 (sin^2 2theta / 3e-9)(m_s / 3 keV)^1.8, to confirm that pure non-resonant production is excluded.
+[run] planning (waves 0, tool calls 0, 67s)
+[phase] plan
+[usage]
+[directions] d-01 [open] Use the sterile-neutrino server to compute BBN observables (; d-02 [open] Quantify the X-ray decay-line constraints. Compute predicted; d-03 [open] Survey the 2024-2026 production-mechanism literature (Shi-Fu
+[phase] critic-plan
+[usage]
+[critique] wave 0 plan: revise
+[directions] d-01 [open] Use the sterile-neutrino server to compute BBN observables (; d-02 [open] Quantify the X-ray decay-line constraints. Compute predicted; d-03 [open] Survey the 2024-2026 production-mechanism literature (Shi-Fu; d-04 [open] Synthesize the d-01 BBN and relic-density results, the d-02 
+**Plan** — 4 lines of investigation:
+1. Use the sterile-neutrino server to compute BBN observables (Yp, D/H, Delta N_eff) together with relic-density constraints across the (m_s, sin^2 2theta) plane. Identify which regions BBN and abundance arguments leave open. — This answers the core quantitative question directly. The survey had no BBN tool, so none of its Yp or D/H statements are computed. The server's validity range and data sets must be established before any of its numbers are trusted.
+2. Quantify the X-ray decay-line constraints. Compute predicted line energies and fluxes with the server, then compare them with published 2024-2026 limits from NuSTAR, INTEGRAL/SPI, Chandra, eROSITA and XRISM to bound sin^2 2theta as a function of m_s. — X-ray limits provide the upper bound on mixing that, combined with the abundance and BBN results, defines the viable window. The decay-rate formula and the J-factor conversion need an independent check.
+3. Survey the 2024-2026 production-mechanism literature (Shi-Fuller resonant production with lepton asymmetry, reheating production, scalar decays) and test its viability claims against tool-computed BBN numbers, adding the Lyman-alpha and structure-formation bounds. — Non-resonant production appears excluded, so the surviving region depends on resonant or non-oscillation mechanisms. Their BBN-compatibility claims must be checked numerically, and the arXiv IDs from the survey need verification.
+4. Synthesize the d-01 BBN and relic-density results, the d-02 X-ray limits and the d-03 structure-formation bounds into a single table of viable (m_s, sin^2 2theta) regions per production mechanism, with an explicit provenance and robustness check. — No direction combines the constraints into the answer the task asks for. Without a synthesis step, claims about viable regions risk mixing tool-computed numbers with abstract-level claims. (added by the critic)
+Critic's view: revise — For keV-scale DM at sin^2 2theta below about 1e-8, the extra radiation from non-resonant production is negligible (Delta N_eff << 0.1). Yp and D/H shifts will then be indistinguishable from SBBN, and the BBN constraint is effectively vacuous in the region of interest. The direction must establish this from the tool output and say so explicitly. Without lepton asymmetry, BBN bites only at large mixing or low mass. Do not present a trivial BBN pass as a non-trivial constraint.; Set the scan ranges after describe_sterile_nu_tools reports the validity range, not before. Also run one zero-mixing (SBBN) baseline point, so that Yp and D/H deviations are reported both against the code's own SBBN value and against observation. This separates a code offset from a sterile-neutrino effect.; Budget risk: scan, plot, grid, bbn_impact, SBL check, DW checks and skill loading together approach 15 calls. Drop or defer check_sterile_nu_sbl_anomaly. The eV-scale SBL point is not keV dark matter and is tangential to the task. Merge the DW-scaling checks into the predict_sterile_nu_grid call..
+[run] running (waves 0, tool calls 0, 135s)
+[direction] d-01 -> running
+[direction] d-02 -> running
+[direction] d-03 -> running
+[run] running (waves 1, tool calls 0, 135s)
+[phase] wave
+[wave 1] start d-01, d-02, d-03
+**Wave 1** — now exploring, in parallel: Use the sterile-neutrino server to compute BBN observables (Yp, D/H, Delta N_eff) together with relic-density constraints across the (m_s, sin^2 2theta) plane. Identify which regions BBN and abundance arguments leave open.; Quantify the X-ray decay-line constraints. Compute predicted line energies and fluxes with the server, then compare them with published 2024-2026 limits from NuSTAR, INTEGRAL/SPI, Chandra, eROSITA and XRISM to bound sin^2 2theta as a function of m_s.; Survey the 2024-2026 production-mechanism literature (Shi-Fuller resonant production with lepton asymmetry, reheating production, scalar decays) and test its viability claims against tool-computed BBN numbers, adding the Lyman-alpha and structure-formation bounds..
+[usage]
+[tool] d-01 describe_sterile_nu_tools {}
+[10/21/26 11:04:08] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-19 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile Neutrino -> BBN / X-ray Bridge Server\n============================================
+[tool] d-01 list_sterile_nu_skills {}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-20 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "2 skills. Load one with load_sterile_nu_skill.",
+  "metadata": {
+    "skills": {
+      "kev
+[usage]
+[tool] d-03 get_arxiv_metadata {"arxiv_id": "2507.18752"}
+[tool] tc-261021_1-w1-d-03-21 -> ok: arXiv ID: 2507.18752
+Title: Return of the Lepton Number: Sterile Neutrino Dark Matter Production and the Revival of the Shi-Fuller Mechanism
+[tool] d-03 get_arxiv_metadata {"arxiv_id": "2502.17374"}
+[tool] tc-261021_1-w1-d-03-22 -> ok: arXiv ID: 2502.17374
+Title: Playing with lepton asymmetry at the resonant production of sterile neutrino dark matter
+Authors: Dmitry Gorbuno
+[tool] d-03 get_arxiv_metadata {"arxiv_id": "2601.03346"}
+[tool] tc-261021_1-w1-d-03-23 -> ok: arXiv ID: 2601.03346
+Title: Sterile Neutrino Dark Matter as a Probe of Inflationary Reheating
+Authors: James M. Cline, Yong Xu
+Year: 2026
+Ab
+[tool] d-03 get_arxiv_metadata {"arxiv_id": "2609.31340"}
+[usage]
+[tool] d-02 predict_sterile_nu_xray_line {"m_s_eV": 7100, "sin2_2theta": 1e-10}
+[usage]
+[tool] d-01 load_sterile_nu_skill {"name": "sterile-nu-bbn-constraints"}
+[10/21/26 11:04:11] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-02-25 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 7.1
+[tool] d-02 predict_sterile_nu_xray_line {"m_s_eV": 20000, "sin2_2theta": 1e-12}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-26 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Loaded skill 'sterile-nu-bbn-constraints'. Follow these instructions.",
+  "metadata": {
+   
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-02-27 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 20 
+[tool] d-02 predict_sterile_nu_grid {"masses_eV": [7100, 10000, 20000, 50000], "sin2_2thetas": [1e-10, 1e-12, 1e-14], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-02-28 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/ste
+[tool] tc-261021_1-w1-d-03-24 -> ok: arXiv ID: 2609.31340
+Title: Natural Saturation Of The Sterile Neutrino Dark Matter Resonant Production By a High Lepton Flavor Asymmetry In 
+[tool] d-03 describe_sterile_nu_tools {}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-03-29 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile Neutrino -> BBN / X-ray Bridge Server\n============================================
+[usage]
+[tool] d-03 download_arxiv_full_text {"arxiv_id": "2507.18752", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w1-d-03-30 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2507.18752.txt
+[tool] d-03 predict_sterile_nu_grid {"masses_eV": [10000, 20000, 30000], "sin2_2thetas": [1e-14, 1e-13], "mechanism": "SF", "lepton_asymmetry": 0.1, "output_dir": "/Users/nramachandra/hep-genesis-
+[10/21/26 11:04:25] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-03-31 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/ste
+[tool] d-03 predict_sterile_nu {"m_s_eV": 20000, "sin2_2theta": 1e-14, "mechanism": "SF", "lepton_asymmetry": 0.1}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-03-32 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile neutrino: m_s = 2e+04 eV, sin\u00b22\u03b8 = 1e-14\nMechanism: SF (SF Delta N_eff i
+[usage]
+[tool] d-01 scan_sterile_nu_parameters {"m_min_eV": 1000, "m_max_eV": 100000, "theta_min": 1e-15, "theta_max": 1e-06, "n_points": 100, "mechanism": "DW", "output_dir": "/Users/nramachandra/hep-genesi
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-33 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/sca
+[tool] d-01 check_sterile_nu_sbl_anomaly {}
+[10/21/26 11:04:26] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-34 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "Sterile neutrino: m_s = 1.14 eV, sin\u00b22\u03b8 = 0.42\nMechanism: DW\n\n\u2500\u2500 Wha
+[tool] d-01 plot_sterile_nu_bbn_impact {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-35 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/bbn
+[usage]
+[tool] d-03 predict_sterile_nu_grid {"lepton_asymmetry": 0.001, "masses_eV": [10000, 20000, 30000], "mechanism": "SF", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research
+[10/21/26 11:04:31] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-03-36 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/ste
+[tool] d-03 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2507.18752.txt", "start": 0, "length": 9000}
+[tool] tc-261021_1-w1-d-03-37 -> ok: [chars 0-9000 of 62265] (more available, next start=9000)
+
+Title: Return of the Lepton Number: Sterile Neutrino Dark Matter Production and t
+[usage]
+[tool] d-02 search_arxiv_abstracts {"query": "XRISM 3.5 keV line dark matter decay", "max_results": 6}
+[usage]
+[tool] d-01 plot_sterile_nu_exclusion {"scan_file": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/scan_DW_dc7743.npz", "output_dir": "/Users/nra
+[10/21/26 11:04:34] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-39 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/exc
+[tool] d-01 predict_sterile_nu_grid {"masses_eV": [1000, 2000, 3000, 5000, 7100, 10000, 20000, 50000, 100000], "sin2_2thetas": [1e-12, 3e-12, 1e-11, 3e-11, 1e-10, 3e-10, 1e-09, 3e-09, 1e-08, 3e-08
+[10/21/26 11:04:35] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-40 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/ste
+[tool] tc-261021_1-w1-d-02-38 -> ok: [2505.07479v2] Thermal and Kinematic Properties of Ejecta in SN1987A revealed by XRISM
+Abstract: We present an analysis of high-resolution s
+[tool] d-02 search_arxiv_abstracts {"query": "eROSITA sterile neutrino dark matter decay line limits", "max_results": 6}
+[tool] tc-261021_1-w1-d-02-41 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[tool] d-02 search_arxiv_abstracts {"query": "NuSTAR sterile neutrino dark matter limits Galactic", "max_results": 6}
+[usage]
+[tool] d-01 read_text_file {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/sterile_nu_grid_DW_397ef0.csv"}
+[tool] tc-261021_1-w1-d-01-43 -> ok: m_s_eV,sin2_2theta,delta_neff,neff,omega_s_h2,Yp,DH_x1e5,Li7H_x1e10,chi2_bbn,delta_chi2_bbn,lifetime_s,free_streaming_kpc,bbn_excluded_95,ov
+[tool] tc-261021_1-w1-d-02-42 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[tool] d-02 search_arxiv_abstracts {"query": "INTEGRAL SPI sterile neutrino dark matter decay line", "max_results": 5}
+[tool] tc-261021_1-w1-d-02-44 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[usage]
+[tool] d-03 post_finding {"claim": "All four survey arXiv IDs resolve: 2507.18752 (Vogel, Garcia Escudero, Froustey, Abazajian 2025, Shi-Fuller revival), 2502.17374 (Gorbunov, Kalashnik
+[usage]
+[tool] d-02 download_arxiv_full_text {"arxiv_id": "2405.17861", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[finding] f-001 All four survey arXiv IDs resolve: 2507.18752 (Vogel, Garcia Escudero, Froustey, Abazajian 2025, Shi-Fuller revival), 2502.17374 (Gorbunov, Kalashnikov, Krugan 
+**Finding:** All four survey arXiv IDs resolve: 2507.18752 (Vogel, Garcia Escudero, Froustey, Abazajian 2025, Shi-Fuller revival), 2502.17374 (Gorbunov, Kalashnikov, Krugan 2025, flavor-dependent asymmetry), 2601.03346 (Cline & Xu 2026, reheating/inflaton-decay production with BR <~ 1e-4) and 2609.31340 (Gorbunov & Kalashnikov 2026, saturation of resonant production at high flavor asymmetry); so q-03 is answered: 2609.31340 is a real paper.
+[tool] tc-261021_1-w1-d-03-45 -> ok: Recorded finding f-001.
+[tool] d-03 post_finding {"claim": "2507.18752 (full text) states: L >~ 0.5 at high T opens viable space at m_s >~ 10 keV and sin^2(2theta) <~ 1e-14; structure bounds used are m_th > 8.
+[finding] f-002 2507.18752 (full text) states: L >~ 0.5 at high T opens viable space at m_s >~ 10 keV and sin^2(2theta) <~ 1e-14; structure bounds used are m_th > 8.4 keV (gala
+**Finding:** 2507.18752 (full text) states: L >~ 0.5 at high T opens viable space at m_s >~ 10 keV and sin^2(2theta) <~ 1e-14; structure bounds used are m_th > 8.4 keV (galaxy counts, 95% CL), m_th > 8.5 keV (counts + strong lensing), and a Lyman-alpha preference m_th = 4.1 (+33.3/-1.5) keV; NuSTAR gives sin^2(2theta) <~ 1e-12 for 6-40 keV and INTEGRAL/SPI gives sin^2(2theta) <~ 3e-14 for m_s >~ 40 keV (lifetimes < ~1e20 s excluded).
+[tool] tc-261021_1-w1-d-03-47 -> ok: Recorded finding f-002.
+[tool] d-03 post_finding {"claim": "The sterile-nu server cannot directly test the 2507.18752 claim. Its SF mode caps lepton_asymmetry at 0.1 (the paper needs L >~ 0.5), its SF Delta N_
+[finding] f-003 The sterile-nu server cannot directly test the 2507.18752 claim. Its SF mode caps lepton_asymmetry at 0.1 (the paper needs L >~ 0.5), its SF Delta N_eff is a he
+**Finding:** The sterile-nu server cannot directly test the 2507.18752 claim. Its SF mode caps lepton_asymmetry at 0.1 (the paper needs L >~ 0.5), its SF Delta N_eff is a heuristic (0.1 x the DW value), and the asymmetry is not fed into the BBN network. At m_s = 10, 20, 30 keV with sin^2(2theta) = 1e-14 it gives Delta N_eff ~ 1e-8 and BBN Delta chi^2 = 0 (allowed). At 20 keV the outputs are Yp = 0.24682 and D/H = 2.4433e-5. Its SF Omega_s h^2 values are 0.122, 0.490, 1.10 for L = 1e-3 and 1.22, 4.90, 11.0 for L = 0.1 (10x larger for 100x larger L). All of these points are flagged as overclosing.
+[tool] tc-261021_1-w1-d-03-48 -> ok: Recorded finding f-003.
+[tool] d-03 cite {"arxiv_id": "2507.18752", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/references.bib", "not
+[tool] tc-261021_1-w1-d-02-46 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2405.17861.txt
+[tool] d-02 download_arxiv_full_text {"arxiv_id": "2510.24560", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w1-d-03-49 -> ok: Cited: Return of the Lepton Number: Sterile Neutrino Dark Matter Production and the Revival of the Shi-Fuller Mechanism (\cite{arxiv25071875
+[tool] d-03 search_arxiv_abstracts {"query": "warm dark matter thermal relic mass bound Lyman-alpha Milky Way satellites sterile neutrino 2024", "max_results": 5}
+[usage]
+[tool] d-01 predict_sterile_nu_grid {"masses_eV": [1000, 2000, 3000, 5000, 7100, 10000, 20000, 50000, 100000], "sin2_2thetas": [8.67e-09, 2.49e-09, 1.2e-09, 4.785e-10, 2.55e-10, 1.37e-10, 3.946e-1
+[10/21/26 11:04:55] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w1-d-01-52 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/ste
+[tool] tc-261021_1-w1-d-02-50 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt
+[tool] d-02 search_arxiv {"query": "eROSITA eFEDS dark matter decay line sterile neutrino", "max_results": 6}
+[tool] tc-261021_1-w1-d-02-53 -> ok: Found 6 papers matching query: 'eROSITA eFEDS dark matter decay line sterile neutrino' (source: arXiv API)
+
+Paper 1:
+arXiv ID: 1702.08430v1
+
+[tool] tc-261021_1-w1-d-03-51 -> ok: [1702.08430v1] keV sterile neutrino Dark Matter
+Abstract: We give an overview of the current status of keV sterile neutrino Dark Matter. Aft
+[usage]
+[tool] d-03 post_finding {"claim": "Mechanism map (from literature quotes, not computed by tools). Shi-Fuller resonant production with L >~ 0.5 above 20 MeV is viable at m_s >~ 10 keV a
+[finding] f-004 Mechanism map (from literature quotes, not computed by tools). Shi-Fuller resonant production with L >~ 0.5 above 20 MeV is viable at m_s >~ 10 keV and sin^2(2t
+**Finding:** Mechanism map (from literature quotes, not computed by tools). Shi-Fuller resonant production with L >~ 0.5 above 20 MeV is viable at m_s >~ 10 keV and sin^2(2theta) <~ 1e-14 (2507.18752). Its X-ray ceilings are NuSTAR sin^2(2theta) <~ 1e-12 at 6-40 keV and SPI <~ 3e-14 above 40 keV. Its structure-formation bounds are m_th > 8.4-8.5 keV (galaxy counts and lensing) or the Lyman-alpha preference m_th ~ 4.1 keV. Flavor-dependent asymmetries, which work best with inverted ordering, open lower mixing angles and give colder spectra that reopen lighter m_s (2502.17374, abstract only). Large L saturates resonant production, which leaves about a two-decade window in sin^2(2theta) (2609.31340, abstract only). Inflaton-decay reheating production with BR <~ 1e-4 gives cold DM at mixings below the X-ray limits, which oscillation production cannot populate (2601.03346, abstract only).
+[tool] tc-261021_1-w1-d-03-54 -> ok: Recorded finding f-004.
+[usage]
+[tool] d-02 post_finding {"claim": "The server's radiative decay rate agrees with Gamma = 1.38e-32 s^-1 (sin^2 2theta/1e-10)(m_s/keV)^5 to within about 1.5%. At m_s = 7.1 keV and sin^2 
+[finding] f-005 The server's radiative decay rate agrees with Gamma = 1.38e-32 s^-1 (sin^2 2theta/1e-10)(m_s/keV)^5 to within about 1.5%. At m_s = 7.1 keV and sin^2 2theta = 1e
+**Finding:** The server's radiative decay rate agrees with Gamma = 1.38e-32 s^-1 (sin^2 2theta/1e-10)(m_s/keV)^5 to within about 1.5%. At m_s = 7.1 keV and sin^2 2theta = 1e-10 the tool gives 2.46e-28 s^-1 (formula 2.49e-28) with E_line = 3.55 keV. At 20 keV and 1e-12 it gives 4.36e-28 s^-1 (formula 4.42e-28) with E_line = 10 keV. The tool's built-in X-ray limits (NuSTAR M31, Roach+2020; XMM blank sky, Dessert+2020) exclude both points.
+[tool] tc-261021_1-w1-d-02-55 -> ok: Recorded finding f-005.
+[tool] d-02 post_finding {"claim": "DW benchmark grid (m_s = 7.1, 10, 20, 50 keV; sin^2 2theta = 1e-10, 1e-12, 1e-14): no point is BBN-excluded (Delta N_eff <= 2.9e-3, |Delta chi^2| <= 
+[finding] f-006 DW benchmark grid (m_s = 7.1, 10, 20, 50 keV; sin^2 2theta = 1e-10, 1e-12, 1e-14): no point is BBN-excluded (Delta N_eff <= 2.9e-3, |Delta chi^2| <= 0.04). DW O
+**Finding:** DW benchmark grid (m_s = 7.1, 10, 20, 50 keV; sin^2 2theta = 1e-10, 1e-12, 1e-14): no point is BBN-excluded (Delta N_eff <= 2.9e-3, |Delta chi^2| <= 0.04). DW Omega_s h^2 reaches 0.12 only near sin^2 2theta ~ 1e-10 at m_s ~ 10-20 keV (0.087 at 10 keV; 0.30 at 20 keV, which overcloses), and 50 keV at 1e-10 gives 1.58. At X-ray-allowed mixings of 1e-12 to 1e-14, DW gives Omega_s h^2 <= 0.016, so a non-DW mechanism is needed.
+[tool] tc-261021_1-w1-d-02-56 -> ok: Recorded finding f-006.
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt", "length": 5000}
+[tool] tc-261021_1-w1-d-02-57 -> ok: [chars 0-5000 of 67438] (more available, next start=5000)
+
+Title: XRISM constraints on unidentified X-ray emission lines, including the 3.5 
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2405.17861.txt", "length": 4000}
+[tool] tc-261021_1-w1-d-02-58 -> ok: [chars 0-4000 of 44941] (more available, next start=4000)
+
+Title: Strong limits on keV-scale galactic sterile neutrino dark matter with stra
+[usage]
+[tool] d-03 post_question {"text": "A real Shi-Fuller BBN test needs Yp computed with a nu_e degeneracy xi_e(T~1 MeV) taken from the L-evolution in 2507.18752. That requires a BBN code t
+[question] q-07 A real Shi-Fuller BBN test needs Yp computed with a nu_e degeneracy xi_e(T~1 MeV) taken from the L-evolution in 2507.18752. That requires a BBN code that accept
+[tool] tc-261021_1-w1-d-03-59 -> ok: Recorded question q-07.
+[usage]
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2405.17861.txt", "start": 14000, "length": 9000
+[tool] tc-261021_1-w1-d-02-60 -> ok: [chars 14000-23000 of 44941] (more available, next start=23000)
+
+rmalization are expressed in units
+of cts/cm2/s/keV/deg2.
+We start by fitti
+[tool] d-02 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt", "start": 9000, "length": 5000}
+[tool] tc-261021_1-w1-d-02-61 -> ok: [chars 9000-14000 of 67438] (more available, next start=14000)
+
+th and Space Science, Osaka University, Osaka 560-0043, Japan
+34Department o
+[usage]
+[direction] d-03 -> closed
+**Completed — Survey the 2024-2026 production-mechanism literature (Shi-Fuller resonant production with lepton asymmetry, reheating production, scalar decays) and test its viability claims against tool-computed BBN numbers, adding the Lyman-alpha and structure-formation bounds..** All four arXiv IDs resolve to real papers (f-001): 2507.18752 (Vogel et al. 2025), 2502.17374 (Gorbunov, Kalashnikov and Krugan 2025), 2601.03346 (Cline and Xu 2026) and 2609.31340 (Gorbunov and Kalashnikov 2026). So 2609.31340 is genuine and q-03 is answered. I read the full text of 2507.18752, cited it in runs/261021_110150/references.bib and saved the text as runs/261021_110150/2507.18752.txt (f-002). The paper's viable region is m_s >~ 10 keV and sin^2(2theta) <~ 1e-14 for L >~ 0.5 at T > 20 MeV. Its bounds: NuSTAR sin^2(2theta) <~ 1e-12 at 6-40 keV, INTEGRAL/SPI <~ 3e-14 above 40 keV, m_th > 8.4 keV from galaxy counts, m_th > 8.5 keV from counts plus lensing, and a Lyman-alpha preference m_th = 4.1 (+33.3/-1.5) keV. Tool tests (f-003; CSVs sterile_nu_grid_SF_fdf543.csv and sterile_nu_grid_SF_d81486.csv) at m_s = 10, 20 and 30 keV with sin^2(2theta) = 1e-14 in SF mode give Delta N_eff ~ 1e-8 and BBN Delta chi^2 = 0 (allowed). At 20 keV Yp = 0.24682 and D/H = 2.4433e-5. Omega_s h^2 is 0.122, 0.490 and 1.10 at L = 1e-3 and ten times larger at L = 0.1; all of these points are flagged as overclosing. The tool cannot test the paper's claims. Its L is capped at 0.1 while the paper needs L >~ 0.5. Its SF Delta N_eff is a heuristic (0.1 x the DW value). It does not feed a xi_e effect into Yp, so the |xi_e| <~ 0.03 condition cannot be checked. Its SF Omega_s h^2 is not a Boltzmann calculation, so the overclosure flag does not contradict the paper. The BBN 'allowed' verdict is trivially true rather than supporting evidence. The server uses Yp = 0.2449 +/- 0.004 and D/H = 2.547 +/- 0.025 (relevant to q-02). Mechanism map (f-004) from the 2502.17374, 2609.31340 and 2601.03346 abstracts only: flavor-dependent asymmetries reopen lighter masses and smaller mixings; large L saturates resonant production, leaving about a two-decade window in sin^2(2theta); inflaton-decay reheating production with BR <~ 1e-4 populates cold DM below the X-ray limits. The survey criteria are only partly met. The full text of 2502.17374 was not read, so its viable ranges have no verbatim quotes. The 2024+ structure-formation search found only arXiv:2409.18917 (mixed WDM from Milky Way satellites), which was neither read nor cited. Open question q-07 asks for a BBN code that accepts xi_e, which a real test would need.
+[usage]
+[tool] d-02 cite {"arxiv_id": "2510.24560", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/references.bib", "not
+[tool] tc-261021_1-w1-d-02-62 -> ok: Cited: XRISM constraints on unidentified X-ray emission lines, including the 3.5 keV line, in the stacked spectrum of ten galaxy clusters (\
+[usage]
+[tool] d-01 post_finding {"claim": "Sterile-nu server assumptions: BBN abundances come from a fit to PRyMordial (<0.3%), and the only BBN input is Delta N_eff. The fit is valid for N_ef
+[finding] f-007 Sterile-nu server assumptions: BBN abundances come from a fit to PRyMordial (<0.3%), and the only BBN input is Delta N_eff. The fit is valid for N_eff in [2.044
+**Finding:** Sterile-nu server assumptions: BBN abundances come from a fit to PRyMordial (<0.3%), and the only BBN input is Delta N_eff. The fit is valid for N_eff in [2.044, 6.044], omega_b h^2 in [0.019, 0.0257] and tau_n in [866.4, 890.4] s, and for m_s below ~100 keV. For m_s >= 1 MeV, decay injection is not modelled, so those results are not constraints. Mechanisms are DW (non-resonant) and SF (resonant), where SF Delta N_eff is a heuristic (0.1 x DW) and SF relic density is a fitting formula in L. Observational values are Yp = 0.2449 +/- 0.004 (Aver+ 2021), D/H = (2.547 +/- 0.025)e-5 (Cooke+ 2018) and Planck N_eff = 2.99 +/- 0.17. Exclusion rule: Delta chi^2 vs SM > 3.84.
+[tool] tc-261021_1-w1-d-01-63 -> ok: Recorded finding f-007.
+[tool] d-01 post_finding {"claim": "DW scan (m_s 1-100 keV, sin^2 2theta 1e-15 to 1e-6, 100x100 grid): BBN (Delta chi^2 > 3.84) excludes only sin^2 2theta above 3.5e-7 (1 keV), 1.2e-7 (
+[finding] f-008 DW scan (m_s 1-100 keV, sin^2 2theta 1e-15 to 1e-6, 100x100 grid): BBN (Delta chi^2 > 3.84) excludes only sin^2 2theta above 3.5e-7 (1 keV), 1.2e-7 (3.7 keV), 8
+**Finding:** DW scan (m_s 1-100 keV, sin^2 2theta 1e-15 to 1e-6, 100x100 grid): BBN (Delta chi^2 > 3.84) excludes only sin^2 2theta above 3.5e-7 (1 keV), 1.2e-7 (3.7 keV), 8.1e-8 (7 keV), 4.3e-8 (13.5 keV), 1.5e-8 (50 keV) and 1e-8 (100 keV). The Omega_s h^2 = 0.12 contour lies at sin^2 2theta = 8.7e-9 (1 keV), 2.5e-9 (2 keV), 1.2e-9 (3 keV), 4.8e-10 (5 keV), 2.55e-10 (7.1 keV), 1.37e-10 (10 keV), 3.9e-11 (20 keV), 7.6e-12 (50 keV) and 2.2e-12 (100 keV), where Delta N_eff = 1e-4 to 1.1e-2 and |Delta chi^2_BBN| < 0.15. So the overclosure bound is 40x (1 keV) to 5000x (100 keV) stronger than BBN, and BBN leaves the whole DW DM line and everything below it open.
+[tool] tc-261021_1-w1-d-01-64 -> ok: Recorded finding f-008.
+[tool] d-01 post_finding {"claim": "Tool-computed BBN at representative DW points, compared with the brief's Yp = 0.245 +/- 0.003 and D/H = (2.53 +/- 0.03)e-5. SM (N_eff = 3.044): Yp = 
+[finding] f-009 Tool-computed BBN at representative DW points, compared with the brief's Yp = 0.245 +/- 0.003 and D/H = (2.53 +/- 0.03)e-5. SM (N_eff = 3.044): Yp = 0.246815 (+
+**Finding:** Tool-computed BBN at representative DW points, compared with the brief's Yp = 0.245 +/- 0.003 and D/H = (2.53 +/- 0.03)e-5. SM (N_eff = 3.044): Yp = 0.246815 (+0.6 sigma), D/H = 2.4433e-5 (-2.9 sigma). 7.1 keV, sin^2 2theta = 3e-10: Yp = 0.24684, D/H = 2.4440e-5, Delta chi^2 = -0.024 (shift from SBBN negligible). 1 keV, 3e-7: Delta N_eff = 0.387, Yp = 0.25193 (+2.3 sigma), D/H = 2.5718e-5 (+1.4 sigma), Delta chi^2 = +0.44, allowed. 10 keV, 1e-7: Delta N_eff = 0.813, Yp = 0.25730 (+4.1 sigma), D/H = 2.7145e-5 (+6.2 sigma), Delta chi^2 = 13.4, excluded. 3 keV, 3e-7: Delta N_eff = 0.931, Yp = 0.25874 (+4.6 sigma), D/H = 2.7540e-5 (+7.5 sigma), Delta chi^2 = 19.3, excluded. The BBN-only limit is Delta N_eff < 0.548 (95%), with slopes dYp/dN_eff = 0.0135 and dD/H(1e-5)/dN_eff = 0.331.
+[tool] tc-261021_1-w1-d-01-65 -> ok: Recorded finding f-009.
+[tool] d-01 post_finding {"claim": "BEST cross-check (m_s = 1.14 eV, sin^2 2theta = 0.42): the server gives Delta N_eff = 1 (N_eff = 4.044), Yp = 0.25956, D/H = 2.777e-5 and Delta chi^2
+[finding] f-010 BEST cross-check (m_s = 1.14 eV, sin^2 2theta = 0.42): the server gives Delta N_eff = 1 (N_eff = 4.044), Yp = 0.25956, D/H = 2.777e-5 and Delta chi^2_BBN = 23.1
+**Finding:** BEST cross-check (m_s = 1.14 eV, sin^2 2theta = 0.42): the server gives Delta N_eff = 1 (N_eff = 4.044), Yp = 0.25956, D/H = 2.777e-5 and Delta chi^2_BBN = 23.1 (excluded). That is 6.2 sigma tension with Planck N_eff = 2.99 +/- 0.17 and 33 sigma at CMB-S4. Omega_s h^2 = 29.3 under DW.
+[tool] tc-261021_1-w1-d-01-66 -> ok: Recorded finding f-010.
+[tool] d-01 post_finding {"claim": "The server's DW relic density scales as Omega_s h^2 = 0.1 (sin^2 2theta / 1e-9)(m_s / 3 keV)^1.8. Checks: 3 keV at 1e-9 gives 0.100, 10 keV at 1e-9 g
+[finding] f-011 The server's DW relic density scales as Omega_s h^2 = 0.1 (sin^2 2theta / 1e-9)(m_s / 3 keV)^1.8. Checks: 3 keV at 1e-9 gives 0.100, 10 keV at 1e-9 gives 0.873 
+**Finding:** The server's DW relic density scales as Omega_s h^2 = 0.1 (sin^2 2theta / 1e-9)(m_s / 3 keV)^1.8. Checks: 3 keV at 1e-9 gives 0.100, 10 keV at 1e-9 gives 0.873 (ratio 8.73 = (10/3)^1.8), and 1 keV at 1e-8 gives 0.138. So the exponent 1.8 matches the brief's formula, but the normalization is 3x higher than the brief's 0.1 (sin^2 2theta / 3e-9)(m_s / 3 keV)^1.8, and the server's DM line sits at 3x smaller mixing.
+[tool] tc-261021_1-w1-d-01-67 -> ok: Recorded finding f-011.
+[usage]
+[tool] d-02 post_finding {"claim": "XRISM Resolve stacked 3.75 Ms of data on ten galaxy clusters (arXiv:2510.24560, 2025) and found no unidentified lines over 2.5-15 keV. Its 3-sigma up
+[finding] f-012 XRISM Resolve stacked 3.75 Ms of data on ten galaxy clusters (arXiv:2510.24560, 2025) and found no unidentified lines over 2.5-15 keV. Its 3-sigma upper limit o
+**Finding:** XRISM Resolve stacked 3.75 Ms of data on ten galaxy clusters (arXiv:2510.24560, 2025) and found no unidentified lines over 2.5-15 keV. Its 3-sigma upper limit on the decay rate of an m_s ~ 7.1 keV particle (E = 3.55 keV) is Gamma ~ 1.0e-27 s^-1. That is 3-4 times stronger than the Hitomi Perseus limit but still 5 times above the rate implied by the Bulbul+2014 XMM detection, so XRISM does not yet rule out the 3.55 keV line. Scaling the server's rate (2.46e-28 s^-1 at sin^2 2theta = 1e-10) gives sin^2 2theta < ~4e-10 at 7.1 keV from XRISM alone.
+[tool] tc-261021_1-w1-d-02-68 -> ok: Recorded finding f-012.
+[tool] d-02 post_finding {"claim": "Krivonos, Barinov, Mukhin and Gorbunov (arXiv:2405.17861, 2024) use 11 years of NuSTAR stray-light data on the Milky Way. They set 95% CL upper limit
+[finding] f-013 Krivonos, Barinov, Mukhin and Gorbunov (arXiv:2405.17861, 2024) use 11 years of NuSTAR stray-light data on the Milky Way. They set 95% CL upper limits on sin^2 
+**Finding:** Krivonos, Barinov, Mukhin and Gorbunov (arXiv:2405.17861, 2024) use 11 years of NuSTAR stray-light data on the Milky Way. They set 95% CL upper limits on sin^2 2theta for m_s ~ 6-40 keV (photon energies 3-20 keV), plotted in their Fig. 3 over the axis range 1e-15 to 1e-10 for several DM profiles. They state that the limits 'reach the bottom edge of theoretical predictions' of realistic production models. Their Eq. 2, Gamma = 1.36e-22 (m_s/keV)^5 sin^2 2theta s^-1, is 1.4% below the lead's 1.38e-32 normalisation and about 1% above the server's output.
+[tool] tc-261021_1-w1-d-02-69 -> ok: Recorded finding f-013.
+[tool] d-02 post_dead_end {"what": "Searches with search_arxiv_abstracts and search_arxiv for 2024-2026 eROSITA and INTEGRAL/SPI sterile-neutrino line limits ('eROSITA sterile neutrino d
+[dead-end] x-01 Searches with search_arxiv_abstracts and search_arxiv for 2024-2026 eROSITA and INTEGRAL/SPI sterile-neutrino line limits ('eROSITA sterile neutrino dark matter
+[tool] tc-261021_1-w1-d-02-70 -> ok: Recorded dead end x-01.
+[tool] d-02 post_question {"text": "What are the numerical sin^2 2theta upper limits at m_s = 7, 10, 20 keV in Fig. 3 of arXiv:2405.17861 (NuSTAR stray light), and at 50 keV from INTEGRA
+[question] q-08 What are the numerical sin^2 2theta upper limits at m_s = 7, 10, 20 keV in Fig. 3 of arXiv:2405.17861 (NuSTAR stray light), and at 50 keV from INTEGRAL/SPI or N
+[tool] tc-261021_1-w1-d-02-71 -> ok: Recorded question q-08.
+[usage]
+[direction] d-01 -> closed
+**Completed — Use the sterile-neutrino server to compute BBN observables (Yp, D/H, Delta N_eff) together with relic-density constraints across the (m_s, sin^2 2theta) plane. Identify which regions BBN and abundance arguments leave open..** Direction d-01 is complete: BBN rules out none of the parameter space that Dodelson-Widrow (DW, non-resonant) dark matter actually occupies; only overclosure does. All runs were local.
+
+(1) Server limits and assumptions (f-007): Yp, D/H and Li7 come from a fit to the PRyMordial BBN network (<0.3% error), and the only BBN input is Delta N_eff. The fit is valid for N_eff 2.044-6.044, omega_b h^2 0.019-0.0257, tau_n 866.4-890.4 s and m_s below about 100 keV. At m_s >= 1 MeV, decay injection is not modelled, so those results are not constraints. Mechanisms are DW and Shi-Fuller (SF, resonant). The SF Delta N_eff is a heuristic (0.1 x DW) and the SF relic density is a fitting formula in the lepton asymmetry L. The server's data are Yp = 0.2449 +/- 0.004, D/H = (2.547 +/- 0.025)e-5 and Planck N_eff = 2.99 +/- 0.17, not the brief's values. A point is excluded when its BBN Delta chi^2 versus the SM exceeds 3.84 (95%). This answers q-01 and q-02.
+
+(2) DW scan, m_s 1-100 keV x sin^2 2theta 1e-15 to 1e-6, 100x100 points (f-008): the files are scan_DW_dc7743.npz and .csv, and the exclusion plot is exclusion_scan_DW_dc7743.png (Figure 8). BBN excludes only large mixing: sin^2 2theta above 3.5e-7 at 1 keV, 1.2e-7 at 3.7 keV, 8.1e-8 at 7 keV, 4.3e-8 at 13.5 keV, 1.5e-8 at 50 keV and 1e-8 at 100 keV. From grid sterile_nu_grid_DW_360bc1.csv, the Omega_s h^2 = 0.12 line sits at sin^2 2theta = 8.7e-9 (1 keV), 2.5e-9 (2 keV), 1.2e-9 (3 keV), 4.8e-10 (5 keV), 2.55e-10 (7.1 keV), 1.37e-10 (10 keV), 3.9e-11 (20 keV), 7.6e-12 (50 keV) and 2.2e-12 (100 keV). Along that line Delta N_eff is 1e-4 to 1.1e-2 and |Delta chi^2| < 0.15. The overclosure bound is therefore 40x (1 keV) to about 5000x (100 keV) stronger than BBN. BBN leaves the whole DW dark-matter line and everything below it open, so viability must be decided by the X-ray and Lyman-alpha bounds (d-02, d-03).
+
+(3) Representative points from grid sterile_nu_grid_DW_397ef0.csv (f-009). Sigma values are against Yp = 0.245 +/- 0.003 and D/H = (2.53 +/- 0.03)e-5:
+- SM: Yp = 0.246815 (+0.6 sigma), D/H = 2.4433e-5 (-2.9 sigma).
+- 7.1 keV, 3e-10: Yp = 0.24684, D/H = 2.4440e-5. The shift from SBBN is negligible.
+- 1 keV, 3e-7: Delta N_eff = 0.387, Yp = 0.25193 (+2.3 sigma), D/H = 2.5718e-5 (+1.4 sigma), Delta chi^2 = 0.44. Allowed.
+- 10 keV, 1e-7: Delta N_eff = 0.813, Yp = 0.25730 (+4.1 sigma), D/H = 2.7145e-5 (+6.2 sigma), Delta chi^2 = 13.4. Excluded.
+- 3 keV, 3e-7: Delta N_eff = 0.931, Yp = 0.25874 (+4.6 sigma), D/H = 2.754e-5 (+7.5 sigma), Delta chi^2 = 19.3. Excluded.
+From bbn_vs_neff.png (Figure 6), BBN alone gives Delta N_eff < 0.548 (95%), with dYp/dN_eff = 0.0135 and d(D/H x 1e5)/dN_eff = 0.331.
+
+(4) BEST cross-check, 1.14 eV and sin^2 2theta = 0.42 (f-010): Delta N_eff = 1, Yp = 0.25956, D/H = 2.777e-5, Delta chi^2 = 23.1 (excluded). That is a 6.2 sigma tension with Planck and would be 33 sigma at CMB-S4.
+
+(5) DW scaling check (f-011): the server gives Omega_s h^2 = 0.1 (sin^2 2theta / 1e-9)(m_s / 3 keV)^1.8. Its 1.8 exponent matches the brief, but its normalization is 3x higher than the brief's formula with 3e-9. As a result the server's dark-matter line sits at 3x smaller mixing, which d-02 needs to account for.
+
+Caveats: the BBN numbers come from a fit, not a full network run. The SF mode was not scanned in this direction. The server cannot constrain masses of 1 MeV or more. All files are in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150.
+[usage]
+[direction] d-02 -> closed
+**Completed — Quantify the X-ray decay-line constraints. Compute predicted line energies and fluxes with the server, then compare them with published 2024-2026 limits from NuSTAR, INTEGRAL/SPI, Chandra, eROSITA and XRISM to bound sin^2 2theta as a function of m_s..** Partly done: the decay-rate check and the 3.55 keV line status are complete, but the table of X-ray limits versus mass is not. (1) Decay-rate check (f-005; tc-...-25, tc-...-27): the server's rate matches Gamma = 1.38e-32 s^-1 (sin^2 2theta/1e-10)(m_s/keV)^5 to within about 1.5%. At m_s = 7.1 keV and sin^2 2theta = 1e-10 the tool gives 2.46e-28 s^-1 (formula 2.49e-28), with E = 3.55 keV and lifetime 4.07e27 s. At 20 keV and 1e-12 it gives 4.36e-28 s^-1 (formula 4.42e-28), with E = 10 keV. The rate normalisation in arXiv:2405.17861 Eq. 2 (1.36e-32 s^-1 at sin^2 2theta = 1e-10 and 1 keV) falls in the same range. Whole-halo fluxes at 7.1 keV and 1e-10 are 4.68 ph/s/cm^2 for the Milky Way centre, 6.89e-4 for M31 and 3.55e-5 for Perseus (f_DM = 1, no field-of-view cut). The tool's built-in NuSTAR M31 (Roach+2020) and XMM blank-sky (Dessert+2020) limits exclude both test points. (2) DW benchmark grid at 4 masses x 3 mixings (f-006; CSV /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/sterile_nu_grid_DW_5199ae.csv): no point is BBN-excluded (Delta N_eff <= 2.9e-3). Omega_s h^2 is 0.087 at 10 keV and 1e-10, 0.30 at 20 keV and 1e-10 (overcloses), and 1.58 at 50 keV and 1e-10 (overcloses). At mixings of 1e-12 to 1e-14, Omega_s h^2 <= 0.016, so a non-DW mechanism is needed. Only the 1e-10 mixing was run through the X-ray tool at 7.1 keV, and only 1e-12 at 20 keV. (3) Status of the 3.55 keV line (f-012, cited in references.bib under key arxiv251024560): XRISM Resolve stacked ten clusters for 3.75 Ms (arXiv:2510.24560) and found no unidentified lines. Its 3-sigma limit is Gamma ~ 1.0e-27 s^-1 at m_s ~ 7.1 keV, 3-4 times stronger than Hitomi but still 5 times above the Bulbul+2014 XMM signal, so the line is constrained but not ruled out. Scaling the tool's rate turns this into sin^2 2theta < ~4e-10. (4) NuSTAR 11-year stray-light limits (arXiv:2405.17861, Fig. 3, 95% CL, m_s ~ 6-40 keV; f-013) reach the lower edge of resonant-production predictions, but the numbers at 7, 10 and 20 keV were not read off the figure. Open items: the table of sin^2 2theta limits at 7, 10, 20 and 50 keV has no figure-read values yet (q-08). Searches for 2024-2026 eROSITA and INTEGRAL/SPI limits found nothing (dead end x-01). The XRISM-derived limit at 7.1 keV is the only quoted entry; 10, 20 and 50 keV need Fig. 3 of 2405.17861 and an SPI or NuSTAR GC source. The NuSTAR paper was not added to the bib.
+[wave 1] end d-01, d-02, d-03
+[phase] critic-wave
+[usage]
+[usage]
+[critique] wave 1 wave: continue
+**Critic, wave 1** — continue: 9 findings stand up to the evidence, 4 questioned ('2507.18752 (full text) states: L >~ 0.5 at high T opens viable space at m_s >~ 10 keV and ': The quoted evidence is a download confirmation (tc-...-30) and characters 0-9000 of the paper (tc-...-37), which show only the title, authors and affiliations. None of the claimed numbers appear in the quoted excerpts: L >~ 0.5, m_s >~ 10 keV, sin^2 2theta <~ 1e-14, m_th > 8.4/8.5 keV, m_th = 4.1 (+33.3/-1.5) keV, NuSTAR 1e-12, SPI 3e-14. They may appear later in the 62k-character file, but the cited excerpts do not contain them.; 'Mechanism map (from literature quotes, not computed by tools). Shi-Fuller resonant product': The 2507.18752 numbers depend on the unevidenced f-002. Several specifics are not in the truncated abstracts quoted: the inverted-ordering preference and 'colder spectra' for 2502.17374, and the 'about two-decade window in sin^2 2theta' for 2609.31340. tc-...-51 is a pre-2024 review listing and supports none of these details.; 'XRISM Resolve stacked 3.75 Ms of data on ten galaxy clusters (arXiv:2510.24560, 2025) and ': tc-...-61 is an affiliations chunk (characters 9000-14000) and tc-...-62 is only a citation confirmation. Neither contains the 3.75 Ms exposure, the 2.5-15 keV band, Gamma ~ 1.0e-27 s^-1, the comparison with Hitomi or the comparison with Bulbul+2014. Only the final scaling (1e-27 / 2.46e-28 = 4.1, giving about 4e-10) can be checked, and it is correct given those inputs.; 'Krivonos, Barinov, Mukhin and Gorbunov (arXiv:2405.17861, 2024) use 11 years of NuSTAR str': The excerpts (title page and methods text on CXB fitting) do not contain Eq. 2, the Fig. 3 axis range or the 'bottom edge of theoretical predictions' quote. The claim also has an arithmetic inconsistency. The server's rate implies a coefficient of 2.46e-28 / (7.1^5 x 1e-10) = 1.36e-32, so the paper's 1.36e-32 matches the server to within about 0.3% rather than sitting 1% above it. The quoted '1.36e-22' also mis-transcribes the exponent.).
+
+Issues: The DW normalization ambiguity decides the DW verdict at 7.1 keV. The server's DM line is at 2.55e-10. The brief's formula gives about 7.6e-10. The XRISM-only limit is about 4e-10. So DW at 3.5 keV is allowed under one normalization and excluded under the other. Neither normalization has been checked against a published DW production calculation, including its QCD-era uncertainty.; The SM D/H baseline (2.4433e-5) is 2.9 sigma below the brief's value and about 4 sigma below the server's 2.547 +/- 0.025. Because exclusion uses Delta chi^2 relative to the SM, extra radiation partly improves the D/H fit. This is why 1 keV at 3e-7 (Yp at +2.3 sigma) has Delta chi^2 of only 0.44. The Delta N_eff < 0.548 bound is therefore sensitive to the nuclear-rate choice and the baseline. This does not change the DW conclusion, but it matters for resonant-production claims.; The core deliverable, sin^2 2theta limits as a function of m_s, is missing at 10, 20 and 50 keV. NuSTAR Fig. 3 values were not read. No INTEGRAL/SPI or eROSITA 2024-2026 limit was sourced. The only number entering the viability table relies on the unevidenced f-002, so the viable region cannot yet be stated quantitatively from verified sources..
+[phase] replan
+[usage]
+[directions] d-01 [closed] Use the sterile-neutrino server to compute BBN observables (; d-02 [closed] Quantify the X-ray decay-line constraints. Compute predicted; d-03 [closed] Survey the 2024-2026 production-mechanism literature (Shi-Fu; d-04 [closed] Synthesize the d-01 BBN and relic-density results, the d-02 ; d-05 [open] Re-extract the quantitative literature claims (f-002, f-012,; d-06 [open] Settle the factor-3 DW relic-density normalization against a
+**Next steps after wave 1** — One wave and 23 tool calls remain, so the plan uses two focused directions of about 11 calls each rather than three. I close d-04 because a synthesis run before verification would only restate the contested numbers. Its table becomes the final step of the first direction, which first re-supports f-002, f-012 and f-013 with verbatim quotes and fills the missing X-ray limits at 10-50 keV, the critic's top issue. The second direction resolves the DW normalization ambiguity, which decides the 7.1 keV verdict, and adds m_th along the DW line so the structure-formation exclusion is actually quantified. The critic's BBN-robustness suggestion is folded into the second direction as a short analytic check rather than run as a separate direction, to stay within budget. The tools cannot test resonant production at L >~ 0.5, so those claims stay literature-sourced and are labelled that way. The task does not require a facility run, so none is scheduled.
+
+New lines of investigation: Re-extract the quantitative literature claims (f-002, f-012, f-013) as verbatim quotes. Build a verified X-ray limit table at m_s = 7.1, 10, 20, 40 and 50 keV. Then produce the final per-mechanism viability table in the (m_s, sin^2 2theta) plane (DW, Shi-Fuller with lepton asymmetry, flavor-dependent asymmetry, reheating production), with a provenance column for each entry.; Settle the factor-3 DW relic-density normalization against a published calculation and compute m_th along the DW dark-matter line. Also give a short BBN robustness check: the Delta N_eff bound under the brief's data versus the server's data, and the joint (Delta N_eff, xi_e) bound using dYp/dxi_e ~ -0.25..
+[wave 1] end d-01, d-02, d-03 -> continue
+[direction] d-05 -> running
+[direction] d-06 -> running
+[run] running (waves 2, tool calls 37, 386s)
+[phase] wave
+[wave 2] start d-05, d-06
+**Wave 2** — now exploring, in parallel: Re-extract the quantitative literature claims (f-002, f-012, f-013) as verbatim quotes. Build a verified X-ray limit table at m_s = 7.1, 10, 20, 40 and 50 keV. Then produce the final per-mechanism viability table in the (m_s, sin^2 2theta) plane (DW, Shi-Fuller with lepton asymmetry, flavor-dependent asymmetry, reheating production), with a provenance column for each entry.; Settle the factor-3 DW relic-density normalization against a published calculation and compute m_th along the DW dark-matter line. Also give a short BBN robustness check: the Delta N_eff bound under the brief's data versus the server's data, and the joint (Delta N_eff, xi_e) bound using dYp/dxi_e ~ -0.25..
+[usage]
+[tool] d-05 read_text_file {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2507.18752.txt"}
+[tool] tc-261021_1-w2-d-05-72 -> ok: Title: Return of the Lepton Number: Sterile Neutrino Dark Matter Production and the Revival of the Shi-Fuller Mechanism
+Authors: Cannon M. V
+[tool] d-05 download_arxiv_full_text {"arxiv_id": "2405.17861", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w2-d-05-73 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2405.17861.txt
+[tool] d-05 download_arxiv_full_text {"arxiv_id": "2510.24560", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w2-d-05-74 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt
+[usage]
+[tool] d-06 download_arxiv_full_text {"arxiv_id": "1702.08430", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w2-d-06-75 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/1702.08430.txt
+[tool] d-06 search_arxiv_abstracts {"query": "Dodelson-Widrow sterile neutrino relic abundance QCD transition uncertainty", "max_results": 5}
+[usage]
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2405.17861.txt", "start": 0, "length": 14000}
+[tool] tc-261021_1-w2-d-06-76 -> ok: [1512.05369v1] Dodelson-Widrow Production of Sterile Neutrino Dark Matter with Non-Trivial Initial Abundance
+Abstract: The simplest way to c
+[tool] d-06 predict_sterile_nu_grid {"masses_eV": [3000, 7100, 10000, 20000, 50000], "sin2_2thetas": [1.2e-09, 2.55e-10, 1.37e-10, 3.9e-11, 7.6e-12], "combine": "zip", "output_dir": "/Users/nramac
+[tool] tc-261021_1-w2-d-05-77 -> ok: [chars 0-14000 of 44941] (more available, next start=14000)
+
+Title: Strong limits on keV-scale galactic sterile neutrino dark matter with st
+[10/21/26 11:08:33] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt", "start": 0, "length": 5000}
+[tool] tc-261021_1-w2-d-05-79 -> ok: [chars 0-5000 of 67438] (more available, next start=5000)
+
+Title: XRISM constraints on unidentified X-ray emission lines, including the 3.5 
+[tool] tc-261021_1-w2-d-06-78 -> ok: {
+  "status": "ok",
+  "files": [
+    "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/ste
+[usage]
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2405.17861.txt", "start": 14000, "length": 9000
+[tool] tc-261021_1-w2-d-05-80 -> ok: [chars 14000-23000 of 44941] (more available, next start=23000)
+
+rmalization are expressed in units
+of cts/cm2/s/keV/deg2.
+We start by fitti
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt", "start": 7000, "length": 5000}
+[tool] tc-261021_1-w2-d-05-81 -> ok: [chars 7000-12000 of 67438] (more available, next start=12000)
+
+Research, Leiden, The Netherlands
+13ESO, Karl-Schwarzschild-Strasse 2, 85748
+[usage]
+[tool] d-06 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/1702.08430.txt", "start": 250000, "length": 800
+[tool] tc-261021_1-w2-d-06-82 -> ok: [chars 250000-250000 of 21223]
+
+
+[usage]
+[tool] d-06 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/1702.08430.txt", "length": 21223, "start": 0}
+[tool] tc-261021_1-w2-d-06-83 -> ok: [chars 0-20381 of 21223] (more available, next start=20381)
+
+Title: keV sterile neutrino Dark Matter
+Authors: Alexander Merle
+Year: 2017
+arX
+[usage]
+[tool] d-05 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/2510.24560.txt", "length": 4500, "start": 12000
+[tool] tc-261021_1-w2-d-05-84 -> ok: [chars 12000-16500 of 67438] (more available, next start=16500)
+
+ Cambridge, MA 02138, USA
+70School of Physics & Astronomy, University of No
+[tool] d-05 get_paper_figures {"paper_id": "2405.17861", "figures": "1,3", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w2-d-05-85 -> ok: {"status": "success", "files": ["/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/figures_
+[tool] d-05 search_arxiv_abstracts {"query": "INTEGRAL SPI sterile neutrino decay line limit Milky Way 2024", "max_results": 6}
+[tool] tc-261021_1-w2-d-05-86 -> ok: [1011.3046v2] Muon Capture Constraints on Sterile Neutrino Properties
+Abstract: We show that ordinary and radiative muon capture impose stri
+[usage]
+[tool] d-06 download_arxiv_full_text {"arxiv_id": "1705.01837", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w2-d-06-87 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/1705.01837.txt
+[tool] d-06 search_arxiv_abstracts {"max_results": 5, "query": "Viel 2005 constraining warm dark matter Lyman-alpha sterile neutrino thermal relic mass relation"}
+[usage]
+[tool] d-05 post_finding {"claim": "f-002 re-supported verbatim from 2507.18752 full text: \"lepton asymmetries L\u22730.5 at high temperatures open significant viable parameter space i
+[finding] f-014 f-002 re-supported verbatim from 2507.18752 full text: "lepton asymmetries L≳0.5 at high temperatures open significant viable parameter space in the m_s≳10 keV 
+**Finding:** f-002 re-supported verbatim from 2507.18752 full text: "lepton asymmetries L≳0.5 at high temperatures open significant viable parameter space in the m_s≳10 keV and sin^2(2θ)≲10^-14 regime, compatible with both x-ray constraints from NuSTAR and INTEGRAL/SPI and recent Lyman-α inferences of m_th≈4.1 keV"; X-ray: "set 95% CL upper limits at sin^2(2θ)≲10^-12 in the 6–40 keV mass range" (NuSTAR) and SPI "exclude lifetimes below ∼10^20 s at 95% CL [corresponding to sin^2(2θ)≲3×10^-14] in the ≳40 keV mass regime"; structure: "m_th > 8.4 keV (95% CL) [18] for galaxy counts, m_th > 8.5 keV (95% CL) from a combination of galaxy counts and strong lensing" and Lyman-alpha "m_th = 4.1+33.3−1.5 keV".
+[tool] tc-261021_1-w2-d-05-89 -> ok: Recorded finding f-014.
+[tool] d-05 post_finding {"claim": "f-012 re-supported verbatim from XRISM 2510.24560 abstract: \"We stack 3.75 Megaseconds of early XRISM Resolve observations of ten galaxy clusters to
+[finding] f-015 f-012 re-supported verbatim from XRISM 2510.24560 abstract: "We stack 3.75 Megaseconds of early XRISM Resolve observations of ten galaxy clusters to search for 
+**Finding:** f-012 re-supported verbatim from XRISM 2510.24560 abstract: "We stack 3.75 Megaseconds of early XRISM Resolve observations of ten galaxy clusters to search for unidentified spectral lines in the E= 2.5-15 keV band (rest frame)... No unidentified lines are detected... with the 3σ upper limit on the m_s∼7.1 keV DM particle decay rate (which corresponds to a E= 3.55 keV emission line) of Γ∼1.0×10^-27 s^-1. This upper limit is 3−4 times lower than the one derived by Hitomi ... but still 5 times higher than the XMM-Newton detection reported by Bulbul et al. (2014)". With Γ = 1.38e-32 (sin^2 2θ/1e-10)(m_s/keV)^5 s^-1 this converts to sin^2 2θ < ~4e-10 at 7.1 keV (3σ, cluster J-factors as in the paper; derived, not quoted).
+[tool] tc-261021_1-w2-d-05-90 -> ok: Recorded finding f-015.
+[tool] d-05 post_finding {"claim": "f-013 partially re-supported, but the requested figure readings were not obtained. Verbatim from 2405.17861: Eq. 2 reads \"\u0393\u03b3 = 9/1024 \u03
+[finding] f-016 f-013 partially re-supported, but the requested figure readings were not obtained. Verbatim from 2405.17861: Eq. 2 reads "Γγ = 9/1024 α/π^4 G_F^2 m_s^5 sin^2 2θ
+**Finding:** f-013 partially re-supported, but the requested figure readings were not obtained. Verbatim from 2405.17861: Eq. 2 reads "Γγ = 9/1024 α/π^4 G_F^2 m_s^5 sin^2 2θ = 1.36×10^-22 (m_s/1keV)^5 sin^2 2θ s^-1". The exponent -22 is correct as written, because sin^2 2θ is not normalized there; it equals 1.36e-32 s^-1 at sin^2 2θ = 1e-10, so the board's "correction to 1e-32" applies only to the normalized form. The paper places "new upper limits on the active-sterile mixing angle θ for sterile neutrino masses m_s = 6−40 keV" at 95% CL. Fig. 3 is plotted on a sin^2(2θ) axis from 1e-15 to 1e-10. The paper says that observed limits are "stronger ... in certain mass ranges (e.g. m_νs = 8−9 keV or 23−25 keV)", and that "the borderline excess at 40 keV is the known instrumental effect". I could not read numerical values at 7, 10 or 20 keV: Fig. 3 is missing from the HTML rendering, and the Fig. 1 image (registered as Figure 15) was downloaded but cannot be digitized with the available tools. So the only NuSTAR number per mass is the secondary 2507.18752 summary, sin^2 2θ <~ 1e-12 across 6-40 keV.
+[tool] tc-261021_1-w2-d-05-91 -> ok: Recorded finding f-016.
+[tool] d-05 post_dead_end {"what": "Targeted search_arxiv_abstracts for a 2024-2026 INTEGRAL/SPI sterile-neutrino line limit at m_s >= 40 keV", "why": "Returned only unrelated papers (mu
+[dead-end] x-02 Targeted search_arxiv_abstracts for a 2024-2026 INTEGRAL/SPI sterile-neutrino line limit at m_s >= 40 keV
+[tool] tc-261021_1-w2-d-05-92 -> ok: Recorded dead end x-02.
+[tool] tc-261021_1-w2-d-06-88 -> ok: [0501562v2] Constraining Warm Dark Matter candidates including sterile neutrinos and light gravitinos with WMAP and the Lyman-alpha forest
+A
+[usage]
+[tool] d-06 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/1705.01837.txt", "start": 60000, "length": 1500
+[tool] tc-261021_1-w2-d-06-93 -> ok: [chars 60000-75000 of 150256] (more available, next start=75000)
+
+ reheating temperature, the production of sterile neutrino dark matter
+pro
+[usage]
+[tool] d-05 predict_sterile_nu_xray_line {"m_s_eV": 50000, "sin2_2theta": 3e-14, "target": "all"}
+[10/21/26 11:09:18] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w2-d-05-94 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 50 
+[tool] d-05 predict_sterile_nu_xray_line {"m_s_eV": 10000, "sin2_2theta": 1e-12, "target": "all"}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tc-261021_1-w2-d-05-95 -> ok: {
+  "status": "ok",
+  "files": [],
+  "message": "X-ray line prediction for Perseus, M31, Milky_Way_center, Coma, stacked_galaxies\nm_s = 10 
+[tool] d-05 cite {"arxiv_id": "2405.17861", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/references.bib", "not
+[tool] tc-261021_1-w2-d-05-96 -> ok: Cited: Strong limits on keV-scale galactic sterile neutrino dark matter with stray light from NuSTAR after 11 years of operation (\cite{arxi
+[usage]
+[tool] d-06 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/1705.01837.txt", "length": 14000, "start": 4600
+[tool] tc-261021_1-w2-d-06-97 -> ok: [chars 46000-60000 of 150256] (more available, next start=60000)
+
+ation.
+The damping coeﬃcient is given by Eq. (29). The rotation vector V(p
+[usage]
+[tool] d-05 post_finding {"claim": "X-ray limit table (95% CL unless noted), each limit cross-checked with the server's line tool:\n- 7.1 keV: XRISM gives Gamma < 1.0e-27 s^-1 at 3 sigm
+[finding] f-017 X-ray limit table (95% CL unless noted), each limit cross-checked with the server's line tool:
+- 7.1 keV: XRISM gives Gamma < 1.0e-27 s^-1 at 3 sigma, which con
+**Finding:** X-ray limit table (95% CL unless noted), each limit cross-checked with the server's line tool:
+- 7.1 keV: XRISM gives Gamma < 1.0e-27 s^-1 at 3 sigma, which converts to sin^2 2θ < ~4e-10 (quote in f-015). NuSTAR gives <~1e-12 over 6-40 keV (2507.18752 quote). The tool's built-in tables exclude the point 1e-10 (tc-...-d-02-25).
+- 10 keV: NuSTAR <~1e-12. The tool gives Gamma = 1.36e-29 s^-1, E = 5 keV and lifetime 7.35e28 s at 1e-12, which its tables do not exclude.
+- 20 keV: NuSTAR <~1e-12. The tool's tables exclude 1e-12 (tc-...-d-02-27), so its NuSTAR M31 table is stronger than the summary value here.
+- 40 keV: NuSTAR's 6-40 keV upper edge, where 2405.17861 flags an instrumental excess, and SPI at >~40 keV gives <~3e-14.
+- 50 keV: SPI <~3e-14. The tool gives Gamma = 1.28e-27 s^-1, E = 25 keV and lifetime 7.84e26 s at 3e-14, not excluded.
+Warning: 2507.18752 equates SPI's "lifetimes below ~1e20 s" with sin^2 2θ <~ 3e-14, but the tool's lifetime at 3e-14 and 50 keV is 7.8e26 s. The lifetime and mixing in that quote are inconsistent by about 7 orders of magnitude, so the SPI mixing value should be checked against the primary SPI paper. No figure-read values from 2405.17861 were obtained at 7, 10 or 20 keV.
+[tool] tc-261021_1-w2-d-05-98 -> ok: Recorded finding f-017.
+[tool] d-05 post_finding {"claim": "Final viability table in the (m_s, sin^2 2\u03b8) plane:\n- DW (non-resonant): not viable as all of the dark matter. The DM line sits at sin^2 2\u03b
+[finding] f-018 Final viability table in the (m_s, sin^2 2θ) plane:
+- DW (non-resonant): not viable as all of the dark matter. The DM line sits at sin^2 2θ = 2.55e-10 (7.1 keV)
+**Finding:** Final viability table in the (m_s, sin^2 2θ) plane:
+- DW (non-resonant): not viable as all of the dark matter. The DM line sits at sin^2 2θ = 2.55e-10 (7.1 keV), 1.37e-10 (10 keV), 3.9e-11 (20 keV) and 7.6e-12 (50 keV) (server normalization, f-008). All of these lie above the XRISM limit (~4e-10 at 7.1 keV is the only point below the line's value there, but it sits within a factor of 1.6) and above the NuSTAR <~1e-12 and SPI <~3e-14 limits. Binding constraint: X-ray. BBN is not binding; Delta chi^2 < 0.15 along the line. Provenance: f-008 and f-014 to f-017. 2507.18752 states "the original DW mechanism is ruled out as producing the entirety of the dark matter".
+- Shi-Fuller with L >~ 0.5 at T > 20 MeV: viable at m_s >~ 10 keV and sin^2 2θ <~ 1e-14. Binding constraints are X-ray (NuSTAR 1e-12, SPI 3e-14 above 40 keV) and structure formation (m_th > 8.4-8.5 keV from galaxy counts and lensing, against a Lyman-alpha preference of 4.1 keV). Provenance: verbatim quotes from 2507.18752 (f-014). Server BBN is trivially allowed (f-003), but this is not an independent test because the tool caps L at 0.1.
+- Flavor-dependent asymmetry (2502.17374): lighter m_s at smaller mixing, with BBN limits weakened and colder spectra. Abstract only; no numerical ranges are quoted. Saturation at large L (2609.31340) leaves a window of about two decades in sin^2 2θ; abstract only.
+- Reheating (inflaton decay, BR <~ 1e-4; 2601.03346): cold DM at mixings below the X-ray limits. Binding constraint: X-ray only. Abstract only.
+[tool] tc-261021_1-w2-d-05-99 -> ok: Recorded finding f-018.
+[usage]
+[direction] d-05 -> closed
+**Completed — Re-extract the quantitative literature claims (f-002, f-012, f-013) as verbatim quotes. Build a verified X-ray limit table at m_s = 7.1, 10, 20, 40 and 50 keV. Then produce the final per-mechanism viability table in the (m_s, sin^2 2theta) plane (DW, Shi-Fuller with lepton asymmetry, flavor-dependent asymmetry, reheating production), with a provenance column for each entry..** All three contested findings now have verbatim quotes. The X-ray limit table covers five masses, but only one value is read directly from a primary source; the rest come from a secondary summary. Viability table: f-018. Findings f-014 to f-018 and dead end x-02 are posted.
+
+(1) f-002, re-supported by f-014, quoting the 2507.18752 full text (runs/261021_110150/2507.18752.txt, tc-...-w2-d-05-72). Viable region: 'L≳0.5 ... m_s≳10 keV and sin^2(2θ)≲10^-14'. NuSTAR: 'sin^2(2θ)≲10^-12 in the 6–40 keV mass range'. INTEGRAL/SPI: 'exclude lifetimes below ∼10^20 s at 95% CL [corresponding to sin^2(2θ)≲3×10^-14] in the ≳40 keV mass regime'. Structure formation: m_th > 8.4 keV from galaxy counts, m_th > 8.5 keV from counts plus strong lensing, and a Lyman-alpha preference of m_th = 4.1 (+33.3/-1.5) keV.
+
+(2) f-012, re-supported by f-015, quoting the 2510.24560 abstract (tc-...-84). XRISM stacked 3.75 Ms of data on ten clusters over 2.5-15 keV. Its 3-sigma limit is Γ ∼ 1.0e-27 s^-1 at m_s ∼ 7.1 keV, which converts to sin^2 2θ < ~4e-10 (my conversion, not a quote).
+
+(3) f-013, partly re-supported and downgraded to medium by f-016 (tc-...-77, -80, -85). Eq. 2 of 2405.17861 reads 1.36×10^-22 (m_s/keV)^5 sin^2 2θ s^-1. That exponent is correct as written, because sin^2 2θ is not normalised there; it equals 1.36e-32 s^-1 at sin^2 2θ = 1e-10. The paper gives 95% limits for m_s = 6-40 keV, with observed limits stronger than expected at 8-9 and 23-25 keV and an instrumental excess at 40 keV. Fig. 3 is missing from the HTML rendering. The Fig. 1 image was downloaded (Figure 15, figures_2405.17861/fig01.png) but not read numerically. So the 7, 10 and 20 keV entries rest on the secondary summary value of <~1e-12. 2405.17861 is now cited in references.bib under arxiv240517861 (tc-...-96).
+
+(4) X-ray limit table (f-017), cross-checked with the server's line tool:
+- 7.1 keV: XRISM < ~4e-10 (3 sigma); NuSTAR <~1e-12.
+- 10 keV: NuSTAR <~1e-12. At 1e-12 the tool gives Γ = 1.36e-29 s^-1, E = 5 keV and lifetime 7.35e28 s, not excluded by its tables (tc-...-95).
+- 20 keV: NuSTAR <~1e-12. The tool's own tables exclude 1e-12 (d-02).
+- 40 keV: the upper edge of NuSTAR coverage, where SPI <~3e-14 takes over.
+- 50 keV: SPI <~3e-14. At 3e-14 the tool gives Γ = 1.28e-27 s^-1 and lifetime 7.8e26 s, not excluded (tc-...-94).
+Warning: the SPI quote equates a lifetime of ~1e20 s with a mixing of 3e-14, but the tool gives 7.8e26 s at that mixing, a gap of about 7 orders of magnitude. The SPI mixing value needs checking against the primary SPI paper. My search for a 2024-2026 SPI or NuSTAR limit above 40 keV found nothing (dead end x-02, tc-...-86).
+
+(5) Viability table (f-018):
+- Dodelson-Widrow: excluded as all of the dark matter. Its dark-matter line (2.55e-10 at 7.1 keV, 1.37e-10 at 10 keV, 3.9e-11 at 20 keV, 7.6e-12 at 50 keV; server normalisation from f-008) lies above the NuSTAR and SPI limits, so X-ray is the binding constraint and BBN is not. Correction to the wording in f-018: at 7.1 keV the dark-matter line (2.55e-10) sits below the XRISM limit (~4e-10), so XRISM alone does not exclude it there; NuSTAR does.
+- Shi-Fuller with L >~ 0.5 at T > 20 MeV: viable at m_s >~ 10 keV and sin^2 2θ <~ 1e-14. The binding constraints are X-ray and m_th. Provenance is the 2507.18752 quotes; the server cannot test this because it caps L at 0.1.
+- Flavor-dependent asymmetry (2502.17374) and saturation at large L (2609.31340): lighter masses at smaller mixing, and about a two-decade window in mixing. Abstract only.
+- Reheating production (2601.03346, branching ratio <~ 1e-4): cold dark matter below the X-ray limits. Abstract only.
+[usage]
+[tool] d-06 download_arxiv_full_text {"arxiv_id": "astro-ph/0501562", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150"}
+[tool] tc-261021_1-w2-d-06-100 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/astro-ph_0501562.txt
+[tool] d-06 cite {"arxiv_id": "1705.01837", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150/references.bib", "not
+[tool] tc-261021_1-w2-d-06-101 -> ok: Cited: Sterile neutrinos in cosmology (\cite{arxiv170501837})
+[usage]
+[tool] d-06 post_finding {"claim": "The published DW normalization (Abazajian 2017 review, arXiv:1705.01837 Eq. 37, a fit from Ref. [120]) is m_s ~ 3.40 keV (sin^2 2theta/1e-8)^-0.615 (
+[finding] f-019 The published DW normalization (Abazajian 2017 review, arXiv:1705.01837 Eq. 37, a fit from Ref. [120]) is m_s ~ 3.40 keV (sin^2 2theta/1e-8)^-0.615 (Omega_DM/0.
+**Finding:** The published DW normalization (Abazajian 2017 review, arXiv:1705.01837 Eq. 37, a fit from Ref. [120]) is m_s ~ 3.40 keV (sin^2 2theta/1e-8)^-0.615 (Omega_DM/0.26)^0.5 x 0.527 erfc[-1.15 (T_QCD/170 MeV)^2.15]. Inverting it gives a DM line at sin^2 2theta ~ 1.23e-8 (3 keV), 3.0e-9 (7.1 keV), 1.73e-9 (10 keV), 5.6e-10 (20 keV) and 1.26e-10 (50 keV). The server line from the tool is 1.2e-9, 2.55e-10, 1.37e-10, 3.9e-11 and 7.6e-12 (Omega_s h^2 = 0.119-0.120). So the published line needs 10x (3 keV) to 17x (50 keV) more mixing than the server and 3.4-5.5x more than the brief's formula. The two differ in shape as well as normalization: Omega is proportional to m^2 (sin^2 2theta)^1.23 rather than m^1.8 times sin^2 2theta.
+[tool] tc-261021_1-w2-d-06-102 -> ok: Recorded finding f-019.
+[tool] d-06 post_finding {"claim": "At 7.1 keV the DW verdict depends on the normalization when compared with the XRISM limit sin^2 2theta < ~4e-10 (f-012). The server line (2.55e-10) s
+[finding] f-020 At 7.1 keV the DW verdict depends on the normalization when compared with the XRISM limit sin^2 2theta < ~4e-10 (f-012). The server line (2.55e-10) survives XRI
+**Finding:** At 7.1 keV the DW verdict depends on the normalization when compared with the XRISM limit sin^2 2theta < ~4e-10 (f-012). The server line (2.55e-10) survives XRISM. The brief's line (7.65e-10) and the published Abazajian line (3.0e-9, about +10%/-7% from T_QCD) are excluded, the published one by about 7.5x. Since the published normalization is the reference calculation, DW dark matter at 7.1 keV is excluded by XRISM alone. The server's DW Omega_s h^2 underestimates the mixing needed by about 12x at 7.1 keV, so server-based DW statements are not conservative.
+[tool] tc-261021_1-w2-d-06-103 -> ok: Recorded finding f-020.
+[tool] d-06 post_finding {"claim": "On the DW DM line, the standard DW-to-thermal mapping m_s = 4.43 keV (m_th/keV)^(4/3) (Viel et al. 2005, astro-ph/0501562; text downloaded, but the f
+[finding] f-021 On the DW DM line, the standard DW-to-thermal mapping m_s = 4.43 keV (m_th/keV)^(4/3) (Viel et al. 2005, astro-ph/0501562; text downloaded, but the formula was 
+**Finding:** On the DW DM line, the standard DW-to-thermal mapping m_s = 4.43 keV (m_th/keV)^(4/3) (Viel et al. 2005, astro-ph/0501562; text downloaded, but the formula was not quoted verbatim from it) gives m_th = 0.75 keV (m_s = 3 keV), 1.42 keV (7.1 keV), 1.84 keV (10 keV), 3.10 keV (20 keV) and 6.16 keV (50 keV). Lyman-alpha m_th > 4 (6) keV requires m_s > 28 (48) keV, and satellite counts m_th > 8.4 keV require m_s > 76 keV. At m_s >= 28 keV the DW line has sin^2 2theta ~ 3e-10 (published normalization) or about 1e-11 (server). Both values lie far above the NuSTAR ceiling of about 1e-12 at 6-40 keV and the SPI ceiling of about 3e-14 above 40 keV (f-002). The surviving DW mass interval is therefore empty under all three normalizations.
+[tool] tc-261021_1-w2-d-06-104 -> ok: Recorded finding f-021.
+[tool] d-06 post_finding {"claim": "BBN robustness check. I used linearized f-009 slopes (dYp/dN_eff = 0.0135, dD/H/dN_eff = 0.331e-5) about the server SM values (Yp = 0.246815, D/H = 2
+[finding] f-022 BBN robustness check. I used linearized f-009 slopes (dYp/dN_eff = 0.0135, dD/H/dN_eff = 0.331e-5) about the server SM values (Yp = 0.246815, D/H = 2.4433e-5). 
+**Finding:** BBN robustness check. I used linearized f-009 slopes (dYp/dN_eff = 0.0135, dD/H/dN_eff = 0.331e-5) about the server SM values (Yp = 0.246815, D/H = 2.4433e-5). The 95% upper bounds on Delta N_eff are given as Delta chi^2 = 3.84 against the SM, with Delta chi^2 = 3.84 against the best fit in brackets. Brief data (Yp 0.245 +/- 0.003, D/H 2.53 +/- 0.03): Yp-only 0.32; D/H-only 0.58 [0.44]; combined 0.47 [0.37]. Server data (Yp 0.2449 +/- 0.004, D/H 2.547 +/- 0.025): Yp-only 0.46; D/H-only 0.66 [0.46]; combined 0.61 [0.43]. The server tool reports 0.548. D/H alone prefers Delta N_eff = 0.26 (brief data) or 0.31 (server data) because the SM D/H sits 2.9 or 4.1 sigma low, so the bound depends on the baseline at the 0.1-0.2 level. Joint bound with dYp/dxi_e = -0.25, assuming D/H does not depend on xi_e, using 2-dof Delta chi^2 = 5.99. Brief data: Delta N_eff in [0.04, 0.48] and xi_e = 0.0073 + 0.054 Delta N_eff +/- 0.029. Server data: Delta N_eff in [0.13, 0.50] and xi_e = 0.0077 + 0.054 Delta N_eff +/- 0.039. So |xi_e| <~ 0.03-0.06 overall, and a positive xi_e of about 0.03 compensates Delta N_eff of about 0.5 in Yp.
+[tool] tc-261021_1-w2-d-06-105 -> ok: Recorded finding f-022.
+[tool] d-06 post_question {"text": "Should the sterile-nu server's DW relic formula (Omega ~ 0.1 (s/1e-9)(m/3 keV)^1.8) be replaced with the Abazajian 2006/2017 fit, which requires 10-17
+[question] q-09 Should the sterile-nu server's DW relic formula (Omega ~ 0.1 (s/1e-9)(m/3 keV)^1.8) be replaced with the Abazajian 2006/2017 fit, which requires 10-17x more mix
+[tool] tc-261021_1-w2-d-06-106 -> ok: Recorded question q-09.
+[usage]
+[direction] d-06 -> closed
+**Completed — Settle the factor-3 DW relic-density normalization against a published calculation and compute m_th along the DW dark-matter line. Also give a short BBN robustness check: the Delta N_eff bound under the brief's data versus the server's data, and the joint (Delta N_eff, xi_e) bound using dYp/dxi_e ~ -0.25..** Normalization (f-019): the published DW fit in arXiv:1705.01837 (Abazajian review) Eq. 37 is m_s ~ 3.40 keV (sin^2 2theta/1e-8)^-0.615 (Omega_DM/0.26)^0.5 x 0.527 erfc[-1.15 (T_QCD/170 MeV)^2.15]. It is cited in references.bib under key arxiv170501837. I inverted it by hand. Its dark-matter line sits at sin^2 2theta ~ 1.23e-8 (3 keV), 3.0e-9 (7.1 keV), 1.73e-9 (10 keV), 5.6e-10 (20 keV) and 1.26e-10 (50 keV). The QCD-era uncertainty (T_QCD 150-200 MeV) moves these by about +10%/-7%. The server line from predict_sterile_nu_grid (sterile_nu_grid_DW_2461e9.csv, Omega h^2 = 0.119-0.120) is 1.2e-9, 2.55e-10, 1.37e-10, 3.9e-11 and 7.6e-12. The published normalization therefore needs 10-17x more mixing than the server and 3.4-5.5x more than the brief's formula, and it scales differently with mass and mixing. Verdict at 7.1 keV (f-020): against the XRISM limit of about 4e-10, the server line (2.55e-10) survives, while the brief's line (7.65e-10) and the published line (3.0e-9) are excluded. Using the published normalization, DW at 7.1 keV is excluded by about 7.5x. m_th (f-021): I used the DW-to-thermal mapping m_s = 4.43 keV (m_th)^(4/3) from Viel+2005 (astro-ph/0501562). I downloaded that paper but did not quote the coefficient verbatim from it. This gives m_th = 0.75, 1.42, 1.84, 3.10 and 6.16 keV at m_s = 3, 7.1, 10, 20 and 50 keV. Lyman-alpha (m_th > 4-6 keV) then needs m_s > 28-48 keV, and satellite counts (m_th > 8.4 keV) need m_s > 76 keV. At those masses the DW line under any of the three normalizations sits well above the NuSTAR (~1e-12) and SPI (~3e-14) ceilings, so the surviving DW mass interval is empty. BBN (f-022): these are analytic results from linearized f-009 slopes, not server runs. Upper bounds on Delta N_eff at 95%, relative to the SM: with the brief's data, 0.32 from Yp only, 0.58 from D/H only and 0.47 combined. With the server's data, 0.46, 0.66 and 0.61. The server tool itself quotes 0.548. The SM D/H sits 2.9-4.1 sigma low, so D/H prefers Delta N_eff ~ 0.3 and the bound moves by 0.1-0.2 depending on the baseline. For the joint bound I used dYp/dxi_e = -0.25 and 2-dof Delta chi^2 < 5.99. Brief data: Delta N_eff in [0.04, 0.48], with xi_e = 0.0073 + 0.054 Delta N_eff +/- 0.029. Server data: Delta N_eff in [0.13, 0.50], with xi_e = 0.0077 + 0.054 Delta N_eff +/- 0.039. Overall |xi_e| <~ 0.03-0.06. Question q-09 is posted. Open items: the Viel coefficient and the full Eq. 37 citation still need verbatim quotes, and dD/H/dxi_e was neglected.
+[wave 2] end d-05, d-06
+[phase] critic-wave
+[usage]
+[critique] wave 2 wave: continue
+**Critic, wave 2** — continue: 5 findings stand up to the evidence, 4 questioned ('X-ray limit table (95% CL unless noted), each limit cross-checked with the server's line t': The tool values at 10 keV (Gamma 1.36e-29 s^-1, lifetime 7.35e28 s) and 50 keV (1.28e-27 s^-1, 7.84e26 s) match the excerpts. Two parts do not hold. (1) The 'not excluded' and 'excluded' verdicts at 10, 20 and 50 keV cannot be seen in the truncated excerpts. (2) The claimed 7-order inconsistency in the SPI quote is almost certainly a seconds-versus-years slip. The tool's own output at 50 keV and 3e-14 is 2.48e19 yr. Read as ~1e20 yr (3.2e27 s), the SPI lifetime matches sin^2 2theta ~2.3e-14 at 40 keV and ~7.5e-15 at 50 keV, which agrees with the quoted ~3e-14. The finding asserts a contradiction where the units are the more likely explanation.; 'Final viability table in the (m_s, sin^2 2θ) plane:
+- DW (non-resonant): not viable as all': The claim says the DW line at all masses lies 'above the XRISM limit', but at 7.1 keV the server line (2.55e-10) is below ~4e-10. The d-05 summary corrects this, but the posted claim still contains it. The DW row is also built on the server normalization, which f-019 shows is 10-17x low. The Shi-Fuller row inherits the SPI ceiling of 3e-14, whose interpretation f-017 left open. The table should be reissued with the published DW line and the corrected XRISM wording.; 'The published DW normalization (Abazajian 2017 review, arXiv:1705.01837 Eq. 37, a fit from': The hand inversion is arithmetically correct. For example, 0.527*erfc(-1.15) = 0.999, giving 3.0e-9 at 7.1 keV and 1.26e-10 at 50 keV. However, the cited excerpt (tc-...-d-06-97, chars 46000-60000) shows Eq. 35 and the Fig. 2 lepton-asymmetry plot, not Eq. 37. No tool output on the board contains the quoted fit formula.; 'At 7.1 keV the DW verdict depends on the normalization when compared with the XRISM limit ': The verdict 'excluded by about 7.5x at 7.1 keV' depends entirely on the f-019 normalization, which is not yet evidenced. The XRISM evidence excerpt (tc-...-d-02-61) contains only author affiliations. The XRISM-to-mixing conversion (~4e-10) checks out arithmetically against the decay-rate formula.).
+
+Issues: The SPI 'lifetime ~1e20 s' is very likely ~1e20 yr. The tool gives 2.48e19 yr at 50 keV and 3e-14, and m_s^5 scaling puts 1e20 yr at ~2.3e-14 at 40 keV. Resolve this against the primary SPI paper rather than flagging a 7-order discrepancy. It sets the mass dependence of the ceiling above 40 keV, which tightens as m_s^-5, so 'flat 3e-14' is wrong at 50-100 keV.; All NuSTAR entries at 7-20 keV rest on a secondary 'flat <~1e-12 over 6-40 keV' summary. The real 2405.17861 curve varies with mass: it is stronger at 8-9 and 23-25 keV and has the 40 keV artefact. The fig01.png file exists and should be digitized, or the limits taken from the arXiv source or supplementary tables.; The f-014 and f-015 excerpts show only the title page and affiliations, not the quoted sentences. The quotes are consistent with prior findings and the arithmetic, but future findings should excerpt the relevant character range..
+[phase] replan
+[wave 2] end d-05, d-06 -> stop:budget: 2/2 waves used
+Stopping after wave 2: budget reached (2/2 waves used). Writing the report from the board.
+[run] reporting (waves 2, tool calls 61, 658s)
+[phase] report
+[usage]
+[phase] honesty
+[usage]
+[critique] wave 2 report: revise
+[usage]
+[run] done (waves 2, tool calls 61, 817s)
+[phase] done
+[done]
+
+Tokens: 1.7M in (1.2M cached) · 103K out · 54 calls — worker 1.4M in (1.2M cached) · 50K out · 40 calls; critic 146K in (35K cached) · 25K out · 5 calls; report 105K in (701 cached) · 16K out · 2 calls; survey 58K in (37K cached) · 4.5K out · 5 calls; plan 24K in · 6.6K out · 2 calls
+
+Board: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/research/default/board.json
+Outputs: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray/runs/261021_110150
