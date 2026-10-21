@@ -1,0 +1,48 @@
+I couldn't compute either number. This server's CCL tools aren't available, so neither calculation ran.
+
+**What happened**
+- `list_desc_packages` shows pyccl 3.3.6 installed and lists a `ccl` tool family for distances and P(k).
+- `describe_desc_tool_family("ccl")` failed with: `Family 'ccl' is not importable in this environment: No module named 'tools.ccl'`. It listed no tools.
+- None of the other tool families (sacc, firecrown, augur, TJPCov, NaMaster and the rest) can return χ(z) or P(k) on its own. Building a firecrown or augur run just to pull out intermediate numbers wouldn't give a clean χ(z=1) or P(k=1 h/Mpc) either.
+
+**Results**
+- χ(z=1): **not computed**
+- P(k=1 h/Mpc, z=0.5, halofit): **not computed**
+
+I won't swap in hand estimates for computed values. Your reference ranges (about 3300 Mpc for χ, and 800–900 (Mpc/h)³ for P) still need checking.
+
+**To fix it**
+1. Check the server's `tools/` package for a missing or broken `tools/ccl` module. This could be an install or packaging problem, or an import error inside that module. Then restart `serve-desc.sh` and confirm that `describe_desc_tool_family("ccl")` lists tools.
+2. Or run these few lines of pyccl 3.3.6 yourself:
+   ```python
+   import pyccl as ccl
+   cosmo = ccl.Cosmology(Omega_c=0.25, Omega_b=0.05, h=0.67, n_s=0.96, sigma8=0.81,
+                         transfer_function="boltzmann_camb", matter_power_spectrum="halofit")
+   chi1 = ccl.comoving_radial_distance(cosmo, 1/(1+1.0))            # Mpc
+   h = 0.67
+   pk = ccl.nonlin_matter_power(cosmo, 1.0*h, 1/(1+0.5)) * h**3     # (Mpc/h)^3 at k = 1 h/Mpc
+   print(chi1, pk)
+   ```
+   These are the vanilla cosmology parameters given in the tool docs (Ω_c=0.25, Ω_b=0.05, h=0.67, n_s=0.96, σ8=0.81, CAMB, halofit). The `h` factors convert k = 1 h/Mpc to CCL's h-free 1/Mpc and P to (Mpc/h)³.
+
+Once the CCL tools are back, I can run both calculations and give you the two numbers.
+
+[Tool ledger]
+- `describe_desc_tool_family(ccl)`: unavailable, "No module named 'tools.ccl'", no tools listed.
+- `list_desc_packages`: pyccl 3.3.6 installed. No χ(z) or P(k) values were produced this turn.
+Loading MCP servers…
+[10/21/26 17:06:51] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/21/26 17:06:56] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+[tool] list_desc_packages {}
+[10/21/26 17:06:58] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/21/26 17:07:02] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] list_desc_packages -> ok: {   "status": "success",   "files": [],   "message": "9 DESC packages; tool families: meta, ccl, sacc, firecrown, augur, txpipe, tjpcov, namaster, smokescreen, 
+Tokens: 173K in (113K cached) · 1.4K out · 3 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/ccl-1021.json

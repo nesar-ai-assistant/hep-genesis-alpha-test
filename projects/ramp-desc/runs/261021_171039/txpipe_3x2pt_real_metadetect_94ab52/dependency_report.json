@@ -1,0 +1,801 @@
+{
+ "spec": {
+  "preset": "3x2pt_real",
+  "catalog_type": "metadetect",
+  "stages": [],
+  "inputs": {},
+  "source_zbin_edges": [],
+  "lens_zbin_edges": [],
+  "nside": null,
+  "min_sep": null,
+  "max_sep": null,
+  "nbins": null,
+  "ell_min": null,
+  "ell_max": null,
+  "n_ell": null,
+  "threads": 2,
+  "resume": true,
+  "blinding": "null",
+  "include_covariance": false,
+  "allow_mpi": false,
+  "config_overrides": {},
+  "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs",
+  "log_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/logs",
+  "config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml"
+ },
+ "compose": {
+  "preset": "3x2pt_real",
+  "catalog_type": "metadetect",
+  "warnings": [],
+  "notes": [
+   "blinding='null' -> TXNullBlinding (simulations); use blinding='muir' for real data"
+  ],
+  "base_example": "examples/metadetect",
+  "targets": [
+   "TXTwoPoint",
+   "TXNullBlinding",
+   "TXTwoPointTheoryReal",
+   "TXTwoPointPlots",
+   "TXPhotozPlotSource",
+   "TXPhotozPlotLens"
+  ],
+  "unknown_stages": [],
+  "n_stages": 27,
+  "stages": [
+   "FlowCreator",
+   "GridSelection",
+   "TXParqetToHDF",
+   "PZPrepareEstimatorLens",
+   "PZEstimatorLens",
+   "TXMeanLensSelector",
+   "NZDirInformerLens",
+   "PZRailSummarizeLens",
+   "PZRailSummarizeSource",
+   "TXSourceSelectorMetadetect",
+   "TXSourceTomography",
+   "NZDirInformerSource",
+   "TXShearCalibration",
+   "TXLensCatalogSplitter",
+   "TXLSSWeightsUnit",
+   "TXDepthMaps",
+   "TXBrightObjectMaps",
+   "TXSimpleMaskFrac",
+   "TXTracerMetadata",
+   "TXRandomCat",
+   "TXJackknifeCenters",
+   "TXTwoPoint",
+   "TXNullBlinding",
+   "TXTwoPointTheoryReal",
+   "TXTwoPointPlots",
+   "TXPhotozPlotSource",
+   "TXPhotozPlotLens"
+  ],
+  "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs",
+  "log_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/logs",
+  "threads": 2,
+  "modules": [
+   "txpipe",
+   "txpipe.extensions",
+   "txpipe.extensions.hos.fsb",
+   "rail.creation.degraders.grid_selection",
+   "rail.creation.engines.flowEngine",
+   "rail.estimation.algos.nz_dir",
+   "rail.estimation.algos.bpz_lite"
+  ],
+  "clone_commit": "dbd906c2f4c25f3430bb0d4989b2381605b9842c"
+ },
+ "validation": {
+  "ok": true,
+  "n_stages": 27,
+  "unknown_stages": [],
+  "duplicate_instances": [],
+  "unresolved_inputs": [],
+  "duplicate_outputs": [],
+  "cycle": false,
+  "overall_inputs": {
+   "shear_catalog": {
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/example/inputs/metadetect_shear_catalog.hdf5",
+    "exists": false
+   },
+   "photometry_catalog": {
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5",
+    "exists": false
+   },
+   "fiducial_cosmology": {
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/fiducial_cosmology.yml",
+    "exists": true
+   },
+   "flow": {
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/example/inputs/example_flow.pkl",
+    "exists": false
+   }
+  },
+  "missing_input_files": [
+   {
+    "tag": "shear_catalog",
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/example/inputs/metadetect_shear_catalog.hdf5"
+   },
+   {
+    "tag": "photometry_catalog",
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5"
+   },
+   {
+    "tag": "flow",
+    "path": "/Users/nramachandra/github-integration/TXPipe/data/example/inputs/example_flow.pkl"
+   }
+  ],
+  "none_inputs": [],
+  "stages": [
+   {
+    "instance": "FlowCreator",
+    "classname": "FlowCreator",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "flow": "overall input"
+    },
+    "outputs": [
+     "ideal_specz_catalog"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "GridSelection",
+    "classname": "GridSelection",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "ideal_specz_catalog": "from FlowCreator"
+    },
+    "outputs": [
+     "specz_catalog_pq"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXParqetToHDF",
+    "classname": "TXParqetToHDF",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "specz_catalog_pq": "from GridSelection"
+    },
+    "outputs": [
+     "spectroscopic_catalog"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "PZPrepareEstimatorLens",
+    "classname": "BPZliteInformer",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "spectroscopic_catalog": "from TXParqetToHDF"
+    },
+    "outputs": [
+     "lens_photoz_model"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "PZEstimatorLens",
+    "classname": "BPZliteEstimator",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "lens_photoz_model": "from PZPrepareEstimatorLens",
+     "photometry_catalog": "overall input"
+    },
+    "outputs": [
+     "lens_photoz_pdfs"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXMeanLensSelector",
+    "classname": "TXMeanLensSelector",
+    "known": true,
+    "group": "selection",
+    "inputs": {
+     "photometry_catalog": "overall input",
+     "lens_photoz_pdfs": "from PZEstimatorLens"
+    },
+    "outputs": [
+     "lens_tomography_catalog_unweighted"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "NZDirInformerLens",
+    "classname": "NZDirInformer",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "spectroscopic_catalog": "from TXParqetToHDF"
+    },
+    "outputs": [
+     "lens_direct_calibration_model"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "PZRailSummarizeLens",
+    "classname": "PZRailSummarize",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "binned_lens_catalog": "from TXLSSWeightsUnit",
+     "lens_direct_calibration_model": "from NZDirInformerLens"
+    },
+    "outputs": [
+     "lens_photoz_stack",
+     "lens_photoz_realizations"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "PZRailSummarizeSource",
+    "classname": "PZRailSummarize",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "binned_shear_catalog": "from TXShearCalibration",
+     "source_direct_calibration_model": "from NZDirInformerSource"
+    },
+    "outputs": [
+     "shear_photoz_stack",
+     "source_photoz_realizations"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXSourceSelectorMetadetect",
+    "classname": "TXSourceSelectorMetadetect",
+    "known": true,
+    "group": "selection",
+    "inputs": {
+     "shear_catalog": "overall input",
+     "shear_tomography_classifier": "from TXSourceTomography"
+    },
+    "outputs": [
+     "shear_tomography_catalog"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXSourceTomography",
+    "classname": "TXSourceTomography",
+    "known": true,
+    "group": "selection",
+    "inputs": {
+     "spectroscopic_catalog": "from TXParqetToHDF"
+    },
+    "outputs": [
+     "shear_tomography_classifier"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "NZDirInformerSource",
+    "classname": "NZDirInformer",
+    "known": true,
+    "group": "photo-z",
+    "inputs": {
+     "spectroscopic_catalog": "from TXParqetToHDF"
+    },
+    "outputs": [
+     "source_direct_calibration_model"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXShearCalibration",
+    "classname": "TXShearCalibration",
+    "known": true,
+    "group": "calibration",
+    "inputs": {
+     "shear_catalog": "overall input",
+     "shear_tomography_catalog": "from TXSourceSelectorMetadetect",
+     "fiducial_cosmology": "overall input"
+    },
+    "outputs": [
+     "binned_shear_catalog"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXLensCatalogSplitter",
+    "classname": "TXLensCatalogSplitter",
+    "known": true,
+    "group": "calibration",
+    "inputs": {
+     "lens_tomography_catalog_unweighted": "from TXMeanLensSelector",
+     "photometry_catalog": "overall input",
+     "fiducial_cosmology": "overall input",
+     "lens_photoz_pdfs": "from PZEstimatorLens"
+    },
+    "outputs": [
+     "binned_lens_catalog_unweighted"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXLSSWeightsUnit",
+    "classname": "TXLSSWeightsUnit",
+    "known": true,
+    "group": "lss-weights",
+    "inputs": {
+     "binned_lens_catalog_unweighted": "from TXLensCatalogSplitter",
+     "lens_tomography_catalog_unweighted": "from TXMeanLensSelector",
+     "mask": "from TXSimpleMaskFrac"
+    },
+    "outputs": [
+     "lss_weight_summary",
+     "weighted_density_correlation",
+     "lss_weight_maps",
+     "binned_lens_catalog",
+     "lens_tomography_catalog"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXDepthMaps",
+    "classname": "TXDepthMaps",
+    "known": true,
+    "group": "maps",
+    "inputs": {
+     "photometry_catalog": "overall input"
+    },
+    "outputs": [
+     "depth_map"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXBrightObjectMaps",
+    "classname": "TXBrightObjectMaps",
+    "known": true,
+    "group": "maps",
+    "inputs": {
+     "photometry_catalog": "overall input"
+    },
+    "outputs": [
+     "bright_object_map"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXSimpleMaskFrac",
+    "classname": "TXSimpleMaskFrac",
+    "known": true,
+    "group": "maps",
+    "inputs": {
+     "depth_map": "from TXDepthMaps",
+     "bright_object_map": "from TXBrightObjectMaps"
+    },
+    "outputs": [
+     "mask"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXTracerMetadata",
+    "classname": "TXTracerMetadata",
+    "known": true,
+    "group": "maps",
+    "inputs": {
+     "shear_catalog": "overall input",
+     "shear_tomography_catalog": "from TXSourceSelectorMetadetect",
+     "lens_tomography_catalog": "from TXLSSWeightsUnit",
+     "mask": "from TXSimpleMaskFrac"
+    },
+    "outputs": [
+     "tracer_metadata",
+     "tracer_metadata_yml"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXRandomCat",
+    "classname": "TXRandomCat",
+    "known": true,
+    "group": "maps",
+    "inputs": {
+     "depth_map": "from TXDepthMaps",
+     "mask": "from TXSimpleMaskFrac",
+     "lens_photoz_stack": "from PZRailSummarizeLens",
+     "fiducial_cosmology": "overall input"
+    },
+    "outputs": [
+     "random_cats",
+     "binned_random_catalog",
+     "binned_random_catalog_sub"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXJackknifeCenters",
+    "classname": "TXJackknifeCenters",
+    "known": true,
+    "group": "maps",
+    "inputs": {
+     "random_cats": "from TXRandomCat"
+    },
+    "outputs": [
+     "patch_centers",
+     "jk"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXTwoPoint",
+    "classname": "TXTwoPoint",
+    "known": true,
+    "group": "two-point",
+    "inputs": {
+     "binned_shear_catalog": "from TXShearCalibration",
+     "binned_lens_catalog": "from TXLSSWeightsUnit",
+     "binned_random_catalog": "from TXRandomCat",
+     "binned_random_catalog_sub": "from TXRandomCat",
+     "shear_photoz_stack": "from PZRailSummarizeSource",
+     "lens_photoz_stack": "from PZRailSummarizeLens",
+     "patch_centers": "from TXJackknifeCenters",
+     "tracer_metadata": "from TXTracerMetadata"
+    },
+    "outputs": [
+     "twopoint_data_real_raw",
+     "twopoint_gamma_x"
+    ],
+    "threads_per_process": 2,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXNullBlinding",
+    "classname": "TXNullBlinding",
+    "known": true,
+    "group": "blinding",
+    "inputs": {
+     "twopoint_data_real_raw": "from TXTwoPoint"
+    },
+    "outputs": [
+     "twopoint_data_real"
+    ],
+    "threads_per_process": 2,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXTwoPointTheoryReal",
+    "classname": "TXTwoPointTheoryReal",
+    "known": true,
+    "group": "two-point",
+    "inputs": {
+     "twopoint_data_real": "from TXNullBlinding",
+     "fiducial_cosmology": "overall input"
+    },
+    "outputs": [
+     "twopoint_theory_real"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXTwoPointPlots",
+    "classname": "TXTwoPointPlots",
+    "known": true,
+    "group": "plots",
+    "inputs": {
+     "twopoint_data_real": "from TXNullBlinding",
+     "twopoint_gamma_x": "from TXTwoPoint"
+    },
+    "outputs": [
+     "shear_xi_plus",
+     "shear_xi_minus",
+     "shearDensity_xi",
+     "density_xi",
+     "shearDensity_xi_x"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXPhotozPlotSource",
+    "classname": "TXPhotozPlot",
+    "known": true,
+    "group": "plots",
+    "inputs": {
+     "shear_photoz_stack": "from PZRailSummarizeSource"
+    },
+    "outputs": [
+     "nz_source"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   },
+   {
+    "instance": "TXPhotozPlotLens",
+    "classname": "TXPhotozPlot",
+    "known": true,
+    "group": "plots",
+    "inputs": {
+     "lens_photoz_stack": "from PZRailSummarizeLens"
+    },
+    "outputs": [
+     "nz_lens"
+    ],
+    "threads_per_process": 1,
+    "nprocess": 1
+   }
+  ],
+  "order": [
+   "FlowCreator",
+   "TXBrightObjectMaps",
+   "TXDepthMaps",
+   "GridSelection",
+   "TXSimpleMaskFrac",
+   "TXParqetToHDF",
+   "NZDirInformerLens",
+   "NZDirInformerSource",
+   "PZPrepareEstimatorLens",
+   "TXSourceTomography",
+   "PZEstimatorLens",
+   "TXSourceSelectorMetadetect",
+   "TXMeanLensSelector",
+   "TXShearCalibration",
+   "PZRailSummarizeSource",
+   "TXLensCatalogSplitter",
+   "TXLSSWeightsUnit",
+   "TXPhotozPlotSource",
+   "PZRailSummarizeLens",
+   "TXTracerMetadata",
+   "TXPhotozPlotLens",
+   "TXRandomCat",
+   "TXJackknifeCenters",
+   "TXTwoPoint",
+   "TXNullBlinding",
+   "TXTwoPointPlots",
+   "TXTwoPointTheoryReal"
+  ],
+  "commands": [
+   {
+    "stage": "FlowCreator",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m ceci rail.creation.engines.flowEngine.FlowCreator --model=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/example_flow.pkl --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --output=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/ideal_specz_catalog.pq"
+   },
+   {
+    "stage": "TXBrightObjectMaps",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXBrightObjectMaps --photometry_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --bright_object_map=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/bright_object_map.hdf5"
+   },
+   {
+    "stage": "TXDepthMaps",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXDepthMaps --photometry_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --depth_map=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/depth_map.hdf5"
+   },
+   {
+    "stage": "GridSelection",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m ceci rail.creation.degraders.grid_selection.GridSelection --input=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/ideal_specz_catalog.pq --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --output=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/specz_catalog_pq.pq"
+   },
+   {
+    "stage": "TXSimpleMaskFrac",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXSimpleMaskFrac --depth_map=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/depth_map.hdf5 --bright_object_map=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/bright_object_map.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --mask=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/mask.hdf5"
+   },
+   {
+    "stage": "TXParqetToHDF",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXParqetToHDF --input=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/specz_catalog_pq.pq --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --output=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/spectroscopic_catalog.hdf5"
+   },
+   {
+    "stage": "NZDirInformerLens",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m ceci rail.estimation.algos.nz_dir.NZDirInformer --input=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/spectroscopic_catalog.hdf5 --name=NZDirInformerLens --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --model=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_direct_calibration_model.pkl"
+   },
+   {
+    "stage": "NZDirInformerSource",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m ceci rail.estimation.algos.nz_dir.NZDirInformer --input=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/spectroscopic_catalog.hdf5 --name=NZDirInformerSource --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --model=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/source_direct_calibration_model.pkl"
+   },
+   {
+    "stage": "PZPrepareEstimatorLens",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m ceci rail.estimation.algos.bpz_lite.BPZliteInformer --input=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/spectroscopic_catalog.hdf5 --name=PZPrepareEstimatorLens --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --model=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_model.pkl"
+   },
+   {
+    "stage": "TXSourceTomography",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXSourceTomography --spectroscopic_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/spectroscopic_catalog.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --shear_tomography_classifier=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_tomography_classifier.pkl"
+   },
+   {
+    "stage": "PZEstimatorLens",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m ceci rail.estimation.algos.bpz_lite.BPZliteEstimator --model=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_model.pkl --input=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5 --name=PZEstimatorLens --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --output=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_pdfs.hdf5"
+   },
+   {
+    "stage": "TXSourceSelectorMetadetect",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXSourceSelectorMetadetect --shear_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/metadetect_shear_catalog.hdf5 --shear_tomography_classifier=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_tomography_classifier.pkl --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --shear_tomography_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_tomography_catalog.hdf5"
+   },
+   {
+    "stage": "TXMeanLensSelector",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXMeanLensSelector --photometry_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5 --lens_photoz_pdfs=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_pdfs.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --lens_tomography_catalog_unweighted=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_tomography_catalog_unweighted.hdf5"
+   },
+   {
+    "stage": "TXShearCalibration",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXShearCalibration --shear_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/metadetect_shear_catalog.hdf5 --shear_tomography_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_tomography_catalog.hdf5 --fiducial_cosmology=/Users/nramachandra/github-integration/TXPipe/data/fiducial_cosmology.yml --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --binned_shear_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_shear_catalog.hdf5"
+   },
+   {
+    "stage": "PZRailSummarizeSource",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe PZRailSummarize --binned_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_shear_catalog.hdf5 --model=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/source_direct_calibration_model.pkl --name=PZRailSummarizeSource --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_photoz_stack.hdf5 --photoz_realizations=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/source_photoz_realizations.hdf5"
+   },
+   {
+    "stage": "TXLensCatalogSplitter",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXLensCatalogSplitter --lens_tomography_catalog_unweighted=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_tomography_catalog_unweighted.hdf5 --photometry_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/photometry_catalog.hdf5 --fiducial_cosmology=/Users/nramachandra/github-integration/TXPipe/data/fiducial_cosmology.yml --lens_photoz_pdfs=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_pdfs.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --binned_lens_catalog_unweighted=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_lens_catalog_unweighted.hdf5"
+   },
+   {
+    "stage": "TXLSSWeightsUnit",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXLSSWeightsUnit --binned_lens_catalog_unweighted=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_lens_catalog_unweighted.hdf5 --lens_tomography_catalog_unweighted=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_tomography_catalog_unweighted.hdf5 --mask=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/mask.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --lss_weight_summary=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lss_weight_summary --weighted_density_correlation=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/weighted_density_correlation.hdf5 --lss_weight_maps=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lss_weight_maps.hdf5 --binned_lens_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_lens_catalog.hdf5 --lens_tomography_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_tomography_catalog.hdf5"
+   },
+   {
+    "stage": "TXPhotozPlotSource",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXPhotozPlot --photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_photoz_stack.hdf5 --name=TXPhotozPlotSource --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --nz_plot=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/nz_source.png"
+   },
+   {
+    "stage": "PZRailSummarizeLens",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe PZRailSummarize --binned_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_lens_catalog.hdf5 --model=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_direct_calibration_model.pkl --name=PZRailSummarizeLens --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_stack.hdf5 --photoz_realizations=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_realizations.hdf5"
+   },
+   {
+    "stage": "TXTracerMetadata",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXTracerMetadata --shear_catalog=/Users/nramachandra/github-integration/TXPipe/data/example/inputs/metadetect_shear_catalog.hdf5 --shear_tomography_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_tomography_catalog.hdf5 --lens_tomography_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_tomography_catalog.hdf5 --mask=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/mask.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --tracer_metadata=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/tracer_metadata.hdf5 --tracer_metadata_yml=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/tracer_metadata_yml.yml"
+   },
+   {
+    "stage": "TXPhotozPlotLens",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXPhotozPlot --photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_stack.hdf5 --name=TXPhotozPlotLens --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --nz_plot=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/nz_lens.png"
+   },
+   {
+    "stage": "TXRandomCat",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXRandomCat --depth_map=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/depth_map.hdf5 --mask=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/mask.hdf5 --lens_photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_stack.hdf5 --fiducial_cosmology=/Users/nramachandra/github-integration/TXPipe/data/fiducial_cosmology.yml --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --random_cats=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/random_cats.hdf5 --binned_random_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_random_catalog.hdf5 --binned_random_catalog_sub=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_random_catalog_sub.hdf5"
+   },
+   {
+    "stage": "TXJackknifeCenters",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXJackknifeCenters --random_cats=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/random_cats.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --patch_centers=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/patch_centers.txt --jk=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/jk.png"
+   },
+   {
+    "stage": "TXTwoPoint",
+    "command": "OMP_NUM_THREADS=2 NUMBA_NUM_THREADS=2 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXTwoPoint --binned_shear_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_shear_catalog.hdf5 --binned_lens_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_lens_catalog.hdf5 --binned_random_catalog=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_random_catalog.hdf5 --binned_random_catalog_sub=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/binned_random_catalog_sub.hdf5 --shear_photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_photoz_stack.hdf5 --lens_photoz_stack=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/lens_photoz_stack.hdf5 --patch_centers=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/patch_centers.txt --tracer_metadata=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/tracer_metadata.hdf5 --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --twopoint_data_real_raw=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_data_real_raw.sacc --twopoint_gamma_x=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_gamma_x.sacc"
+   },
+   {
+    "stage": "TXNullBlinding",
+    "command": "OMP_NUM_THREADS=2 NUMBA_NUM_THREADS=2 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXNullBlinding --twopoint_data_real_raw=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_data_real_raw.sacc --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --twopoint_data_real=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_data_real.sacc"
+   },
+   {
+    "stage": "TXTwoPointPlots",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXTwoPointPlots --twopoint_data_real=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_data_real.sacc --twopoint_gamma_x=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_gamma_x.sacc --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --shear_xi_plus=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_xi_plus.png --shear_xi_minus=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shear_xi_minus.png --shearDensity_xi=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shearDensity_xi.png --density_xi=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/density_xi.png --shearDensity_xi_x=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/shearDensity_xi_x.png"
+   },
+   {
+    "stage": "TXTwoPointTheoryReal",
+    "command": "OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=/Users/nramachandra/github-integration/TXPipe/submodules/WLMassMap/python/desc:/Users/nramachandra/github-integration/TXPipe/submodules/pyfsb:$PYTHONPATH python3 -m txpipe TXTwoPointTheoryReal --twopoint_data_real=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_data_real.sacc --fiducial_cosmology=/Users/nramachandra/github-integration/TXPipe/data/fiducial_cosmology.yml --config=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml --twopoint_theory_real=/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs/twopoint_theory_real.sacc"
+   }
+  ],
+  "warnings": [],
+  "site": {
+   "name": "local",
+   "max_threads": 2
+  },
+  "launcher": {
+   "name": "mini",
+   "interval": 1.0
+  },
+  "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/outputs",
+  "log_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/logs",
+  "config": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171039/txpipe_3x2pt_real_metadetect_94ab52/config.yml"
+ },
+ "expected_outputs": {
+  "FlowCreator": [
+   "ideal_specz_catalog.pq"
+  ],
+  "GridSelection": [
+   "specz_catalog_pq.pq"
+  ],
+  "TXParqetToHDF": [
+   "spectroscopic_catalog.hdf5"
+  ],
+  "PZPrepareEstimatorLens": [
+   "lens_photoz_model.pkl"
+  ],
+  "PZEstimatorLens": [
+   "lens_photoz_pdfs.hdf5"
+  ],
+  "TXMeanLensSelector": [
+   "lens_tomography_catalog_unweighted.hdf5"
+  ],
+  "NZDirInformerLens": [
+   "lens_direct_calibration_model.pkl"
+  ],
+  "PZRailSummarizeLens": [
+   "lens_photoz_stack.hdf5",
+   "lens_photoz_realizations.hdf5"
+  ],
+  "PZRailSummarizeSource": [
+   "shear_photoz_stack.hdf5",
+   "source_photoz_realizations.hdf5"
+  ],
+  "TXSourceSelectorMetadetect": [
+   "shear_tomography_catalog.hdf5"
+  ],
+  "TXSourceTomography": [
+   "shear_tomography_classifier.pkl"
+  ],
+  "NZDirInformerSource": [
+   "source_direct_calibration_model.pkl"
+  ],
+  "TXShearCalibration": [
+   "binned_shear_catalog.hdf5"
+  ],
+  "TXLensCatalogSplitter": [
+   "binned_lens_catalog_unweighted.hdf5"
+  ],
+  "TXLSSWeightsUnit": [
+   "lss_weight_summary",
+   "weighted_density_correlation.hdf5",
+   "lss_weight_maps.hdf5",
+   "binned_lens_catalog.hdf5",
+   "lens_tomography_catalog.hdf5"
+  ],
+  "TXDepthMaps": [
+   "depth_map.hdf5"
+  ],
+  "TXBrightObjectMaps": [
+   "bright_object_map.hdf5"
+  ],
+  "TXSimpleMaskFrac": [
+   "mask.hdf5"
+  ],
+  "TXTracerMetadata": [
+   "tracer_metadata.hdf5",
+   "tracer_metadata_yml.yml"
+  ],
+  "TXRandomCat": [
+   "random_cats.hdf5",
+   "binned_random_catalog.hdf5",
+   "binned_random_catalog_sub.hdf5"
+  ],
+  "TXJackknifeCenters": [
+   "patch_centers.txt",
+   "jk.png"
+  ],
+  "TXTwoPoint": [
+   "twopoint_data_real_raw.sacc",
+   "twopoint_gamma_x.sacc"
+  ],
+  "TXNullBlinding": [
+   "twopoint_data_real.sacc"
+  ],
+  "TXTwoPointTheoryReal": [
+   "twopoint_theory_real.sacc"
+  ],
+  "TXTwoPointPlots": [
+   "shear_xi_plus.png",
+   "shear_xi_minus.png",
+   "shearDensity_xi.png",
+   "density_xi.png",
+   "shearDensity_xi_x.png"
+  ],
+  "TXPhotozPlotSource": [
+   "nz_source.png"
+  ],
+  "TXPhotozPlotLens": [
+   "nz_lens.png"
+  ]
+ }
+}

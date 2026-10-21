@@ -425,8 +425,8 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
             args=('--quick "For the sacc you measured with NaMaster: generate a TJPCov FourierGaussianFsky '
                   'covariance config (f_sky from the mask, n_gal, galaxy bias), compute the covariance, compare '
                   'with plain Knox, report chi2 at input cosmology and whether positive definite." '
-                  f'--servers {DESC} --project ramp-desc --chat cov'),
-            desc="DESC tjpcov: covariance + Knox comparison + chi2", timeout=900))
+                  f'--servers {DESC} --project ramp-desc --chat nm'),
+            desc="DESC tjpcov: covariance + Knox comparison + chi2 (continues D7 chat 'nm')", timeout=900))
         cases.append(dict(id="D9-skills-dispatch", mode="quick",
             args=('--quick "List the server-side skills (list_desc_skills), load the desc-tour skill and follow '
                   'its first two steps only. Then call auth_status and report the dispatch state." '
@@ -595,7 +595,11 @@ def main():
     ap.add_argument("--profile", default="core",
                     choices=["smoke", "core", "research", "combo", "features", "desc"])
     ap.add_argument("--date-suffix", default=None,
-                    help="e.g. 'am' to make runs/2026-10-16-am-core/")
+                    help="e.g. 'am' to make runs/2026-10-16-am-core/'")
+    ap.add_argument("--chat-suffix", default=None,
+                    help="append to every --chat name so repeat runs get FRESH "
+                         "conversations instead of resuming prior ones "
+                         "(e.g. '-1021' -> --chat meta-1021)")
     args = ap.parse_args()
 
     run_id = datetime.now().strftime("%Y-%m-%d")
@@ -631,6 +635,17 @@ def main():
         sys.exit(3)
 
     cases = build_cases(env, run_dir, profile=args.profile)
+    if args.chat_suffix:
+        n_subbed = 0
+        for c in cases:
+            new_args, k = re.subn(
+                r"(--chat )(\S+)",
+                lambda m: f"{m.group(1)}{m.group(2)}{args.chat_suffix}",
+                c["args"])
+            n_subbed += k
+            c["args"] = new_args
+        print(f"[harness] chat suffix '{args.chat_suffix}' applied to {n_subbed} "
+              f"chat names (fresh conversations, no resume)")
     metas = []
     for c in cases:
         try:

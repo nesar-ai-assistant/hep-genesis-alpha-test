@@ -1,0 +1,349 @@
+{
+  "id": "b21b373c3ffa",
+  "name": "dv-1021",
+  "created_at": "2026-10-21T17:07:20",
+  "messages": [
+    {
+      "id": "5b7f51ba2b31",
+      "role": "user",
+      "content": "Generate LSST Y1 SRD source and lens n(z) bins with ccl_lsst_srd_nz, compute 3x2pt angular C_ell for ell 20-2000, write to a sacc file. Then inspect it with sacc_inspect: tracers, data types, whether covariance is present.",
+      "ts": "2026-10-21T17:07:20",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "5412b093ea9a",
+      "role": "assistant",
+      "content": "I couldn't use `ccl_lsst_srd_nz`: the CCL tool family isn't available on this server (`No module named 'tools.ccl'`). I used augur instead. It builds the same LSST Y1 SRD setup from the SRD n(z) tables that ship with augur, computes the C_ell with pyccl 3.3.6 / firecrown 1.16.0, and writes a sacc file. So the n(z) bins come from the tabulated SRD files, not from CCL's analytic SRD n(z) function.\n\n**Setup**\n- **Cosmology:** DESC SRD fiducial (\u03a9_c = 0.2664, \u03a9_b = 0.0492, h = 0.6727, n_s = 0.9645, \u03c38 = 0.831, w0 = \u22121, wa = 0). Power spectrum uses the Eisenstein\u2013Hu transfer function with halofit.\n- **Bins:** 5 source bins (10 gal/arcmin\u00b2 in total, \u03c3_e = 0.26) and 5 lens bins (18 gal/arcmin\u00b2 in total).\n- **Multipoles:** 20 log-spaced bands with edges from 20 to 2000. Each point sits at its band's geometric centre, so the ells in the file run from 22.4 to 1782.5.\n- **Output:** `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc`. Figure 7 plots all the spectra with error bars.\n\n**What `sacc_inspect` reports**\n\n*Tracers (10):* every one is an NZ tracer with 500 z samples over z = 0\u20133.5. The names and quantities already follow the firecrown/augur convention, so no renaming is needed.\n\n| Tracer | Quantity | Mean z |\n|---|---|---|\n| src0\u2013src4 | galaxy_shear | 0.25, 0.46, 0.65, 0.92, 1.53 |\n| lens0\u2013lens4 | galaxy_density | 0.32, 0.51, 0.70, 0.90, 1.09 |\n\n*Data types (540 points, harmonic space, no bandpower windows):*\n\n| Data type | Tracer pairs | Points |\n|---|---|---|\n| galaxy_shear_cl_ee | 15 (all src_i\u2013src_j with i \u2264 j) | 300 |\n| galaxy_shearDensity_cl_e | 7 (src2\u2013lens0, src3\u2013lens0, src4\u2013lens0, src3\u2013lens1, src4\u2013lens1, src4\u2013lens2, src4\u2013lens3) | 140 |\n| galaxy_density_cl | 5 (lens auto-spectra only) | 100 |\n\n*Covariance: present.*\n- It is a full 540\u00d7540 matrix: augur's mode-counting Gaussian (`gaus_internal`) with f_sky = 0.3. That means no super-sample or connected non-Gaussian terms.\n- It is positive definite: the smallest eigenvalue is 1.9e\u221223, and no diagonal entry is zero or negative.\n- The condition number is 9.95e12, mostly because the C_ell amplitudes differ by orders of magnitude across tracers. The largest correlation between different points is 0.88.\n- Figure 21 shows the correlation matrix.\n\n**Things to know before using the file**\n- **Scale cuts:** the sacc holds every ell. The SRD cut for anything involving lenses (kmax = 0.202 Mpc\u207b\u00b9) is applied later, in the likelihood. With that cut 457 of the 540 points remain: all 300 shear, 88 galaxy\u2013galaxy lensing and 69 clustering. The lens-bin limits run from \u2113_max \u2248 224 (lens0) to \u2248 710 (lens4).\n- **Signal-to-noise:** the total S/N is about 1574, counting all 540 points with no scale cuts applied.\n\nThe file is ready to pass to `firecrown_build_likelihood` or `augur_compute_fisher`.",
+      "ts": "2026-10-21T17:07:20",
+      "tool_calls": [
+        {
+          "id": "tooluse_4L2Nad7RQEL3GxVnUzssLo",
+          "tool": "describe_desc_tool_family",
+          "server": "serve-desc.sh",
+          "args": {
+            "family": "ccl"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"Family 'ccl' is not importable in this environment: No module named 'tools.ccl'\",\n  \"metadata\": {\n    \"family\": \"ccl\",\n    \"summary\": \"pyccl theory predictions: background, P(k), C_ell, xi, halo model, SRD n(z)\",\n    \"tools\": {}\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"Family 'ccl' is not importable in this environment: No module named 'tools.ccl'\",\n  \"metadata\": {\n    \"family\": \"ccl\",\n    \"summary\": \"pyccl theory predictions: background, P(k), C_ell, xi, halo model, SRD n(z)\",\n    \"tools\": {}\n  }\n}",
+          "is_error": false,
+          "artifact_ids": []
+        },
+        {
+          "id": "tooluse_FCIl13js8dXFBpYuqSDqXF",
+          "tool": "augur_generate_forecast_config",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716",
+            "survey_year": "Y1",
+            "probes": "3x2pt",
+            "ell_min": 20,
+            "ell_max": 2000,
+            "label": "y1_3x2pt_l2000",
+            "cov_type": "gaus_internal"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.yml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.json\"\n  ],\n  \"message\": \"Wrote augur Y1 3x2pt forecast config (27 tracer pairs x 20 ells = 540 data points before cuts; 9 varied parameters -> ~20 likelihood evaluations; cov gaus_internal).\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.yml\",\n    \"run_dir\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28\",\n    \"survey_year\": \"Y1\",\n    \"probes\": \"3x2pt\",\n    \"n_source_bins\": 5,\n    \"n_lens_bins\": 5,\n    \"ndens_arcmin2\": {\n      \"source\": 10.0,\n      \"lens\": 18.0\n    },\n    \"ell_bands\": {\n      \"n\": 20,\n      \"edges\": [\n        20.0,\n        25.179,\n        31.698,\n        39.905,\n        50.238,\n        63.246,\n        79.621,\n        100.237,\n        126.191,\n        158.866,\n        200.0,\n        251.785,\n        316.979,\n        399.052,\n        502.377,\n        632.456,\n        796.214,\n        1002.374,\n        1261.915,\n        1588.656,\n        2000.0\n      ]\n    },\n    \"scale_cuts\": {\n      \"lens_probes\": {\n        \"kmax\": 0.202\n      },\n      \"shear_lmax\": null,\n      \"kmax_units\": \"Mpc^-1 (no h)\"\n    },\n    \"n_pairs\": {\n      \"galaxy_shear_cl_ee\": 15,\n      \"galaxy_shearDensity_cl_e\": 7,\n      \"galaxy_density_cl\": 5\n    },\n    \"n_data_before_cuts\": 540,\n    \"cov_type\": \"gaus_internal\",\n    \"fsky\": 0.3,\n    \"srd_covariance_layout_match\": false,\n    \"cosmology\": {\n      \"preset\": \"desc_srd\",\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"sigma8\": 0.831,\n      \"A_s\": null,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"mass_split\": \"normal\",\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"transfer_function\": \"eisenstein_hu\",\n      \"matter_power_spectrum\": \"halofit\",\n      \"baryons\": \"none\",\n      \"baryon_params\": {},\n      \"hmcode_logT_AGN\": 7.8,\n      \"mg_mu0\": 0.0,\n      \"mg_sigma0\": 0.0\n    },\n    \"cosmology_label\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"n_s\",\n      \"w0\",\n      \"wa\",\n      \"Omega_b\",\n      \"h\",\n      \"lens0_bias\",\n      \"lens1_bias\"\n    ],\n    \"gaussian_priors\": {},\n    \"step_absolute\": 0.01,\n    \"derivative_method\": \"numdifftools\",\n    \"estimated_likelihood_evaluations\": 20,\n    \"fisher_bias_params\": null,\n    \"validator\": {\n      \"errors\": [],\n      \"warnings\": []\n    },\n    \"nuisance_parameters_available\": [\n      \"alphaz\",\n      \"ia_bias\",\n      \"lens0_alphag\",\n      \"lens0_alphaz\",\n      \"lens0_bias\",\n      \"lens0_delta_z\",\n      \"lens0_sigma_z\",\n      \"lens0_z_piv\",\n      \"lens1_alphag\",\n      \"lens1_alphaz\",\n      \"lens1_bias\",\n      \"lens1_delta_z\",\n      \"lens1_sigma_z\",\n      \"lens1_z_piv\",\n      \"lens2_alphag\",\n      \"lens2_alphaz\",\n      \"lens2_bias\",\n      \"lens2_delta_z\",\n      \"lens2_sigma_z\",\n      \"lens2_z_piv\",\n      \"lens3_alphag\",\n      \"lens3_alphaz\",\n      \"lens3_bias\",\n      \"lens3_delta_z\",\n      \"lens3_sigma_z\",\n      \"lens3_z_piv\",\n      \"lens4_alphag\",\n      \"lens4_alphaz\",\n      \"lens4_bias\",\n      \"lens4_delta_z\",\n      \"lens4_sigma_z\",\n      \"lens4_z_piv\",\n      \"src0_delta_z\",\n      \"src0_mult_bias\",\n      \"src1_delta_z\",\n      \"src1_mult_bias\",\n      \"src2_delta_z\",\n      \"src2_mult_bias\",\n      \"src3_delta_z\",\n      \"src3_mult_bias\",\n      \"src4_delta_z\",\n      \"src4_mult_bias\",\n      \"z_piv\"\n    ],\n    \"units\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (sp",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.yml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.json\"\n  ],\n  \"message\": \"Wrote augur Y1 3x2pt forecast config (27 tracer pairs x 20 ells = 540 data points before cuts; 9 varied parameters -> ~20 likelihood evaluations; cov gaus_internal).\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.yml\",\n    \"run_dir\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28\",\n    \"survey_year\": \"Y1\",\n    \"probes\": \"3x2pt\",\n    \"n_source_bins\": 5,\n    \"n_lens_bins\": 5,\n    \"ndens_arcmin2\": {\n      \"source\": 10.0,\n      \"lens\": 18.0\n    },\n    \"ell_bands\": {\n      \"n\": 20,\n      \"edges\": [\n        20.0,\n        25.179,\n        31.698,\n        39.905,\n        50.238,\n        63.246,\n        79.621,\n        100.237,\n        126.191,\n        158.866,\n        200.0,\n        251.785,\n        316.979,\n        399.052,\n        502.377,\n        632.456,\n        796.214,\n        1002.374,\n        1261.915,\n        1588.656,\n        2000.0\n      ]\n    },\n    \"scale_cuts\": {\n      \"lens_probes\": {\n        \"kmax\": 0.202\n      },\n      \"shear_lmax\": null,\n      \"kmax_units\": \"Mpc^-1 (no h)\"\n    },\n    \"n_pairs\": {\n      \"galaxy_shear_cl_ee\": 15,\n      \"galaxy_shearDensity_cl_e\": 7,\n      \"galaxy_density_cl\": 5\n    },\n    \"n_data_before_cuts\": 540,\n    \"cov_type\": \"gaus_internal\",\n    \"fsky\": 0.3,\n    \"srd_covariance_layout_match\": false,\n    \"cosmology\": {\n      \"preset\": \"desc_srd\",\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"sigma8\": 0.831,\n      \"A_s\": null,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"mass_split\": \"normal\",\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"transfer_function\": \"eisenstein_hu\",\n      \"matter_power_spectrum\": \"halofit\",\n      \"baryons\": \"none\",\n      \"baryon_params\": {},\n      \"hmcode_logT_AGN\": 7.8,\n      \"mg_mu0\": 0.0,\n      \"mg_sigma0\": 0.0\n    },\n    \"cosmology_label\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"n_s\",\n      \"w0\",\n      \"wa\",\n      \"Omega_b\",\n      \"h\",\n      \"lens0_bias\",\n      \"lens1_bias\"\n    ],\n    \"gaussian_priors\": {},\n    \"step_absolute\": 0.01,\n    \"derivative_method\": \"numdifftools\",\n    \"estimated_likelihood_evaluations\": 20,\n    \"fisher_bias_params\": null,\n    \"validator\": {\n      \"errors\": [],\n      \"warnings\": []\n    },\n    \"nuisance_parameters_available\": [\n      \"alphaz\",\n      \"ia_bias\",\n      \"lens0_alphag\",\n      \"lens0_alphaz\",\n      \"lens0_bias\",\n      \"lens0_delta_z\",\n      \"lens0_sigma_z\",\n      \"lens0_z_piv\",\n      \"lens1_alphag\",\n      \"lens1_alphaz\",\n      \"lens1_bias\",\n      \"lens1_delta_z\",\n      \"lens1_sigma_z\",\n      \"lens1_z_piv\",\n      \"lens2_alphag\",\n      \"lens2_alphaz\",\n      \"lens2_bias\",\n      \"lens2_delta_z\",\n      \"lens2_sigma_z\",\n      \"lens2_z_piv\",\n      \"lens3_alphag\",\n      \"lens3_alphaz\",\n      \"lens3_bias\",\n      \"lens3_delta_z\",\n      \"lens3_sigma_z\",\n      \"lens3_z_piv\",\n      \"lens4_alphag\",\n      \"lens4_alphaz\",\n      \"lens4_bias\",\n      \"lens4_delta_z\",\n      \"lens4_sigma_z\",\n      \"lens4_z_piv\",\n      \"src0_delta_z\",\n      \"src0_mult_bias\",\n      \"src1_delta_z\",\n      \"src1_mult_bias\",\n      \"src2_delta_z\",\n      \"src2_mult_bias\",\n      \"src3_delta_z\",\n      \"src3_mult_bias\",\n      \"src4_delta_z\",\n      \"src4_mult_bias\",\n      \"z_piv\"\n    ],\n    \"units\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (split per bin by the n(z) integral)\",\n      \"sigma_e\": \"per-component shape noise (SRD: 0.26); noise power = sigma_e^2 / nbar\",\n      \"ells\": \"dimensionless; bands are geometric centres of log-spaced edges (SRD: 20 bands in 20..15000)\",\n      \"step\": \"ABSOLUTE finite-difference step in parameter units (not relative); default 0.01\",\n      \"fsky\": \"sky fraction for gaus_internal / tjpcov (LSST Y1 ~0.3, Y10 ~0.4)\",\n      \"parameter_names\": \"firecrown/CCL: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu w0 wa; nuisance src{i}_delta_z src{i}_mult_bias lens{i}_bias lens{i}_delta_z lens{i}_sigma_z, global IA ia_bias alphaz z_piv\",\n      \"fisher_units\": \"F_ij in (parameter units)^-2; sigma_i = sqrt((F^-1)_ii) marginalised over the rest\",\n      \"fom\": \"DETF FoM = 1/sqrt(det Cov(w0,wa)); augur's get_FoM_all divides Cov by chi2.ppf(CL,2)\",\n      \"tracer_names\": \"src{i} (galaxy_shear) and lens{i} (galaxy_density) - required by augur\",\n      \"ggl_pairs\": \"statistics.galaxy_shearDensity_cl_e.tracer_combs are [lens_i, src_j]\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "e3c14effd681",
+            "19ca2d3aaea2"
+          ]
+        },
+        {
+          "id": "tooluse_bvDIGHIVKbvTou7fWYW0Mg",
+          "tool": "augur_generate_synthetic_datavector",
+          "server": "serve-desc.sh",
+          "args": {
+            "config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.yml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/datavector_c02c59.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/nz_sources_c02c59.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/nz_lenses_c02c59.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/cov_c02c59.npy\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/datavector_c02c59.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc\"\n  ],\n  \"message\": \"Synthetic data vector: 540 C_ell points (457 inside the scale cuts) with gaus_internal covariance, total S/N 1574; computed on local.\",\n  \"metadata\": {\n    \"computed_on\": \"local\",\n    \"n_data\": 540,\n    \"n_data_in_likelihood\": 457,\n    \"per_statistic\": {\n      \"galaxy_shear_cl_ee\": {\n        \"n_points\": 300,\n        \"n_in_likelihood\": 300,\n        \"n_pairs\": 15\n      },\n      \"galaxy_shearDensity_cl_e\": {\n        \"n_points\": 140,\n        \"n_in_likelihood\": 88,\n        \"n_pairs\": 7\n      },\n      \"galaxy_density_cl\": {\n        \"n_points\": 100,\n        \"n_in_likelihood\": 69,\n        \"n_pairs\": 5\n      }\n    },\n    \"total_snr\": 1574.2142453858198,\n    \"cov_type\": \"gaus_internal\",\n    \"scale_cuts_kept\": {\n      \"src0-src0\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src3-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src3-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src4-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"src3-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"src4-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"src3-lens1\": {\n        \"n_ell_kept\": 13,\n        \"lmax_kept\": 355.6558820077846\n      },\n      \"src4-lens1\": {\n        \"n_ell_kept\": 13,\n        \"lmax_kept\": 355.6558820077846\n      },\n      \"src4-lens2\": {\n        \"n_ell_kept\": 14,\n        \"lmax_kept\": 447.74422771366807\n      },\n      \"src4-lens3\": {\n        \"n_ell_kept\": 15,\n        \"lmax_kept\": 563.6765862528911\n      },\n      \"lens0-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"lens1-lens1\": {\n        \"n_ell_kept\": 13,\n        \"lmax_kept\": 355.6558820077846\n      },\n      \"lens2-lens2\": {\n        \"n_ell_kept\": 14,\n        \"lmax_kept\": 447.74422771366807\n      },\n      \"lens3-lens3\": {\n        \"n_ell_kept\": 15,\n        \"lmax_kept\": 563.6765862528911\n      },\n      \"lens4-lens4\": {\n        \"n_ell_kept\": 16,\n        \"lmax_kept\": 709.626",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/datavector_c02c59.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/nz_sources_c02c59.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/nz_lenses_c02c59.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/cov_c02c59.npy\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/datavector_c02c59.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc\"\n  ],\n  \"message\": \"Synthetic data vector: 540 C_ell points (457 inside the scale cuts) with gaus_internal covariance, total S/N 1574; computed on local.\",\n  \"metadata\": {\n    \"computed_on\": \"local\",\n    \"n_data\": 540,\n    \"n_data_in_likelihood\": 457,\n    \"per_statistic\": {\n      \"galaxy_shear_cl_ee\": {\n        \"n_points\": 300,\n        \"n_in_likelihood\": 300,\n        \"n_pairs\": 15\n      },\n      \"galaxy_shearDensity_cl_e\": {\n        \"n_points\": 140,\n        \"n_in_likelihood\": 88,\n        \"n_pairs\": 7\n      },\n      \"galaxy_density_cl\": {\n        \"n_points\": 100,\n        \"n_in_likelihood\": 69,\n        \"n_pairs\": 5\n      }\n    },\n    \"total_snr\": 1574.2142453858198,\n    \"cov_type\": \"gaus_internal\",\n    \"scale_cuts_kept\": {\n      \"src0-src0\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src0-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src1-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src3-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src3-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src4-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 1782.501876267492\n      },\n      \"src2-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"src3-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"src4-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"src3-lens1\": {\n        \"n_ell_kept\": 13,\n        \"lmax_kept\": 355.6558820077846\n      },\n      \"src4-lens1\": {\n        \"n_ell_kept\": 13,\n        \"lmax_kept\": 355.6558820077846\n      },\n      \"src4-lens2\": {\n        \"n_ell_kept\": 14,\n        \"lmax_kept\": 447.74422771366807\n      },\n      \"src4-lens3\": {\n        \"n_ell_kept\": 15,\n        \"lmax_kept\": 563.6765862528911\n      },\n      \"lens0-lens0\": {\n        \"n_ell_kept\": 11,\n        \"lmax_kept\": 224.40369086039274\n      },\n      \"lens1-lens1\": {\n        \"n_ell_kept\": 13,\n        \"lmax_kept\": 355.6558820077846\n      },\n      \"lens2-lens2\": {\n        \"n_ell_kept\": 14,\n        \"lmax_kept\": 447.74422771366807\n      },\n      \"lens3-lens3\": {\n        \"n_ell_kept\": 15,\n        \"lmax_kept\": 563.6765862528911\n      },\n      \"lens4-lens4\": {\n        \"n_ell_kept\": 16,\n        \"lmax_kept\": 709.6267784671511\n      }\n    },\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc\",\n    \"cov_file_is_full_matrix\": true,\n    \"nz_zmean\": {\n      \"src0\": 0.2505966656834447,\n      \"src1\": 0.45605942855726667,\n      \"src2\": 0.6546446098265024,\n      \"src3\": 0.9172730584971861,\n      \"src4\": 1.5266621728445269,\n      \"lens0\": 0.3171458339539383,\n      \"lens1\": 0.5055579964793565,\n      \"lens2\": 0.699855311932133,\n      \"lens3\": 0.8960284242214852,\n      \"lens4\": 1.0929400158289029\n    },\n    \"versions\": {\n      \"augur\": \"present\",\n      \"firecrown\": \"1.16.0\",\n      \"pyccl\": \"3.3.6\",\n      \"sacc\": \"2.4\",\n      \"numdifftools\": \"0.11.1\",\n      \"tjpcov\": \"present\"\n    },\n    \"timing_s\": {\n      \"generate\": 6.391386032104492,\n      \"total\": 6.466673135757446\n    },\n    \"validator_warnings\": []\n  }\n}\n[1 figure(s) displayed to the user as Figure 7 (datavector_c02c59.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "9825d66a6c53",
+            "b044ce5f0005",
+            "57e81aede84f",
+            "3bba72ea7f8d",
+            "573a73bfa084",
+            "6f56270b3cc2"
+          ]
+        },
+        {
+          "id": "tooluse_ePxUolyVq575mRnufgwIya",
+          "tool": "sacc_inspect",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_tracers.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src1.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src2.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src3.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src4.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens1.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens2.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens3.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens4.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_datavector.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_covariance_corr.png\"\n  ],\n  \"message\": \"fiducial_datavector.sacc: 10 tracers (src0, src1, src2, src3, src4, lens0, lens1, lens2, lens3, lens4), 3 data types, 540 points, harmonic space, covariance present (cond 9.95e+12). Tracer names and quantities are firecrown/augur-ready.\",\n  \"metadata\": {\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc\",\n    \"n_points\": 540,\n    \"space\": \"harmonic\",\n    \"tracers\": [\n      {\n        \"name\": \"src0\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.2505966656834448\n      },\n      {\n        \"name\": \"src1\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.4560594285572666\n      },\n      {\n        \"name\": \"src2\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.6546446098265025\n      },\n      {\n        \"name\": \"src3\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.9172730584971862\n      },\n      {\n        \"name\": \"src4\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 1.526629777407961\n      },\n      {\n        \"name\": \"lens0\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.31714583395393825\n      },\n      {\n        \"name\": \"lens1\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.5055579964793566\n      },\n      {\n        \"name\": \"lens2\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.6998553119321332\n      },\n      {\n        \"name\": \"lens3\",\n        \"type\": \"N",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_tracers.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src1.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src2.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src3.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src4.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens1.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens2.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens3.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens4.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_datavector.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_covariance_corr.png\"\n  ],\n  \"message\": \"fiducial_datavector.sacc: 10 tracers (src0, src1, src2, src3, src4, lens0, lens1, lens2, lens3, lens4), 3 data types, 540 points, harmonic space, covariance present (cond 9.95e+12). Tracer names and quantities are firecrown/augur-ready.\",\n  \"metadata\": {\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc\",\n    \"n_points\": 540,\n    \"space\": \"harmonic\",\n    \"tracers\": [\n      {\n        \"name\": \"src0\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.2505966656834448\n      },\n      {\n        \"name\": \"src1\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.4560594285572666\n      },\n      {\n        \"name\": \"src2\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.6546446098265025\n      },\n      {\n        \"name\": \"src3\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.9172730584971862\n      },\n      {\n        \"name\": \"src4\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 1.526629777407961\n      },\n      {\n        \"name\": \"lens0\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.31714583395393825\n      },\n      {\n        \"name\": \"lens1\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.5055579964793566\n      },\n      {\n        \"name\": \"lens2\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.6998553119321332\n      },\n      {\n        \"name\": \"lens3\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.8960284242214851\n      },\n      {\n        \"name\": \"lens4\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_density\",\n        \"inferred_kind\": \"density\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 1.0929400158289033\n      }\n    ],\n    \"data_types\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"n_points\": 300,\n        \"n_pairs\": 15,\n        \"tracer_pairs\": [\n          [\n            \"src0\",\n            \"src0\"\n          ],\n          [\n            \"src0\",\n            \"src1\"\n          ],\n          [\n            \"src0\",\n            \"src2\"\n          ],\n          [\n            \"src0\",\n            \"src3\"\n          ],\n          [\n            \"src0\",\n            \"src4\"\n          ],\n          [\n            \"src1\",\n            \"src1\"\n          ],\n          [\n            \"src1\",\n            \"src2\"\n          ],\n          [\n            \"src1\",\n            \"src3\"\n          ],\n          [\n            \"src1\",\n            \"src4\"\n          ],\n          [\n            \"src2\",\n            \"src2\"\n          ],\n          [\n            \"src2\",\n            \"src3\"\n          ],\n          [\n            \"src2\",\n            \"src4\"\n          ],\n          [\n            \"src3\",\n            \"src3\"\n          ],\n          [\n            \"src3\",\n            \"src4\"\n          ],\n          [\n            \"src4\",\n            \"src4\"\n          ]\n        ],\n        \"x\": \"ell\",\n        \"x_min\": 22.440369086039272,\n        \"x_max\": 1782.501876267492,\n        \"has_window\": false\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"n_points\": 140,\n        \"n_pairs\": 7,\n        \"tracer_pairs\": [\n          [\n            \"src2\",\n            \"lens0\"\n          ],\n          [\n            \"src3\",\n            \"lens0\"\n          ],\n          [\n            \"src4\",\n            \"lens0\"\n          ],\n          [\n            \"src3\",\n            \"lens1\"\n          ],\n          [\n            \"src4\",\n            \"lens1\"\n          ],\n          [\n            \"src4\",\n            \"lens2\"\n          ],\n          [\n            \"src4\",\n            \"lens3\"\n          ]\n        ],\n        \"x\": \"ell\",\n        \"x_min\": 22.440369086039272,\n        \"x_max\": 1782.501876267492,\n        \"has_window\": false\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"n_points\": 100,\n        \"n_pairs\": 5,\n        \"tracer_pairs\": [\n          [\n            \"lens0\",\n            \"lens0\"\n          ],\n          [\n            \"lens1\",\n            \"lens1\"\n          ],\n          [\n            \"lens2\",\n            \"lens2\"\n          ],\n          [\n            \"lens3\",\n            \"lens3\"\n          ],\n          [\n            \"lens4\",\n            \"lens4\"\n          ]\n        ],\n        \"x\": \"ell\",\n        \"x_min\": 22.440369086039272,\n        \"x_max\": 1782.501876267492,\n        \"has_window\": false\n      }\n    ],\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        540,\n        540\n      ],\n      \"diag_min\": 2.0125861050534221e-23,\n      \"diag_max\": 1.8777787313897981e-10,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 9951480641729.08,\n      \"min_eigenvalue\": 1.8887251600632316e-23,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.8776372956179106,\n      \"is_diagonal\": false\n    },\n    \"firecrown_ready\": true,\n    \"tracer_names_ready\": true,\n    \"quantities_ready\": true,\n    \"sacc_version\": null\n  }\n}\n[1 figure(s) displayed to the user as Figure 21 (fiducial_datavector_covariance_corr.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "0c5b327b37cd",
+            "c52f3c229883",
+            "4626edf5aa1a",
+            "3aa32c4a75e3",
+            "11afa12ab03f",
+            "4d9dbeeaf0b0",
+            "5223b1181f38",
+            "ed0b2072b40c",
+            "3c43a2edf2ec",
+            "8258a83a80e6",
+            "fed5143d4bbd",
+            "5035f357a69c",
+            "8f2c7860fe58"
+          ]
+        }
+      ],
+      "artifact_ids": [
+        "e3c14effd681",
+        "19ca2d3aaea2",
+        "9825d66a6c53",
+        "b044ce5f0005",
+        "57e81aede84f",
+        "3bba72ea7f8d",
+        "573a73bfa084",
+        "6f56270b3cc2",
+        "0c5b327b37cd",
+        "c52f3c229883",
+        "4626edf5aa1a",
+        "3aa32c4a75e3",
+        "11afa12ab03f",
+        "4d9dbeeaf0b0",
+        "5223b1181f38",
+        "ed0b2072b40c",
+        "3c43a2edf2ec",
+        "8258a83a80e6",
+        "fed5143d4bbd",
+        "5035f357a69c",
+        "8f2c7860fe58"
+      ],
+      "usage": {
+        "quick": {
+          "input": 299788,
+          "cached": 234322,
+          "output": 2497,
+          "reasoning": 0,
+          "calls": 5
+        }
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "e3c14effd681",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.yml",
+      "name": "forecast_config.yml",
+      "kind": "other",
+      "tool": "augur_generate_forecast_config",
+      "server": "serve-desc.sh",
+      "figure": 1,
+      "caption": ""
+    },
+    {
+      "id": "19ca2d3aaea2",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/forecast_config.json",
+      "name": "forecast_config.json",
+      "kind": "text",
+      "tool": "augur_generate_forecast_config",
+      "server": "serve-desc.sh",
+      "figure": 2,
+      "caption": ""
+    },
+    {
+      "id": "9825d66a6c53",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/datavector_c02c59.csv",
+      "name": "datavector_c02c59.csv",
+      "kind": "csv",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 3,
+      "caption": ""
+    },
+    {
+      "id": "b044ce5f0005",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/nz_sources_c02c59.csv",
+      "name": "nz_sources_c02c59.csv",
+      "kind": "csv",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 4,
+      "caption": ""
+    },
+    {
+      "id": "57e81aede84f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/nz_lenses_c02c59.csv",
+      "name": "nz_lenses_c02c59.csv",
+      "kind": "csv",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 5,
+      "caption": ""
+    },
+    {
+      "id": "3bba72ea7f8d",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/cov_c02c59.npy",
+      "name": "cov_c02c59.npy",
+      "kind": "other",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 6,
+      "caption": ""
+    },
+    {
+      "id": "573a73bfa084",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/datavector_c02c59.png",
+      "name": "datavector_c02c59.png",
+      "kind": "image",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 7,
+      "caption": ""
+    },
+    {
+      "id": "6f56270b3cc2",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/augur_y1_3x2pt_l2000_14dd28/fiducial_datavector.sacc",
+      "name": "fiducial_datavector.sacc",
+      "kind": "other",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 8,
+      "caption": ""
+    },
+    {
+      "id": "0c5b327b37cd",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_tracers.csv",
+      "name": "fiducial_datavector_tracers.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 9,
+      "caption": ""
+    },
+    {
+      "id": "c52f3c229883",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src0.csv",
+      "name": "fiducial_datavector_nz_src0.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 10,
+      "caption": ""
+    },
+    {
+      "id": "4626edf5aa1a",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src1.csv",
+      "name": "fiducial_datavector_nz_src1.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 11,
+      "caption": ""
+    },
+    {
+      "id": "3aa32c4a75e3",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src2.csv",
+      "name": "fiducial_datavector_nz_src2.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 12,
+      "caption": ""
+    },
+    {
+      "id": "11afa12ab03f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src3.csv",
+      "name": "fiducial_datavector_nz_src3.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 13,
+      "caption": ""
+    },
+    {
+      "id": "4d9dbeeaf0b0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_src4.csv",
+      "name": "fiducial_datavector_nz_src4.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 14,
+      "caption": ""
+    },
+    {
+      "id": "5223b1181f38",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens0.csv",
+      "name": "fiducial_datavector_nz_lens0.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 15,
+      "caption": ""
+    },
+    {
+      "id": "ed0b2072b40c",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens1.csv",
+      "name": "fiducial_datavector_nz_lens1.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 16,
+      "caption": ""
+    },
+    {
+      "id": "3c43a2edf2ec",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens2.csv",
+      "name": "fiducial_datavector_nz_lens2.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 17,
+      "caption": ""
+    },
+    {
+      "id": "8258a83a80e6",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens3.csv",
+      "name": "fiducial_datavector_nz_lens3.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 18,
+      "caption": ""
+    },
+    {
+      "id": "fed5143d4bbd",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_nz_lens4.csv",
+      "name": "fiducial_datavector_nz_lens4.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 19,
+      "caption": ""
+    },
+    {
+      "id": "5035f357a69c",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_datavector.csv",
+      "name": "fiducial_datavector_datavector.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 20,
+      "caption": ""
+    },
+    {
+      "id": "8f2c7860fe58",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_170716/fiducial_datavector_covariance_corr.png",
+      "name": "fiducial_datavector_covariance_corr.png",
+      "kind": "image",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 21,
+      "caption": ""
+    }
+  ],
+  "digest": null,
+  "title": "Generate LSST Y1 SRD source and lens n(z) bins with ccl_l\u2026"
+}

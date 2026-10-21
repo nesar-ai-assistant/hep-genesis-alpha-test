@@ -480,3 +480,27 @@ Clean run — no flags.
 
 Clean run — no flags.
 
+
+## 2026-10-21-eve-desc — 10 pass / 0 flagged
+
+Clean run — no flags.
+
+
+Notes (manual review):
+- **Fresh-chat run** (new harness `--chat-suffix -1021`): first DESC battery where all
+  chains were built from scratch rather than resumed. 10/10 pass.
+- **[local] D8 test-design flaw (fixed)**: D8's prompt assumed a NaMaster sacc from a
+  prior turn; with fresh chats the agent correctly refused instead of fabricating.
+  Harness fixed: D8 now continues D7's chat (`--chat nm`). Manual rerun on the
+  continued chat completed the full 9-tool cross-family chain (sacc → mask →
+  prepare_for_firecrown → tjpcov config/cov/compare → Knox → firecrown loglike):
+  TJPCov↔Knox agree ~1%, χ²=27.7/18 (p≈0.07), positive definite. Chaining verified.
+- **upstream #11, 3rd recurrence (D6)**: txpipe_validate_pipeline tool result again
+  truncated at 20k chars (~8 of 27 dry-run commands). Difference from prior runs: this
+  time the model NOTICED and disclosed the cut-off ("output was cut off after about 8
+  of them") instead of misreporting — with the fresh chat there was no prior-run
+  memory to anchor a wrong belief. Still silent truncation server-side; comment added
+  to HEP-KE/hep-genesis-releases#11.
+- **[local] desc_mcp_server#4 persists**: 48/54 tools; `tools.ccl` module missing.
+  D2/D9/D10 CCL steps ran as honest "not computed" refusals. Also confirmed
+  `conamaster` family is absent from `tools/` entirely (never registered).

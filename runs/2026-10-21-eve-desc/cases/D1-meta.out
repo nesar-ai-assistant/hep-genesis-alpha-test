@@ -1,0 +1,25 @@
+Installed versions: pyccl 3.3.6, sacc 2.4, firecrown 1.16.0, augur 1.2.4.1.
+
+The ccl family is installed but can't be used right now. `describe_desc_tool_family("ccl")` failed with "No module named 'tools.ccl'". pyccl itself imports fine; what's missing is this server's wrapper module for the ccl family, so it returned an empty tool list. None of the other tool names on this server start with `ccl_` either.
+
+To fix it, check the server's `tools/` package or the deployment that `serve-desc.sh` starts.
+
+[Tool ledger]
+- list_desc_packages: pyccl 3.3.6, sacc 2.4, firecrown 1.16.0 (clone 1.16.0+74), augur 1.2.4.1 (clone 1.2.4); also tjpcov 0.5.1, pymaster 3.0, smokescreen v1.5.6, ceci 2.6; txpipe not imported (by design).
+- describe_desc_tool_family(ccl): failed to import, "No module named 'tools.ccl'", empty tool list.
+Loading MCP servers…
+[10/21/26 17:06:26] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] list_desc_packages {}
+[10/21/26 17:06:32] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/21/26 17:06:41] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] list_desc_packages -> ok: {   "status": "success",   "files": [],   "message": "9 DESC packages; tool families: meta, ccl, sacc, firecrown, augur, txpipe, tjpcov, namaster, smokescreen, 
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/21/26 17:06:42] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+Tokens: 116K in (56K cached) · 457 out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/meta-1021.json

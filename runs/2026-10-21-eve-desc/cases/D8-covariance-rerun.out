@@ -1,0 +1,132 @@
+Loading MCP servers…
+[10/21/26 17:17:18] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+I'll start by checking the sacc's data types and getting f_sky from the mask. Both can run at once.
+[tool] sacc_inspect {"sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171124/namaster_32676c.sacc", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/26102
+[10/21/26 17:17:29] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_inspect -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_32676c_tracers.csv",     "/Use
+[tool] namaster_mask_properties {"mask_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171124/sim_mask.fits", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_17171
+[10/21/26 17:17:30] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/21/26 17:17:31] INFO     NSIDE = 64                          fitsfunc.py:471
+                    INFO     ORDERING = RING in fits file        fitsfunc.py:479
+                    INFO     INDXSCHM = IMPLICIT                 fitsfunc.py:506
+[tool] namaster_mask_properties -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/sim_mask_mask_stats.json"   ],   "messa
+The file still has B-mode types, which neither the Knox tool nor firecrown's E-mode likelihood supports, so I'll drop them first.
+[tool] sacc_prepare_for_firecrown {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171124/namaster_326
+[10/21/26 17:17:35] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_prepare_for_firecrown -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_EE.hdf5"   ],   "message": "Wr
+[tool] tjpcov_generate_config {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_EE.
+[10/21/26 17:17:43] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tjpcov_generate_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/tjpcov_config_d6e7b2.yaml"   ],   "mess
+[tool] sacc_attach_gaussian_covariance {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_EE.
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_attach_gaussian_covariance -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_EE_knox.hdf5",     "/Users/nra
+[tool] tjpcov_compute_covariance {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/tjpcov_config_d6e7b2.yaml", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/run
+[10/21/26 17:17:47] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+Computing independent covariance blocks
+Rank None: ('src0', 'src0'), ('src0', 'src0')
+Rank None: ('src0', 'src0'), ('src0', 'lens0')
+Rank None: ('src0', 'src0'), ('lens0', 'lens0')
+Rank None: ('src0', 'lens0'), ('src0', 'lens0')
+Rank None: ('src0', 'lens0'), ('lens0', 'lens0')
+Rank None: ('lens0', 'lens0'), ('lens0', 'lens0')
+Building the covariance: placing blocks in their place
+('src0', 'src0') ('src0', 'src0')
+('src0', 'src0') ('src0', 'lens0')
+('src0', 'src0') ('lens0', 'lens0')
+('src0', 'lens0') ('src0', 'lens0')
+('src0', 'lens0') ('lens0', 'lens0')
+('lens0', 'lens0') ('lens0', 'lens0')
+[tool] tjpcov_compute_covariance -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_EE_tjpcov_674817.hdf5",     "/
+[tool] tjpcov_compare_covariances {"label_a": "Knox", "label_b": "TJPCov", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717", "sacc_a": "/Users/nramachandra/hep-genesis-testing/projects/ramp
+[10/21/26 17:17:57] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] tjpcov_compare_covariances -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/namaster_EE_knox_vs_namaster_EE_tjpcov_
+[tool] firecrown_build_likelihood {"name": "nmt_tjpcov", "nc_per_bin": [], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/r
+[10/21/26 17:17:58] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_build_likelihood -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/nmt_tjpcov_387b8d.yaml",     "/Users/nr
+[tool] firecrown_build_likelihood {"name": "nmt_knox", "nc_per_bin": [], "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ram
+[10/21/26 17:17:59] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_build_likelihood -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/nmt_knox_5281c9.yaml",     "/Users/nram
+Now χ² at the input cosmology (vanilla ΛCDM, lens0_bias = 1.6, no systematics, matching the simulation) under each covariance.
+[tool] firecrown_compute_loglike {"experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/nmt_tjpcov_387b8d.yaml", "nuisance": {"lens0_bias": 1.6}, "output_dir": "/Users/nramachandra/hep-gene
+[10/21/26 17:18:06] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/theory_vs_data_788f4f.csv",     "/Users
+[tool] firecrown_compute_loglike {"experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/nmt_knox_5281c9.yaml", "nuisance": {"lens0_bias": 1.6}, "output_dir": "/Users/nramachandra/hep-genesi
+[10/21/26 17:18:08] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261021_171717/theory_vs_data_868980.csv"   ],   "mess
+I computed the TJPCov FourierGaussianFsky covariance, and it is positive definite. It agrees with plain Knox to about 1%. At the input cosmology χ² = 27.7 for 18 data points (p ≈ 0.07), which is an acceptable fit.
+
+**What I did**
+1. **Dropped the B-mode spectra.** The NaMaster sacc has 42 points; the Gaussian covariance tools and the firecrown likelihood only handle the E-mode 3x2pt spectra. That leaves 18 points: shear EE, density × shear-E and density, 6 bandpowers each. File: `namaster_EE.hdf5`.
+2. **Read f_sky from the mask** (`sim_mask.fits`): f_sky,eff = 0.2995, about 12,354 deg². The mask is binary, so the raw and effective values are the same.
+3. **Wrote the TJPCov config** (`tjpcov_config_d6e7b2.yaml`):
+   - FourierGaussianFsky with f_sky = 0.2995.
+   - n_gal: 8 arcmin⁻² for src0 and 4 for lens0; σ_e = 0.26; lens0 bias 1.6.
+   - Same cosmology as the simulation (Ω_m = 0.30, σ8 = 0.81, h = 0.67).
+   - It uses the sacc's bandpower windows for the binning.
+4. **Computed the TJPCov covariance** locally in 1.1 s → `namaster_EE_tjpcov_674817.hdf5`. The correlation matrix is Figure 28.
+5. **Built a Knox covariance** from the same inputs → `namaster_EE_knox.hdf5`.
+6. **Built a firecrown likelihood for each file and evaluated χ²** at the input point: ΛCDM, lens0 bias 1.6, no other systematics.
+
+**Positive definiteness**
+
+| | TJPCov | Knox |
+|---|---|---|
+| Positive definite | yes | yes |
+| Minimum eigenvalue | 1.11e-20 | 1.11e-20 |
+| Condition number | 1.01e9 | 1.03e9 |
+| Largest off-diagonal correlation | 0.78 | 0.78 |
+| Total S/N | 64.9 | 64.3 |
+
+The condition number of about 10⁹ reflects the very different scales of the shear and clustering spectra (the diagonal ranges from 3e-20 to 1e-11), not a near-singular matrix. TJPCov did not flag it as ill-conditioned.
+
+**TJPCov vs Knox (Figure 30)**
+The table gives the ratio σ_TJPCov / σ_Knox per data type:
+
+| Data type | Median | Min | Max |
+|---|---|---|---|
+| Shear EE | 0.991 | 0.883 | 0.999 |
+| Shear–density | 0.989 | 0.936 | 1.001 |
+| Density | 0.991 | 0.967 | 1.002 |
+
+- The correlation matrices differ by at most 0.026.
+- The biggest differences (12% for shear EE, 6% for shear–density) are presumably in the lowest bin, ℓ = 2–22. Knox approximates each bin's width with a single Δℓ, while TJPCov sums over the ℓ's inside the bandpower window. That matters most where the bin is wide relative to ℓ.
+
+Both use the same Gaussian f_sky physics, so close agreement is what you'd expect.
+
+**χ² at the input cosmology**
+
+| Spectrum | TJPCov χ² (own block) | Knox χ² (own block) |
+|---|---|---|
+| Shear EE | 8.1 / 6 | 7.9 / 6 |
+| Shear–density | 5.4 / 6 | 5.1 / 6 |
+| Density | 8.6 / 6 | 8.4 / 6 |
+| **Total (with cross-covariance)** | **27.7 / 18** (χ²/n = 1.54) | **26.1 / 18** (χ²/n = 1.45) |
+
+- The p-values are about 0.07 for TJPCov and 0.10 for Knox. These are my own estimates from a χ² distribution with 18 degrees of freedom, since nothing is fitted.
+- The largest single pull is 2.1σ and the RMS pull is 1.1.
+- The shear–density spectrum makes a slightly negative contribution to the total (−3.3 of the 27.7 under TJPCov). Its 7–9% shortfall is correlated with the low density spectrum, so the cross-covariance partly absorbs it.
+- Theory vs data with error bars is in Figure 36.
+
+The few-percent offsets seen in the previous step are consistent with the noise in a single realization.
+
+**Caveats**
+- **Covariance is likely slightly too small.** Both covariances use the f_sky approximation. They ignore the coupling between neighbouring bandpowers caused by the sharp-edged mask, and that coupling inflates the real scatter, especially at low ℓ. This probably explains why χ²/n is a little above 1. A NaMaster-based covariance with the same mask (FourierGaussianNmt), or repeating the simulation with several seeds, would test that.
+- **Only Gaussian terms.** No super-sample or connected non-Gaussian terms are included. They are negligible at ℓ < 130 for this setup.
+
+All files are in `runs/261021_171717/`.
+Tokens: 462K in (387K cached) · 6.0K out · 7 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/nm-1021.json
