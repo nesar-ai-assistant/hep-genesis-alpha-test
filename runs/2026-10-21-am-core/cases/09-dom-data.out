@@ -1,0 +1,29 @@
+I'll check once more whether a sample file or dataset has been added.
+Nothing has changed. I checked again just now: there are no input files and no loaded datasets. So I still can't produce real statistics or a histogram for a Gaussian with mean 5 and sigma 2.
+
+**Why not:**
+- **The mean and sigma can't be set.** `run_test_job` only takes `distribution`, `n` and `seed`. Its `normal` option always uses mean 0 and sigma 1. Earlier I tried `normal(mu=5,sigma=2)` and it was rejected.
+- **The samples aren't saved.** The job returns only a summary (`artifact: null`). That leaves `compute_statistics` and `compute_histogram` with no data to work on.
+
+**The closest result I have** is from the first run (`normal`, n=1000, seed=42, run on this machine). It gave a mean of -0.0183 and a std of 1.0191. Shifting and scaling by 5 + 2x gives:
+- **mean ≈ 4.963**, against an expected 5 ± 0.063
+- **std ≈ 2.038**, against an expected 2 ± 0.045
+
+Both are within about one standard error of what's expected. But this is my arithmetic on a summary, not a sample that was actually drawn, and there's no histogram.
+
+**To get a real answer, one of these needs to change:**
+1. **Add a sample file** where `list_input_files` can find it, for example:
+   `numpy.savetxt("gauss_5_2.txt", numpy.random.default_rng(42).normal(5, 2, 1000))`
+   Then I'll load it and compute the statistics and histogram.
+2. **Update the server** so `run_test_job` accepts `mu` and `sigma` and saves its samples to a file.
+
+Repeating the request won't change the result unless one of those two things happens.
+Loading MCP servers…
+Loaded 21 tools
+[tool] list_input_files {}
+[tool] list_input_files -> ok: {   "status": "success",   "files": [],   "usage": "Pass any of these filenames to load_table_data()." }
+[tool] list_datasets {}
+[tool] list_datasets -> ok: {'count': 0, 'datasets': []}
+Tokens: 20K in (10K cached) · 764 out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/dom.json

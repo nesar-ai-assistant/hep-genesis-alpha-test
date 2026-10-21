@@ -330,9 +330,29 @@ time.
 - Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/11
   with the exact code lines and both run transcripts as evidence.
 
----
+### 28. Fixed `--chat` names make repeat core batteries resume stale conversations — no fresh tool chains **[local, harness design]** — open
 
-## Run log (auto-appended by harness)
+- Found 2026-10-21 (am-core, v0.3.18). Cases 04/05 (sbbn chat) answered
+"this is the fifth/sixth time you've asked" and made **zero new tool calls**
+(token line: `1 call` = the ListToolsRequest only); case 07 (hydro chat)
+likewise "sixth time you've asked for this". The agent correctly reasoned
+results were deterministic and replayed earlier grids instead of re-chaining.
+- Cause: harness uses fixed chat names (`--chat sbbn`, `idm`, `hydro`, `dom`,
+`multi`) in `build_cases()` core profile; at 4-6 batteries/day during ramp-up
+each run resumes the previous conversation in that chat file. Same caveat the
+skill documents for the DESC battery — it applies to ALL profiles.
+- Consequence: core battery loses its fresh-chain signal for tool use /
+multi-server orchestration; passing is still meaningful (CLI, reasoning,
+replay path), but "PASS" no longer exercises the tool-call path from scratch.
+Judge heuristic can't see this (rc=0, substantive output → PASS).
+- Fix (harness-side, no app bug): rotate chat names per run — append the
+run_id date suffix to chat names in `build_cases()`, e.g. `--chat sbbn-1021`.
+For DESC battery, same: `--chat meta-1021` etc. Not filed upstream —
+harness design, not an app defect.
+
+ ---
+
+ ## Run log (auto-appended by harness)
 
 
 ## 2026-10-15-r1-core — 10 pass / 0 flagged
@@ -429,6 +449,11 @@ Clean run — no flags.
 
 
 ## 2026-10-20-eve-desc — 10 pass / 0 flagged
+
+Clean run — no flags.
+
+
+## 2026-10-21-am-core — 10 pass / 0 flagged
 
 Clean run — no flags.
 
