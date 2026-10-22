@@ -1,0 +1,66 @@
+I couldn't use `ccl_lsst_srd_nz`: the CCL tool family isn't available on this server (`No module named 'tools.ccl'`). I made the same product with augur instead. It uses the LSST Y1 SRD n(z) tables and runs pyccl 3.3.6 and firecrown 1.16.0 underneath. The result is a 3x2pt sacc file, `fiducial_datavector.sacc`, with 540 C_ell points, and it already has a covariance.
+
+**Setup**
+- **Survey:** Y1 SRD, with 5 source bins (src0–4) and 5 lens bins (lens0–4). Number densities are 10 arcmin⁻² for sources and 18 arcmin⁻² for lenses; shape noise σ_e = 0.26.
+- **Cosmology:** the DESC SRD fiducial: Ω_c = 0.2664, Ω_b = 0.0492, h = 0.6727, n_s = 0.9645, σ8 = 0.831, w0 = −1, wa = 0. The linear power spectrum uses Eisenstein–Hu and the nonlinear part uses halofit.
+- **Multipoles:** 20 log-spaced bands with edges from 20 to 2000. The values stored in the file are the band centres, so they run from 22.4 to 1782.5.
+- **Plot:** Figure 7 shows all the C_ell with error bars.
+- **Signal-to-noise:** total S/N = 1574.
+
+**sacc_inspect results**
+
+*Tracers (10, all `NZ` type, 500 z samples each, z from 0 to 3.5):*
+
+| Tracer | Quantity | Mean z |
+|---|---|---|
+| src0 / src1 / src2 / src3 / src4 | galaxy_shear | 0.251 / 0.456 / 0.655 / 0.917 / 1.527 |
+| lens0 / lens1 / lens2 / lens3 / lens4 | galaxy_density | 0.317 / 0.506 / 0.700 / 0.896 / 1.093 |
+
+*Data types (harmonic space, no bandpower windows):*
+
+| Data type | Tracer pairs | Points |
+|---|---|---|
+| galaxy_shear_cl_ee | 15 (every src pair) | 300 |
+| galaxy_shearDensity_cl_e | 7 SRD source–lens pairs (src2–lens0, src3–lens0, src4–lens0, src3–lens1, src4–lens1, src4–lens2, src4–lens3) | 140 |
+| galaxy_density_cl | 5 (lens auto-spectra only) | 100 |
+
+*Covariance:* a covariance is present. It is a full 540×540 Gaussian mode-counting covariance with f_sky = 0.3, and it is positive definite. The smallest eigenvalue is 1.9e-23 and the condition number is about 1.0e13, which is high but normal for C_ell spanning many orders of magnitude. The largest off-diagonal correlation is 0.88. The correlation matrix is shown in Figure 21. This covariance has no super-sample or non-Gaussian terms; use TJPCov if you need those.
+
+Tracer names and quantities already follow the src{i}/lens{i} convention, so the file can go straight into firecrown with no renaming.
+
+**Scale cuts**
+The file keeps all 540 points; augur applies its cuts later, in the likelihood. It cuts lens probes at k_max = 0.202 Mpc⁻¹, which leaves 457 points in use. All 300 shear points survive. Galaxy–galaxy lensing keeps 88 of 140 points and clustering keeps 69 of 100. The lens cuts range from ℓ_max ≈ 224 for lens0 to about 710 for lens4. If you want true C_ell all the way to 2000 for clustering and galaxy–galaxy lensing, use the stored points as they are and don't apply these cuts.
+
+**Files** (in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429`):
+- `augur_y1_3x2_ell2000_14dd28/fiducial_datavector.sacc` — the sacc file
+- `augur_y1_3x2_ell2000_14dd28/forecast_config.yml` — the forecast config
+- `datavector_e8b679.csv`, `nz_sources_e8b679.csv`, `nz_lenses_e8b679.csv` — data vector and n(z) tables
+- `cov_e8b679.npy` — the covariance
+- `fiducial_datavector_tracers.csv`, `fiducial_datavector_nz_*.csv`, `fiducial_datavector_datavector.csv` — sacc_inspect outputs
+Loading MCP servers…
+[10/22/26 17:04:31] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/22/26 17:04:36] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+[tool] augur_generate_forecast_config {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429", "survey_year": "Y1", "probes": "3x2pt", "ell_min": 20, "ell_max": 2000, "nz_mode": "file", "cov_type": "
+[10/22/26 17:04:41] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/22/26 17:04:45] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] augur_generate_forecast_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429/augur_y1_3x2_ell2000_14dd28/forecast_co
+[tool] augur_generate_synthetic_datavector {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429/augur_y1_3x2_ell2000_14dd28/forecast_config.yml", "output_dir": "/Users/nramachandra/hep-genesis-testing/
+[10/22/26 17:04:49] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/22/26 17:04:54] INFO     loading filters                     generate.py:823
+[10/22/26 17:04:57] INFO     Warning: UserWarning: No bandpower    server.py:723
+                             windows associated with these data                 
+[tool] augur_generate_synthetic_datavector -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429/datavector_e8b679.csv",     "/Users/nra
+[tool] sacc_inspect {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429/augur_y1_3x2
+[10/22/26 17:05:00] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_inspect -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170429/fiducial_datavector_tracers.csv",     "
+Tokens: 300K in (235K cached) · 2.7K out · 5 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/dv-1022.json

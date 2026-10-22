@@ -1,0 +1,72 @@
+I ran the LSST Y1 shear-only Fisher forecast locally. The marginalised errors are **σ(σ8) = 0.0062** and **σ(w0) = 0.0165**. Both are fixed-nuisance best cases, so they are much tighter than a realistic Y1 shear analysis would give.
+
+**Setup**
+- **Config:** `augur_y1_shear_c7bb5d/forecast_config.yml`. The validator returned "go" with 0 errors and 0 warnings.
+- **Survey:** LSST Y1, cosmic shear only. 5 source bins, 10 galaxies/arcmin² in total, σ_e = 0.26, f_sky = 0.3.
+- **Data vector:** 15 shear spectra (the auto- and cross-spectra of the 5 bins) × 20 log-spaced ell bands from 20 to 15000, giving 300 points. No ell cut on shear (the SRD applies none).
+- **Model and covariance:** DESC SRD fiducial cosmology with Eisenstein–Hu transfer function and halofit. The covariance is augur's simple Gaussian mode-counting one (`gaus_internal`).
+- **Varied parameters:** Omega_c, sigma8 and w0. Derivatives used numdifftools with an absolute step of 0.01, which took 7 evaluations and about 8 s.
+- **Matrix checks:** symmetric, positive-definite, condition number about 1.2×10³.
+
+**Marginalised 1σ errors (no priors)**
+
+| Parameter | Fiducial | σ |
+|---|---|---|
+| Omega_c | 0.2664 | 0.00364 |
+| **sigma8** | 0.831 | **0.00622** |
+| **w0** | −1.0 | **0.0165** |
+| Omega_m (derived) | 0.3156 | 0.00364 |
+| S8 (derived) | 0.852 | 0.00173 |
+
+Figure 8 (`fisher_contours_8b4e0e.png`) shows the 68% and 95% Fisher ellipses for (Omega_c, sigma8, w0).
+
+**Why the numbers are optimistic**
+- **Nuisance parameters held at fiducial values:** Omega_b, h, n_s and wa are not varied, and neither are intrinsic alignments, photo-z shifts or shear calibration biases.
+- **Simplified covariance:** it is Gaussian only, with no super-sample or non-Gaussian terms.
+- **No small-scale cut:** shear goes up to ell = 15000 with no baryon modelling.
+
+Varying the full SRD parameter set, including IA and the photo-z and calibration nuisances, would loosen σ(w0) and σ(σ8) considerably. No DETF figure of merit is reported because wa was not varied.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/`:
+- `fisher_4b8ca6.csv`
+- `marginalized_sigmas_4b8ca6.csv`
+- `fom_4b8ca6.json`
+- `derivatives_4b8ca6.npy`
+- `augur_y1_shear_c7bb5d/fiducial_datavector.sacc`
+
+[Tool ledger]
+- augur_generate_forecast_config → `.../augur_y1_shear_c7bb5d/forecast_config.yml` (300 pts, 3 var_pars, gaus_internal, fsky 0.3)
+- augur_validate_forecast_config → go, 0 errors / 0 warnings
+- augur_compute_fisher (computed_on: local) → `fisher_4b8ca6.csv`; σ: Omega_c 0.003637, sigma8 0.006225, w0 0.016526; S8 0.001731; PD, cond 1186
+- augur_plot_fisher_contours → `fisher_contours_8b4e0e.png` (Figure 8)
+Loading MCP servers…
+[10/22/26 17:07:20] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] augur_generate_forecast_config {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719", "survey_year": "Y1", "probes": "shear", "var_pars": ["Omega_c", "sigma8", "w0"], "label": "y1_shear"}
+[10/22/26 17:07:27] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/22/26 17:07:31] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] augur_generate_forecast_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/augur_y1_shear_c7bb5d/forecast_config.y
+[tool] augur_validate_forecast_config {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/augur_y1_shear_c7bb5d/forecast_config.yml"}
+[10/22/26 17:07:34] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] augur_validate_forecast_config -> ok: {   "status": "success",   "files": [],   "message": "go: 0 errors, 0 warnings for /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719
+[tool] get_dispatch {}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] get_dispatch -> ok: Dispatch: local execution.
+[tool] augur_compute_fisher {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/augur_y1_shear_c7bb5d/forecast_config.yml", "output_dir": "/Users/nramachandra/hep-genesis-testing/projec
+[10/22/26 17:07:37] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/22/26 17:07:40] INFO     loading filters                     generate.py:823
+[10/22/26 17:07:45] INFO     Warning: UserWarning: No bandpower    server.py:723
+                             windows associated with these data                 
+[tool] augur_compute_fisher -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/fisher_4b8ca6.csv",     "/Users/nramach
+[tool] augur_plot_fisher_contours {"fisher_csvs": ["/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/fisher_4b8ca6.csv"], "labels": ["LSST Y1 cosmic shear"], "output_dir": "/Users/nramachandra/hep-genesis-
+[10/22/26 17:07:48] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] augur_plot_fisher_contours -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170719/fisher_contours_8b4e0e.png"   ],   "mes
+Tokens: 297K in (235K cached) · 2.3K out · 5 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/fisher-1022.json

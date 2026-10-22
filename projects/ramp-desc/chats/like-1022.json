@@ -1,0 +1,588 @@
+{
+  "id": "e7f62357a978",
+  "name": "like-1022",
+  "created_at": "2026-10-22T17:05:21",
+  "messages": [
+    {
+      "id": "0d1805db288b",
+      "role": "user",
+      "content": "Attach a Gaussian covariance to a sacc you generate (f_sky=0.4, sigma_e=0.26, n_gal=10/arcmin2), build a firecrown likelihood (harmonic, PhotoZShift+MultiplicativeShearBias per bin, LinearAlignment global), compute loglike at the generation cosmology. chi2 should be ~0; explain why.",
+      "ts": "2026-10-22T17:05:21",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "059071050eff",
+      "role": "assistant",
+      "content": "I'll generate a noiseless theory sacc with augur, replace its covariance with the requested Gaussian one, then build and evaluate the firecrown likelihood.\n\nI got **\u03c7\u00b2 = 0.00 for 300 points** (log L = \u22120.000, every pull zero), but only on the second try. The first attempt gave \u03c7\u00b2 \u2248 2\u00d710\u2076, and that is part of the explanation.\n\n## What ran (all locally)\n\n1. **Sacc generation (augur):** LSST Y1 cosmic shear only. 5 source bins give 15 auto and cross pairs, with 20 log-spaced multipole bands from \u2113 = 20 to 15000, so 300 points. Cosmology was the DESC SRD fiducial: \u03a9_c = 0.2664, \u03a9_b = 0.0492, h = 0.6727, n_s = 0.9645, \u03c38 = 0.831 (\u03a9_m = 0.316), with the Eisenstein\u2013Hu transfer function and halofit. Source density was 10 arcmin\u207b\u00b2, f_sky = 0.4, \u03c3_e = 0.26.\n2. **Gaussian covariance:** I replaced augur's covariance with the mode-counting one, Cov = (C_ac C_bd + C_ad C_bc) / ((2\u2113+1) \u0394\u2113 f_sky), using the same f_sky, \u03c3_e and n_gal. The 300\u00d7300 matrix is positive definite, with condition number 8.2\u00d710\u2079 and total S/N = 1684.\n3. **Likelihood (firecrown):** harmonic space, per-bin `PhotoZShift` and `MultiplicativeShearBias`, global `LinearAlignment`. It has 300 data points and 24 parameters (11 cosmology, 13 nuisance).\n4. **First evaluation, on the augur data vector:** \u03c7\u00b2 = 2,013,454 (\u03c7\u00b2/n = 6712, rms pull 74). Changing z_piv from 0.62 to 0.5 gave exactly the same \u03c7\u00b2, as it should with alphaz = 0. Figure 13 shows the mismatch.\n5. **Fix:** I used firecrown's own model at the same point to write a noiseless theory sacc. It keeps the same n(z) and the same covariance.\n6. **Second evaluation, on that file:** \u03c7\u00b2 = 0.00 and log L = \u22120.000 (Figure 24).\n\nThe nuisance parameters were the same in both evaluations: all \u03b4z_i = 0, all m_i = 0, ia_bias = 0.5 and alphaz = 0.\n\n## Why \u03c7\u00b2 is about 0\n\n\u03c7\u00b2 = (d \u2212 t)\u1d40 C\u207b\u00b9 (d \u2212 t), where d is the data vector, t is the theory and C is the covariance.\n\n- **The data is the model.** The sacc values were made by the same firecrown model, with the same n(z), multipoles, systematics and parameters, that the likelihood evaluates. So d \u2212 t = 0 at every point.\n- **No noise was added.** A data vector drawn from C would scatter around the theory and give \u03c7\u00b2 \u2248 n_data \u2248 300 \u00b1 24 (24 \u2248 \u221a(2\u00d7300)). The noiseless version has zero residual.\n- **The covariance doesn't change the result.** With a zero residual, any positive-definite C gives \u03c7\u00b2 = 0. The size of C only sets how fast \u03c7\u00b2 grows when you move away from the true point, which is what a scan or Fisher matrix measures.\n\nSo getting exactly 0 shows that the plumbing is consistent: tracer names, ordering, binning, parameter names and units. Nonzero residuals at the 10\u207b\u00b9\u00b2 level would just be floating-point noise.\n\n## Why the first attempt failed\n\nThe augur data vector was generated with augur's own SRD modelling choices, not the likelihood configuration I evaluated, so \u03c7\u00b2 measured the model difference, not a fit. I haven't worked out exactly which settings differ. Intrinsic-alignment amplitude and how the IA model is evaluated are the likely candidates, but I haven't checked them. The general lesson is that the closure test only works when the data vector comes from exactly the configuration being tested.\n\n**Caveat on the covariance:** its S/N of 1684 is much higher than the 366 from augur's covariance. Neither file has bandpower windows, so the tool estimated \u0394\u2113 from the spacing of neighbouring band centres, not the true band edges. That likely makes these errors too small. It doesn't affect \u03c7\u00b2 = 0, but for a forecast I'd re-attach the covariance with the explicit band edges (20 \u2026 15000, recorded in the augur config).\n\n## Files\n\nAll files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/`:\n- Theory sacc with the covariance (closure test passes): `closure_c39d8b_theory_e57b1e.hdf5`\n- Likelihood for it: `closure_fc_3e8485.yaml`\n- Augur data vector with the Gaussian covariance attached: `closure_gausscov.hdf5`\n\n[Tool ledger]\n- augur config: augur_closure_08b16a/forecast_config.yml (Y1 shear, 5 src bins, 300 pts, fsky 0.4, ndens 10, sigma_e 0.26, desc_srd + eisenstein_hu/halofit)\n- augur sacc: augur_closure_08b16a/fiducial_datavector.sacc (augur S/N 366); Figure 6\n- Gaussian cov sacc: closure_gausscov.hdf5 (S/N 1684.4, cond 8.17e9, PD, delta_ell from neighbour spacing)\n- Likelihood on augur data: closure_c39d8b.yaml -> chi2 2013453.55 (chi2/n 6711.5, rms pull 73.6), same for z_piv 0.62 and 0.5; Figures 13, 15\n- Firecrown theory sacc: closure_c39d8b_theory_e57b1e.hdf5 (same cov); Figure 18\n- Likelihood on theory sacc: closure_fc_3e8485.yaml -> chi2 0.00, loglike -0.000, n_data 300; Figure 24 (theory_vs_data_17c188.png)",
+      "ts": "2026-10-22T17:05:21",
+      "tool_calls": [
+        {
+          "id": "tooluse_tq4dWZNs4jXEzzJDzy4FGv",
+          "tool": "augur_generate_forecast_config",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "probes": "shear",
+            "survey_year": "Y1",
+            "label": "closure",
+            "fsky": 0.4,
+            "ndens_source": 10,
+            "sigma_e": 0.26,
+            "var_pars": [
+              "Omega_c",
+              "sigma8"
+            ]
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.yml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.json\"\n  ],\n  \"message\": \"Wrote augur Y1 shear forecast config (15 tracer pairs x 20 ells = 300 data points before cuts; 2 varied parameters -> ~6 likelihood evaluations; cov gaus_internal).\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.yml\",\n    \"run_dir\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a\",\n    \"survey_year\": \"Y1\",\n    \"probes\": \"shear\",\n    \"n_source_bins\": 5,\n    \"n_lens_bins\": 0,\n    \"ndens_arcmin2\": {\n      \"source\": 10.0,\n      \"lens\": null\n    },\n    \"ell_bands\": {\n      \"n\": 20,\n      \"edges\": [\n        20.0,\n        27.847,\n        38.774,\n        53.987,\n        75.17,\n        104.664,\n        145.73,\n        202.909,\n        282.523,\n        393.376,\n        547.723,\n        762.63,\n        1061.859,\n        1478.495,\n        2058.604,\n        2866.328,\n        3990.975,\n        5556.893,\n        7737.223,\n        10773.038,\n        15000.0\n      ]\n    },\n    \"scale_cuts\": {\n      \"lens_probes\": {\n        \"kmax\": 0.202\n      },\n      \"shear_lmax\": null,\n      \"kmax_units\": \"Mpc^-1 (no h)\"\n    },\n    \"n_pairs\": {\n      \"galaxy_shear_cl_ee\": 15\n    },\n    \"n_data_before_cuts\": 300,\n    \"cov_type\": \"gaus_internal\",\n    \"fsky\": 0.4,\n    \"srd_covariance_layout_match\": false,\n    \"cosmology\": {\n      \"preset\": \"desc_srd\",\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"sigma8\": 0.831,\n      \"A_s\": null,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"mass_split\": \"normal\",\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"transfer_function\": \"eisenstein_hu\",\n      \"matter_power_spectrum\": \"halofit\",\n      \"baryons\": \"none\",\n      \"baryon_params\": {},\n      \"hmcode_logT_AGN\": 7.8,\n      \"mg_mu0\": 0.0,\n      \"mg_sigma0\": 0.0\n    },\n    \"cosmology_label\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\"\n    ],\n    \"gaussian_priors\": {},\n    \"step_absolute\": 0.01,\n    \"derivative_method\": \"numdifftools\",\n    \"estimated_likelihood_evaluations\": 6,\n    \"fisher_bias_params\": null,\n    \"validator\": {\n      \"errors\": [],\n      \"warnings\": []\n    },\n    \"nuisance_parameters_available\": [\n      \"alphaz\",\n      \"ia_bias\",\n      \"src0_delta_z\",\n      \"src0_mult_bias\",\n      \"src1_delta_z\",\n      \"src1_mult_bias\",\n      \"src2_delta_z\",\n      \"src2_mult_bias\",\n      \"src3_delta_z\",\n      \"src3_mult_bias\",\n      \"src4_delta_z\",\n      \"src4_mult_bias\",\n      \"z_piv\"\n    ],\n    \"units\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (split per bin by the n(z) integral)\",\n      \"sigma_e\": \"per-component shape noise (SRD: 0.26); noise power = sigma_e^2 / nbar\",\n      \"ells\": \"dimensionless; bands are geometric centres of log-spaced edges (SRD: 20 bands in 20..15000)\",\n      \"step\": \"ABSOLUTE finite-difference step in parameter units (not relative); default 0.01\",\n      \"fsky\": \"sky fraction for gaus_internal / tjpcov (LSST Y1 ~0.3, Y10 ~0.4)\",\n      \"parameter_names\": \"firecrown/CCL: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu w0 wa; nuisance src{i}_delta_z src{i}_mult_bias lens{i}_bias lens{i}_delta_z lens{i}_sigma_z, global IA ia_bias alphaz z_piv\",\n      \"fisher_units\": \"F_ij in (parameter units)^-2; sigma_i = sqrt((F^-1)_ii) marginalised over the rest\",\n      \"fom\": \"DETF FoM = 1/sqrt(det Cov(w0,wa)); augur's get_FoM_all divides Cov by chi2.ppf(CL,2)\",\n      \"",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.yml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.json\"\n  ],\n  \"message\": \"Wrote augur Y1 shear forecast config (15 tracer pairs x 20 ells = 300 data points before cuts; 2 varied parameters -> ~6 likelihood evaluations; cov gaus_internal).\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.yml\",\n    \"run_dir\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a\",\n    \"survey_year\": \"Y1\",\n    \"probes\": \"shear\",\n    \"n_source_bins\": 5,\n    \"n_lens_bins\": 0,\n    \"ndens_arcmin2\": {\n      \"source\": 10.0,\n      \"lens\": null\n    },\n    \"ell_bands\": {\n      \"n\": 20,\n      \"edges\": [\n        20.0,\n        27.847,\n        38.774,\n        53.987,\n        75.17,\n        104.664,\n        145.73,\n        202.909,\n        282.523,\n        393.376,\n        547.723,\n        762.63,\n        1061.859,\n        1478.495,\n        2058.604,\n        2866.328,\n        3990.975,\n        5556.893,\n        7737.223,\n        10773.038,\n        15000.0\n      ]\n    },\n    \"scale_cuts\": {\n      \"lens_probes\": {\n        \"kmax\": 0.202\n      },\n      \"shear_lmax\": null,\n      \"kmax_units\": \"Mpc^-1 (no h)\"\n    },\n    \"n_pairs\": {\n      \"galaxy_shear_cl_ee\": 15\n    },\n    \"n_data_before_cuts\": 300,\n    \"cov_type\": \"gaus_internal\",\n    \"fsky\": 0.4,\n    \"srd_covariance_layout_match\": false,\n    \"cosmology\": {\n      \"preset\": \"desc_srd\",\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"sigma8\": 0.831,\n      \"A_s\": null,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"mass_split\": \"normal\",\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"transfer_function\": \"eisenstein_hu\",\n      \"matter_power_spectrum\": \"halofit\",\n      \"baryons\": \"none\",\n      \"baryon_params\": {},\n      \"hmcode_logT_AGN\": 7.8,\n      \"mg_mu0\": 0.0,\n      \"mg_sigma0\": 0.0\n    },\n    \"cosmology_label\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\"\n    ],\n    \"gaussian_priors\": {},\n    \"step_absolute\": 0.01,\n    \"derivative_method\": \"numdifftools\",\n    \"estimated_likelihood_evaluations\": 6,\n    \"fisher_bias_params\": null,\n    \"validator\": {\n      \"errors\": [],\n      \"warnings\": []\n    },\n    \"nuisance_parameters_available\": [\n      \"alphaz\",\n      \"ia_bias\",\n      \"src0_delta_z\",\n      \"src0_mult_bias\",\n      \"src1_delta_z\",\n      \"src1_mult_bias\",\n      \"src2_delta_z\",\n      \"src2_mult_bias\",\n      \"src3_delta_z\",\n      \"src3_mult_bias\",\n      \"src4_delta_z\",\n      \"src4_mult_bias\",\n      \"z_piv\"\n    ],\n    \"units\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (split per bin by the n(z) integral)\",\n      \"sigma_e\": \"per-component shape noise (SRD: 0.26); noise power = sigma_e^2 / nbar\",\n      \"ells\": \"dimensionless; bands are geometric centres of log-spaced edges (SRD: 20 bands in 20..15000)\",\n      \"step\": \"ABSOLUTE finite-difference step in parameter units (not relative); default 0.01\",\n      \"fsky\": \"sky fraction for gaus_internal / tjpcov (LSST Y1 ~0.3, Y10 ~0.4)\",\n      \"parameter_names\": \"firecrown/CCL: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu w0 wa; nuisance src{i}_delta_z src{i}_mult_bias lens{i}_bias lens{i}_delta_z lens{i}_sigma_z, global IA ia_bias alphaz z_piv\",\n      \"fisher_units\": \"F_ij in (parameter units)^-2; sigma_i = sqrt((F^-1)_ii) marginalised over the rest\",\n      \"fom\": \"DETF FoM = 1/sqrt(det Cov(w0,wa)); augur's get_FoM_all divides Cov by chi2.ppf(CL,2)\",\n      \"tracer_names\": \"src{i} (galaxy_shear) and lens{i} (galaxy_density) - required by augur\",\n      \"ggl_pairs\": \"statistics.galaxy_shearDensity_cl_e.tracer_combs are [lens_i, src_j]\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "02e88c1fa77f",
+            "c85ee03b25fc"
+          ]
+        },
+        {
+          "id": "tooluse_utoDv0xjTI80sb3p7Q743D",
+          "tool": "augur_generate_synthetic_datavector",
+          "server": "serve-desc.sh",
+          "args": {
+            "config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.yml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/datavector_dccac7.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/nz_sources_dccac7.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/cov_dccac7.npy\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/datavector_dccac7.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc\"\n  ],\n  \"message\": \"Synthetic data vector: 300 C_ell points (300 inside the scale cuts) with gaus_internal covariance, total S/N 366; computed on local.\",\n  \"metadata\": {\n    \"computed_on\": \"local\",\n    \"n_data\": 300,\n    \"n_data_in_likelihood\": 300,\n    \"per_statistic\": {\n      \"galaxy_shear_cl_ee\": {\n        \"n_points\": 300,\n        \"n_in_likelihood\": 300,\n        \"n_pairs\": 15\n      }\n    },\n    \"total_snr\": 365.7122843422338,\n    \"cov_type\": \"gaus_internal\",\n    \"scale_cuts_kept\": {\n      \"src0-src0\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src2-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src2-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src2-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src3-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src3-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src4-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      }\n    },\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc\",\n    \"cov_file_is_full_matrix\": true,\n    \"nz_zmean\": {\n      \"src0\": 0.2505966656834447,\n      \"src1\": 0.45605942855726667,\n      \"src2\": 0.6546446098265024,\n      \"src3\": 0.9172730584971861,\n      \"src4\": 1.5266621728445269\n    },\n    \"versions\": {\n      \"augur\": \"present\",\n      \"firecrown\": \"1.16.0\",\n      \"pyccl\": \"3.3.6\",\n      \"sacc\": \"2.4\",\n      \"numdifftools\": \"0.11.1\",\n      \"tjpcov\": \"present\"\n    },\n    \"timing_s\": {\n      \"generate\": 3.1517879962921143,\n      \"total\": 3.1865358352661133\n    },\n    \"validator_warnings\": []\n  }\n}\n[1 figure(s) displayed to the user as Figure 6 (datavector_dccac7.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/datavector_dccac7.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/nz_sources_dccac7.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/cov_dccac7.npy\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/datavector_dccac7.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc\"\n  ],\n  \"message\": \"Synthetic data vector: 300 C_ell points (300 inside the scale cuts) with gaus_internal covariance, total S/N 366; computed on local.\",\n  \"metadata\": {\n    \"computed_on\": \"local\",\n    \"n_data\": 300,\n    \"n_data_in_likelihood\": 300,\n    \"per_statistic\": {\n      \"galaxy_shear_cl_ee\": {\n        \"n_points\": 300,\n        \"n_in_likelihood\": 300,\n        \"n_pairs\": 15\n      }\n    },\n    \"total_snr\": 365.7122843422338,\n    \"cov_type\": \"gaus_internal\",\n    \"scale_cuts_kept\": {\n      \"src0-src0\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src0-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src1\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src1-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src2-src2\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src2-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src2-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src3-src3\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src3-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      },\n      \"src4-src4\": {\n        \"n_ell_kept\": 20,\n        \"lmax_kept\": 12712.024682972025\n      }\n    },\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc\",\n    \"cov_file_is_full_matrix\": true,\n    \"nz_zmean\": {\n      \"src0\": 0.2505966656834447,\n      \"src1\": 0.45605942855726667,\n      \"src2\": 0.6546446098265024,\n      \"src3\": 0.9172730584971861,\n      \"src4\": 1.5266621728445269\n    },\n    \"versions\": {\n      \"augur\": \"present\",\n      \"firecrown\": \"1.16.0\",\n      \"pyccl\": \"3.3.6\",\n      \"sacc\": \"2.4\",\n      \"numdifftools\": \"0.11.1\",\n      \"tjpcov\": \"present\"\n    },\n    \"timing_s\": {\n      \"generate\": 3.1517879962921143,\n      \"total\": 3.1865358352661133\n    },\n    \"validator_warnings\": []\n  }\n}\n[1 figure(s) displayed to the user as Figure 6 (datavector_dccac7.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "ffef5007e142",
+            "0581390c2afa",
+            "98642730c5cb",
+            "a31b6ea49d80",
+            "83c35f1cbf76"
+          ]
+        },
+        {
+          "id": "tooluse_mbnT7XyxkoV7pDJB4z4HeW",
+          "tool": "sacc_attach_gaussian_covariance",
+          "server": "serve-desc.sh",
+          "args": {
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "f_sky": 0.4,
+            "n_gal": 10,
+            "sigma_e": 0.26,
+            "overwrite_existing": true,
+            "cosmology": {
+              "preset": "desc_srd",
+              "transfer_function": "eisenstein_hu",
+              "matter_power_spectrum": "halofit"
+            },
+            "output_name": "closure_gausscov"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov_bed064.json\"\n  ],\n  \"message\": \"Wrote closure_gausscov.hdf5 with a 300x300 Gaussian covariance (f_sky=0.4, sigma_e=0.26, delta_ell 9.26-3.58e+03); total S/N 1684.4; condition number 8.17e+09.\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5\",\n    \"f_sky\": 0.4,\n    \"sigma_e\": 0.26,\n    \"n_gal_arcmin2\": {\n      \"src0\": 10.0,\n      \"src1\": 10.0,\n      \"src2\": 10.0,\n      \"src3\": 10.0,\n      \"src4\": 10.0\n    },\n    \"tracer_kinds\": {\n      \"src0\": \"shear\",\n      \"src1\": \"shear\",\n      \"src2\": \"shear\",\n      \"src3\": \"shear\",\n      \"src4\": \"shear\"\n    },\n    \"cosmology\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"delta_ell_source\": \"neighbour spacing\",\n    \"snr_total\": 1684.4201869043102,\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        300,\n        300\n      ],\n      \"diag_min\": 8.996088729866152e-27,\n      \"diag_max\": 2.7853742568697715e-17,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 8166363526.672167,\n      \"min_eigenvalue\": 8.982518271079276e-27,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.968372541156973,\n      \"is_diagonal\": false\n    },\n    \"n_points\": 300,\n    \"formula\": \"Cov = (C13 C24 + C14 C23)/((2l+1) dl f_sky); noise sigma_e^2/nbar (shear), 1/nbar (density)\"\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov_bed064.json\"\n  ],\n  \"message\": \"Wrote closure_gausscov.hdf5 with a 300x300 Gaussian covariance (f_sky=0.4, sigma_e=0.26, delta_ell 9.26-3.58e+03); total S/N 1684.4; condition number 8.17e+09.\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5\",\n    \"f_sky\": 0.4,\n    \"sigma_e\": 0.26,\n    \"n_gal_arcmin2\": {\n      \"src0\": 10.0,\n      \"src1\": 10.0,\n      \"src2\": 10.0,\n      \"src3\": 10.0,\n      \"src4\": 10.0\n    },\n    \"tracer_kinds\": {\n      \"src0\": \"shear\",\n      \"src1\": \"shear\",\n      \"src2\": \"shear\",\n      \"src3\": \"shear\",\n      \"src4\": \"shear\"\n    },\n    \"cosmology\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"delta_ell_source\": \"neighbour spacing\",\n    \"snr_total\": 1684.4201869043102,\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        300,\n        300\n      ],\n      \"diag_min\": 8.996088729866152e-27,\n      \"diag_max\": 2.7853742568697715e-17,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 8166363526.672167,\n      \"min_eigenvalue\": 8.982518271079276e-27,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.968372541156973,\n      \"is_diagonal\": false\n    },\n    \"n_points\": 300,\n    \"formula\": \"Cov = (C13 C24 + C14 C23)/((2l+1) dl f_sky); noise sigma_e^2/nbar (shear), 1/nbar (density)\"\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "b1d23f28acc7",
+            "46e224756fc0"
+          ]
+        },
+        {
+          "id": "tooluse_4IxsikptOU188WuAZMcFJH",
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "correlation_space": "harmonic",
+            "name": "closure",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5",
+            "wl_global": [
+              "LinearAlignmentSystematicFactory"
+            ],
+            "wl_per_bin": [
+              "MultiplicativeShearBiasFactory",
+              "PhotoZShiftFactory"
+            ],
+            "transfer_function": "eisenstein_hu"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_params.json\"\n  ],\n  \"message\": \"Experiment YAML closure_c39d8b.yaml: harmonic space, 15 statistics, n_data=300; 24 parameters required (11 cosmology + 13 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 300,\n    \"n_data_total\": 300,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"Neff\",\n      \"Omega_b\",\n      \"Omega_k\",\n      \"h\",\n      \"n_s\",\n      \"T_CMB\",\n      \"w0\",\n      \"sigma8\",\n      \"wa\",\n      \"Omega_c\"\n    ],\n    \"nuisance_parameters\": {\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"src1_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"src3_mult_bias\": 1.0\n    },\n ",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_params.json\"\n  ],\n  \"message\": \"Experiment YAML closure_c39d8b.yaml: harmonic space, 15 statistics, n_data=300; 24 parameters required (11 cosmology + 13 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 300,\n    \"n_data_total\": 300,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"Neff\",\n      \"Omega_b\",\n      \"Omega_k\",\n      \"h\",\n      \"n_s\",\n      \"T_CMB\",\n      \"w0\",\n      \"sigma8\",\n      \"wa\",\n      \"Omega_c\"\n    ],\n    \"nuisance_parameters\": {\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"src1_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"src3_mult_bias\": 1.0\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [\n        \"MultiplicativeShearBiasFactory\",\n        \"PhotoZShiftFactory\"\n      ],\n      \"wl_global\": [\n        \"LinearAlignmentSystematicFactory\"\n      ],\n      \"nc_per_bin\": [\n        \"PhotoZShiftFactory\"\n      ],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"eisenstein_hu\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "79779258b534",
+            "053814a0906b"
+          ]
+        },
+        {
+          "id": "tooluse_35zJXOACcH5t9S5Qt275Nq",
+          "tool": "firecrown_compute_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "cosmology": {
+              "preset": "desc_srd",
+              "transfer_function": "eisenstein_hu",
+              "matter_power_spectrum": "halofit"
+            },
+            "nuisance": {
+              "ia_bias": 0.5,
+              "alphaz": 0.0,
+              "z_piv": 0.62,
+              "src0_mult_bias": 0,
+              "src1_mult_bias": 0,
+              "src2_mult_bias": 0,
+              "src3_mult_bias": 0,
+              "src4_mult_bias": 0,
+              "src0_delta_z": 0,
+              "src1_delta_z": 0,
+              "src2_delta_z": 0,
+              "src3_delta_z": 0,
+              "src4_delta_z": 0
+            }
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_d35e1f.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_d35e1f.png\"\n  ],\n  \"message\": \"loglike = -1006726.777, chi2 = 2013453.55 for n_data = 300 (chi2/n = 6711.512) at Om=0.316, sigma8=0.831, h=0.6727. Worst statistics by chi2_block/n: shear_cl_ee src0-src3 (299214.8/20), shear_cl_ee src0-src4 (271302.2/20), shear_cl_ee src0-src2 (267153.6/20), shear_cl_ee src0-src0 (248534.1/20), shear_cl_ee src1-src4 (171028.0/20). \",\n  \"metadata\": {\n    \"loglike\": -1006726.777307155,\n    \"chi2\": 2013453.55461431,\n    \"n_data\": 300,\n    \"chi2_per_dof\": 6711.511848714366,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20,\n        \"chi2_block\": 248534.08639476312,\n        \"chi2_share\": 525736.419752568\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 55606.03960496894,\n        \"chi2_share\": 119559.8240106338\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 267153.5831875716,\n        \"chi2_share\": 329020.35340819124\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 299214.84150329756,\n        \"chi2_share\": 146028.11502581916\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 271302.164871446,\n        \"chi2_share\": 100692.99382527995\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 54035.23454072532,\n        \"chi2_share\": 197364.382533183\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12863.47115086777,\n        \"chi2_share\": 26869.60702128789\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 118185.5287968996,\n        \"chi2_share\": 189251.988642326\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 171027.99318457404,\n        \"chi2_share\": 110272.27705933388\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12610.496617785022,\n        \"chi2_share\": 75561.6798313864\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 13092.843724119824,\n        \"chi2_share\": 28932.57625677937\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 80376.15314930418,\n        \"chi2_share\": 106364.62294431913\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 1647.7362364772744,\n        \"chi2_share\": 22257.480958904107\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 19347.299749843685,\n        \"chi2_share\": 41503.586992423996\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 646.1204867449692,\n        \"chi2_share\": -5962.353648127056\n      }\n    ],\n    \"point\": {\n      \"Omeg",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_d35e1f.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_d35e1f.png\"\n  ],\n  \"message\": \"loglike = -1006726.777, chi2 = 2013453.55 for n_data = 300 (chi2/n = 6711.512) at Om=0.316, sigma8=0.831, h=0.6727. Worst statistics by chi2_block/n: shear_cl_ee src0-src3 (299214.8/20), shear_cl_ee src0-src4 (271302.2/20), shear_cl_ee src0-src2 (267153.6/20), shear_cl_ee src0-src0 (248534.1/20), shear_cl_ee src1-src4 (171028.0/20). \",\n  \"metadata\": {\n    \"loglike\": -1006726.777307155,\n    \"chi2\": 2013453.55461431,\n    \"n_data\": 300,\n    \"chi2_per_dof\": 6711.511848714366,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20,\n        \"chi2_block\": 248534.08639476312,\n        \"chi2_share\": 525736.419752568\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 55606.03960496894,\n        \"chi2_share\": 119559.8240106338\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 267153.5831875716,\n        \"chi2_share\": 329020.35340819124\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 299214.84150329756,\n        \"chi2_share\": 146028.11502581916\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 271302.164871446,\n        \"chi2_share\": 100692.99382527995\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 54035.23454072532,\n        \"chi2_share\": 197364.382533183\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12863.47115086777,\n        \"chi2_share\": 26869.60702128789\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 118185.5287968996,\n        \"chi2_share\": 189251.988642326\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 171027.99318457404,\n        \"chi2_share\": 110272.27705933388\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12610.496617785022,\n        \"chi2_share\": 75561.6798313864\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 13092.843724119824,\n        \"chi2_share\": 28932.57625677937\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 80376.15314930418,\n        \"chi2_share\": 106364.62294431913\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 1647.7362364772744,\n        \"chi2_share\": 22257.480958904107\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 19347.299749843685,\n        \"chi2_share\": 41503.586992423996\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 646.1204867449692,\n        \"chi2_share\": -5962.353648127056\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831,\n      \"ia_bias\": 0.5,\n      \"alphaz\": 0.0,\n      \"z_piv\": 0.62,\n      \"src0_mult_bias\": 0.0,\n      \"src1_mult_bias\": 0.0,\n      \"src2_mult_bias\": 0.0,\n      \"src3_mult_bias\": 0.0,\n      \"src4_mult_bias\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src1_delta_z\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"src4_delta_z\": 0.0\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"max_abs_pull\": 197.78263204791386,\n    \"rms_pull\": 73.61258029257836,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 13 (theory_vs_data_d35e1f.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "a1567b0e49ac",
+            "e35d52b7f3ae"
+          ]
+        },
+        {
+          "id": "tooluse_yThTRkqFUHFaHcEb6Xvy1y",
+          "tool": "firecrown_compute_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "cosmology": {
+              "preset": "desc_srd",
+              "transfer_function": "eisenstein_hu",
+              "matter_power_spectrum": "halofit"
+            },
+            "nuisance": {
+              "ia_bias": 0.5,
+              "alphaz": 0.0,
+              "z_piv": 0.5,
+              "src0_mult_bias": 0,
+              "src1_mult_bias": 0,
+              "src2_mult_bias": 0,
+              "src3_mult_bias": 0,
+              "src4_mult_bias": 0,
+              "src0_delta_z": 0,
+              "src1_delta_z": 0,
+              "src2_delta_z": 0,
+              "src3_delta_z": 0,
+              "src4_delta_z": 0
+            }
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_a9b7cf.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_a9b7cf.png\"\n  ],\n  \"message\": \"loglike = -1006726.777, chi2 = 2013453.55 for n_data = 300 (chi2/n = 6711.512) at Om=0.316, sigma8=0.831, h=0.6727. Worst statistics by chi2_block/n: shear_cl_ee src0-src3 (299214.8/20), shear_cl_ee src0-src4 (271302.2/20), shear_cl_ee src0-src2 (267153.6/20), shear_cl_ee src0-src0 (248534.1/20), shear_cl_ee src1-src4 (171028.0/20). \",\n  \"metadata\": {\n    \"loglike\": -1006726.777307155,\n    \"chi2\": 2013453.55461431,\n    \"n_data\": 300,\n    \"chi2_per_dof\": 6711.511848714366,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20,\n        \"chi2_block\": 248534.08639476312,\n        \"chi2_share\": 525736.419752568\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 55606.03960496894,\n        \"chi2_share\": 119559.8240106338\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 267153.5831875716,\n        \"chi2_share\": 329020.35340819124\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 299214.84150329756,\n        \"chi2_share\": 146028.11502581916\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 271302.164871446,\n        \"chi2_share\": 100692.99382527995\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 54035.23454072532,\n        \"chi2_share\": 197364.382533183\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12863.47115086777,\n        \"chi2_share\": 26869.60702128789\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 118185.5287968996,\n        \"chi2_share\": 189251.988642326\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 171027.99318457404,\n        \"chi2_share\": 110272.27705933388\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12610.496617785022,\n        \"chi2_share\": 75561.6798313864\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 13092.843724119824,\n        \"chi2_share\": 28932.57625677937\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 80376.15314930418,\n        \"chi2_share\": 106364.62294431913\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 1647.7362364772744,\n        \"chi2_share\": 22257.480958904107\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 19347.299749843685,\n        \"chi2_share\": 41503.586992423996\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 646.1204867449692,\n        \"chi2_share\": -5962.353648127056\n      }\n    ],\n    \"point\": {\n      \"Omeg",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_a9b7cf.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_a9b7cf.png\"\n  ],\n  \"message\": \"loglike = -1006726.777, chi2 = 2013453.55 for n_data = 300 (chi2/n = 6711.512) at Om=0.316, sigma8=0.831, h=0.6727. Worst statistics by chi2_block/n: shear_cl_ee src0-src3 (299214.8/20), shear_cl_ee src0-src4 (271302.2/20), shear_cl_ee src0-src2 (267153.6/20), shear_cl_ee src0-src0 (248534.1/20), shear_cl_ee src1-src4 (171028.0/20). \",\n  \"metadata\": {\n    \"loglike\": -1006726.777307155,\n    \"chi2\": 2013453.55461431,\n    \"n_data\": 300,\n    \"chi2_per_dof\": 6711.511848714366,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20,\n        \"chi2_block\": 248534.08639476312,\n        \"chi2_share\": 525736.419752568\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 55606.03960496894,\n        \"chi2_share\": 119559.8240106338\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 267153.5831875716,\n        \"chi2_share\": 329020.35340819124\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 299214.84150329756,\n        \"chi2_share\": 146028.11502581916\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 271302.164871446,\n        \"chi2_share\": 100692.99382527995\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 54035.23454072532,\n        \"chi2_share\": 197364.382533183\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12863.47115086777,\n        \"chi2_share\": 26869.60702128789\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 118185.5287968996,\n        \"chi2_share\": 189251.988642326\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 171027.99318457404,\n        \"chi2_share\": 110272.27705933388\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 12610.496617785022,\n        \"chi2_share\": 75561.6798313864\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 13092.843724119824,\n        \"chi2_share\": 28932.57625677937\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 80376.15314930418,\n        \"chi2_share\": 106364.62294431913\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 1647.7362364772744,\n        \"chi2_share\": 22257.480958904107\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 19347.299749843685,\n        \"chi2_share\": 41503.586992423996\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 646.1204867449692,\n        \"chi2_share\": -5962.353648127056\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831,\n      \"ia_bias\": 0.5,\n      \"alphaz\": 0.0,\n      \"z_piv\": 0.5,\n      \"src0_mult_bias\": 0.0,\n      \"src1_mult_bias\": 0.0,\n      \"src2_mult_bias\": 0.0,\n      \"src3_mult_bias\": 0.0,\n      \"src4_mult_bias\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src1_delta_z\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"src4_delta_z\": 0.0\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"max_abs_pull\": 197.78263204791386,\n    \"rms_pull\": 73.61258029257836,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 15 (theory_vs_data_a9b7cf.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "0357e753dcb8",
+            "d66635e0caba"
+          ]
+        },
+        {
+          "id": "tooluse_xW1nJ8lQzM3NUV2paJJtYk",
+          "tool": "firecrown_theory_data_vector",
+          "server": "serve-desc.sh",
+          "args": {
+            "cosmology": {
+              "matter_power_spectrum": "halofit",
+              "preset": "desc_srd",
+              "transfer_function": "eisenstein_hu"
+            },
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml",
+            "nuisance": {
+              "alphaz": 0,
+              "ia_bias": 0.5,
+              "src0_delta_z": 0,
+              "src0_mult_bias": 0,
+              "src1_delta_z": 0,
+              "src1_mult_bias": 0,
+              "src2_delta_z": 0,
+              "src2_mult_bias": 0,
+              "src3_delta_z": 0,
+              "src3_mult_bias": 0,
+              "src4_delta_z": 0,
+              "src4_mult_bias": 0,
+              "z_piv": 0.5
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "add_noise": false
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vector_e57b1e.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vector_e57b1e.png\"\n  ],\n  \"message\": \"Theory vector of 300 points at Om=0.316, sigma8=0.831, h=0.6727 (chi2 vs the file's data = 2013453.6); wrote theory realization sacc closure_c39d8b_theory_e57b1e.hdf5. \",\n  \"metadata\": {\n    \"n_data\": 300,\n    \"loglike_at_point\": -1006726.777307155,\n    \"chi2_at_point\": 2013453.55461431,\n    \"sacc_file\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"add_noise\": false,\n    \"seed\": null,\n    \"point\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831,\n      \"alphaz\": 0.0,\n      \"ia_bias\": 0.5,\n      \"src0_delta_z\": 0.0,\n      \"src0_mult_bias\": 0.0,\n      \"src1_delta_z\": 0.0,\n      \"src1_mult_bias\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"src2_mult_bias\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"src3_mult_bias\": 0.0,\n      \"src4_delta_z\": 0.0,\n      \"src4_mult_bias\": 0.0,\n      \"z_piv\": 0.5\n    },\n    \"warnings\": [],\n    \"theory_min\": 8.02909666681097e-14,\n    \"theory_max\": 4.912981434142086e-8,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      }\n    ],\n    \"computed_on\": \"local\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 18 (theory_vector_e57b1e.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vector_e57b1e.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vector_e57b1e.png\"\n  ],\n  \"message\": \"Theory vector of 300 points at Om=0.316, sigma8=0.831, h=0.6727 (chi2 vs the file's data = 2013453.6); wrote theory realization sacc closure_c39d8b_theory_e57b1e.hdf5. \",\n  \"metadata\": {\n    \"n_data\": 300,\n    \"loglike_at_point\": -1006726.777307155,\n    \"chi2_at_point\": 2013453.55461431,\n    \"sacc_file\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"add_noise\": false,\n    \"seed\": null,\n    \"point\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831,\n      \"alphaz\": 0.0,\n      \"ia_bias\": 0.5,\n      \"src0_delta_z\": 0.0,\n      \"src0_mult_bias\": 0.0,\n      \"src1_delta_z\": 0.0,\n      \"src1_mult_bias\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"src2_mult_bias\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"src3_mult_bias\": 0.0,\n      \"src4_delta_z\": 0.0,\n      \"src4_mult_bias\": 0.0,\n      \"z_piv\": 0.5\n    },\n    \"warnings\": [],\n    \"theory_min\": 8.02909666681097e-14,\n    \"theory_max\": 4.912981434142086e-8,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      }\n    ],\n    \"computed_on\": \"local\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 18 (theory_vector_e57b1e.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "2e45dd47251d",
+            "71bb90544df0",
+            "9637797be918"
+          ]
+        },
+        {
+          "id": "tooluse_4I8Gi2wceiRq6J5QWEGNhQ",
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "correlation_space": "harmonic",
+            "name": "closure_fc",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5",
+            "transfer_function": "eisenstein_hu",
+            "wl_global": [
+              "LinearAlignmentSystematicFactory"
+            ],
+            "wl_per_bin": [
+              "MultiplicativeShearBiasFactory",
+              "PhotoZShiftFactory"
+            ]
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485_params.json\"\n  ],\n  \"message\": \"Experiment YAML closure_fc_3e8485.yaml: harmonic space, 15 statistics, n_data=300; 24 parameters required (11 cosmology + 13 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 300,\n    \"n_data_total\": 300,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"Neff\",\n      \"Omega_b\",\n      \"Omega_k\",\n      \"h\",\n      \"n_s\",\n      \"T_CMB\",\n      \"w0\",\n      \"sigma8\",\n      \"wa\",\n      \"Omega_c\"\n    ],\n    \"nuisance_parameters\": {\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"src1_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"src3_",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485_params.json\"\n  ],\n  \"message\": \"Experiment YAML closure_fc_3e8485.yaml: harmonic space, 15 statistics, n_data=300; 24 parameters required (11 cosmology + 13 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 300,\n    \"n_data_total\": 300,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"Neff\",\n      \"Omega_b\",\n      \"Omega_k\",\n      \"h\",\n      \"n_s\",\n      \"T_CMB\",\n      \"w0\",\n      \"sigma8\",\n      \"wa\",\n      \"Omega_c\"\n    ],\n    \"nuisance_parameters\": {\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"src1_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"src3_mult_bias\": 1.0\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [\n        \"MultiplicativeShearBiasFactory\",\n        \"PhotoZShiftFactory\"\n      ],\n      \"wl_global\": [\n        \"LinearAlignmentSystematicFactory\"\n      ],\n      \"nc_per_bin\": [\n        \"PhotoZShiftFactory\"\n      ],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"eisenstein_hu\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "3914e7f86a32",
+            "dc89ab58c7ce"
+          ]
+        },
+        {
+          "id": "tooluse_p7jWaizczkTfWhgguaL5TG",
+          "tool": "sacc_inspect",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5",
+            "plot_covariance": false,
+            "write_nz": false
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory/closure_c39d8b_theory_e57b1e_tracers.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory/closure_c39d8b_theory_e57b1e_datavector.csv\"\n  ],\n  \"message\": \"closure_c39d8b_theory_e57b1e.hdf5: 5 tracers (src0, src1, src2, src3, src4), 1 data types, 300 points, harmonic space, covariance present (cond 8.17e+09). Tracer names and quantities are firecrown/augur-ready.\",\n  \"metadata\": {\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"n_points\": 300,\n    \"space\": \"harmonic\",\n    \"tracers\": [\n      {\n        \"name\": \"src0\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.2505966656834448\n      },\n      {\n        \"name\": \"src1\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.4560594285572666\n      },\n      {\n        \"name\": \"src2\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.6546446098265025\n      },\n      {\n        \"name\": \"src3\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.9172730584971862\n      },\n      {\n        \"name\": \"src4\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 1.526629777407961\n      }\n    ],\n    \"data_types\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"n_points\": 300,\n        \"n_pairs\": 15,\n        \"tracer_pairs\": [\n          [\n            \"src0\",\n            \"src0\"\n          ],\n          [\n            \"src0\",\n            \"src1\"\n          ],\n          [\n            \"src0\",\n            \"src2\"\n          ],\n          [\n            \"src0\",\n            \"src3\"\n          ],\n          [\n            \"src0\",\n            \"src4\"\n          ],\n          [\n            \"src1\",\n            \"src1\"\n          ],\n          [\n            \"src1\",\n            \"src2\"\n          ],\n          [\n            \"src1\",\n            \"src3\"\n          ],\n          [\n            \"src1\",\n            \"src4\"\n          ],\n          [\n            \"src2\",\n            \"src2\"\n          ],\n          [\n            \"src2\",\n            \"src3\"\n          ],\n          [\n            \"src2\",\n            \"src4\"\n          ],\n          [\n            \"src3\",\n            \"src3\"\n          ],\n          [\n            \"src3\",\n            \"src4\"\n          ],\n          [\n            \"src4\",\n            \"src4\"\n          ]\n        ],\n        \"x\": \"ell\",\n        \"x_min\": 23.59970244565801,\n        \"x_max\": 12712.024682972025,\n        \"has_window\": false\n      }\n    ],\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        300,\n        300\n      ],\n      \"diag_min\": 8.996088729866152e-27,\n      \"diag_max\": 2.7853742568697715e-17,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 8166363526.672167,\n      \"min_eigenvalue\": 8.982518271079276e-27,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.968372541156973,\n      \"is_diagonal\": false\n    },\n    \"firecrown_ready\": true,\n    \"tracer_names_ready\": true,\n    \"quantities_ready\": true,\n    \"sacc_version\": null\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory/closure_c39d8b_theory_e57b1e_tracers.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory/closure_c39d8b_theory_e57b1e_datavector.csv\"\n  ],\n  \"message\": \"closure_c39d8b_theory_e57b1e.hdf5: 5 tracers (src0, src1, src2, src3, src4), 1 data types, 300 points, harmonic space, covariance present (cond 8.17e+09). Tracer names and quantities are firecrown/augur-ready.\",\n  \"metadata\": {\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5\",\n    \"n_points\": 300,\n    \"space\": \"harmonic\",\n    \"tracers\": [\n      {\n        \"name\": \"src0\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.2505966656834448\n      },\n      {\n        \"name\": \"src1\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.4560594285572666\n      },\n      {\n        \"name\": \"src2\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.6546446098265025\n      },\n      {\n        \"name\": \"src3\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 0.9172730584971862\n      },\n      {\n        \"name\": \"src4\",\n        \"type\": \"NZ\",\n        \"quantity\": \"galaxy_shear\",\n        \"inferred_kind\": \"shear\",\n        \"n_z\": 500,\n        \"z_min\": 0.0,\n        \"z_max\": 3.5,\n        \"z_mean\": 1.526629777407961\n      }\n    ],\n    \"data_types\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"n_points\": 300,\n        \"n_pairs\": 15,\n        \"tracer_pairs\": [\n          [\n            \"src0\",\n            \"src0\"\n          ],\n          [\n            \"src0\",\n            \"src1\"\n          ],\n          [\n            \"src0\",\n            \"src2\"\n          ],\n          [\n            \"src0\",\n            \"src3\"\n          ],\n          [\n            \"src0\",\n            \"src4\"\n          ],\n          [\n            \"src1\",\n            \"src1\"\n          ],\n          [\n            \"src1\",\n            \"src2\"\n          ],\n          [\n            \"src1\",\n            \"src3\"\n          ],\n          [\n            \"src1\",\n            \"src4\"\n          ],\n          [\n            \"src2\",\n            \"src2\"\n          ],\n          [\n            \"src2\",\n            \"src3\"\n          ],\n          [\n            \"src2\",\n            \"src4\"\n          ],\n          [\n            \"src3\",\n            \"src3\"\n          ],\n          [\n            \"src3\",\n            \"src4\"\n          ],\n          [\n            \"src4\",\n            \"src4\"\n          ]\n        ],\n        \"x\": \"ell\",\n        \"x_min\": 23.59970244565801,\n        \"x_max\": 12712.024682972025,\n        \"has_window\": false\n      }\n    ],\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        300,\n        300\n      ],\n      \"diag_min\": 8.996088729866152e-27,\n      \"diag_max\": 2.7853742568697715e-17,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 8166363526.672167,\n      \"min_eigenvalue\": 8.982518271079276e-27,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.968372541156973,\n      \"is_diagonal\": false\n    },\n    \"firecrown_ready\": true,\n    \"tracer_names_ready\": true,\n    \"quantities_ready\": true,\n    \"sacc_version\": null\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "f4ffcb6fa8f6",
+            "38690dfca2b8"
+          ]
+        },
+        {
+          "id": "tooluse_9sz6UjiPFM39sGmFvGtbJ9",
+          "tool": "firecrown_compute_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "cosmology": {
+              "matter_power_spectrum": "halofit",
+              "preset": "desc_srd",
+              "transfer_function": "eisenstein_hu"
+            },
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml",
+            "nuisance": {
+              "alphaz": 0,
+              "ia_bias": 0.5,
+              "src0_delta_z": 0,
+              "src0_mult_bias": 0,
+              "src1_delta_z": 0,
+              "src1_mult_bias": 0,
+              "src2_delta_z": 0,
+              "src2_mult_bias": 0,
+              "src3_delta_z": 0,
+              "src3_mult_bias": 0,
+              "src4_delta_z": 0,
+              "src4_mult_bias": 0,
+              "z_piv": 0.5
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_17c188.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_17c188.png\"\n  ],\n  \"message\": \"loglike = -0.000, chi2 = 0.00 for n_data = 300 (chi2/n = 0.000) at Om=0.316, sigma8=0.831, h=0.6727. Worst statistics by chi2_block/n: shear_cl_ee src0-src0 (0.0/20), shear_cl_ee src0-src1 (0.0/20), shear_cl_ee src0-src2 (0.0/20), shear_cl_ee src0-src3 (0.0/20), shear_cl_ee src0-src4 (0.0/20). \",\n  \"metadata\": {\n    \"loglike\": -0.0,\n    \"chi2\": 0.0,\n    \"n_data\": 300,\n    \"chi2_per_dof\": 0.0,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831,\n      \"alphaz\": 0.0,\n      \"ia_bias\": 0.5,\n      \"src0_delta_z\": 0.0,\n      \"src0_mult_bias\": 0.0,\n      \"src1_delta_z\": 0.0,\n      \"src1_mult_bias\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"src2_mult_bias\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"src3_mult_bias\": 0.0,\n      \"src4_delta_z\": ",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_17c188.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_17c188.png\"\n  ],\n  \"message\": \"loglike = -0.000, chi2 = 0.00 for n_data = 300 (chi2/n = 0.000) at Om=0.316, sigma8=0.831, h=0.6727. Worst statistics by chi2_block/n: shear_cl_ee src0-src0 (0.0/20), shear_cl_ee src0-src1 (0.0/20), shear_cl_ee src0-src2 (0.0/20), shear_cl_ee src0-src3 (0.0/20), shear_cl_ee src0-src4 (0.0/20). \",\n  \"metadata\": {\n    \"loglike\": -0.0,\n    \"chi2\": 0.0,\n    \"n_data\": 300,\n    \"chi2_per_dof\": 0.0,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src4\",\n        \"tracer2\": \"src4\",\n        \"n\": 20,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831,\n      \"alphaz\": 0.0,\n      \"ia_bias\": 0.5,\n      \"src0_delta_z\": 0.0,\n      \"src0_mult_bias\": 0.0,\n      \"src1_delta_z\": 0.0,\n      \"src1_mult_bias\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"src2_mult_bias\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"src3_mult_bias\": 0.0,\n      \"src4_delta_z\": 0.0,\n      \"src4_mult_bias\": 0.0,\n      \"z_piv\": 0.5\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"src3_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src2_mult_bias\": 1.0,\n      \"src2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"ia_bias\": 0.5,\n      \"Neff\": 3.044,\n      \"src1_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"Omega_k\": 0.0,\n      \"alphaz\": 0.0,\n      \"src0_delta_z\": 0.0,\n      \"src4_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"src0_mult_bias\": 1.0,\n      \"src4_delta_z\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"src3_mult_bias\": 1.0,\n      \"w0\": -1.0,\n      \"sigma8\": 0.81,\n      \"wa\": 0.0,\n      \"Omega_c\": 0.25\n    },\n    \"max_abs_pull\": 0.0,\n    \"rms_pull\": 0.0,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.831\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 24 (theory_vs_data_17c188.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "5aac13d52620",
+            "e92b66cba5cc"
+          ]
+        }
+      ],
+      "artifact_ids": [
+        "02e88c1fa77f",
+        "c85ee03b25fc",
+        "ffef5007e142",
+        "0581390c2afa",
+        "98642730c5cb",
+        "a31b6ea49d80",
+        "83c35f1cbf76",
+        "b1d23f28acc7",
+        "46e224756fc0",
+        "79779258b534",
+        "053814a0906b",
+        "a1567b0e49ac",
+        "e35d52b7f3ae",
+        "0357e753dcb8",
+        "d66635e0caba",
+        "2e45dd47251d",
+        "71bb90544df0",
+        "9637797be918",
+        "3914e7f86a32",
+        "dc89ab58c7ce",
+        "f4ffcb6fa8f6",
+        "38690dfca2b8",
+        "5aac13d52620",
+        "e92b66cba5cc"
+      ],
+      "usage": {
+        "quick": {
+          "input": 609273,
+          "cached": 527237,
+          "output": 8133,
+          "reasoning": 0,
+          "calls": 9
+        }
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "02e88c1fa77f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.yml",
+      "name": "forecast_config.yml",
+      "kind": "other",
+      "tool": "augur_generate_forecast_config",
+      "server": "serve-desc.sh",
+      "figure": 1,
+      "caption": ""
+    },
+    {
+      "id": "c85ee03b25fc",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/forecast_config.json",
+      "name": "forecast_config.json",
+      "kind": "text",
+      "tool": "augur_generate_forecast_config",
+      "server": "serve-desc.sh",
+      "figure": 2,
+      "caption": ""
+    },
+    {
+      "id": "ffef5007e142",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/datavector_dccac7.csv",
+      "name": "datavector_dccac7.csv",
+      "kind": "csv",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 3,
+      "caption": ""
+    },
+    {
+      "id": "0581390c2afa",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/nz_sources_dccac7.csv",
+      "name": "nz_sources_dccac7.csv",
+      "kind": "csv",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 4,
+      "caption": ""
+    },
+    {
+      "id": "98642730c5cb",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/cov_dccac7.npy",
+      "name": "cov_dccac7.npy",
+      "kind": "other",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 5,
+      "caption": ""
+    },
+    {
+      "id": "a31b6ea49d80",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/datavector_dccac7.png",
+      "name": "datavector_dccac7.png",
+      "kind": "image",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 6,
+      "caption": ""
+    },
+    {
+      "id": "83c35f1cbf76",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/augur_closure_08b16a/fiducial_datavector.sacc",
+      "name": "fiducial_datavector.sacc",
+      "kind": "other",
+      "tool": "augur_generate_synthetic_datavector",
+      "server": "serve-desc.sh",
+      "figure": 7,
+      "caption": ""
+    },
+    {
+      "id": "b1d23f28acc7",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov.hdf5",
+      "name": "closure_gausscov.hdf5",
+      "kind": "other",
+      "tool": "sacc_attach_gaussian_covariance",
+      "server": "serve-desc.sh",
+      "figure": 8,
+      "caption": ""
+    },
+    {
+      "id": "46e224756fc0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_gausscov_bed064.json",
+      "name": "closure_gausscov_bed064.json",
+      "kind": "text",
+      "tool": "sacc_attach_gaussian_covariance",
+      "server": "serve-desc.sh",
+      "figure": 9,
+      "caption": ""
+    },
+    {
+      "id": "79779258b534",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b.yaml",
+      "name": "closure_c39d8b.yaml",
+      "kind": "other",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 10,
+      "caption": ""
+    },
+    {
+      "id": "053814a0906b",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_params.json",
+      "name": "closure_c39d8b_params.json",
+      "kind": "text",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 11,
+      "caption": ""
+    },
+    {
+      "id": "a1567b0e49ac",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_d35e1f.csv",
+      "name": "theory_vs_data_d35e1f.csv",
+      "kind": "csv",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 12,
+      "caption": ""
+    },
+    {
+      "id": "e35d52b7f3ae",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_d35e1f.png",
+      "name": "theory_vs_data_d35e1f.png",
+      "kind": "image",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 13,
+      "caption": ""
+    },
+    {
+      "id": "0357e753dcb8",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_a9b7cf.csv",
+      "name": "theory_vs_data_a9b7cf.csv",
+      "kind": "csv",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 14,
+      "caption": ""
+    },
+    {
+      "id": "d66635e0caba",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_a9b7cf.png",
+      "name": "theory_vs_data_a9b7cf.png",
+      "kind": "image",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 15,
+      "caption": ""
+    },
+    {
+      "id": "2e45dd47251d",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vector_e57b1e.csv",
+      "name": "theory_vector_e57b1e.csv",
+      "kind": "csv",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh",
+      "figure": 16,
+      "caption": ""
+    },
+    {
+      "id": "71bb90544df0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_c39d8b_theory_e57b1e.hdf5",
+      "name": "closure_c39d8b_theory_e57b1e.hdf5",
+      "kind": "other",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh",
+      "figure": 17,
+      "caption": ""
+    },
+    {
+      "id": "9637797be918",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vector_e57b1e.png",
+      "name": "theory_vector_e57b1e.png",
+      "kind": "image",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh",
+      "figure": 18,
+      "caption": ""
+    },
+    {
+      "id": "3914e7f86a32",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485.yaml",
+      "name": "closure_fc_3e8485.yaml",
+      "kind": "other",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 19,
+      "caption": ""
+    },
+    {
+      "id": "dc89ab58c7ce",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/closure_fc_3e8485_params.json",
+      "name": "closure_fc_3e8485_params.json",
+      "kind": "text",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 20,
+      "caption": ""
+    },
+    {
+      "id": "f4ffcb6fa8f6",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory/closure_c39d8b_theory_e57b1e_tracers.csv",
+      "name": "closure_c39d8b_theory_e57b1e_tracers.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 21,
+      "caption": ""
+    },
+    {
+      "id": "38690dfca2b8",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/inspect_theory/closure_c39d8b_theory_e57b1e_datavector.csv",
+      "name": "closure_c39d8b_theory_e57b1e_datavector.csv",
+      "kind": "csv",
+      "tool": "sacc_inspect",
+      "server": "serve-desc.sh",
+      "figure": 22,
+      "caption": ""
+    },
+    {
+      "id": "5aac13d52620",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_17c188.csv",
+      "name": "theory_vs_data_17c188.csv",
+      "kind": "csv",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 23,
+      "caption": ""
+    },
+    {
+      "id": "e92b66cba5cc",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261022_170518/theory_vs_data_17c188.png",
+      "name": "theory_vs_data_17c188.png",
+      "kind": "image",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 24,
+      "caption": ""
+    }
+  ],
+  "digest": null,
+  "title": "Attach a Gaussian covariance to a sacc you generate (f_sk\u2026"
+}

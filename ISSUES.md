@@ -594,3 +594,29 @@ second occurrence).
 
 - transcript: runs/2026-10-22-pm-combo/cases/C1-multi-server-research.out
 
+
+## 2026-10-22-eve-desc — 10 pass / 0 flagged
+
+Clean run — no flags. First DESC battery where all 10 cases ran fresh chats
+AND the D8 harness fix (continue D7's chat) worked with no manual rerun.
+
+- **Cross-family chains: all verified.** D3 augur→sacc_inspect (540-pt sacc,
+  10 tracers, PD covariance); D4 augur→sacc_attach_gaussian_covariance→
+  firecrown closure test — first eval χ²≈2×10⁶ on augur's datavector, agent
+  self-diagnosed the model mismatch, regenerated a firecrown-theory sacc and
+  got χ²=0.00/300 (honest failure+recovery, no fabrication); D7→D8 same-chat
+  chain namaster→sacc_prepare_for_firecrown→tjpcov config+compute→Knox
+  comparison (agree ~1%)→firecrown χ²=27.7/18, p≈0.07, PD; D10 firecrown DES
+  Y1 test vector χ²/n=1.207 (matches 10-21 run exactly). D5 augur Fisher:
+  σ(σ8)=0.0062, σ(w0)=0.0165 (matches 10-21).
+- **[local] desc_mcp_server#4 persists**: 48/54 tools, `tools.ccl` still
+  missing. D2/D9 tour step 2/D10 step 1 all blocked; agent honestly refused
+  to quote numbers each time (correct behaviour). D9 auth_status: local
+  dispatch.
+- **GH#11 third instance (D6)**: `txpipe_validate_pipeline` returned 27
+  dry-run commands, tool result cut at ~20k chars after ~8 commands — same
+  tool as the 10-21 instance, deterministic repro. Model NOTICED and
+  disclosed ("assembled, not copied") — no misreporting this time. Comment
+  added to HEP-KE/hep-genesis-releases#11.
+- No new upstream-worthy bugs; #10 (budget) N/A — quick mode only.
+

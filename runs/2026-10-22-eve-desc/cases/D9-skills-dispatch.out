@@ -1,0 +1,48 @@
+Step 1 is done. Step 2 needs `ccl_background` and `ccl_matter_pk`, but this server does not expose either tool: the CCL family failed to import. I'll check auth and the dispatch state now.
+I listed the skills, loaded `desc-tour` and completed step 1. Step 2 could not run because the CCL tools aren't available on this server. Heavy tools run locally (`get_dispatch`), and this server cannot send jobs to a facility itself.
+
+**Server-side skills (10):** ccl-datavector-to-sacc, conceal-datavector, desc-tour, hpc-dispatch-handoff, likelihood-sanity-checks, lsst-3x2pt-forecast, maps-to-likelihood, pk-ccl-vs-emulators, txpipe-measurement, txpipe-sacc-to-likelihood.
+
+**Step 1 (Discover): done.**
+- **Installed versions:** pyccl 3.3.6, sacc 2.4, firecrown 1.16.0, augur 1.2.4.1. Also installed: tjpcov 0.5.1, pymaster (NaMaster) 3.0, smokescreen v1.5.6, ceci 2.6.
+- **TXPipe:** not imported by this server, by design. It is "compose only": pipelines are run in a separate TXPipe environment or on a facility.
+- **CCL family:** `describe_desc_tool_family("ccl")` failed with "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'". It listed no tools. pyccl itself is installed, but the server's CCL tool module is missing.
+
+**Step 2 (CCL theory): not run.** The skill calls for `ccl_background` (z 0–3, vanilla preset) and `ccl_matter_pk` (z = 0.5, halofit). Neither tool exists here, so I can't give the check values the skill expects (chi(z=1) ≈ 3300 Mpc, P_nl(k=1 h/Mpc) ≈ 800–900 (Mpc/h)^3). This needs fixing in the server's install, probably the missing `tools/ccl` module. It will also block tour step 3, which uses `ccl_lsst_srd_nz` and `ccl_angular_cls`.
+
+**Auth and dispatch state:**
+- **Current dispatch:** local execution.
+- **`auth_status`:** "hep-genesis backend not installed in this server's environment - server-side remote dispatch unavailable (the client-side export_dispatch_pack handoff still works)." The suggested fix is `pip install -e <hep-genesis-agent>/backend[iri]`.
+- **What that means:** `set_dispatch` to Polaris or Perlmutter would not work from this server as it stands. Facility runs are only possible by exporting the tool package with `export_dispatch_pack` and submitting it with your own facility tools (the `hpc-dispatch-handoff` skill covers this).
+Loading MCP servers…
+[10/22/26 17:10:36] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] list_desc_skills {}
+[10/22/26 17:10:41] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] list_desc_skills -> ok: {   "status": "success",   "files": [],   "message": "10 skills available. Load one with load_desc_skill when a task matches its description.",   "metadata": { 
+[tool] load_desc_skill {"name": "desc-tour"}
+[10/22/26 17:10:43] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] load_desc_skill -> ok: {   "status": "success",   "files": [],   "message": "Loaded skill 'desc-tour'. Follow these instructions.",   "metadata": {     "instructions": "---\nname: des
+[tool] list_desc_packages {}
+[10/22/26 17:10:46] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/22/26 17:10:49] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] list_desc_packages -> ok: {   "status": "success",   "files": [],   "message": "9 DESC packages; tool families: meta, ccl, sacc, firecrown, augur, txpipe, tjpcov, namaster, smokescreen, 
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/22/26 17:10:50] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+[tool] auth_status {}
+[10/22/26 17:10:53] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] auth_status -> ok: hep-genesis backend not installed in this server's environment - server-side remote dispatch unavailable (the client-side export_dispatch_pack handoff still wor
+[tool] get_dispatch {}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] get_dispatch -> ok: Dispatch: local execution.
+Tokens: 301K in (237K cached) · 1.4K out · 5 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/skill-1022.json
