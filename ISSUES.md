@@ -22,6 +22,17 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
   1,663 `Failed to parse JSONRPC message` pydantic errors in one 5-min
   research run. Client survives; protocol pollution; real errors hard to spot.
 - Evidence: runs/2026-10-15/cases/09-research-arxiv.out lines ~287–330.
+- **Reproduced 2026-10-22 pm-combo on v0.3.18** — first reproduction since
+  10-15 and first in combo mode: 9,877 JSONRPC parse errors in C1
+  (transcript 8.9 MB, vs 92–104 KB / 0 errors in the three prior combo
+  runs). Trigger is deterministic: this run's workers made 6 `arxiv_agent`
+  sub-agent calls (first combo run to do so); the same-day midday research
+  run with 0 arxiv_agent calls had 0 errors. #3's failures compound inside
+  the flood (`'1912.07795 error Object ...has no attribute search'` lines
+  in the pydantic input_value). Corrected the "not reproducing" note on
+  GH#2 with the full table. Also worth noting: 4/6 arxiv_agent calls
+  partially succeeded via arXiv-HTML reads, so #3 is softer than "always
+  fails" — the `'Search'.results` crash hits the PDF download path only.
 
 ### 3. `arxiv_agent` full-text extraction broken **[GH#3]** — open
 - v0.3.16. Sub-agent PDF/TXT downloads fail:
@@ -362,6 +373,14 @@ Judge heuristic can't see this (rc=0, substantive output → PASS).
   first-pass compiles), so first-pass failures are rare but the recovery
   path works. No reproducible trigger; noting for pattern tracking.
   Not filed upstream (single occurrence, auto-recovered).
+- **Second occurrence 2026-10-22 pm-combo** (v0.3.18, C2 for the higgsino-dd
+  combo run): same `LaTeX failed to compile — asking the report model to fix
+  its markup…` → successful retry. All three PDFs valid (report 307 KB,
+  supplement 950 KB, transcript 352 KB; 4 figures). Two occurrences in two
+  consecutive pm-combo runs, both on long multi-figure research boards —
+  still auto-recovered both times, but the pattern is now real, not a
+  one-off. Watch for a third; if it recurs, worth filing upstream as a
+  report-model robustness issue.
 
  ---
 
@@ -542,4 +561,36 @@ Notes (manual review):
 ## 2026-10-22-midday-research — 2 pass / 0 flagged
 
 Clean run — no flags.
+
+
+## 2026-10-22-pm-combo — 2 pass / 1 flagged
+
+**Diagnosis: known GH#2 reproducing in combo mode for the first time — no
+new bug.** C1's research run completed cleanly (status `done`, 47/50 tool
+calls, 2 waves, 28 findings: 17 supported / 11 contested, 0 tool errors);
+the flag is purely traceback noise from 9,877 `Failed to parse JSONRPC
+message` errors (vs 0 in the three prior combo runs). Trigger: the workers
+made 6 `arxiv_agent` sub-agent calls — first combo run to do so — and each
+spews the smolagents Rich banner on the stdio server's stdout (GH#2).
+Correlation is deterministic: same-day midday research run (same wheel,
+backend, topic) made 0 arxiv_agent calls → 0 errors. GH#3 also visibly
+compounded inside the flood (`input_value='1912.07795 error Object ...has
+no attribute search'` lines). Notably 4 of the 6 arxiv_agent calls
+*partially succeeded* via arXiv-HTML reads (LZ 1 TeV limit ≈ 3.1e-47 cm²,
+Hill & Solon bounds) — better than #3's "always fails" title suggests;
+the 2 failures are the known `'Search' object has no attribute` path.
+
+4-server orchestration worked: 26 calls routed to serve-idm.sh (relic
+density, recoil, constraints), 14 to hep-research-aid (arXiv), 18 board
+ops, 1 each to sbbn/hydro (topic-appropriate restraint — DM topic didn't
+need hydro predictions; the agent still listed hydro's tools/datasets to
+check applicability). Budget respected this run (47/50) — GH#10 did NOT
+reproduce. Report: first-pass LaTeX failure again auto-recovered (#29,
+second occurrence).
+
+### C1-multi-server-research — Research with 4 servers: Higgsino thermal target vs direct detection
+
+- rc=0, duration=1393.6s, note: traceback present (run may have continued)
+
+- transcript: runs/2026-10-22-pm-combo/cases/C1-multi-server-research.out
 
