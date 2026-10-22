@@ -1,0 +1,938 @@
+
+Run 261022_110244-c34b: done (stop:budget: 2/2 waves used)
+
+# The thermal higgsino at 1.0–1.2 TeV: relic mass, inelastic LZ rates and neutrino limits
+
+## Abstract
+
+This run surveyed recent work on the pure-higgsino thermal relic, used the inelastic-DM tool server to compute relic densities and xenon recoil rates, and checked the 2026 reading of the LZ 248 keV nuclear-recoil event as higgsino inelastic scattering.
+
+- **Relic mass from the tool.** The tool's perturbative freeze-out gives Omega h^2 = 0.120 at m_chi ≈ 1159 GeV (bracketed by 1150 and 1160 GeV). This is a calibration of the tool's built-in cross-section normalisation, not an independent calculation. The independent Sommerfeld plus bound-state value from the literature is 1.08 ± 0.02 TeV.
+- **LZ event under the tool's halo.** With a standard halo cut off at 776 km/s, the tool predicts zero LZ events for every delta_m ≥ 380 keV at 1.0–1.2 TeV. LZ-compatible event counts appear only near delta_m ≈ 350 keV, which lies below both the 475 keV (IceCube) and 557 keV (Super-K + IceCube) solar-neutrino exclusions.
+- **What the literature region requires.** Analytic kinematics show that the published preferred region (481–519 keV) needs Earth-frame dark-matter speeds of about 920–980 km/s, and clearing the 557 keV line needs about 950–1015 km/s. The higgsino reading of the event therefore depends entirely on the halo's high-velocity tail.
+- **Not done.** The elastic spin-independent comparison against the LZ and XENONnT curves at 1.1 TeV was not completed.
+
+## Background
+
+The pure higgsino is an electroweak doublet whose neutral states are split by a small Majorana mass, delta_m. Its thermal mass is fixed by matching the Planck abundance, Omega h^2 ≈ 0.12. A precise value needs Sommerfeld enhancement and coannihilation with the charged state (arXiv:1411.6930; analytic method in arXiv:1008.2905). Bound-state formation is claimed to matter mainly above a few TeV (arXiv:1407.7874).
+
+Bottaro et al. (arXiv:2205.04486, Table I) give M_DM = 1.08 ± 0.02 TeV for the Dirac Y=1/2 doublet. That value includes Sommerfeld enhancement and bound-state formation and is normalised to Omega_DM h^2 = 0.11933 ± 0.00091. The same paper states that the doublet's direct-detection cross section "lies well below the neutrino" floor. Chen and Hill (arXiv:1912.07795) state: "The direct detection signal in the pure Higgsino limit remains below neutrino backgrounds for WIMPs in the TeV mass range." The relic density also sets the upper mass limit relevant to collider disappearing-track searches (arXiv:1901.02987).
+
+For elastic scattering, the higgsino lies below the LZ 4.2 tonne-year limits (arXiv:2410.17036; best SI limit 2.2e-48 cm^2 at 40 GeV) and the XENONnT limits (arXiv:2303.14729). Tree-level Z exchange is removed by the inelastic splitting.
+
+**The LZ event.** LZ reported a nuclear-recoil candidate at E_R = 248 ± 23 stat ± 23 sys keV, with 3.4σ local and 2.6σ global significance, in a 2.84 tonne-year exposure (arXiv:2609.06890, arXiv:2609.02608).
+
+**Papers interpreting or constraining the event:**
+- Wu, Zhang and Zhu (arXiv:2609.01590) fit the event with a higgsino.
+  - With a Milky Way plus Large Magellanic Cloud (LMC) velocity distribution ("Halo 13"), they find delta_m = 481–519 keV at 1σ and 475–529 keV at 2σ.
+  - With a profiled Maxwellian halo they find 312–422 keV at 1σ and 280–457 keV at 2σ, with best fit 1.09 TeV and 366 keV.
+  - The relic density fixes m_chi = 1000–1183 GeV at 1σ and 943–1230 GeV at 2σ.
+- Solar-capture neutrino limits:
+  - arXiv:2609.07807 excludes delta_m ≲ 557 keV, assuming captured higgsinos thermalise in a standard truncated Maxwellian halo.
+  - arXiv:2609.01590 excludes delta_m ≲ 475 keV at 90% CL with IceCube when captured particles stay on extended orbits without elastic cooling. Loose inputs give 466 keV and the Fe nuclear-response uncertainty gives about 454 keV. Assuming equilibrium instead, the same paper finds about 553 keV.
+- Freese and Theodosopoulos (arXiv:2610.03692) find the 1.1 TeV thermal higgsino only marginally compatible with the event and IceCube. Their compatible regions run from about 2 TeV to hundreds of TeV with delta ≈ 350–525 keV.
+- arXiv:2609.09830 computes one-loop electroweak corrections to delta_m and to the scattering rates.
+- arXiv:2609.06890 proposes boosted dark matter, which does not depend on the halo tail.
+
+Several of these literature numbers were read directly in the full texts but could not be validated as verbatim quotes, because PDF extraction garbles math symbols and en-dash ranges. Treat them as read but not independently verified.
+
+## Results
+
+### Relic density versus mass (tool)
+
+The tool's `compute_relic_density` uses perturbative Kolb–Turner freeze-out (x_f ≈ 24.4–24.8, g* = 86.25) with sigma_v = 2.5e-26 cm^3/s × (1100 GeV/m_chi)^2.
+
+| m_chi (GeV) | Omega h^2 |
+|---|---|
+| 900 | 0.0731 |
+| 1000 | 0.0898 |
+| 1100 | 0.1083 |
+| 1150 | 0.1181 |
+| 1160 | 0.1202 |
+| 1200 | 0.1285 |
+| 1300 | 0.1503 |
+
+The Planck crossing (0.120 ± 0.0012) is at about 1159 GeV.
+
+- **Comparison with the literature.** This is about 1% below the 1172 GeV inferred, not quoted, from arXiv:1411.6930. It is about 7% above the 1.08 TeV of arXiv:2205.04486.
+- **Why it is not a check.** The agreement follows from the hard-coded normalisation; it is not independent physics.
+- **Missing inputs.** The tool has no Sommerfeld or coannihilation switch, no charged-splitting input and no delta_m dependence: Omega h^2 = 0.1202 at 1160 GeV for delta = 400, 500 and 600 keV. The "with and without Sommerfeld/coannihilation" and charged-splitting sensitivity items could not be run.
+- **Unreliable flag.** The tool's `consistent_planck` flag reads True at 25σ tension and False at 39σ.
+
+### Inelastic recoil kinematics and LZ event counts (tool)
+
+The tool's halo is a standard halo with a hard cutoff at v_esc + v_E = 776 km/s. No call exposes halo parameters. Results at m_chi = 1100 GeV, sigma_n = 7.43e-39 cm^2:
+
+| delta (keV) | E_R,peak (keV) | v_min at peak (km/s) | v_min at 248 keV (km/s) | N_LZ (2.84 t-yr) |
+|---|---|---|---|---|
+| 300 | 270 | 701 | 701 | 744.6 |
+| 400 | 360 | 809 | 823 | 0.00 |
+| 480 | 432 | 886 | 921 | 0.00 |
+| 520 | 468 | 922 | 969 | 0.00 |
+| 560 | 504 | 957 | 1018 | 0.00 |
+
+Scaling by exposure gives about 1101 events at 4.2 t-yr for 300 keV and zero for the rest. The tool does not report a separate E_R,min or an integrated rate above 100 keV. The annual-modulation output at (1100 GeV, 500 keV, 248 keV) is identically zero, because the rate is zero.
+
+Bracketing near the edge with `predict_recoil` (2.84 t-yr):
+
+| delta (keV) | events at 1000 GeV | events at upper mass |
+|---|---|---|
+| 340 | 10.67 | 17.30 (1183 GeV) |
+| 350 | 1.13 | 2.90 (1200 GeV) |
+| 360 | 0.03 | 0.158 (1183 GeV) |
+| 380 | 0.00 | 0.00 (1183 GeV) |
+
+**Scans.**
+- A 15×15 scan (900–1300 GeV, 300–650 keV) found 180 of 225 points passing all constraints. Only 12 points predict 0.3–5 LZ events, with best fit (986 GeV, 350 keV).
+- A 16×16 scan (1000–1200 GeV, 330–480 keV) passed all 256 points. It placed 16 points in the 0.3–5 band, with best fit (1000 GeV, 350 keV).
+- That those 16 points form the delta = 350 keV row is inferred from the bracketing above. The binary scan file could not be read, so this was not listed directly by the tool.
+- The second scan overwrote the first scan's file (`.../inelastic-dm-server/output/scan_idm.npz`) and its summary plot (`constraint_summary.png`). A recoil-spectrum plot for 1100 GeV / 500 keV is at `.../output/recoil_spectrum.png`.
+- No numbered figures were produced.
+
+**Interpretation.** Under the truncated halo, no LZ-compatible point reaches delta ≥ 360 keV. In particular none reaches the 475 or 557 keV neutrino lines, so no tool point that reproduces the event survives the neutrino limits. The critic stressed that the band near 350 keV is an artefact of the hard cutoff, where N falls from 10.7 to 1.1 to 0.03 over 20 keV. It is not a physical preferred region.
+
+### Analytic kinematic check
+
+The maximum splitting that can produce a recoil at E_R = 248 keV for a given maximum speed is
+
+delta_max = v_max·sqrt(2 m_N E_R) − m_N E_R/mu,
+
+with m_N = 122.0 GeV (Xe-131) and sqrt(2 m_N E_R) = 0.8206 keV per km/s.
+
+| v_max (km/s) | delta_max at 1000 GeV (keV) | at 1100 GeV | at 1183 GeV |
+|---|---|---|---|
+| 776 | 358.5 | 361.3 | 363.2 |
+| 800 | 378 | 381 | 383 |
+| 850 | 419 | 422 | 424 |
+| 900 | 460 | 463 | 465 |
+
+- **Agreement with the tool.** This reproduces the tool's v_min(248 keV) to within about 1 km/s.
+- **Origin of the "about 365 keV" edge.** That figure is the endpoint with E_R left free, mu v_max^2/2 = 364–370 keV at 776 km/s, reached near E_R ≈ 330 keV rather than at 248 keV.
+
+Inverting at 1100 GeV gives the Earth-frame v_max needed to reach a given splitting:
+
+| delta (keV) | v_max with event at 248 keV (km/s) | v_max with E_R free (km/s) |
+|---|---|---|
+| 422 | — | 830 |
+| 457 | 893 | 864 |
+| 475 | 915 | 881 |
+| 519 | 968 | 921 |
+| 529 | 980 | 930 |
+| 557 | 1015 | 954 |
+
+At 1000 GeV these values shift by about +3 km/s, and at 1183 GeV by about −2 km/s.
+
+What this implies:
+- The profiled-Maxwellian edges of arXiv:2609.01590 (422/457 keV) imply an effective endpoint of about 830–890 km/s.
+- The Halo 13 edges (519/529 keV) need an LMC-boosted tail reaching about 920–980 km/s.
+- Clearing 475 keV needs at least about 880–915 km/s, and clearing 557 keV needs at least about 950–1015 km/s.
+
+The critic noted two sources of uncertainty that make these thresholds uncertain by roughly ±10–20 km/s:
+- The calculation assumes a single isotope. Natural xenon spans A = 124–136, and Xe-134 raises delta_max by about 7 keV at 776 km/s and 1.1 TeV.
+- The ±23 keV statistical and systematic energy uncertainty also enters.
+
+### Combined constraint check (tool)
+
+At 1160 GeV, `check_all_constraints` returns "VIABLE" for delta = 400, 500 and 600 keV:
+
+| Quantity | delta = 400 keV | 500 keV | 600 keV | Tool's limit |
+|---|---|---|---|---|
+| Omega h^2 | 0.1202 (0.1σ) | 0.1202 | 0.1202 | — |
+| N_LZ (2.84 t-yr) | 0.00 | 0.00 | 0.00 | flagged inconsistent with 1 observed event |
+| sigma_v today (cm^3/s) | 6.7e-42 | 1.04e-41 | 1.50e-41 | 2.48e-25 (Fermi) |
+| CMB p_ann | 0.86e-45 | 1.35e-45 | 1.94e-45 | 3.2e-28 |
+
+At (1100 GeV, 500 keV) the check gives Omega h^2 = 0.1083, N_LZ = 0 and sigma_v = 1.29e-41 against a Fermi limit of 2.3e-25.
+
+Warning: these verdicts are not physically reliable. The tool treats annihilation today as p-wave and splitting-suppressed, whereas the higgsino annihilates s-wave to WW/ZZ at about 1e-26 cm^3/s. The "viable" label therefore means invisible, not allowed. The critic contested this finding, and no s-wave replacement was computed.
+
+### Literature: why the two neutrino lines differ, and gamma-ray lines
+
+The 475 vs 557 keV difference comes from how captured particles are treated in the Sun, not from the halo model (read in the full texts; not independently verified).
+
+- **arXiv:2609.01590 (475 keV).** At 1.11 TeV it uses a non-thermal captured population on extended orbits, <sigma v>_eff ≈ 1.5e-26 cm^3/s with Sommerfeld, and ten years of IceCube data.
+- **arXiv:2609.07807 (557 keV).** It assumes thermalisation, a truncated Maxwellian (u0 = 220, v_esc = 544, v_sun = 232 km/s; rho = 0.4 GeV/cm^3), sigma_chi_n = 7.4e-39 cm^2, <sigma v> = 1.3e-26 cm^3/s and m_chi = 1.08 TeV. It uses a 95% CL fit to IceCube nu_mu, IceCube nu_e and Super-K. It still allows rescue by an LMC tail or substructure.
+- **arXiv:2610.03692.** It shows four 90% CL IceCube cooling treatments in its Fig. 2:
+  - capture–annihilation equilibrium;
+  - spin-independent (SI) inelastic cooling only;
+  - SI inelastic plus spin-dependent (SD) elastic cooling;
+  - SI inelastic plus SD plus SI elastic cooling, with sigma_SI,el = 4e-50 cm^2.
+
+  Its other inputs are a standard halo with rho = 0.3 GeV/cm^3, sigma_Hn = 7.43e-39 cm^2 and an LMC tail cut at 950 km/s. It states the solar limits "remain unchanged by adding the effects of the LMC". The delta values at 1.1 TeV for each treatment appear only in the figure and were not quantified.
+
+**Gamma-ray lines (arXiv:2609.01590).** The thermal line prediction is 0.815–0.900 of the H.E.S.S. 546 h limits, which the paper describes as close to but not excluded. The CTAO Alpha 500 h projection gives mu_gamma,95 = 1.69, which falls short of the thermal target. An Omega-configuration estimate of 0.85 would reach it, but it is unverified whether that number comes from the paper or from the agent's own 1.69/2 scaling. Dwarf, CMB and ATLAS disappearing-track limits do not exclude the region.
+
+**Radiative corrections (arXiv:2609.09830).** Its benchmarks have one-loop on-shell splittings of 36.37, 8.90, 16.39, 10.81 and 10.59 keV at |mu| = 0.61–1.40 TeV, all with Omega h^2 < 0.12. It gives no delta_m shift in the 475–557 keV window. A tree-to-one-loop shift of order 0.1 GeV was read off its mass table by the agent; the paper does not state it. It therefore does not bear on rescuing the window.
+
+## Discussion
+
+**Relic mass.** The tool's 1159 GeV is a normalisation echo. The best independent anchor in the record is 1.08 ± 0.02 TeV (arXiv:2205.04486), which includes Sommerfeld enhancement and bound states. The 1172 GeV figure attributed to arXiv:1411.6930 is inferred rather than quoted. Which value to use as the headline remains open, since published thermal masses differ by roughly 10–20% depending on treatment.
+
+**The LZ event.** Our computations and the literature agree on one point: the LZ reading requires a population of halo particles above roughly 880 km/s in the Earth frame. A standard halo truncated at 776 km/s caps the splitting at about 360 keV at 248 keV recoil. That is below every neutrino exclusion line. This is consistent with arXiv:2609.07807's statement that the reading is disfavoured for standard halo velocities, and with arXiv:2610.03692's "marginal" verdict.
+
+What the run could not do is decide between the published analyses. They differ in the solar treatment (thermalised or not) and in how much LMC tail they assume. Our tool can vary neither.
+
+**Current limits.** The task asked where the higgsino sits relative to current limits. Only qualitative literature statements are available for the elastic channel: below the LZ and XENONnT reach, and below the neutrino floor according to arXiv:1912.07795 and arXiv:2205.04486. No numerical limit at 1.1 TeV was read. For indirect detection, the only computed numbers come from the tool's unphysical p-wave treatment. The literature gamma-ray line ratio (0.815–0.900 of H.E.S.S.) suggests the thermal higgsino is close to current sensitivity, but that number is not independently verified.
+
+**Dead ends.**
+- No tool exposes halo parameters, so the dependence on v_esc and on an LMC tail could not be tested. A custom rate code is needed.
+- `load_table_data` cannot read the binary scan file, so scan-band membership had to be inferred by bracketing.
+- Verbatim quotes from arXiv:2609.01590 failed because of garbled math: the endpoint sentence, the H.E.S.S. ratio, the 553 keV bound, the Maxwellian best fit and the relic ranges.
+- The Planck 2018 quote "0.120 \pm 0.001" was not found in the extracted text, so Planck is not yet cited in the reference file.
+- The tool budget ran out before narrow re-reads of arXiv:2609.01590 and arXiv:2609.07807 and before an s-wave indirect-detection comparison.
+
+## Limitations
+
+- **Relic density.** The tool is perturbative only, with no Sommerfeld, coannihilation, charged-splitting or delta_m dependence. The relic mass is therefore not an independent computation.
+- **Event counts.** Counts assume the tool's unstated LZ acceptance in its extended nuclear-recoil search and a single halo with a hard 776 km/s cutoff. There is no isotope averaging, and the critic noted thresholds carry about ±10–20 km/s.
+- **Elastic SI comparison.** Not done: the LZ 4.2 t-yr and XENONnT 90% CL values near 1.1 TeV, the higgsino sigma_SI band and the neutrino-fog level were never read. The critic flagged this as the main missing piece.
+- **Indirect and CMB.** These rest on an unphysical p-wave assumption. No s-wave comparison was made.
+- **Unverified literature numbers.** Several literature numbers (preferred regions, 553 keV, the H.E.S.S. ratio, the CTAO Omega estimate, the doublet mass, the arXiv:2610.03692 and arXiv:2609.09830 details) were not independently verified. The critic contested them, mostly because of failed verbatim quotes or abstract-only reading.
+- **Reproducibility.** The first scan's outputs were overwritten and cannot be reproduced from disk.
+- **Compute.** All computation ran locally. No HPC facility was used.
+
+## Open directions
+
+1. Read the LZ 4.2 t-yr (arXiv:2410.17036) and XENONnT (arXiv:2303.14729) SI 90% CL limits near 1.1 TeV from text or HEPData and place the Chen–Hill higgsino band and the neutrino fog against them.
+2. Write a custom inelastic rate code with variable v_esc and an LMC high-velocity tail to compute LZ event counts across delta_m = 400–600 keV and test the 481–519 keV region directly.
+3. Replace the tool's p-wave indirect pass with an s-wave WW/ZZ (about 1e-26 cm^3/s) comparison against Fermi dwarf and H.E.S.S. continuum and line limits at 1.1 TeV.
+4. Obtain an independent Sommerfeld-plus-coannihilation thermal mass (e.g. via the arXiv:1008.2905 method) and reconcile it with 1.08 ± 0.02 TeV and the inferred 1172 GeV.
+5. Re-read narrow windows of arXiv:2609.01590 and arXiv:2609.07807 to validate the contested numbers, including whether the CTAO Omega 0.85 is the paper's own value.
+6. Extract the per-treatment IceCube delta limits at 1.1 TeV from arXiv:2610.03692 Fig. 2.
+7. Add isotope averaging over natural xenon and the ±23 keV energy uncert
+Loading MCP servers…
+Loaded 29 tools
+[run] surveying (waves 0, tool calls 0, 0s)
+[phase] survey
+[tool] survey list_agent_files {}
+[tool] tc-261022_1-w0-survey-1 -> ok: []
+[tool] survey list_input_files {}
+[tool] tc-261022_1-w0-survey-2 -> ok: {
+  "status": "success",
+  "files": [],
+  "usage": "Pass any of these filenames to load_table_data()."
+}
+[tool] survey list_datasets {}
+[tool] tc-261022_1-w0-survey-3 -> ok: {'count': 0, 'datasets': []}
+[tool] survey list_files {}
+[tool] tc-261022_1-w0-survey-4 -> ok: Files in .:
+  - .git
+  - .gitignore
+  - .last-release-seen
+  - ISSUES.md
+  - SCOPE.md
+  - docs
+  - downloads
+  - logs
+  - projects
+  - repor
+[tool] survey get_dispatch {}
+[tool] tc-261022_1-w0-survey-5 -> ok: Dispatch: local execution.
+[usage]
+[tool] survey search_arxiv_abstracts {"query": "higgsino thermal relic 1.1 TeV dark matter direct detection", "max_results": 8}
+[tool] tc-261022_1-w0-survey-6 -> ok: [2302.02905v2] Third family quasi-Yukawa unification: Higgsino dark matter, NLSP gluino and all that
+Abstract: We explore the implications o
+[tool] survey search_arxiv_abstracts {"query": "pure higgsino dark matter mass splitting inelastic scattering LZ XENONnT", "max_results": 8}
+[tool] tc-261022_1-w0-survey-7 -> ok: [1509.02910v2] LUX-ZEPLIN (LZ) Conceptual Design Report
+Abstract: The design and performance of the LUX-ZEPLIN (LZ) detector is described as
+[tool] survey search_arxiv_abstracts {"query": "Sommerfeld enhancement higgsino relic abundance bound state formation", "max_results": 6}
+[tool] tc-261022_1-w0-survey-8 -> ok: [0910.5221v2] Relic density and CMB constraints on dark matter annihilation with Sommerfeld enhancement
+Abstract:   We calculate how the rel
+[usage]
+[tool] survey get_arxiv_metadata {"arxiv_id": "2609.01590"}
+[tool] tc-261022_1-w0-survey-9 -> ok: arXiv ID: 2609.01590
+Title: TeV Higgsino Dark Matter from LZ Nuclear Recoil to Fermi-LAT Gamma Rays
+Authors: Lei Wu, Yang Zhang, Bin Zhu
+Yea
+[tool] survey get_arxiv_metadata {"arxiv_id": "2609.07807"}
+[tool] tc-261022_1-w0-survey-10 -> ok: arXiv ID: 2609.07807
+Title: Not so good $ν$s for Higgsino dark matter as LZ excess: stringent limits from Super-Kamiokande and IceCube
+Autho
+[tool] survey get_arxiv_metadata {"arxiv_id": "2609.09830"}
+[tool] tc-261022_1-w0-survey-11 -> ok: arXiv ID: 2609.09830
+Title: Radiative Corrections to the Direct Detection of Inelastic Scattering of Higgsino-like Neutralino Dark Matter
+Au
+[tool] survey search_arxiv_abstracts {"max_results": 6, "query": "LZ WIMP search results exposure spin-independent limit 2024"}
+[tool] tc-261022_1-w0-survey-12 -> ok: [1509.02910v2] LUX-ZEPLIN (LZ) Conceptual Design Report
+Abstract: The design and performance of the LUX-ZEPLIN (LZ) detector is described as
+[usage]
+[tool] survey search_arxiv {"query": "LZ dark matter search results 4.2 tonne-year exposure", "max_results": 5}
+[tool] tc-261022_1-w0-survey-13 -> ok: Found 5 papers matching query: 'LZ dark matter search results 4.2 tonne-year exposure' (source: arXiv API)
+
+Paper 1:
+arXiv ID: 2410.17036v3
+
+[tool] survey search_arxiv_abstracts {"query": "XENONnT WIMP dark matter search nuclear recoil results", "max_results": 5}
+[tool] tc-261022_1-w0-survey-14 -> ok: [0504031v1] Limits on WIMP cross-sections from the NAIAD experiment at the Boulby Underground Laboratory
+Abstract:   The NAIAD experiment (N
+[tool] survey search_arxiv_abstracts {"query": "electroweak multiplet dark matter thermal mass higgsino 1.1 TeV wino 2.8 TeV", "max_results": 6}
+[tool] tc-261022_1-w0-survey-15 -> ok: [1901.02987v2] Discovery reach for wino and higgsino dark matter with a disappearing track signature at a 100 TeV $pp$ collider
+Abstract: Wi
+[tool] survey search_arxiv_abstracts {"query": "LZ high energy nuclear recoil event inelastic dark matter higgsino mass splitting", "max_results": 6}
+[tool] tc-261022_1-w0-survey-16 -> ok: [0510346v1] The Dark Energy Survey
+Abstract:   We describe the Dark Energy Survey (DES), a proposed optical-near infrared survey of 5000 sq.
+[usage]
+[tool] survey search_arxiv_abstracts {"max_results": 5, "query": "LZ collaboration search inelastic dark matter high recoil energy nuclear recoil event 248 keV"}
+[tool] tc-261022_1-w0-survey-17 -> ok: [1211.0310v1] Large Synoptic Survey Telescope: Dark Energy Science Collaboration
+Abstract: This white paper describes the LSST Dark Energy S
+[usage]
+[brief] The pure higgsino, a Dirac-like electroweak doublet whose neutral states are split by a small Majorana mass, is a standard WIMP target. Its mass is fixed by requiring the thermal freeze-out abundance 
+**Survey** — 37 tools on 3 servers, 5 read-only probes, 13 papers found.
+
+The pure higgsino, a Dirac-like electroweak doublet whose neutral states are split by a small Majorana mass, is a standard WIMP target. Its mass is fixed by requiring the thermal freeze-out abundance to match the Planck value Omega h^2 of about 0.12. That puts it near 1.0-1.2 TeV; the commonly quoted 1.1 TeV is background knowledge, and none of the returned abstracts state it. Sommerfeld enhancement and coannihilation with the charged state are needed to compute this mass precisely (1411.6930, 1008.2905). Bound-state effects are claimed to be important mainly above a few TeV (1407.7874). For elastic spin-independent scattering, the pure higgsino lies below the LZ 4.2 tonne-year limits (2410.17036; best SI limit 2.2e-48 cm^2, set at 40 GeV) and the XENONnT limits (2303.14729), because tree-level Z exchange is turned off by the inelastic mass splitting delta_m. The cross-section limits near 1.1 TeV are not given in these abstracts and must be read from the published curves. A burst of 2026 papers concerns a single LZ nuclear-recoil candidate at E_R = 248 keV (3.4 sigma local, 2.6 sigma global, from a 2.84 tonne-year exposure). It has been read as higgsino inelastic scattering with delta_m around 480-520 keV for m_chi = 1000-1183 GeV, which is exactly the thermal relic window (2609.01590). Neutrino constraints from dark matter captured and annihilating in the Sun are in tension with this reading: Super-K plus IceCube exclude delta_m below about 557 keV, which disfavors it for standard halo velocities (2609.07807), while IceCube alone excludes below about 475 keV once velocity effects near the blind spot are included (2609.01590). Other papers try to rescue the window (2610.03692) or look at boosted, non-halo explanations (2609.06890). Summary of where the higgsino stands: the thermal 1.0-1.2 TeV higgsino is not excluded by elastic xenon limits. It is directly testable through inelastic Z-mediated scattering only for delta_m up to a few hundred keV, where LZ's high-recoil sensitivity, solar-neutrino limits and the CTAO gamma-ray line together close in on the remaining parameter space.
+
+Quantities worth checking: Omega h^2 versus m_chi for a pure higgsino at about 0.9, 1.0, 1.1, 1.2 and 1.3 TeV, with and without Sommerfeld enhancement and coannihilation; find the mass where Omega h^2 = 0.12 (Planck); Sensitivity of the relic mass to the charged-neutral splitting (about 340 MeV radiative) and to the neutral splitting delta_m; Elastic SI cross section of the pure higgsino (loop- and Higgs-mediated) at 1-1.2 TeV, compared with the LZ 4.2 tonne-year and XENONnT 90% CL curves at the same mass; Inelastic Z-mediated scattering rate and recoil spectrum in xenon as a function of delta_m (about 400-600 keV) and m_chi; minimum recoil energy E_R,min and the kinematic threshold v_min(delta_m); Expected LZ event count above 100 keV for the 2.84 or 4.2 tonne-year exposure, compared with the single 248 keV event; Dependence of the rate on v_esc and on the LMC-induced high-velocity tail.
+[run] planning (waves 0, tool calls 0, 75s)
+[phase] plan
+[usage]
+[directions] d-09 [open] Use the serve-idm.sh tools to compute the pure-higgsino ther; d-10 [open] Compute the inelastic Z-mediated recoil spectrum, the LZ eve; d-11 [open] Close the remaining literature gaps: the 2205.04486 doublet 
+[phase] critic-plan
+[usage]
+[critique] wave 0 plan: revise
+[directions] d-09 [open] Use the serve-idm.sh tools to compute the pure-higgsino ther; d-10 [open] Compute the inelastic Z-mediated recoil spectrum, the LZ eve; d-11 [open] Close the remaining literature gaps: the 2205.04486 doublet ; d-12 [open] Extract verbatim, citable inputs from the 2026 LZ-event pape
+**Plan** — 4 lines of investigation:
+1. Use the serve-idm.sh tools to compute the pure-higgsino thermal relic density Omega h^2 at m_chi = 0.9, 1.0, 1.1, 1.2 and 1.3 TeV, find the mass where Omega h^2 = 0.120, and run the combined constraint check at the thermal point. — The task asks for relic densities computed with the inelastic-DM tools. Earlier directions d-01 and d-04 could only interpolate from one published point in 1411.6930 because no relic-density tool was connected at the time. compute_relic_density and check_all_constraints are now in the catalog, so this direction answers the core question directly. It also replaces the low-confidence m^2 rescaling (f-009, about 1.14 TeV) with tool output.
+2. Compute the inelastic Z-mediated recoil spectrum, the LZ event expectation and the (m_chi, delta_m) constraint map for the thermal higgsino. Reproduce or test the 2609.01590 preferred region (delta_m = 481-519 keV, m_chi = 1000-1183 GeV) against the 475 keV (IceCube) and 557 keV (Super-K + IceCube) neutrino lines. — Inelastic scattering is the only direct-detection route for the higgsino at current exposures. There is an unresolved tension here. The hand calculation f-001 gives a kinematic delta_max of about 364-368 keV for v_max = 776 km/s. 2609.01590, however, fits delta_m of about 500 keV, which needs a high-velocity tail (from the LMC) or a different halo model. The tool calculation must settle what delta_m can still be reached, and under which halo assumptions.
+3. Close the remaining literature gaps: the 2205.04486 doublet thermal mass, the LZ 2024 and XENONnT SI limits near 1 TeV, and verbatim citations for Planck 2018 and Chen and Hill. — The tool results from d-09 and d-10 need published benchmarks. The thermal mass needs a second independent calculation (q-08). The elastic comparison still rests on a linear extrapolation of the 40 GeV limit (f-008, f-011), and the Planck and Chen-Hill quotes are on the board but not yet in references.bib.
+4. Extract verbatim, citable inputs from the 2026 LZ-event papers: the halo models, rates and preferred regions, the neutrino exclusion lines, the radiative corrections and the rescue scenarios. — No direction reads 2609.01590, 2609.07807, 2610.03692, 2609.09830 or 2609.06890. d-10 relies on their numbers (481-519 keV, 475 and 557 keV, the LMC tail), and the solar-capture cross-check in the quantities list has no tool. The reason the two neutrino bounds differ (halo velocity tail, capture treatment) can only come from the literature. (added by the critic)
+Critic's view: revise — The steps need about 17 calls: 1 describe, 5 masses, 3 toggles, up to 3 bracketing, 4 sensitivity, 1 constraint check. The budget is 15. Drop the 400 and 600 keV delta_m variations, since a keV-scale neutral splitting has a negligible effect on freeze-out. Keep one delta_m variation as a sanity check and use the 2 freed calls for the charged-splitting variations, which do matter through coannihilation.; If describe_tools shows that compute_relic_density is perturbative only, or omits coannihilation, the crossing will land near 1.0 TeV or lower. It must then not be reported as the higgsino thermal mass. State the result as tool output under those stated assumptions, and compare it with 1411.6930 and 2205.04486 (from d-11) rather than replacing them.; The 1172 GeV value for 1411.6930 is inferred, not stated in the paper. Label it as inferred everywhere. For check_all_constraints, record whether its LZ test is elastic SI, inelastic, or both, and which exposure it assumes. Without this, the LZ verdict cannot be interpreted..
+[run] running (waves 0, tool calls 0, 147s)
+[direction] d-09 -> running
+[direction] d-10 -> running
+[direction] d-12 -> running
+[run] running (waves 1, tool calls 0, 147s)
+[phase] wave
+[wave 1] start d-09, d-10, d-12
+**Wave 1** — now exploring, in parallel: Use the serve-idm.sh tools to compute the pure-higgsino thermal relic density Omega h^2 at m_chi = 0.9, 1.0, 1.1, 1.2 and 1.3 TeV, find the mass where Omega h^2 = 0.120, and run the combined constraint check at the thermal point.; Compute the inelastic Z-mediated recoil spectrum, the LZ event expectation and the (m_chi, delta_m) constraint map for the thermal higgsino. Reproduce or test the 2609.01590 preferred region (delta_m = 481-519 keV, m_chi = 1000-1183 GeV) against the 475 keV (IceCube) and 557 keV (Super-K + IceCube) neutrino lines.; Extract verbatim, citable inputs from the 2026 LZ-event papers: the halo models, rates and preferred regions, the neutrino exclusion lines, the radiative corrections and the rescue scenarios..
+[usage]
+[tool] d-09 describe_tools {}
+[tool] tc-261022_1-w1-d-09-18 -> ok: {
+  "server": "inelastic-dm-server",
+  "description": "Bridges particle physics (WIMP mass, mass splitting, cross section) with cosmological
+[usage]
+[tool] d-12 download_arxiv_full_text {"arxiv_id": "2609.01590", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244"}
+[tool] tc-261022_1-w1-d-12-19 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.01590.txt
+[tool] d-12 download_arxiv_full_text {"arxiv_id": "2609.07807", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244"}
+[usage]
+[tool] d-09 compute_relic_density {"m_chi_GeV": 900}
+[tool] tc-261022_1-w1-d-09-21 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 900.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 3.7345679012345686e-26
+  },
+  "relic_density": {
+ 
+[tool] d-09 compute_relic_density {"m_chi_GeV": 1000}
+[tool] tc-261022_1-w1-d-09-22 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1000.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 3.0250000000000006e-26
+  },
+  "relic_density": {
+
+[tool] d-09 compute_relic_density {"m_chi_GeV": 1100}
+[tool] tc-261022_1-w1-d-09-23 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 2.5e-26
+  },
+  "relic_density": {
+    "omega_h2":
+[tool] d-09 compute_relic_density {"m_chi_GeV": 1200}
+[tool] tc-261022_1-w1-d-09-24 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1200.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 2.1006944444444443e-26
+  },
+  "relic_density": {
+
+[tool] d-09 compute_relic_density {"m_chi_GeV": 1300}
+[tool] tc-261022_1-w1-d-09-25 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1300.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 1.789940828402367e-26
+  },
+  "relic_density": {
+ 
+[usage]
+[tool] d-10 describe_tools {}
+[tool] tc-261022_1-w1-d-12-20 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.07807.txt
+[tool] tc-261022_1-w1-d-10-26 -> ok: {
+  "server": "inelastic-dm-server",
+  "description": "Bridges particle physics (WIMP mass, mass splitting, cross section) with cosmological
+[tool] d-10 predict_recoil {"m_chi_GeV": 1100, "delta_keV": 300}
+[tool] tc-261022_1-w1-d-10-27 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 300.0,
+    "sigma_n_cm2": 7.429930732553727e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-10 predict_recoil {"m_chi_GeV": 1100, "delta_keV": 400}
+[tool] tc-261022_1-w1-d-10-28 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 400.0,
+    "sigma_n_cm2": 7.429930732553727e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-10 predict_recoil {"m_chi_GeV": 1100, "delta_keV": 480}
+[tool] tc-261022_1-w1-d-10-29 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 480.0,
+    "sigma_n_cm2": 7.429930732553727e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-10 predict_recoil {"m_chi_GeV": 1100, "delta_keV": 520}
+[tool] tc-261022_1-w1-d-10-30 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 520.0,
+    "sigma_n_cm2": 7.429930732553727e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-10 predict_recoil {"m_chi_GeV": 1100, "delta_keV": 560}
+[tool] tc-261022_1-w1-d-10-31 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 560.0,
+    "sigma_n_cm2": 7.429930732553727e-39,
+    "is_higgsino": true
+  },
+
+[usage]
+[tool] d-12 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.01590.txt", "length": 20000}
+[tool] tc-261022_1-w1-d-12-32 -> ok: [chars 0-20000 of 58419] (more available, next start=20000)
+
+Title: TeV Higgsino Dark Matter from LZ Nuclear Recoil to Fermi-LAT Gamma Rays
+
+[tool] d-12 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.07807.txt", "length": 20000}
+[tool] tc-261022_1-w1-d-12-33 -> ok: [chars 0-20000 of 33556] (more available, next start=20000)
+
+Title: Not so good $ν$s for Higgsino dark matter as LZ excess: stringent limits
+[usage]
+[tool] d-09 compute_relic_density {"m_chi_GeV": 1150}
+[tool] tc-261022_1-w1-d-09-34 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1150.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 2.287334593572779e-26
+  },
+  "relic_density": {
+ 
+[tool] d-09 compute_relic_density {"m_chi_GeV": 1160}
+[tool] tc-261022_1-w1-d-09-35 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1160.0,
+    "is_higgsino": true,
+    "sigma_v_cm3_s": 2.2480677764565993e-26
+  },
+  "relic_density": {
+
+[usage]
+[tool] d-12 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.01590.txt", "start": 20000, "length": 12000}
+[tool] tc-261022_1-w1-d-12-36 -> ok: [chars 20000-32000 of 58419] (more available, next start=32000)
+
+lines [17]. We compute the complete NLO higgsinoγ+X
+
+--- Page 5 ---
+5
+950 1
+[tool] d-12 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.07807.txt", "start": 20000, "length": 9000}
+[tool] tc-261022_1-w1-d-12-37 -> ok: [chars 20000-29000 of 33556] (more available, next start=29000)
+
+direct detectors such as LZ, XENONnT,
+and PandaX-4T.
+We re-state that our r
+[usage]
+[tool] d-09 check_all_constraints {"m_chi_GeV": 1160, "delta_keV": 500}
+[tool] tc-261022_1-w1-d-09-38 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1160.0,
+    "delta_keV": 500.0,
+    "sigma_n_cm2": 7.430586727243295e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-09 check_all_constraints {"m_chi_GeV": 1160, "delta_keV": 400}
+[tool] tc-261022_1-w1-d-09-39 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1160.0,
+    "delta_keV": 400.0,
+    "sigma_n_cm2": 7.430586727243295e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-09 check_all_constraints {"m_chi_GeV": 1160, "delta_keV": 600}
+[tool] tc-261022_1-w1-d-09-40 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1160.0,
+    "delta_keV": 600.0,
+    "sigma_n_cm2": 7.430586727243295e-39,
+    "is_higgsino": true
+  },
+
+[usage]
+[tool] d-10 get_dispatch {}
+[tool] tc-261022_1-w1-d-10-41 -> ok: Dispatch: local execution.
+[tool] d-10 scan_mass_splitting {"m_chi_min": 900, "m_chi_max": 1300, "delta_min": 300, "delta_max": 650, "n_points": 15}
+[tool] tc-261022_1-w1-d-10-42 -> ok: {
+  "scan_file": "/Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz",
+  "grid": "15 x 15 = 225 points",
+  "rang
+[tool] d-10 plot_recoil_spectrum {"m_chi_GeV": 1100, "delta_keV": 500}
+[usage]
+[tool] d-12 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.01590.txt", "start": 12000, "length": 8000}
+[tool] tc-261022_1-w1-d-12-44 -> ok: [chars 12000-20000 of 58419] (more available, next start=20000)
+
+-
+fore directly testable by IceCube searches for solar neu-
+trinos [15]. Th
+[tool] d-12 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.07807.txt", "start": 12000, "length": 8000}
+[tool] tc-261022_1-w1-d-12-45 -> ok: [chars 12000-20000 of 33556] (more available, next start=20000)
+
+i
+d is the measured ν + ¯ν flux with
+uncertaintyσi
+d, Φi
+atm is the atmosph
+/Users/nramachandra/github-integration/inelastic-dm-server/tools/idm_tools.py:467: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout()
+[tool] tc-261022_1-w1-d-10-43 -> ok: {
+  "plot_file": "/Users/nramachandra/github-integration/inelastic-dm-server/output/recoil_spectrum.png",
+  "parameters": {
+    "m_chi_GeV":
+[tool] d-10 predict_annual_modulation {"m_chi_GeV": 1100, "delta_keV": 500, "E_R_keV": 248}
+[tool] tc-261022_1-w1-d-10-46 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 500.0,
+    "E_R_keV": 248.0
+  },
+  "modulation": {
+    "peak_day": 1,
+    "pea
+[tool] d-10 check_all_constraints {"m_chi_GeV": 1100, "delta_keV": 500}
+[tool] tc-261022_1-w1-d-10-47 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1100.0,
+    "delta_keV": 500.0,
+    "sigma_n_cm2": 7.429930732553727e-39,
+    "is_higgsino": true
+  },
+
+[usage]
+[tool] d-12 cite {"arxiv_id": "2609.01590", "note": "[\"including the high-velocity tail generated by the gravitational influence of the Large Magellanic Cloud yields\", \"The p
+[tool] tc-261022_1-w1-d-12-48 -> ok: QUOTE FAILED: "The upper reach inδ m is controlled primarily by the kinematic endpointv esc +vE" not found in source
+[tool] d-12 cite {"arxiv_id": "2609.07807", "note": "[\"excluding inter-state mass splittings \u2272 557 keV. This disfavors Higgsino-like interpretations of the LZ event for st
+[tool] tc-261022_1-w1-d-12-49 -> ok: Cited: Not so good $ν$s for Higgsino dark matter as LZ excess: stringent limits from Super-Kamiokande and IceCube (\cite{arxiv260907807})
+[tool] d-12 get_arxiv_metadata {"arxiv_id": "2610.03692"}
+[tool] tc-261022_1-w1-d-12-50 -> ok: arXiv ID: 2610.03692
+Title: Higgsino dark matter compatible with the LUX-ZEPLIN high-energy nuclear-recoil event and IceCube constraints
+Aut
+[tool] d-12 get_arxiv_metadata {"arxiv_id": "2609.09830"}
+[tool] tc-261022_1-w1-d-12-51 -> ok: arXiv ID: 2609.09830
+Title: Radiative Corrections to the Direct Detection of Inelastic Scattering of Higgsino-like Neutralino Dark Matter
+Au
+[tool] d-12 get_arxiv_metadata {"arxiv_id": "2609.06890"}
+[tool] tc-261022_1-w1-d-12-52 -> ok: arXiv ID: 2609.06890
+Title: High-Energy Nuclear Recoils from Boosted Dark Matter for the LZ 248-keV Event: Beyond the Halo-Dependent High-Ve
+[usage]
+[tool] d-10 post_finding {"claim": "At m_chi=1100 GeV (higgsino, sigma_n=7.43e-39 cm^2, hard halo cutoff v_esc+v_E=776 km/s), predict_recoil gives v_min(248 keV)=701/823/921/969/1018 km
+[finding] f-018 At m_chi=1100 GeV (higgsino, sigma_n=7.43e-39 cm^2, hard halo cutoff v_esc+v_E=776 km/s), predict_recoil gives v_min(248 keV)=701/823/921/969/1018 km/s and E_R,
+**Finding:** At m_chi=1100 GeV (higgsino, sigma_n=7.43e-39 cm^2, hard halo cutoff v_esc+v_E=776 km/s), predict_recoil gives v_min(248 keV)=701/823/921/969/1018 km/s and E_R,peak=270/360/432/468/504 keV for delta=300/400/480/520/560 keV, with N_LZ(extended NR, 2.84 t-yr)=744.6 at 300 keV and 0.00 for delta>=400 keV; the 2609.01590 window (481-519 keV) gives zero events under the tool halo, consistent with f-001 delta_max of about 365 keV.
+[tool] tc-261022_1-w1-d-10-53 -> ok: Recorded finding f-018.
+[tool] d-10 post_finding {"claim": "Local scan_mass_splitting (dispatch reported 'local execution') over m_chi=900-1300 GeV, delta=300-650 keV (15x15) finds 180/225 points pass all cons
+[finding] f-019 Local scan_mass_splitting (dispatch reported 'local execution') over m_chi=900-1300 GeV, delta=300-650 keV (15x15) finds 180/225 points pass all constraints and
+**Finding:** Local scan_mass_splitting (dispatch reported 'local execution') over m_chi=900-1300 GeV, delta=300-650 keV (15x15) finds 180/225 points pass all constraints and only 12 predict 0.3-5 LZ events; check_all_constraints at (1100 GeV, 500 keV) gives Omega h^2=0.1083, N_LZ=0.00 (not consistent with 1 event), sigma_v=1.29e-41 cm^3/s vs Fermi 2.3e-25, so 'viable' only because it is invisible; annual modulation at 248 keV is 0 (no rate).
+[tool] tc-261022_1-w1-d-10-54 -> ok: Recorded finding f-019.
+[tool] d-10 plot_constraint_summary {"scan_file": "/Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz"}
+[tool] tc-261022_1-w1-d-10-55 -> ok: {
+  "plot_file": "/Users/nramachandra/github-integration/inelastic-dm-server/output/constraint_summary.png",
+  "best_fit": {
+    "m_chi_GeV"
+[usage]
+[tool] d-09 post_finding {"claim": "Tool compute_relic_density (perturbative Kolb-Turner freeze-out, higgsino default sigma_v = 2.5e-26 cm^3/s x (1100 GeV/m_chi)^2, x_f about 24.5, g* =
+[finding] f-020 Tool compute_relic_density (perturbative Kolb-Turner freeze-out, higgsino default sigma_v = 2.5e-26 cm^3/s x (1100 GeV/m_chi)^2, x_f about 24.5, g* = 86.25) giv
+**Finding:** Tool compute_relic_density (perturbative Kolb-Turner freeze-out, higgsino default sigma_v = 2.5e-26 cm^3/s x (1100 GeV/m_chi)^2, x_f about 24.5, g* = 86.25) gives Omega h^2 = 0.0731, 0.0898, 0.1083, 0.1285, 0.1503 at m_chi = 900, 1000, 1100, 1200, 1300 GeV, and 0.1181 (1150 GeV) and 0.1202 (1160 GeV), so the thermal mass Omega h^2 = 0.120 is at about 1159 GeV (bracketed 1150-1160 GeV).
+[tool] tc-261022_1-w1-d-09-56 -> ok: Recorded finding f-020.
+[tool] d-09 post_finding {"claim": "The serve-idm.sh relic tool is perturbative only: it has no Sommerfeld or coannihilation switch, no charged-splitting input and no delta_m input (Ome
+[finding] f-021 The serve-idm.sh relic tool is perturbative only: it has no Sommerfeld or coannihilation switch, no charged-splitting input and no delta_m input (Omega h^2 = 0.
+**Finding:** The serve-idm.sh relic tool is perturbative only: it has no Sommerfeld or coannihilation switch, no charged-splitting input and no delta_m input (Omega h^2 = 0.1202 at 1160 GeV for delta = 400, 500 and 600 keV). Its 'consistent_planck' flag is unreliable: it reports True at 25 sigma tension (1000 and 1300 GeV) and False at 39 sigma (900 GeV).
+[tool] tc-261022_1-w1-d-09-57 -> ok: Recorded finding f-021.
+[tool] d-09 post_finding {"claim": "check_all_constraints at m_chi = 1160 GeV returns 'VIABLE' for delta = 400, 500 and 600 keV, with relic Omega h^2 = 0.1202 (0.1 sigma). It gives N_ex
+[finding] f-022 check_all_constraints at m_chi = 1160 GeV returns 'VIABLE' for delta = 400, 500 and 600 keV, with relic Omega h^2 = 0.1202 (0.1 sigma). It gives N_expected_LZ =
+**Finding:** check_all_constraints at m_chi = 1160 GeV returns 'VIABLE' for delta = 400, 500 and 600 keV, with relic Omega h^2 = 0.1202 (0.1 sigma). It gives N_expected_LZ = 0.00 (2.84 t-yr, sigma_n = 7.43e-39 cm^2), which is inconsistent with the 1 observed event. Indirect sigma_v_today = 6.7e-42, 1.04e-41 and 1.50e-41 cm^3/s, against a Fermi limit of 2.48e-25 cm^3/s. CMB p_ann = 0.86, 1.35 and 1.94 e-45, against a limit of 3.2e-28.
+[tool] tc-261022_1-w1-d-09-58 -> ok: Recorded finding f-022.
+[tool] d-09 post_question {"text": "Why does check_all_constraints give N_LZ = 0.00 already at delta = 400 keV for m_chi = 1160 GeV, and why does it use a p-wave, splitting-suppressed si
+[question] q-15 Why does check_all_constraints give N_LZ = 0.00 already at delta = 400 keV for m_chi = 1160 GeV, and why does it use a p-wave, splitting-suppressed sigma_v_toda
+[tool] tc-261022_1-w1-d-09-59 -> ok: Recorded question q-15.
+[usage]
+[tool] d-10 post_finding {"claim": "plot_constraint_summary on the 900-1300 GeV x 300-650 keV scan returns best fit m_chi=986 GeV, delta=350 keV (plot /Users/nramachandra/github-integra
+[finding] f-023 plot_constraint_summary on the 900-1300 GeV x 300-650 keV scan returns best fit m_chi=986 GeV, delta=350 keV (plot /Users/nramachandra/github-integration/inelas
+**Finding:** plot_constraint_summary on the 900-1300 GeV x 300-650 keV scan returns best fit m_chi=986 GeV, delta=350 keV (plot /Users/nramachandra/github-integration/inelastic-dm-server/output/constraint_summary.png); this lies below both the 475 keV (IceCube, 2609.01590) and 557 keV (Super-K+IceCube, 2609.07807) solar-neutrino exclusion lines, so under the tool's truncated SHM (v_max=776 km/s) no point reproducing the LZ event survives the neutrino limits, and the 2609.01590 region (481-519 keV) requires a high-velocity tail (e.g. LMC) not modelled by the tool.
+[tool] tc-261022_1-w1-d-10-60 -> ok: Recorded finding f-023.
+[tool] d-10 post_dead_end {"what": "Quantifying the dependence of the delta_m=500 keV rate on v_esc or an LMC high-velocity tail using the serve-idm tools.", "why": "predict_recoil, scan
+[dead-end] x-03 Quantifying the dependence of the delta_m=500 keV rate on v_esc or an LMC high-velocity tail using the serve-idm tools.
+[tool] tc-261022_1-w1-d-10-61 -> ok: Recorded dead end x-03.
+[usage]
+[direction] d-09 -> closed
+**Completed — Use the serve-idm.sh tools to compute the pure-higgsino thermal relic density Omega h^2 at m_chi = 0.9, 1.0, 1.1, 1.2 and 1.3 TeV, find the mass where Omega h^2 = 0.120, and run the combined constraint check at the thermal point..** Done. compute_relic_density (serve-idm.sh) gives Omega h^2 = 0.0731, 0.0898, 0.1083, 0.1285 and 0.1503 at m_chi = 900, 1000, 1100, 1200 and 1300 GeV. It gives 0.1181 at 1150 GeV and 0.1202 at 1160 GeV, so the thermal mass (Omega h^2 = 0.120, Planck 0.12 +/- 0.0012) is about 1159 GeV, bracketed between 1150 and 1160 GeV (f-020). This is about 1 percent below the 1172 GeV inferred from 1411.6930 and about 2 percent above the f-009 estimate of about 1.14 TeV. The agreement is by construction, not from independent physics. The tool does perturbative Kolb-Turner freeze-out (x_f about 24.5, g* = 86.25) with sigma_v = 2.5e-26 cm^3/s x (1100 GeV/m_chi)^2. It has no Sommerfeld or coannihilation switch, no charged-splitting input and no delta_m dependence: Omega h^2 = 0.1202 at delta = 400, 500 and 600 keV (f-021). So step 3 (toggling Sommerfeld/coannihilation) and the charged-splitting part of step 5 could not be run. The tool's consistent_planck flag is unreliable: it reads True at 25 sigma tension and False at 39 sigma. check_all_constraints at 1160 GeV, delta = 500 keV returns 'VIABLE'. Relic is 0.1202 (0.1 sigma). LZ gives N_expected = 0.00 for 2.84 t-yr with sigma_n = 7.43e-39 cm^2, flagged inconsistent with the 1 observed event; no LZ limit value is returned. Fermi-LAT: sigma_v_today = 1.04e-41 cm^3/s against a limit of 2.48e-25. CMB: p_ann = 1.35e-45 against a limit of 3.2e-28. Results at 400 and 600 keV are similar (f-022). Warning: the tool treats annihilation today as p-wave and splitting-suppressed, at odds with the s-wave higgsino WW/ZZ rate of about 1e-26 cm^3/s, so its indirect and CMB passes are not physically reliable (q-15). No files or figures were produced.
+[usage]
+[direction] d-10 -> closed
+**Completed — Compute the inelastic Z-mediated recoil spectrum, the LZ event expectation and the (m_chi, delta_m) constraint map for the thermal higgsino. Reproduce or test the 2609.01590 preferred region (delta_m = 481-519 keV, m_chi = 1000-1183 GeV) against the 475 keV (IceCube) and 557 keV (Super-K + IceCube) neutrino lines..** All runs were local; get_dispatch reported 'local execution'. The tool uses a standard halo with a hard cutoff at v_esc+v_E = 776 km/s, and none of its calls accept a v_esc or LMC-tail option. At m_chi = 1100 GeV (sigma_n = 7.43e-39 cm^2), predict_recoil gives these values for delta = 300/400/480/520/560 keV: peak E_R = 270/360/432/468/504 keV, v_min at the peak = 701/809/886/922/957 km/s, and v_min at 248 keV = 701/823/921/969/1018 km/s. Expected events in the LZ extended nuclear-recoil search (2.84 t-yr): 744.6 at 300 keV and 0.00 for every delta of 400 keV or more. Scaling by exposure gives about 1101 events at 4.2 t-yr for 300 keV, and still zero for the rest. The tool reports only the peak E_R, not a separate E_R,min, and gives no integrated rate above 100 keV. These results agree with f-001's kinematic limit of about 365 keV (f-018). At (1100 GeV, 500 keV), check_all_constraints gives Omega h^2 = 0.108 and N_LZ = 0, marked 'not consistent with 1 event'. Fermi and CMB pass by many orders of magnitude, and the annual modulation at 248 keV is zero. The 15x15 scan (m_chi 900-1300 GeV, delta 300-650 keV, file /Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz) finds 180 of 225 points pass all constraints, but only 12 predict 0.3-5 LZ events. Its best fit is m_chi = 986 GeV, delta = 350 keV, which lies below both the 475 keV (IceCube) and 557 keV (Super-K + IceCube) neutrino lines (f-019, f-023). The scan output does not list which points are in the 12-point group, so the claim that they all sit below the neutrino lines is inferred from the 1.1 TeV kinematics, not confirmed by the tool. Plots: constraint summary at /Users/nramachandra/github-integration/inelastic-dm-server/output/constraint_summary.png and the 1100 GeV / 500 keV recoil spectrum at /Users/nramachandra/github-integration/inelastic-dm-server/output/recoil_spectrum.png; the tools return no figure numbers. Conclusion: under the tool's halo, delta of about 480-520 keV gives zero events, not O(1), so no part of the 2609.01590 region survives. Explaining the LZ event at about 500 keV needs a high-velocity tail (for example from the LMC), which the tool does not model. How the rate changes with v_esc could not be tested, because no tool exposes halo parameters (dead end x-03).
+[usage]
+[tool] d-12 cite {"arxiv_id": "2609.01590", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/references.bib", "note": "
+[tool] tc-261022_1-w1-d-12-62 -> ok: QUOTE FAILED: "At the joint best-fit mass, the thermal higgsino line prediction reaches 0.815–0" not found in source
+[tool] d-12 post_finding {"claim": "2609.01590 (Wu, Zhang, Zhu) finds LZ-preferred delta_m = 481-519 keV (1 sigma) and 475-529 keV (2 sigma) for m_chi = 1000-1183 GeV with the Halo 13 M
+[finding] f-024 2609.01590 (Wu, Zhang, Zhu) finds LZ-preferred delta_m = 481-519 keV (1 sigma) and 475-529 keV (2 sigma) for m_chi = 1000-1183 GeV with the Halo 13 MW+LMC veloc
+**Finding:** 2609.01590 (Wu, Zhang, Zhu) finds LZ-preferred delta_m = 481-519 keV (1 sigma) and 475-529 keV (2 sigma) for m_chi = 1000-1183 GeV with the Halo 13 MW+LMC velocity distribution, but only 312-422 keV (1 sigma) and 280-457 keV (2 sigma), best fit m_chi = 1.09 TeV and delta_m = 366 keV, for a profiled Maxwellian. The text says the upper reach in delta_m is set by the kinematic endpoint v_esc + v_E. The relic mass range is 1000-1183 GeV (1 sigma) and 943-1230 GeV (2 sigma). LZ inputs: E_R = 248 +/- 23 stat +/- 23 sys keV and 2.84 tonne-year exposure.
+[tool] tc-261022_1-w1-d-12-63 -> ok: Recorded finding f-024.
+[tool] d-12 post_finding {"claim": "The 475 keV and 557 keV neutrino lines differ because of how the captured population in the Sun is treated, not because of the halo. 2609.01590 simul
+[finding] f-025 The 475 keV and 557 keV neutrino lines differ because of how the captured population in the Sun is treated, not because of the halo. 2609.01590 simulates a non-
+**Finding:** The 475 keV and 557 keV neutrino lines differ because of how the captured population in the Sun is treated, not because of the halo. 2609.01590 simulates a non-thermal population on extended solar orbits at m_chi = 1.11 TeV with no elastic cooling (elastic blind spot) and 10-year IceCube data, using <sigma v>_eff of about 1.5e-26 cm^3/s with Sommerfeld; this gives delta_m >~ 475 keV excluded at 90% CL (466 keV with loose solar/nuclear inputs, about 454 keV with the Fe nuclear-response uncertainty). If elastic scattering allows thermalization and capture-annihilation equilibrium, the same paper gets delta_m >~ 553 keV. 2609.07807 assumes thermalization within the Sun after capture, a standard truncated Maxwellian (u0 = 220 km/s, v_esc = 544 km/s, v_sun = 232 km/s), rho = 0.4 GeV/cm^3, sigma_chi_n = 7.4e-39 cm^2, <sigma v> = 1.3e-26 cm^3/s, m_chi = 1.08 TeV and a 95% CL chi^2 on IceCube nu_mu (2016), IceCube nu_e and Super-K data. It excludes delta_m <~ 557 keV and states the interpretation could remain viable with an LMC tail or substructure.
+[tool] tc-261022_1-w1-d-12-64 -> ok: Recorded finding f-025.
+[tool] d-12 post_finding {"claim": "Gamma-ray line status at about 1.1 TeV (2609.01590): at the joint best-fit mass the thermal higgsino line prediction is 0.815-0.900 of the H.E.S.S. o
+[finding] f-026 Gamma-ray line status at about 1.1 TeV (2609.01590): at the joint best-fit mass the thermal higgsino line prediction is 0.815-0.900 of the H.E.S.S. observed lim
+**Finding:** Gamma-ray line status at about 1.1 TeV (2609.01590): at the joint best-fit mass the thermal higgsino line prediction is 0.815-0.900 of the H.E.S.S. observed limits (546 h), so it is close to but not excluded. The matched CTAO Alpha 500 h projection gives mu_gamma,95 = 1.69, which is above the thermal target. The estimate for the Omega configuration, 1.69/2 = 0.85, is below mu_gamma = 1, so the thermal target is within CTAO exclusion reach. Dwarf, CMB and ATLAS disappearing-track limits do not exclude the region.
+[tool] tc-261022_1-w1-d-12-65 -> ok: Recorded finding f-026.
+[tool] d-12 post_finding {"claim": "Abstract-level only: 2610.03692 (Freese and Theodosopoulos) finds the 1.1 TeV thermal higgsino only marginally compatible with the LZ event and IceCu
+[finding] f-027 Abstract-level only: 2610.03692 (Freese and Theodosopoulos) finds the 1.1 TeV thermal higgsino only marginally compatible with the LZ event and IceCube, and onl
+**Finding:** Abstract-level only: 2610.03692 (Freese and Theodosopoulos) finds the 1.1 TeV thermal higgsino only marginally compatible with the LZ event and IceCube, and only with the LMC tail, no elastic solar cooling and no LZ high-energy sideband. Its compatible regions extend from about 2 TeV to hundreds of TeV, with delta about 350-525 keV. 2609.09830 computes one-loop EW corrections, with on-shell renormalization reducing delta_m and Higgs-exchange elastic and inelastic rates; the abstract gives no number for the size of the change. 2609.06890 proposes light boosted DM whose energy is set by the dark-sector spectrum, so it is independent of the halo tail.
+[tool] tc-261022_1-w1-d-12-66 -> ok: Recorded finding f-027.
+[tool] d-12 post_question {"text": "How large is the 2609.09830 one-loop change to delta_m and to the inelastic cross section (the full text has not been read), and what are the 2610.036
+[question] q-16 How large is the 2609.09830 one-loop change to delta_m and to the inelastic cross section (the full text has not been read), and what are the 2610.03692 thermal
+[tool] tc-261022_1-w1-d-12-67 -> ok: Recorded question q-16.
+[usage]
+[tool] d-12 cite {"arxiv_id": "2609.01590", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/references.bib", "note": "
+[tool] tc-261022_1-w1-d-12-68 -> ok: Cited: TeV Higgsino Dark Matter from LZ Nuclear Recoil to Fermi-LAT Gamma Rays (\cite{arxiv260901590})
+[usage]
+[tool] d-12 post_dead_end {"what": "Verbatim cite() of some 2609.01590 sentences: the kinematic-endpoint sentence 'controlled primarily by the kinematic endpoint v_esc + v_E', the HESS 0
+[dead-end] x-04 Verbatim cite() of some 2609.01590 sentences: the kinematic-endpoint sentence 'controlled primarily by the kinematic endpoint v_esc + v_E', the HESS 0.815-0.900
+[tool] tc-261022_1-w1-d-12-69 -> ok: Recorded dead end x-04.
+[usage]
+[direction] d-12 -> closed
+**Completed — Extract verbatim, citable inputs from the 2026 LZ-event papers: the halo models, rates and preferred regions, the neutrino exclusion lines, the radiative corrections and the rescue scenarios..** I read the full texts of 2609.01590 and 2609.07807 and only the abstracts of 2610.03692, 2609.09830 and 2609.06890. The validated citations are in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/references.bib (keys arxiv260901590 and arxiv260907807). Not every number has a validated quote: the cite tool rejected several 2609.01590 sentences (the v_esc + v_E endpoint sentence, the 0.815-0.900 H.E.S.S. ratio, the 553 keV equilibrium bound, the Maxwellian best fit and the relic mass ranges) because the PDF text garbles math symbols and en-dash ranges. Those numbers were read directly in the text (tc-...-32, -36, -44) but have no validated quote (dead end x-04).
+
+1. Preferred region, 2609.01590 (f-024, Fig. 1). With the Halo 13 MW+LMC velocity distribution the LZ fit gives delta_m = 481-519 keV at 1 sigma and 475-529 keV at 2 sigma, best fit about 496 keV. With a profiled Maxwellian halo it gives 312-422 keV at 1 sigma and 280-457 keV at 2 sigma, best fit 1.09 TeV and 366 keV. The paper says the upper limit on delta_m is set by the kinematic endpoint v_esc + v_E, not by the event-rate normalization. The relic density fixes m_chi = 1000-1183 GeV at 1 sigma and 943-1230 GeV at 2 sigma. LZ inputs are E_R = 248 +/- 23 stat +/- 23 sys keV and 2.84 tonne-year.
+
+2. Why the neutrino lines are 475 and 557 keV (f-025; Fig. 2 of 2609.01590, Figs. 2-3 of 2609.07807). The difference comes from how the captured higgsinos are treated in the Sun, not from the halo model.
+- 2609.01590, at m_chi = 1.11 TeV: if elastic scattering is negligible (the blind spot), the captured higgsinos never thermalize and stay on extended orbits, so they annihilate less. With <sigma v>_eff of about 1.5e-26 cm^3/s and ten years of IceCube data, this excludes delta_m up to about 475 keV at 90% CL. Loose solar and nuclear inputs lower this to 466 keV, and the Fe nuclear-response uncertainty to about 454 keV. If elastic scattering lets them reach equilibrium, the same paper finds delta_m >~ 553 keV.
+- 2609.07807 assumes the captured higgsinos thermalize and uses a standard truncated Maxwellian halo: u0 = 220 km/s, v_esc = 544 km/s, v_sun = 232 km/s, rho = 0.4 GeV/cm^3. Other inputs are sigma_chi_n = 7.4e-39 cm^2, <sigma v> = 1.3e-26 cm^3/s and m_chi = 1.08 TeV, with a 95% CL fit to IceCube nu_mu, IceCube nu_e and Super-K data. It excludes delta_m below about 557 keV, which agrees with the 553 keV equilibrium result. It still allows rescue by an LMC tail or substructure.
+
+3. Gamma-ray lines near 1.1 TeV, 2609.01590 (f-026, Fig. 3). The thermal prediction is 0.815-0.900 of the H.E.S.S. 546 h limits, which the paper calls close to, but not excluded by, the present limits. The CTAO Alpha 500 h projection, mu_gamma,95 = 1.69, falls short of the thermal target. The Omega configuration, estimated at 0.85, would reach it. Dwarf-galaxy, CMB and ATLAS disappearing-track limits do not exclude the region.
+
+4. Rescue and alternative scenarios, abstracts only (f-027).
+- 2610.03692: the 1.1 TeV thermal higgsino is only marginally compatible with the LZ event and IceCube, and only with the LMC tail, no elastic cooling in the Sun and no sideband constraint. Compatible regions run from about 2 TeV to hundreds of TeV, with delta about 350-525 keV.
+- 2609.09830: one-loop electroweak corrections with on-shell renormalization reduce delta_m. The abstract gives no size for the change.
+- 2609.06890: light boosted dark matter, which does not depend on the halo velocity tail.
+
+Still open (q-16): how large the 2609.09830 radiative correction is, and the numbers for the four IceCube variants in 2610.03692.
+[wave 1] end d-09, d-10, d-12
+[phase] critic-wave
+[usage]
+[critique] wave 1 wave: continue
+**Critic, wave 1** — continue: 5 findings stand up to the evidence, 5 questioned ('check_all_constraints at m_chi = 1160 GeV returns 'VIABLE' for delta = 400, 500 and 600 ke': The quoted excerpts of tc-...-38/39/40 stop at the 'cmb_energy_injection' key. Neither the CMB p_ann values (0.86, 1.35, 1.94 e-45 against 3.2e-28) nor the overall 'VIABLE' verdict appears in the evidence. The relic, LZ and Fermi numbers do match. Re-quote the full JSON before treating the CMB and verdict parts as supported.; '2609.01590 (Wu, Zhang, Zhu) finds LZ-preferred delta_m = 481-519 keV (1 sigma) and 475-529': Neither evidence excerpt contains the claimed numbers. tc-...-32 is the title and author page, and tc-...-36 is the Fig. 3 gamma-ray caption. Neither shows 481-519, 475-529, 312-422, 280-457, 366 keV, 1.09 TeV, 1000-1183 GeV or 943-1230 GeV. The d-12 summary also says the cite tool rejected these sentences (x-04). The values may be correct, but they are not evidenced.; 'The 475 keV and 557 keV neutrino lines differ because of how the captured population in th': Only part of the claim is evidenced. tc-...-37 supports the LMC/substructure rescue statement, and tc-...-45 shows the chi^2 procedure. No excerpt contains 475, 466, 454, 553 or 557 keV, the halo parameters (220/544/232 km/s), <sigma v> = 1.3e-26 or 1.5e-26, or m_chi = 1.08/1.11 TeV. There is also a labelling issue: tc-...-45 sets the limit at Delta chi^2 = 2.71, which is the one-sided 95% (two-sided 90%) threshold. This should be stated explicitly when comparing with the 90% CL IceCube line of 2609.01590.; 'Gamma-ray line status at about 1.1 TeV (2609.01590): at the joint best-fit mass the therma': tc-...-36 shows only that Fig. 3 plots H.E.S.S. and CTAO Omega curves of mu_gamma over 950-1200 GeV. The 0.815-0.900 ratio, the 546 h exposure and mu_gamma,95 = 1.69 do not appear in any excerpt. It is also unclear whether '1.69/2 = 0.85' comes from the paper or is the agent's own estimate. tc-...-44 concerns solar thermalization and is not relevant to the gamma-ray claim.).
+
+Issues: The central task question has not been answered quantitatively: where does the elastic SI cross section of the thermal higgsino sit relative to the LZ 4.2 t-yr and XENONnT 90% CL curves at 1.0-1.2 TeV? No finding gives either the higgsino SI value (loop and Higgs-mediated, around 1e-48 to 1e-49 cm^2 with possible cancellation) or the limit values at 1.1 TeV. d-11 is still open, and this comparison is the core of the headline answer.; The thermal mass of about 1159 GeV is set by the tool's hard-coded normalization (sigma_v = 2.5e-26 x (1100/m)^2). It is a calibration, not a computation. The report must not present it as an independent check of 1411.6930. The Sommerfeld/coannihilation step and the charged-splitting sensitivity in the brief were never done. A literature or analytic estimate (1008.2905 method) is needed if the task's 'with and without Sommerfeld' item is to be answered.; The tool's indirect-detection and CMB passes rest on a p-wave, splitting-suppressed annihilation today. This is unphysical for a higgsino, which annihilates s-wave to WW/ZZ at about 1-1.5e-26 cm^3/s. The 'VIABLE' label for indirect and CMB constraints should be replaced by a comparison of the s-wave rate with the Fermi dwarf and H.E.S.S. continuum and line limits at 1.1 TeV, together with f-026..
+[phase] replan
+[usage]
+[directions] d-09 [closed] Use the serve-idm.sh tools to compute the pure-higgsino ther; d-10 [closed] Compute the inelastic Z-mediated recoil spectrum, the LZ eve; d-11 [open] Close the remaining literature gaps: the 2205.04486 doublet ; d-12 [closed] Extract verbatim, citable inputs from the 2026 LZ-event pape; d-13 [open] Run an analytic and tool-based kinematic check of delta_max(; d-14 [open] Recover quoted evidence for the contested literature numbers
+**Next steps after wave 1** — This is the final wave, with 24 tool calls. Open direction d-11 carries over and runs first. It already covers the critic's top issue, the elastic SI position of the thermal higgsino against the LZ 4.2 t-yr and XENONnT limits near 1.1 TeV and the neutrino fog, which is the core of the task's answer. I am not adding a duplicate. The executor should treat d-11 as SI-first: the higgsino SI prediction with its band, the limit values at 1.0-1.2 TeV, and the ratio; the 2205.04486 mass and the Planck citation are secondary. I add two directions. The first is a tight kinematic reconciliation using the tool and analytic delta_max, which tests the robustness of the 'no surviving point' claim against v_max and the LMC tail. The second is a narrow-window quote recovery plus an s-wave indirect-detection cross-check, which resolves the contested f-024 to f-027 and replaces the unphysical p-wave pass. The task does not ask for facility runs, so none is scheduled. Sommerfeld toggling cannot be done with the tools; the report should cite 1411.6930 for it and describe the tool's thermal mass as a calibration, not an independent check.
+
+New lines of investigation: Run an analytic and tool-based kinematic check of delta_max(m_chi, v_max) at E_R = 248 keV. Identify the scan points compatible with the LZ event, and reconcile the tool's 776 km/s cutoff with the upper delta edges of 2609.01590 (profiled Maxwellian 422/457 keV; Halo 13 519/529 keV).; Recover quoted evidence for the contested literature numbers (f-024, f-025, f-026, f-027), and replace the tool's unphysical p-wave indirect-detection pass with an s-wave higgsino comparison at 1.1 TeV..
+[wave 1] end d-09, d-10, d-12 -> continue
+[direction] d-11 -> running
+[direction] d-13 -> running
+[direction] d-14 -> running
+[run] running (waves 2, tool calls 36, 310s)
+[phase] wave
+[wave 2] start d-11, d-13, d-14
+**Wave 2** — now exploring, in parallel: Close the remaining literature gaps: the 2205.04486 doublet thermal mass, the LZ 2024 and XENONnT SI limits near 1 TeV, and verbatim citations for Planck 2018 and Chen and Hill.; Run an analytic and tool-based kinematic check of delta_max(m_chi, v_max) at E_R = 248 keV. Identify the scan points compatible with the LZ event, and reconcile the tool's 776 km/s cutoff with the upper delta edges of 2609.01590 (profiled Maxwellian 422/457 keV; Halo 13 519/529 keV).; Recover quoted evidence for the contested literature numbers (f-024, f-025, f-026, f-027), and replace the tool's unphysical p-wave indirect-detection pass with an s-wave higgsino comparison at 1.1 TeV..
+[usage]
+[tool] d-13 load_table_data {"filename": "/Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz"}
+[tool] tc-261022_1-w2-d-13-70 -> ok: Error: 'utf-8' codec can't decode byte 0xc4 in position 15: invalid continuation byte
+[tool] d-13 describe_tools {}
+[tool] tc-261022_1-w2-d-13-71 -> ok: {
+  "server": "inelastic-dm-server",
+  "description": "Bridges particle physics (WIMP mass, mass splitting, cross section) with cosmological
+[usage]
+[tool] d-11 download_arxiv_full_text {"arxiv_id": "2205.04486", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244"}
+[usage]
+[tool] d-14 download_arxiv_full_text {"arxiv_id": "2609.01590", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244"}
+[usage]
+[tool] d-13 scan_mass_splitting {"m_chi_min": 1000, "m_chi_max": 1200, "delta_min": 330, "delta_max": 480, "n_points": 16}
+[tool] tc-261022_1-w2-d-13-74 -> ok: {
+  "scan_file": "/Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz",
+  "grid": "16 x 16 = 256 points",
+  "rang
+[tool] d-13 predict_recoil {"m_chi_GeV": 1000, "delta_keV": 360}
+[tool] tc-261022_1-w2-d-13-75 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1000.0,
+    "delta_keV": 360.0,
+    "sigma_n_cm2": 7.428662722453626e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-13 predict_recoil {"m_chi_GeV": 1183, "delta_keV": 360}
+[tool] tc-261022_1-w2-d-13-76 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1183.0,
+    "delta_keV": 360.0,
+    "sigma_n_cm2": 7.430820569964924e-39,
+    "is_higgsino": true
+  },
+
+[usage]
+[tool] d-13 predict_recoil {"delta_keV": 340, "m_chi_GeV": 1000}
+[tool] tc-261022_1-w2-d-13-77 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1000.0,
+    "delta_keV": 340.0,
+    "sigma_n_cm2": 7.428662722453626e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-13 predict_recoil {"delta_keV": 340, "m_chi_GeV": 1183}
+[tool] tc-261022_1-w2-d-13-78 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1183.0,
+    "delta_keV": 340.0,
+    "sigma_n_cm2": 7.430820569964924e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-13 predict_recoil {"delta_keV": 380, "m_chi_GeV": 1000}
+[tool] tc-261022_1-w2-d-11-72 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2205.04486.txt
+[tool] d-11 cite {"arxiv_id": "1807.06209", "note": "[\"0.120 \\\\pm 0.001\"]", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/2610
+[tool] tc-261022_1-w2-d-13-79 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1000.0,
+    "delta_keV": 380.0,
+    "sigma_n_cm2": 7.428662722453626e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-13 predict_recoil {"delta_keV": 380, "m_chi_GeV": 1183}
+[tool] tc-261022_1-w2-d-13-81 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1183.0,
+    "delta_keV": 380.0,
+    "sigma_n_cm2": 7.430820569964924e-39,
+    "is_higgsino": true
+  },
+
+[tool] tc-261022_1-w2-d-14-73 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.01590.txt
+[tool] d-14 download_arxiv_full_text {"arxiv_id": "2610.03692", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244"}
+[tool] tc-261022_1-w2-d-11-80 -> ok: QUOTE FAILED: "0.120 \pm 0.001" not found in source
+[tool] d-11 cite {"arxiv_id": "1912.07795", "note": "[\"less than 10^-48 cm^2 in the TeV mass regime\"]", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-rese
+[tool] tc-261022_1-w2-d-14-82 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2610.03692.txt
+[tool] d-14 download_arxiv_full_text {"arxiv_id": "2609.09830", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244"}
+[tool] tc-261022_1-w2-d-11-83 -> ok: QUOTE FAILED: "less than 10^-48 cm^2 in the TeV mass regime" not found in source
+[tool] tc-261022_1-w2-d-14-84 -> ok: Downloaded: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.09830.txt
+[usage]
+[tool] d-11 list_files {"directory": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261016_110437"}
+[tool] tc-261022_1-w2-d-11-85 -> ok: Files in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261016_110437:
+  - 1104.0228.pdf
+  - 1104.0228.txt
+
+[tool] d-11 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2205.04486.txt", "start": 0, "length": 6000}
+[tool] tc-261022_1-w2-d-11-86 -> ok: [chars 0-6000 of 118982] (more available, next start=6000)
+
+Title: The last Complex WIMPs standing
+Authors: Salvatore Bottaro, Dario Buttazz
+[usage]
+[tool] d-14 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.09830.txt", "start": 0, "length": 12000}
+[tool] tc-261022_1-w2-d-14-87 -> ok: [chars 0-12000 of 71943] (more available, next start=12000)
+
+Title: Radiative Corrections to the Direct Detection of Inelastic Scattering of
+[tool] d-14 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2610.03692.txt", "start": 0, "length": 12000}
+[tool] tc-261022_1-w2-d-14-88 -> ok: [chars 0-12000 of 83465] (more available, next start=12000)
+
+Title: Higgsino dark matter compatible with the LUX-ZEPLIN high-energy nuclear-
+[usage]
+[tool] d-11 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261016_110437/1807.06209.txt", "length": 3500}
+[tool] tc-261022_1-w2-d-11-89 -> ok: [chars 0-3500 of 442128] (more available, next start=3500)
+
+Title: Planck 2018 results. VI. Cosmological parameters
+Authors:  Planck Collabo
+[tool] d-11 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261016_110437/1912.07795.txt", "length": 3500}
+[tool] tc-261022_1-w2-d-11-90 -> ok: [chars 0-3500 of 37078] (more available, next start=3500)
+
+Title: Direct detection rate of heavy Higgsino-like and Wino-like dark matter
+Aut
+[tool] d-11 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2205.04486.txt", "start": 6000, "length": 5000}
+[tool] tc-261022_1-w2-d-11-91 -> ok: [chars 6000-11000 of 118982] (more available, next start=11000)
+
+22 - 40 60 312 - 1.6 ×104
+41/2 4.8± 0.3 ≃MPl 0.001 0.21 - 3 × 104 5× 106 20
+[usage]
+[tool] d-14 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2610.03692.txt", "start": 12000, "length": 14000}
+[tool] tc-261022_1-w2-d-14-92 -> ok: [chars 12000-26000 of 83465] (more available, next start=26000)
+
+arger Higgsino
+masses than 1.1 TeV and took into account the issues
+describ
+[tool] d-14 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.09830.txt", "start": 20000, "length": 14000}
+[tool] tc-261022_1-w2-d-14-93 -> ok: [chars 20000-34000 of 71943] (more available, next start=34000)
+
+ced
+corrections play a crucial role in shaping the spin-independent elastic
+[usage]
+[tool] d-14 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2609.09830.txt", "length": 9000, "start": 34000}
+[tool] tc-261022_1-w2-d-14-94 -> ok: [chars 34000-43000 of 71943] (more available, next start=43000)
+
+t with colors signifying chargino mass splitting,δm ˜χ±
+1
+=m ˜χ±
+1
+−m ˜χ0
+1
+[tool] d-14 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2610.03692.txt", "length": 16000, "start": 28000}
+[tool] tc-261022_1-w2-d-14-95 -> ok: [chars 28000-44000 of 83465] (more available, next start=44000)
+
+thermal 1.1 TeV Higgsino better agreement with the
+combination of LZ data a
+[usage]
+[tool] d-11 read_arxiv_chunk {"filepath": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261016_110437/1807.06209.txt", "length": 2500, "start": 7000}
+[tool] tc-261022_1-w2-d-11-96 -> ok: [chars 7000-9500 of 442128] (more available, next start=9500)
+
+index ns = 0.965± 0.004, and optical depth τ = 0.054± 0.007 (in this abstract
+[tool] d-11 cite {"arxiv_id": "2205.04486", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/references.bib", "note": "
+[tool] tc-261022_1-w2-d-11-97 -> ok: Cited: The last Complex WIMPs standing (\cite{arxiv220504486})
+[tool] d-11 cite {"arxiv_id": "1912.07795", "bib_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/references.bib", "note": "
+[tool] tc-261022_1-w2-d-11-98 -> ok: Cited: Direct detection rate of heavy Higgsino-like and Wino-like dark matter (\cite{arxiv191207795})
+[usage]
+[tool] d-13 predict_recoil {"delta_keV": 350, "m_chi_GeV": 1000}
+[tool] tc-261022_1-w2-d-13-99 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1000.0,
+    "delta_keV": 350.0,
+    "sigma_n_cm2": 7.428662722453626e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-13 predict_recoil {"delta_keV": 350, "m_chi_GeV": 1200}
+[tool] tc-261022_1-w2-d-13-100 -> ok: {
+  "parameters": {
+    "m_chi_GeV": 1200.0,
+    "delta_keV": 350.0,
+    "sigma_n_cm2": 7.430987655656208e-39,
+    "is_higgsino": true
+  },
+
+[tool] d-13 plot_constraint_summary {}
+[tool] tc-261022_1-w2-d-13-101 -> ok: {
+  "plot_file": "/Users/nramachandra/github-integration/inelastic-dm-server/output/constraint_summary.png",
+  "best_fit": {
+    "m_chi_GeV"
+[usage]
+[tool] d-11 post_finding {"claim": "2205.04486 (Bottaro et al., Table I) gives the thermal mass of the Dirac-fermion Y=1/2 doublet (2_{1/2}, higgsino-like) as M_DM = 1.08 +/- 0.02 TeV, 
+[finding] f-028 2205.04486 (Bottaro et al., Table I) gives the thermal mass of the Dirac-fermion Y=1/2 doublet (2_{1/2}, higgsino-like) as M_DM = 1.08 +/- 0.02 TeV, including S
+**Finding:** 2205.04486 (Bottaro et al., Table I) gives the thermal mass of the Dirac-fermion Y=1/2 doublet (2_{1/2}, higgsino-like) as M_DM = 1.08 +/- 0.02 TeV, including Sommerfeld enhancement and bound-state formation, with Omega_DM h^2 = 0.11933 +/- 0.00091; the paper also states the 2_{1/2} DD cross section lies well below the neutrino floor. This independent value is about 7 percent below the serve-idm.sh perturbative 1159 GeV (f-020).
+[tool] tc-261022_1-w2-d-11-102 -> ok: Recorded finding f-028.
+[tool] d-11 post_finding {"claim": "Chen and Hill (1912.07795) is cited in references.bib (key arxiv191207795) with the verbatim abstract sentence 'The direct detection signal in the pu
+[finding] f-029 Chen and Hill (1912.07795) is cited in references.bib (key arxiv191207795) with the verbatim abstract sentence 'The direct detection signal in the pure Higgsino
+**Finding:** Chen and Hill (1912.07795) is cited in references.bib (key arxiv191207795) with the verbatim abstract sentence 'The direct detection signal in the pure Higgsino limit remains below neutrino backgrounds for WIMPs in the TeV mass range.'; the earlier board phrasing 'less than 10^-48 cm^2 in the TeV mass regime' was not found verbatim in the extracted text.
+[tool] tc-261022_1-w2-d-11-103 -> ok: Recorded finding f-029.
+[tool] d-11 post_dead_end {"what": "Citing Planck 2018 (1807.06209) with the quote '0.120 \\pm 0.001'.", "why": "Quote not found in the extracted text (PDF math garbling of Omega_c h^2);
+[dead-end] x-05 Citing Planck 2018 (1807.06209) with the quote '0.120 \pm 0.001'.
+[tool] tc-261022_1-w2-d-11-104 -> ok: Recorded dead end x-05.
+[tool] d-11 post_question {"text": "The LZ 2024 (2410.17036) and XENONnT (2303.14729) SI limits at 1.1 TeV and the XLZD neutrino-fog level remain unread in d-11 (budget exhausted); can a
+[question] q-17 The LZ 2024 (2410.17036) and XENONnT (2303.14729) SI limits at 1.1 TeV and the XLZD neutrino-fog level remain unread in d-11 (budget exhausted); can a follow-up
+[tool] tc-261022_1-w2-d-11-105 -> ok: Recorded question q-17.
+[usage]
+[tool] d-14 post_finding {"claim": "2609.09830 (Chatterjee et al.) gives no on-shell delta_m shift in the 300-600 keV range. Its benchmarks are tuned so the one-loop on-shell (CCN[n] sc
+[finding] f-030 2609.09830 (Chatterjee et al.) gives no on-shell delta_m shift in the 300-600 keV range. Its benchmarks are tuned so the one-loop on-shell (CCN[n] scheme) neutr
+**Finding:** 2609.09830 (Chatterjee et al.) gives no on-shell delta_m shift in the 300-600 keV range. Its benchmarks are tuned so the one-loop on-shell (CCN[n] scheme) neutral splitting is delta = 36.37, 8.90, 16.39, 10.81 and 10.59 keV for BP1-BP5 (|mu| = 0.61-1.40 TeV; all have Omega h^2 < 0.12, so the relic constraint is not imposed). The tree-to-one-loop shift can be read from the Table III masses: about 0.14 GeV tree splitting vs 0 at one loop for BP1 (739.55/-739.69 to 739.33/-739.33 GeV), i.e. O(10-100) MeV scale. This paper therefore does not bear on the 475-557 keV window.
+[tool] tc-261022_1-w2-d-14-106 -> ok: Recorded finding f-030.
+[tool] d-14 post_finding {"claim": "2610.03692 (Freese and Theodosopoulos) shows four IceCube treatments at 90% CL as lower limits on delta in Fig. 2: capture-annihilation equilibrium; 
+[finding] f-031 2610.03692 (Freese and Theodosopoulos) shows four IceCube treatments at 90% CL as lower limits on delta in Fig. 2: capture-annihilation equilibrium; SI inelasti
+**Finding:** 2610.03692 (Freese and Theodosopoulos) shows four IceCube treatments at 90% CL as lower limits on delta in Fig. 2: capture-annihilation equilibrium; SI inelastic cooling only; SI inelastic + SD elastic (sigma_SI,el = 0); SI inelastic + SD + SI elastic (sigma_SI,el = 4e-50 cm^2). It uses the W+W- annihilation-rate limits, an SHM with v0 = 220, v_sun = 232 and v_esc = 544 km/s, rho = 0.3 GeV/cm^3 and sigma_Hn = 7.43e-39 cm^2. For the solar bound it says the neutrino limits 'remain unchanged by adding the effects of the LMC'. For LZ, the SHM+LMC eta(v_min) is set to 0 above 950 km/s. The numerical delta values at 1.1 TeV under each treatment appear only in the figure, not in the text I read, so they are not quantified here.
+[tool] tc-261022_1-w2-d-14-107 -> ok: Recorded finding f-031.
+[tool] d-14 post_dead_end {"what": "Re-verifying the f-024/f-025/f-026 numbers (481-519, 312-422 keV, 0.815-0.900, 553/557 keV, Delta chi^2 = 2.71) with narrow read_arxiv_chunk windows, 
+[dead-end] x-06 Re-verifying the f-024/f-025/f-026 numbers (481-519, 312-422 keV, 0.815-0.900, 553/557 keV, Delta chi^2 = 2.71) with narrow read_arxiv_chunk windows, and doing 
+[tool] tc-261022_1-w2-d-14-108 -> ok: Recorded dead end x-06.
+[usage]
+[direction] d-11 -> blocked (The tool budget ran out before steps 3-6. The LZ 2024 (2410.17036) and XENONnT (2303.14729) SI limits near 1.1 TeV and the XLZD neutrino-fog level were not read, and the comparison table was not built (q-17). The Planck citation needs a shorter fragment found in the extracted text and a second cite attempt.)
+**Blocked — Close the remaining literature gaps: the 2205.04486 doublet thermal mass, the LZ 2024 and XENONnT SI limits near 1 TeV, and verbatim citations for Planck 2018 and Chen and Hill..** (The tool budget ran out before steps 3-6. The LZ 2024 (2410.17036) and XENONnT (2303.14729) SI limits near 1.1 TeV and the XLZD neutrino-fog level were not read, and the comparison table was not built (q-17). The Planck citation needs a shorter fragment found in the extracted text and a second cite attempt.) Two of the five gaps are closed; the other three are still open. (1) The doublet thermal mass from 2205.04486 (Bottaro et al., Table I) is quoted verbatim. For the Dirac-fermion Y=1/2 doublet it is M_DM = 1.08 +/- 0.02 TeV, computed with Sommerfeld enhancement and bound-state formation, normalised to Omega_DM h^2 = 0.11933 +/- 0.00091. The paper also says the doublet's direct-detection cross section 'lies well below the neutrino' floor. This is an independent result and sits about 7 percent below the tool's perturbative 1159 GeV (f-020). It is in references.bib under key arxiv220504486 (f-028). (2) Chen and Hill (1912.07795) is in references.bib under key arxiv191207795, with the abstract sentence 'The direct detection signal in the pure Higgsino limit remains below neutrino backgrounds for WIMPs in the TeV mass range.' The board's phrase 'less than 10^-48 cm^2 in the TeV mass regime' does not appear verbatim in the extracted text, so it was not cited (f-029). (3) Planck 2018 (1807.06209) is not cited yet. The quote '0.120 \pm 0.001' was not found in the extracted text, and the part of the abstract that was read does not contain the Omega_c h^2 sentence (dead end x-05). Bib file: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/references.bib. Full text of 2205.04486: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/2205.04486.txt. No figures were produced.
+[usage]
+[direction] d-14 -> blocked (The tool budget ran out before the 2609.01590 and 2609.07807 text windows could be read and before the indirect-detection comparison could be done.)
+**Blocked — Recover quoted evidence for the contested literature numbers (f-024, f-025, f-026, f-027), and replace the tool's unphysical p-wave indirect-detection pass with an s-wave higgsino comparison at 1.1 TeV..** (The tool budget ran out before the 2609.01590 and 2609.07807 text windows could be read and before the indirect-detection comparison could be done.) Two of the four goals are settled from full texts. The other two, plus the indirect-detection comparison, were not reached. (1) 2609.09830 does not give an on-shell delta_m shift for the 475-557 keV window (f-030). Its benchmark points are tuned to small one-loop on-shell splittings: delta = 36.37, 8.90, 16.39, 10.81 and 10.59 keV for BP1-BP5, at |mu| = 0.61-1.40 TeV, all with Omega h^2 < 0.12. Comparing its tree and one-loop masses suggests the shift is of order 0.1 GeV, but that is my reading of their mass table, not a number the paper states. So the paper is not relevant to rescuing the 475-557 keV window. (2) 2610.03692 defines four IceCube treatments, shown at 90% CL in its Fig. 2 (f-031): capture-annihilation equilibrium; SI inelastic cooling only; SI inelastic + SD elastic cooling; and SI inelastic + SD + SI elastic cooling with sigma_SI,el = 4e-50 cm^2. Its inputs: W+W- limits, standard halo with v0 = 220, v_sun = 232 and v_esc = 544 km/s, rho = 0.3 GeV/cm^3, and an LMC tail cut off at v_min = 950 km/s. The solar limits are stated not to change when the LMC is added. The delta values at 1.1 TeV for each treatment appear only in the figure, so they are not quantified. The paper's text calls the 1.1 TeV thermal higgsino only marginally compatible. Blocked items (dead end x-06): the tool budget ran out before narrow re-reads of 2609.01590 and 2609.07807. Findings f-024, f-025 and f-026 therefore remain contested, including whether the 1.69/2 CTAO Omega estimate is from the paper or from the agent. No s-wave <sigma v> versus H.E.S.S. ratio was computed, so the tool's p-wave pass (f-022) is still unreplaced. The full texts are in /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244/ as 2609.01590.txt, 2610.03692.txt and 2609.09830.txt. No cite calls were made.
+[usage]
+[tool] d-13 post_finding {"claim": "Under the tool's truncated SHM (v_max = 776 km/s), the LZ-compatible band (0.3-5 events, 2.84 t-yr) for m_chi = 1000-1200 GeV is confined to delta of
+[finding] f-032 Under the tool's truncated SHM (v_max = 776 km/s), the LZ-compatible band (0.3-5 events, 2.84 t-yr) for m_chi = 1000-1200 GeV is confined to delta of about 350 
+**Finding:** Under the tool's truncated SHM (v_max = 776 km/s), the LZ-compatible band (0.3-5 events, 2.84 t-yr) for m_chi = 1000-1200 GeV is confined to delta of about 350 keV. predict_recoil gives N = 10.67/17.30 at delta = 340 keV (m_chi = 1000/1183 GeV), 1.13/2.90 at 350 keV (1000/1200 GeV), 0.03/0.158 at 360 keV (1000/1183 GeV) and 0.00/0.00 at 380 keV. A 16x16 scan (m_chi 1000-1200 GeV, delta 330-480 keV in 10 keV steps) reports exactly 16 points in the 0.3-5 band, best fit (1000 GeV, 350 keV). No LZ-compatible point has delta >= 475 keV, or even >= 360 keV.
+[tool] tc-261022_1-w2-d-13-109 -> ok: Recorded finding f-032.
+[tool] d-13 post_finding {"claim": "Analytic kinematics (m_N = 122.0 GeV for Xe-131, E_R = 248 keV, sqrt(2 m_N E_R) = 0.8206 keV per km/s): delta_max = v_max*sqrt(2 m_N E_R) - m_N E_R/m
+[finding] f-033 Analytic kinematics (m_N = 122.0 GeV for Xe-131, E_R = 248 keV, sqrt(2 m_N E_R) = 0.8206 keV per km/s): delta_max = v_max*sqrt(2 m_N E_R) - m_N E_R/mu gives, at
+**Finding:** Analytic kinematics (m_N = 122.0 GeV for Xe-131, E_R = 248 keV, sqrt(2 m_N E_R) = 0.8206 keV per km/s): delta_max = v_max*sqrt(2 m_N E_R) - m_N E_R/mu gives, at m_chi = 1000/1100/1183 GeV, 358.5/361.3/363.2 keV for v_max = 776 km/s, 378/381/383 keV for 800 km/s, 419/422/424 keV for 850 km/s and 460/463/465 keV for 900 km/s. This reproduces the tool's v_min(248 keV) to within 1 km/s (766 vs 765.7 km/s at 1000 GeV and 350 keV; 921/969/1018 km/s at 1100 GeV and 480/520/560 keV). The tool's 'about 365 keV' edge is the E_R-optimized endpoint delta_max = mu v_max^2/2 = 364/368/370 keV at 776 km/s, reached at E_R = mu*delta/m_N of about 330 keV, not at 248 keV.
+[tool] tc-261022_1-w2-d-13-110 -> ok: Recorded finding f-033.
+[tool] d-13 post_finding {"claim": "Inverting the kinematics at m_chi = 1100 GeV gives the v_max (Earth frame) needed to reach a given delta with an event exactly at E_R = 248 keV: 893 
+[finding] f-034 Inverting the kinematics at m_chi = 1100 GeV gives the v_max (Earth frame) needed to reach a given delta with an event exactly at E_R = 248 keV: 893 km/s for 45
+**Finding:** Inverting the kinematics at m_chi = 1100 GeV gives the v_max (Earth frame) needed to reach a given delta with an event exactly at E_R = 248 keV: 893 km/s for 457 keV, 915 km/s for 475 keV, 968 km/s for 519 keV, 980 km/s for 529 keV and 1015 km/s for 557 keV (about +3 km/s at 1000 GeV, about -2 km/s at 1183 GeV). If E_R is free (at the optimal E_R = mu*delta/m_N of about 380-500 keV), the minimum is v_max = sqrt(2 delta/mu): 830 km/s for 422, 864 for 457, 881 for 475, 921 for 519, 930 for 529 and 954 km/s for 557 keV. All of these exceed the tool's SHM cutoff of 776 km/s by 55-240 km/s. So the 2609.01590 profiled-Maxwellian upper edges (422/457 keV) imply an effective endpoint of about 830-890 km/s. The Halo 13 edges (519/529 keV) need about 920-980 km/s of LMC-boosted tail. Covering delta >= 557 keV (above the Super-K + IceCube line) needs at least about 950-1015 km/s, and delta >= 475 keV needs at least about 880-915 km/s. The higgsino reading therefore rests entirely on the halo's population above about 880 km/s in the Earth frame.
+[tool] tc-261022_1-w2-d-13-111 -> ok: Recorded finding f-034.
+[tool] d-13 post_dead_end {"what": "load_table_data on /Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz to list the individual LZ-compatible scan points", "
+[dead-end] x-07 load_table_data on /Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz to list the individual LZ-compatible scan points
+[tool] tc-261022_1-w2-d-13-112 -> ok: Recorded dead end x-07.
+[usage]
+[direction] d-13 -> closed
+**Completed — Run an analytic and tool-based kinematic check of delta_max(m_chi, v_max) at E_R = 248 keV. Identify the scan points compatible with the LZ event, and reconcile the tool's 776 km/s cutoff with the upper delta edges of 2609.01590 (profiled Maxwellian 422/457 keV; Halo 13 519/529 keV)..** Main result: under the tool's halo, which cuts off at 776 km/s, no point that reproduces the LZ event has delta of 475 keV or more; the compatible band sits at about 350 keV. Everything ran locally. Points in the 0.3-5 event band were identified by bracketing with predict_recoil, because the scan file could not be read (x-07).
+
+Event counts from predict_recoil (LZ, 2.84 t-yr):
+- delta 340 keV: 10.67 events at 1000 GeV and 17.30 at 1183 GeV
+- delta 350 keV: 1.13 at 1000 GeV and 2.90 at 1200 GeV
+- delta 360 keV: 0.03 at 1000 GeV and 0.158 at 1183 GeV
+- delta 380 keV: 0.00 at both masses
+
+A new 16x16 scan (m_chi 1000-1200 GeV, delta 330-480 keV in 10 keV steps) passes all 256 points and puts 16 in the 0.3-5 band, best fit (1000 GeV, 350 keV). That the 16 are the delta = 350 keV row is inferred from the bracketing, not listed by the tool (f-032). This scan overwrote /Users/nramachandra/github-integration/inelastic-dm-server/output/scan_idm.npz and constraint_summary.png. The tools return no figure numbers.
+
+Analytic check (f-033, hand-computed): delta_max = v_max*sqrt(2 m_N E_R) - m_N E_R/mu at E_R = 248 keV, with m_N = 122 GeV. At 1000/1100/1183 GeV it gives 358.5/361.3/363.2 keV for 776 km/s, 378/381/383 keV for 800, 419/422/424 keV for 850 and 460/463/465 keV for 900 km/s. It matches the tool's v_min(248 keV) to within about 1 km/s. The tool's 'about 365 keV' edge is the endpoint when E_R is left free, mu v^2/2 = 364-370 keV at 776 km/s, reached near E_R of about 330 keV rather than at 248 keV.
+
+Required v_max (f-034, hand-computed), at 1100 GeV with the event at 248 keV: 893 km/s for 457 keV, 915 for 475, 968 for 519, 980 for 529 and 1015 for 557 keV. With E_R left free the minimum is lower: 830 km/s for 422 keV, 864 for 457, 881 for 475, 921 for 519, 930 for 529 and 954 for 557 keV.
+
+What this means for 2609.01590 and the LMC tail:
+- The paper's profiled-Maxwellian upper edges (422/457 keV) imply an effective endpoint of about 830-890 km/s, compared with the tool's 776 km/s. This explains why the tool gives zero events at 400 keV.
+- The Halo 13 edges (519/529 keV) need an LMC-boosted tail reaching about 920-980 km/s.
+- Clearing the 475 keV IceCube line needs at least about 880-915 km/s.
+- Clearing the 557 keV Super-K + IceCube line needs at least about 950-1015 km/s.
+The higgsino reading of the event therefore depends entirely on how many particles the halo has above about 880 km/s in the Earth frame.
+
+Still open: I could not compare these numbers with the actual v_esc + v_E values of the 2609.01590 halos, because the paper's endpoint sentence has no validated quote (x-04).
+
+Dead end x-07: load_table_data cannot read the binary npz file.
+[wave 2] end d-11, d-13, d-14
+[phase] critic-wave
+[usage]
+[critique] wave 2 wave: continue
+**Critic, wave 2** — continue: 4 findings stand up to the evidence, 3 questioned ('2205.04486 (Bottaro et al., Table I) gives the thermal mass of the Dirac-fermion Y=1/2 dou': The quoted excerpts do not contain the claimed values. tc-...-86 is the title page. tc-...-91 shows Table I rows for 4_{1/2} through 12_{1/2} Dirac fermions and the complex-scalar 2_{1/2} (0.58 +/- 0.01), but not the Dirac-fermion 2_{1/2} row with 1.08 +/- 0.02 TeV. Neither 0.11933 +/- 0.00091 nor the 'well below the neutrino floor' sentence appears. The cite call tc-...-97 returns only 'Cited:' and does not show which fragment was validated. The value is probably correct, but the evidence posted does not show it.; '2609.09830 (Chatterjee et al.) gives no on-shell delta_m shift in the 300-600 keV range. I': Neither excerpt (tc-...-93, tc-...-94) contains the BP1-BP5 splittings (36.37/8.90/16.39/10.81/10.59 keV), the |mu| range, the Omega h^2 < 0.12 statement or the Table III masses. They contain only the counterterm text and the Fig. 4 caption. The tree-to-loop shift is also the agent's own reading. A table quoted to 0.01 GeV cannot resolve keV-scale one-loop splittings. A shift of about 140 MeV against a keV-scale delta also implies strong scheme sensitivity, which may bear on the 475-557 keV window rather than being irrelevant to it.; '2610.03692 (Freese and Theodosopoulos) shows four IceCube treatments at 90% CL as lower li': Only partly supported. The excerpts support the equilibrium case plus three other cooling scenarios, the 90% CL treatment and the 'marginal' reading at 1.1 TeV. None of the specific inputs appears in any excerpt: v0 = 220, v_sun = 232, v_esc = 544 km/s, rho = 0.3 GeV/cm^3, sigma_Hn = 7.43e-39 cm^2, the 950 km/s LMC eta cutoff, the 'remain unchanged by adding the effects of the LMC' quote and sigma_SI,el = 4e-50 cm^2.).
+
+Issues: The core comparison asked for in the task is still missing after two waves. No LZ 4.2 t-yr or XENONnT SI 90% CL limit near 1.0-1.2 TeV has been read. The higgsino elastic sigma_SI has not been placed against those limits or the neutrino fog, and Planck 2018 is uncited. The final answer cannot be stated quantitatively without these.; The 'compatible band at about 350 keV' is an artefact of the tool's hard 776 km/s cutoff. N falls from 10.7 to 1.1 to 0.03 over 20 keV. This should be stated as a property of the truncated SHM, not as a physical preferred region. The scan also overwrote the d-10 scan_idm.npz and constraint_summary.png, so the f-019/f-023 outputs can no longer be reproduced from disk.; The kinematics assume a single isotope with m_N = 122 GeV (Xe-131). Natural xenon spans A = 124-136. For example, Xe-134 raises delta_max at 776 km/s and 1.1 TeV by about 7 keV. The 248 +/- 23 stat +/- 23 sys keV energy uncertainty also matters. The v_max thresholds therefore carry roughly +/- 10-20 km/s, which should be stated..
+[phase] replan
+[wave 2] end d-11, d-13, d-14 -> stop:budget: 2/2 waves used
+Stopping after wave 2: budget reached (2/2 waves used). Writing the report from the board.
+[run] reporting (waves 2, tool calls 67, 485s)
+[phase] report
+[usage]
+[phase] honesty
+[usage]
+[critique] wave 2 report: ok
+[run] done (waves 2, tool calls 67, 575s)
+[phase] done
+[done]
+
+Tokens: 1.3M in (956K cached) · 74K out · 50 calls — worker 1.1M in (925K cached) · 35K out · 38 calls; critic 102K in · 19K out · 4 calls; survey 48K in (31K cached) · 4.9K out · 5 calls; report 48K in · 8.2K out · 1 call; plan 34K in · 6.5K out · 2 calls
+
+Board: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/research/default/board.json
+Outputs: /Users/nramachandra/hep-genesis-testing/projects/ramp-research-higgsino-dd/runs/261022_110244

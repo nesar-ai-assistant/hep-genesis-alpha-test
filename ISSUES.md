@@ -538,3 +538,8 @@ Notes (manual review):
 - No new upstream-worthy bugs: truncation (#11) not triggered today (no
   >20k-char tool results); #10 budget overrun is research-mode-only.
 
+
+## 2026-10-22-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags.
+
