@@ -1,0 +1,34 @@
+A 100 GeV WIMP with ⟨σv⟩ = 3×10⁻²⁶ cm³/s has a relic density today of **Ω_χ h² = 0.0823** and freezes out at **T_f = 4.46 GeV** (x_f = 22.4). I ran `compute_relic_density` again just now, and it returned the same values as every earlier run.
+
+## Results (generic WIMP, not a higgsino)
+
+| Quantity | Value |
+|---|---|
+| Relic density today, Ω_χ h² | 0.0823 |
+| Planck 2018 (arXiv:1807.06209) | 0.120 ± 0.0012 |
+| Freeze-out parameter, x_f = m_χ/T_f | 22.4 |
+| Freeze-out temperature, T_f | 4.46 GeV (100 / 22.4) |
+| g* at freeze-out | 86.25 |
+
+The tool uses the Kolb & Turner analytic approximation (Eqs. 5.26–5.29).
+
+**Comparison with Planck:** this cross section produces about 70% of the observed dark matter. The tool reports a 31.4σ tension, but that counts only Planck's 1% error and treats the approximation as exact, so it overstates the disagreement. Because Ω ∝ 1/⟨σv⟩, a cross section of about 2.2×10⁻²⁶ cm³/s would give 0.12. That matches precise numerical results (arXiv:1204.3622).
+
+## Why x_f ≈ 20–25
+
+1. **When freeze-out happens:** annihilation stops when its rate, Γ = n_eq⟨σv⟩, falls to the expansion rate H ≈ 1.66 √g* T²/M_Pl. Once the WIMPs are non-relativistic, their equilibrium density drops as n_eq = g(mT/2π)^{3/2} e^{−x}.
+2. **The two rates start far apart:** at T ~ m, weak-scale annihilation is faster than the expansion by about M_Pl m⟨σv⟩ ~ 10¹⁰. That ratio comes from the large gap between the weak and Planck scales.
+3. **Only the exponential can close the gap:** factors that go as a power of T change too slowly. The rates become equal only when e^{−x} ≈ 10⁻¹⁰, which gives x_f ≈ ln(10¹⁰) ≈ 23. The full condition is x_f ≈ ln[0.038 g M_Pl m⟨σv⟩ / √(g* x_f)] ≈ ln(5×10⁹) ≈ 22, matching the tool.
+4. **x_f barely changes:** it depends on the inputs only through a logarithm. Changing m or ⟨σv⟩ by a factor of 10 shifts x_f by only about 2.3, so WIMPs from about 10 GeV to a few TeV all freeze out at x_f ≈ 20–25.
+5. **What this means for the relic density:** with x_f nearly fixed, Ω h² ∝ x_f/⟨σv⟩ depends almost entirely on the cross section. This is the "WIMP miracle": a weak-scale cross section gives roughly the observed amount of dark matter.
+
+This is the seventh identical request, and the answer will stay the same. If you want something different, I can solve for the ⟨σv⟩ that gives exactly Ω h² = 0.12, scan x_f over a range of masses, or write a PDF report.
+
+[Tool ledger] compute_relic_density(m_chi_GeV=100, is_higgsino=false, sigma_v_cm3_s=3e-26) returned omega_h2=0.0823, x_f=22.4, T_f_GeV=4.46, g_star=86.25, tension_sigma=31.4 (Planck 0.12±0.0012); identical to prior runs. No files produced.
+Loading MCP servers…
+Loaded 8 tools
+[tool] compute_relic_density {"m_chi_GeV": 100, "is_higgsino": false, "sigma_v_cm3_s": 3e-26}
+[tool] compute_relic_density -> ok: {   "parameters": {     "m_chi_GeV": 100.0,     "is_higgsino": false,     "sigma_v_cm3_s": 3e-26   },   "relic_density": {     "omega_h2": 0.0823,     "planck_v
+Tokens: 27K in (13K cached) · 1.6K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/idm.json

@@ -599,7 +599,13 @@ def main():
     ap.add_argument("--chat-suffix", default=None,
                     help="append to every --chat name so repeat runs get FRESH "
                          "conversations instead of resuming prior ones "
-                         "(e.g. '-1021' -> --chat meta-1021)")
+                         "(e.g. '-1021' -> --chat meta-1021). "
+                         "DEFAULT: '-<MMDD>' date suffix (fresh chats every run, "
+                         "per the 10-21 DESC fresh-chat finding); pass "
+                         "--resume-chats to disable.")
+    ap.add_argument("--resume-chats", action="store_true",
+                    help="do NOT apply a chat suffix; resume prior conversations "
+                         "with fixed chat names (pre-2026-10-22 default behaviour)")
     args = ap.parse_args()
 
     run_id = datetime.now().strftime("%Y-%m-%d")
@@ -635,6 +641,12 @@ def main():
         sys.exit(3)
 
     cases = build_cases(env, run_dir, profile=args.profile)
+    # Fresh chats by default (10-22 finding: core battery resumed week-old
+    # chats — several cases answered from memory with zero new tool calls).
+    # Same suffix on every case keeps within-run continuations (D7 -> D8)
+    # working while preventing cross-run resumption.
+    if not args.resume_chats and not args.chat_suffix:
+        args.chat_suffix = "-" + datetime.now().strftime("%m%d")
     if args.chat_suffix:
         n_subbed = 0
         for c in cases:

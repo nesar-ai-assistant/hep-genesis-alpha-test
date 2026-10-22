@@ -504,3 +504,37 @@ Notes (manual review):
 - **[local] desc_mcp_server#4 persists**: 48/54 tools; `tools.ccl` module missing.
   D2/D9/D10 CCL steps ran as honest "not computed" refusals. Also confirmed
   `conamaster` family is absent from `tools/` entirely (never registered).
+
+## 2026-10-22-am-core — 10 pass / 0 flagged
+
+Clean run — no flags.
+
+Notes (manual review):
+- **[harness, fixed] Core battery was resuming week-old chats**: every quick case
+  opened `chats/<name>.json` in `ramp-core` that has been resumed daily since
+  10-16. The agent said so outright ("sixth/seventh time you've asked", "Figure
+  45", "nothing was recomputed"). Cases 04 and 10 made **zero new tool calls**,
+  answering purely from prior context — so today's PASSes test conversation
+  memory, not fresh tool use. Same flaw the 10-21 DESC run fixed with
+  `--chat-suffix -1021`, but core/research/combo never passed the flag.
+  **Fix applied in harness.py**: fresh chats are now the DEFAULT — every run
+  auto-appends a `-MMDD` date suffix to all `--chat` names (pass
+  `--resume-chats` to restore old behaviour). Within-run continuations
+  (D7→D8 `--chat nm`) keep working since all cases share the same suffix.
+  Effect verified for today's run: it ran BEFORE the fix, so its PASSes reflect
+  resumed context. Tomorrow's batteries will be the first fresh-chat core run.
+- **Physics quality on resumed chats still strong** (case 04): DW production
+  f ∝ m_s^0.8 / Ω_s h² ∝ m_s^1.8 scaling derived correctly across 1–50 keV,
+  with honest caveats (suspects the tool's power-law fit; flags both points
+  overclose; notes ΔN_eff far below BBN limit). Case 05 correctly solved
+  Y_p +1% at N_eff ≈ 3.229 via DW mixing scan. Case 06: Ω_χ h² = 0.0823,
+  x_f = 22.4, T_f = 4.46 GeV for 100 GeV WIMP, σ=31 tension vs Planck — all
+  consistent with prior runs and textbook expectations.
+- **Recurring pattern [local, #13]**: hydroemu cases (07, 08) again returned
+  files+plot but no inline bin values, so the agent correctly refused to quote
+  amplitudes and narrated expected physics instead — right behaviour for a
+  truncated tool response, but it means hydro cases still can't verify numeric
+  predictions end-to-end (ISSUES.md #13).
+- No new upstream-worthy bugs: truncation (#11) not triggered today (no
+  >20k-char tool results); #10 budget overrun is research-mode-only.
+

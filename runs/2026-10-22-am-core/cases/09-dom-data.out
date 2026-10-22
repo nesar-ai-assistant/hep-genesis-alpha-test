@@ -1,0 +1,33 @@
+I'll check once more whether a sample file or dataset has been added.
+I still can't do this, because nothing has changed: there are still no input files and no loaded datasets.
+
+- `run_test_job` has no setting for mean or sigma. Its `normal` option always draws from a Gaussian with mean 0 and sigma 1, and it rejected `normal(mu=5,sigma=2)`.
+- It doesn't save its samples (`artifact: null`). That leaves `compute_statistics` and `compute_histogram` with no data to work on.
+
+**Closest result I have:** the first run (`normal`, n=1000, seed=42, run on this machine) gave a mean of -0.0183 and a std of 1.0191. If you shift and scale those (5 + 2x), you get a mean of about 4.963 (expected 5 ± 0.063) and a std of about 2.038 (expected 2 ± 0.045). Both are within about one standard error of what you'd expect. But that's my arithmetic on a summary, not a real sample, and there's no histogram.
+
+I've saved a note about this tool limit so later sessions know it from the start.
+
+**To get a real answer, one of these is needed:**
+1. **Add a sample file** where `list_input_files` can see it, for example:
+   `numpy.savetxt("gauss_5_2.txt", numpy.random.default_rng(42).normal(5, 2, 1000))`
+   I can then load it and compute the statistics and histogram.
+2. **Change the server** so that `run_test_job` accepts `mu` and `sigma` and saves its samples to a file I can load.
+
+Until one of those happens, asking again will get the same answer.
+
+[Tool ledger — exact record of this turn]
+- list_input_files (hep-research-aid) ok — args {}; result: {"status": "success", "files": []}
+- list_datasets (hep-research-aid) ok — args {}; result: {'count': 0, 'datasets': []}
+- remember ok — saved note on run_test_job limits (fixed N(0,1), no artifact).
+Loading MCP servers…
+Loaded 21 tools
+[tool] list_input_files {}
+[tool] list_input_files -> ok: {   "status": "success",   "files": [],   "usage": "Pass any of these filenames to load_table_data()." }
+[tool] list_datasets {}
+[tool] list_datasets -> ok: {'count': 0, 'datasets': []}
+[tool] remember {"lesson": "run_test_job only supports standard distributions (normal is fixed at mu=0, sigma=1; no mu/sigma args) and returns artifact: null, so its samples cannot be passed to compute_statistics or 
+[tool] remember -> ok: Remembered: run_test_job only supports standard distributions (normal is fixed at mu=0, sigma=1; no mu/sigma args) and returns artifact: null, so its samples ca
+Tokens: 33K in (22K cached) · 1.0K out · 3 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/dom.json

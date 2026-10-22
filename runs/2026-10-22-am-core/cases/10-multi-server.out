@@ -1,0 +1,34 @@
+This is the same question as before. The tools give the same output for the same inputs, so these numbers come from the first run and nothing was recomputed.
+
+## The two numbers
+
+| Server | Quantity | Result | Compared with |
+|---|---|---|---|
+| sterile-nu | D/H at N_eff = 3.044 | **2.443 × 10⁻⁵** | Observed (2.547 ± 0.025) × 10⁻⁵, about 4σ low |
+| inelastic-dm | Ωh² for a 1 TeV higgsino | **0.0898** | Planck 0.120 ± 0.0012, 25.1σ low |
+
+- **D/H:** the server has no direct N_eff input. I got N_eff = 3.0440 by using a sterile neutrino with negligible mixing (1 keV, sin²2θ = 10⁻¹⁵, Dodelson–Widrow production). The calculation uses a fit to the PRyMordial BBN code with Ω_b h² = 0.02237 and a neutron lifetime of 878.4 s.
+- **Higgsino:** the annihilation cross-section was set automatically to ⟨σv⟩ = 3.03 × 10⁻²⁶ cm³/s.
+- **Warning:** the higgsino tool reports `consistent_planck: True` alongside a 25σ tension. That label is wrong.
+
+## Which model does Planck favor?
+
+Neither of these setups works as all of the dark matter.
+- **1 TeV higgsino:** it makes only about 75% of the dark matter Planck measures. It still works as part of the dark matter, or as all of it at about 1.1 TeV.
+- **D/H value:** this is a Standard Model check, and Planck's N_eff agrees with it. It doesn't test sterile-neutrino dark matter, which needs larger mixing than I used. At this mixing the sterile neutrino gives Ωh² ≈ 1.4 × 10⁻⁸.
+
+Of the two, the higgsino near 1.1 TeV is closer to a working model.
+
+Sending the same question again will get this same answer. To take it further, name the next step: I can rerun the tool calls fresh, run the higgsino at 1.1 TeV, scan sterile-neutrino masses and mixings for points that give Ωh² = 0.120 and check them against X-ray limits, or write the session up as a PDF report.
+
+[Tool ledger — exact record of this turn]
+- No new tool calls; values reused from the first turn's ledger:
+  - predict_sterile_nu (serve-sbbn.sh), args {"m_s_eV": 1000, "sin2_2theta": 1e-15}: ΔN_eff = 1.289e-09, N_eff = 3.0440, D/H = 2.4433e-5, Yp = 0.24682, Li7/H = 5.46e-10, Δχ² = 0.00, Ω_s h² ≈ 1.4e-8.
+  - compute_relic_density (serve-idm.sh), args {"m_chi_GeV": 1000, "is_higgsino": true}: omega_h2 = 0.0898, planck 0.12 ± 0.0012, tension_sigma = 25.1, consistent_planck = "True" (contradictory), sigma_v = 3.025e-26 cm³/s.
+Loading MCP servers…
+[10/22/26 08:34:53] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 18 tools
+Tokens: 16K in · 1.1K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/multi.json

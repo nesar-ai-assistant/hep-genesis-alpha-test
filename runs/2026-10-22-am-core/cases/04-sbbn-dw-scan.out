@@ -1,0 +1,48 @@
+# Dodelson-Widrow production at 5 keV and 10 keV, sin²2θ = 3×10⁻⁹
+
+**Short answer:** going from 5 to 10 keV raises the production fraction by **1.740** (0.01402 to 0.02440), so f ∝ m_s^0.8. The relic density goes up by **3.482** (0.7524 to 2.620), so Ω_s h² ∝ m_s^1.8.
+
+This is the sixth time you've asked this, and I made no new tool calls this turn. The numbers come from the `predict_sterile_nu_grid` call three turns ago (mechanism DW, 1–50 keV), saved as `.../runs/261020_083118/sterile_nu_grid_DW_cb6b9f.csv`. Four separate runs before that gave identical values. The tool has no field called "production fraction," so I use its ΔN_eff: the sterile-neutrino number density relative to one fully thermalised neutrino species.
+
+## Tool results
+
+| Quantity | 5 keV | 10 keV | Ratio (10/5) |
+|---|---|---|---|
+| ΔN_eff (production fraction f) | 0.01402 | 0.02440 | 1.740, about 2^0.8 |
+| Ω_s h² | 0.7524 | 2.620 | 3.482, about 2^1.8 |
+| Overcloses (observed Ω_DM h² = 0.120)? | yes | yes | – |
+| BBN Δχ² vs the Standard Model | −0.175 (allowed) | −0.296 (allowed) | – |
+| Radiative lifetime (s) | 7.837×10²⁶ | 2.449×10²⁵ | 1/32 = 2⁻⁵ |
+
+The same grid shows the 0.8 exponent holding from 1 to 50 keV: f goes from 0.003868 to 0.08843, a ratio of 22.9, and 50^0.8 is also 22.9.
+
+## Why heavier sterile neutrinos are produced more
+
+1. **How production works.** Active neutrinos oscillate into sterile states, and collisions in the plasma turn part of each oscillating state into a sterile neutrino. The rate is roughly Γ_s ≈ ½ sin²2θ_eff · Γ_ν, where Γ_ν ∝ G_F² T⁵.
+2. **The hot plasma suppresses mixing.** The plasma's thermal potential, V_T ∝ G_F T⁵/M_W², grows with temperature faster than the vacuum term m_s²/2E. The effective mixing is roughly sin²2θ_eff ≈ sin²2θ / [1 + c·T⁶/m_s²]², so production stays off at high temperature.
+3. **Heavier masses peak at higher temperature.** Balancing Γ_s against the Hubble rate puts the production peak at T_peak ∝ m_s^(1/3), about 100–300 MeV for keV masses. A heavier sterile neutrino keeps its mixing into a hotter epoch, where collisions are faster.
+4. **The simple estimate is linear.** Evaluating Γ_s/H at the peak gives f ∝ sin²2θ · m_s, and so Ω ∝ sin²2θ · m_s². The yield is linear in mixing because production stays far from equilibrium (f ≪ 1).
+5. **Why the exponent is 0.8 instead of 1.** T_peak sits near the QCD transition, where the number of relativistic degrees of freedom g* is rising. A higher T_peak means faster expansion during production and more dilution afterwards, which pulls the yield below linear. The extra power of m_s in Ω is the rest mass per particle. Standard references:
+   - Dodelson & Widrow, hep-ph/9303287 (the original mechanism)
+   - Abazajian, astro-ph/0511630
+   - Asaka, Laine & Shaposhnikov, hep-ph/0612182
+
+## Caveats
+
+- **The tool probably uses a fitted power law.** The exponent is exactly 0.80 over 1–50 keV, even though g* changes across that range. That suggests a fit, Ω ∝ sin²2θ · m_s^1.8, rather than a solution of the production equations. So the tool reproduces the published scaling but doesn't derive it independently.
+- **Both points overclose the universe.** By my linear rescaling (not a tool output), the observed dark-matter density needs sin²2θ ≈ 4.8×10⁻¹⁰ at 5 keV and about 1.4×10⁻¹⁰ at 10 keV.
+- **BBN doesn't constrain these points.** ΔN_eff of 0.014–0.024 is far below the BBN 95% limit of ΔN_eff < 0.548.
+
+This question and the BBN one have alternated several times with identical answers. If you're testing reproducibility, the results are stable. If you need something new, tell me which of these to do:
+- Rerun these calls from scratch.
+- Compute Shi-Fuller production.
+- Check the X-ray limits at the mixing that gives the observed dark-matter density.
+- Scan and plot the exclusion plane.
+- Write the session up as a report with `write_report`.
+Loading MCP servers…
+[10/22/26 08:31:47] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+Tokens: 34K in · 1.8K out · 1 call
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn.json
