@@ -1,0 +1,54 @@
+## Results for m_χ = 100 GeV, ⟨σv⟩ = 3×10⁻²⁶ cm³/s
+
+I ran `compute_relic_density` once, with the generic-WIMP model rather than the higgsino one.
+
+| Quantity | Value |
+|---|---|
+| Relic density today, Ω_χh² | **0.0823** |
+| Freeze-out parameter, x_f = m_χ/T_f | **22.4** |
+| Freeze-out temperature, T_f | **4.46 GeV** |
+| g* at freeze-out | 86.25 |
+| Planck 2018 value | 0.120 ± 0.0012 |
+
+So this WIMP ends up with about 70% of the observed dark matter density. It is over-annihilating a little.
+
+**About the tool's "31.4σ tension":** that figure divides by the Planck error alone. It ignores the theory uncertainty in this approximate freeze-out calculation, which is much larger. The result follows the standard Kolb–Turner formula: Ω h² ≈ 1.07×10⁹ x_f / (√g* · M_Pl · ⟨σv⟩ [GeV⁻²]). I checked it by hand, using ⟨σv⟩ = 2.57×10⁻⁹ GeV⁻², and got 0.0823.
+
+**About the canonical 3×10⁻²⁶ cm³/s:** this value is often quoted as giving Ω h² ≈ 0.12, but that is a rough rule of thumb. More careful treatments find a lower value, about 2.2×10⁻²⁶ cm³/s for a Majorana particle at 100 GeV (Steigman, Dasgupta & Beacom, arXiv:1204.3622). So 3×10⁻²⁶ giving roughly 0.08 is consistent with that result. A Dirac particle would shift the answer by about a factor of 2.
+
+## Why freeze-out happens at x_f ≈ 20–25
+
+Freeze-out happens when the annihilation rate per particle falls to the Hubble expansion rate:
+
+Γ = n_eq ⟨σv⟩ ≃ H
+
+- **Number density:** when nonrelativistic, the equilibrium density is n_eq = g (m T / 2π)^{3/2} e^{−m/T}.
+- **Expansion rate:** in radiation domination, H = 1.66 √g* T² / M_Pl.
+
+Setting the two equal and solving for x = m/T gives:
+
+x_f ≃ ln[ 0.038 · g · M_Pl · m_χ · ⟨σv⟩ / √(g* x_f) ]
+
+With g = 2 and the numbers above, the argument of the log is about 5×10⁹. Its logarithm is about 22.4, which matches the tool.
+
+Physically:
+
+1. **Weak-scale annihilation is much faster than the expansion.** Gravity is far weaker than the weak interaction, so near T ~ m the annihilation rate exceeds H by a factor of roughly M_Pl·m·⟨σv⟩ ~ 10¹⁰.
+2. **Only the Boltzmann factor can close that gap.** The power-law terms in T cannot make up 10 orders of magnitude. Annihilations stop only once e^{−m/T} has cut n_eq by about 10⁻¹⁰, which needs m/T ≈ ln(10¹⁰) ≈ 23.
+3. **The result depends only logarithmically on the inputs.** Changing ⟨σv⟩ or m_χ by a factor of 10 moves x_f by only ln 10 ≈ 2.3. That is why x_f ≈ 20–25 holds across WIMP masses from GeV to TeV.
+4. **The relic density tracks 1/⟨σv⟩.** In Ω h² ∝ x_f/⟨σv⟩, the x_f factor changes slowly, so the abundance is set mostly by the cross section. This is the origin of the "WIMP miracle": weak-scale ⟨σv⟩ gives Ω h² ~ 0.1.
+
+At T_f ≈ 4.5 GeV, the W, Z, Higgs and top have already dropped out of the plasma. That is why g* = 86.25, compared with 106.75 for the full Standard Model.
+
+[Tool ledger]
+- describe_tools: inelastic-dm-server; Planck Ω h² = 0.12 ± 0.0012.
+- compute_relic_density(m_chi_GeV=100, is_higgsino=false, sigma_v_cm3_s=3e-26): Ω h² = 0.0823; x_f = 22.4; T_f = 4.46 GeV; g* = 86.25; tension 31.4σ (Planck error only); no files.
+Loading MCP servers…
+Loaded 8 tools
+[tool] describe_tools {}
+[tool] describe_tools -> ok: {   "server": "inelastic-dm-server",   "description": "Bridges particle physics (WIMP mass, mass splitting, cross section) with cosmological observables (relic 
+[tool] compute_relic_density {"m_chi_GeV": 100, "is_higgsino": false, "sigma_v_cm3_s": 3e-26}
+[tool] compute_relic_density -> ok: {   "parameters": {     "m_chi_GeV": 100.0,     "is_higgsino": false,     "sigma_v_cm3_s": 3e-26   },   "relic_density": {     "omega_h2": 0.0823,     "planck_v
+Tokens: 9.3K in (4.0K cached) · 2.9K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/idm-1023.json

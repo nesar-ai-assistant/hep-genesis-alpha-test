@@ -1,0 +1,68 @@
+Redshift: z = 0.1. I'll use the same median (mid-range) parameters as in the previous turn and run the predictions and plots for both profiles together.
+I predicted both cluster profiles at z = 0.1 and plotted them: gas density (CGD) is Figure 6 and temperature (CTP) is Figure 7. The tools gave back files and plots but no numbers, so any shapes or values I mention below are what such simulations usually show, not readings from these predictions.
+
+**Setup**
+- **Parameters:** the same mid-range "median" values as before: κ_w = 3.0, e_w = 0.6, M_seed = 1.3 (×10⁶ M_sun), v_kin = 0.65 (×10⁴ km/s), ε_kin = 0.61 (×10¹), ω_m = 0.1375, σ_8 = 0.8.
+- **Validity:** all values are inside the design ranges, and no extrapolation warnings came back.
+- **Output:** 19 radial bins per profile. Each CSV has the predicted mean (`y_mean`) and its uncertainty (`y_std`); each figure shows the mean with a 2σ band.
+- **Units:** the results didn't state units or how radius is normalised, so check the figure axis labels before reading off values.
+
+**How the two profiles are related: hydrostatic equilibrium**
+
+In a relaxed cluster the hot gas (intracluster medium) roughly balances its outward pressure against the pull of gravity:
+
+dP/dr = −ρ_gas · G M(<r) / r²,  with P = n k_B T (ideal gas).
+
+Rewritten, this gives the standard hydrostatic mass estimate:
+
+M(<r) = −(k_B T r / G μ m_p) · [ d ln n_gas/d ln r + d ln T/d ln r ].
+
+What this means:
+1. **Density and temperature together trace the total (mostly dark) mass.** The steepness of the density profile and of the temperature profile at each radius set how much mass lies inside that radius. Neither profile pins down the mass alone.
+2. **Their product is the pressure.** The emulator's separate pressure profile (CPP) should roughly equal CGD × CTP, give or take the conversion between gas density and particle number. Predicting CPP with the same parameters would be a direct consistency check.
+3. **They also combine into entropy**, K = k_B T / n_e^(2/3), which the emulator predicts as CEP. Feedback acts most clearly through entropy. AGN heating raises the central entropy, which either flattens the central density or lowers it. Because the gas has to stay in hydrostatic balance, the temperature profile adjusts at the same time.
+
+**What to look for in Figures 6 and 7**
+- **Gas density** should fall steeply with radius. Typically it has a core or flattening in the centre and steepens outward (roughly like a β-model, with n ∝ r^(−2) to r^(−3) in the outskirts).
+- **Temperature** is usually fairly flat. It often peaks at a modest fraction of the cluster radius (r₅₀₀), may dip in the core (cool core), and falls gently outward.
+- Because temperature changes much less than density, the density slope is the main term in the hydrostatic mass estimate. The temperature slope is a correction of about 10–30%.
+
+**Caveats**
+- Hydrostatic equilibrium ignores pressure from gas bulk motion and turbulence. Because of that, masses estimated this way usually come out roughly 10–20% too low.
+- I didn't compute the hydrostatic mass from these predictions. The tools here can't take derivatives or combine two CSVs, so I haven't checked the hydrostatic relation numerically.
+- With median parameters, this run shows nothing about sensitivity to feedback. Changing the AGN parameters (κ_w, e_w) while holding z fixed would show how much they reshape the cluster core.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261023_083505/`:
+- CGD_z0.1000_prediction.csv
+- CTP_z0.1000_prediction.csv
+- CGD_z0.1000_prediction.png (Figure 6)
+- CTP_z0.1000_prediction.png (Figure 7)
+
+[Tool ledger]
+- predict_observable CGD z=0.1 (median params) -> .../261023_083505/CGD_z0.1000_prediction.csv (19 bins, no warnings)
+- predict_observable CTP z=0.1 (median params) -> .../261023_083505/CTP_z0.1000_prediction.csv (19 bins, no warnings)
+- plot_prediction CGD z=0.1 -> .../261023_083505/CGD_z0.1000_prediction.png = Figure 6
+- plot_prediction CTP z=0.1 -> .../261023_083505/CTP_z0.1000_prediction.png = Figure 7
+Loading MCP servers…
+[10/23/26 08:35:06] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 5 tools
+[tool] predict_observable {"stat_name": "CGD", "z": 0.1, "kappa_w": 3.0, "e_w": 0.6, "m_seed": 1.3, "v_kin": 0.65, "eps_kin": 0.61, "omega_m": 0.1375, "sigma_8": 0.8, "output_dir": "/Users/nramachandra/hep-genesis-testing/proj
+[10/23/26 08:35:19] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_observable -> ok: {   "status": "success",   "message": "Predicted CGD at z=0.1000 (19 bins).",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/
+[tool] predict_observable {"stat_name": "CTP", "z": 0.1, "kappa_w": 3.0, "e_w": 0.6, "m_seed": 1.3, "v_kin": 0.65, "eps_kin": 0.61, "omega_m": 0.1375, "sigma_8": 0.8, "output_dir": "/Users/nramachandra/hep-genesis-testing/proj
+[10/23/26 08:35:21] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_observable -> ok: {   "status": "success",   "message": "Predicted CTP at z=0.1000 (19 bins).",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/
+[tool] plot_prediction {"stat_name": "CGD", "z": 0.1, "kappa_w": 3.0, "e_w": 0.6, "m_seed": 1.3, "v_kin": 0.65, "eps_kin": 0.61, "omega_m": 0.1375, "sigma_8": 0.8, "output_dir": "/Users/nramachandra/hep-genesis-testing/proj
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] plot_prediction -> ok: {   "status": "success",   "message": "Plotted CGD prediction at z=0.1000.",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/2
+[tool] plot_prediction {"stat_name": "CTP", "z": 0.1, "kappa_w": 3.0, "e_w": 0.6, "m_seed": 1.3, "v_kin": 0.65, "eps_kin": 0.61, "omega_m": 0.1375, "sigma_8": 0.8, "output_dir": "/Users/nramachandra/hep-genesis-testing/proj
+[10/23/26 08:35:22] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] plot_prediction -> ok: {   "status": "success",   "message": "Plotted CTP prediction at z=0.1000.",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/2
+Tokens: 20K in (8.7K cached) · 3.1K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/hydro-1023.json

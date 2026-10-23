@@ -1,0 +1,44 @@
+I got both numbers, but they don't support picking one model over the other. The details are below.
+
+**1. D/H at N_eff = 3.044 (sterile-nu server)**
+
+The server has no option to set N_eff directly; it only takes a sterile mass and mixing. So I ran one point with mixing too small to matter (m_s = 1 keV, sin²2θ = 1e-15, Dodelson–Widrow production). That adds ΔN_eff ≈ 1.3e-9, so N_eff = 3.0440, which is the Standard Model value.
+
+- **D/H = 2.443 × 10⁻⁵**, from a fitted approximation to the PRyMordial BBN code, using Planck's baryon density (Ω_b h² = 0.02237) and a neutron lifetime of 878.4 s.
+- The measured value is 2.547 ± 0.025 × 10⁻⁵ (Cooke+ 2018). That puts the prediction about 4σ low if you count only the measurement error; the tool doesn't add a theory error.
+- This point changes nothing relative to the Standard Model (Δχ² = 0.00), and it is not a dark-matter candidate: its dark-matter density is Ω_s h² ≈ 1.4 × 10⁻⁸.
+
+**2. Thermal relic density of a 1 TeV higgsino (inelastic-DM server)**
+
+- **Ω h² = 0.0898**. The server set the annihilation cross section automatically (⟨σv⟩ = 3.03 × 10⁻²⁶ cm³/s). Freeze-out happens at x_f = 24.7, i.e. T_f = 40.5 GeV.
+- Planck measures 0.120 ± 0.0012, so this is about 25σ low. **Warning:** the tool output reports `consistent_planck: True` alongside that 25σ gap, which is a bug in the tool. A 1 TeV higgsino makes only about 75% of the observed dark matter. It needs a mass around 1.1 TeV (the server's default) to make all of it.
+
+**Which model Planck favors**
+
+These two numbers can't decide that:
+
+- **The D/H value is not a sterile-neutrino result.** It is the Standard Model BBN prediction. On Planck's side, N_eff = 3.044 agrees well with Planck's 2.99 ± 0.17 (about 0.3σ). That favors standard radiation with no extra sterile species, but says nothing about sterile neutrinos as dark matter.
+- **The higgsino number is a dark-matter test, and it fails as stated.** At exactly 1 TeV, a higgsino can't be all of the dark matter. If you allow a mass near 1.1 TeV, it can.
+- **To compare like with like,** I'd suggest one of two things. I could scan sterile-neutrino parameters for points that give Ω_s h² ≈ 0.12 while passing the BBN, X-ray and Lyman-α limits. Or I could compare against the higgsino near 1.1 TeV. I can run either one.
+
+[Tool ledger]
+- describe_sterile_nu_tools: observations D/H = 2.547 ± 0.025 (Cooke+ 2018), Planck N_eff = 2.99 ± 0.17, BBN fit valid N_eff in [2.044, 6.044].
+- predict_sterile_nu(m_s = 1000 eV, sin²2θ = 1e-15, DW): N_eff = 3.0440, D/H × 10⁵ = 2.4433, Yp = 0.24682, Li7/H × 10¹⁰ = 5.46, Δχ² vs SM = -0.00, Ω_s h² = 1.384e-8.
+- compute_relic_density(m_chi = 1000 GeV, higgsino): Ω h² = 0.0898, Planck 0.12 ± 0.0012, tension 25.1σ (flag consistent_planck = True, which contradicts the tension), x_f = 24.7, T_f = 40.53 GeV, ⟨σv⟩ = 3.025e-26 cm³/s.
+Loading MCP servers…
+[10/23/26 08:36:04] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 18 tools
+[tool] describe_sterile_nu_tools {}
+[10/23/26 08:36:12] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_sterile_nu_tools -> ok: {   "status": "ok",   "files": [],   "message": "Sterile Neutrino -> BBN / X-ray Bridge Server\n=============================================\n\nMaps sterile-ne
+[tool] compute_relic_density {"m_chi_GeV": 1000, "is_higgsino": true}
+[tool] compute_relic_density -> ok: {   "parameters": {     "m_chi_GeV": 1000.0,     "is_higgsino": true,     "sigma_v_cm3_s": 3.0250000000000006e-26   },   "relic_density": {     "omega_h2": 0.08
+[tool] predict_sterile_nu {"m_s_eV": 1000, "sin2_2theta": 1e-15}
+[10/23/26 08:36:16] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 1e+03 eV, sin\u00b22\u03b8 = 1e-15\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+Tokens: 28K in (17K cached) · 2.2K out · 3 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/multi-1023.json

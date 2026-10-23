@@ -1,0 +1,35 @@
+Before running this, one known limitation: `run_test_job` always uses a standard normal (mean 0, sigma 1), takes no mean or sigma arguments, and returns no artifact file I can pass to the statistics or histogram tools. I'll run it anyway and check what it actually returns.
+I could only do part of this. `run_test_job` can't sample from a Gaussian with mean 5 and sigma 2, and it doesn't save its samples, so I couldn't run `compute_statistics` or `compute_histogram` on them. I did not make a histogram.
+
+**What ran:** one local job (`computed_on: "local"`, host macB.local) with `distribution="normal"`, `n=1000`, `seed=42`. The tool fixed the parameters at mu = 0.0, sigma = 1.0; it has no options to change them. It returned `artifact: null`, so there is no file to pass on.
+
+**Summary the job reported (standard normal):**
+
+| Quantity | Value | Expected for N(0,1), n=1000 |
+|---|---|---|
+| count | 1000 | 1000 |
+| mean | -0.0183 | 0 ± 0.032 (standard error of the mean, 1/√1000) |
+| stdev | 1.0191 | 1 ± about 0.022 |
+| median (p50) | -0.0185 | 0 |
+| p05 / p95 | -1.681 / 1.743 | ±1.645 |
+| min / max | -3.155 / 3.752 | about ±3.2 is typical |
+
+These match a standard normal: the mean is within 0.6 standard errors of 0, and the stdev is within about 1 standard error of 1.
+
+**Rescaled to mean 5, sigma 2 (my arithmetic, not a tool output):** scaling these samples by x' = 5 + 2x would give a mean of about 4.963 and a stdev of about 2.038. Both are consistent with mean 5 and sigma 2 for 1000 points (expected spread about ±0.063 on the mean and ±0.045 on the stdev). This is only a hand calculation on the summary numbers; no N(5, 2) sample was actually generated.
+
+**To get the full analysis, including the histogram:** the stats and histogram tools need a dataset in the session, which comes from a data file via `load_table_data`. If you have a file of N(5, 2) samples, or can create one, I can load it and run both tools. I can also check `list_input_files` for a suitable existing file.
+
+[Tool ledger]
+- get_dispatch: local execution.
+- run_test_job(distribution=normal, n=1000, seed=42): mu=0, sigma=1 (fixed); mean=-0.01827, stdev=1.01909, min=-3.1545, max=3.7521, p05=-1.6806, p50=-0.01847, p95=1.7429; artifact=null; computed_on=local (macB.local).
+- compute_statistics / compute_histogram: not run (no dataset available).
+Loading MCP servers…
+Loaded 21 tools
+[tool] get_dispatch {}
+[tool] get_dispatch -> ok: Dispatch: local execution.
+[tool] run_test_job {"distribution": "normal", "n": 1000, "seed": 42}
+[tool] run_test_job -> ok: {   "status": "success",   "distribution": "normal",   "params": {     "mu": 0.0,     "sigma": 1.0   },   "seed": 42,   "summary": {     "count": 1000,     "mea
+Tokens: 10K in (4.8K cached) · 1.5K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/dom-1023.json

@@ -1,0 +1,61 @@
+I'll start by checking the GSMF parameter ranges and the redshifts it was trained on.
+I'm using the middle of each parameter range as the "median" point: κ_w=3.0, e_w=0.6, M_seed=1.3, v_kin=0.65, ε_kin=0.61, ω_m=0.1375, σ_8=0.8.
+I ran GSMF predictions at z = 0.5 and z = 1.0 and plotted them together in Figure 3. The tools gave back file paths and a plot but no numbers, so I haven't checked any specific values. The physical description below is what this kind of simulation normally shows, not something I measured here.
+
+**Setup**
+- **Redshifts:** z = 0.5 and z = 1.0. Both match snapshots the emulator was trained on (0.4987 and 0.9996), so no interpolation between snapshots was needed.
+- **"Median" parameters:** I used the middle of each design range: κ_w = 3.0, e_w = 0.6, M_seed = 1.3 (×10⁶ M_sun), v_kin = 0.65 (×10⁴ km/s), ε_kin = 0.61 (×10¹), ω_m = 0.1375, σ_8 = 0.8.
+- **Validity:** every value is inside the design ranges of the 110-simulation, 400 Mpc/h design, and no extrapolation warnings came back.
+- **Output:** 16 stellar-mass bins, in M_sun on the x-axis. Each CSV has the predicted mean (`y_mean`) and its uncertainty (`y_std`).
+- **Figure 3:** the top panel shows both curves. The bottom panel shows z = 0.5 divided by z = 1.0.
+
+**What to look for in Figure 3**
+1. **Low-mass end (about 10⁹–10¹⁰ M_sun), the star-forming regime.** Expect modest growth from z = 1 to 0.5, with a ratio a bit above 1. Supernova and stellar winds regulate these galaxies, and they keep forming stars and gaining mass. Because they move up in mass while new ones form below, the number at a fixed mass changes only gently.
+2. **Around the knee (about 10¹⁰·⁵–10¹¹ M_sun), where quenching sets in.** This is roughly where AGN feedback starts to dominate. Expect the clearest growth here: galaxies built up the most mass at z ≳ 1, then slow down as their black holes begin quenching them.
+3. **High-mass end (≳ 10¹¹ M_sun), the quenched regime.** Expect the exponential tail to get a little fuller and reach higher masses by z = 0.5. These galaxies have mostly stopped forming stars, so growth here comes mainly from mergers rather than new stars. How far the tail moves depends on how strong the AGN feedback is (κ_w, e_w, v_kin, ε_kin).
+
+**Physical picture**
+Between z = 1 and z = 0.5 (about 2.5 Gyr), the total stellar mass keeps building up, but cosmic star formation is already falling. The fact that the shape stays roughly the same while the curve rises is the usual sign of "downsizing": massive galaxies formed early and are now quenched, while lower-mass galaxies are still forming stars. The ratio panel shows where in mass that growth happens.
+
+**Caveats**
+- I haven't checked the values against observations, and I haven't compared how big the change is with the uncertainty band (`y_std`). Figure 3 shows whether the two curves differ by more than the uncertainty in each mass range.
+- With median parameters, the result tells you nothing about how sensitive it is to feedback. Changing κ_w or ε_kin at fixed z would separate the AGN-quenching effects from the effects of time.
+
+Files are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261023_083416/`:
+- GSMF_z0.5000_prediction.csv
+- GSMF_z1.0000_prediction.csv
+- GSMF_comparison.png
+
+[Tool ledger]
+- describe_parameters(GSMF): 7 params, ranges above; 110 sims, 400 Mpc/h.
+- list_observables: GSMF z snapshots 0–2.0036, 16 bins, x = stellar mass [M_sun].
+- predict_observable GSMF z=0.5 -> .../GSMF_z0.5000_prediction.csv (no warnings)
+- predict_observable GSMF z=1.0 -> .../GSMF_z1.0000_prediction.csv (no warnings)
+- plot_observable_comparison (ref = z=1.0) -> .../GSMF_comparison.png = Figure 3
+Loading MCP servers…
+[10/23/26 08:34:25] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 5 tools
+[tool] describe_parameters {"stat_name": "GSMF"}
+[10/23/26 08:34:30] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_parameters -> ok: {   "status": "success",   "message": "7-parameter design space for GSMF: kappa_w, e_w, M_seed, v_kin, epsilon_kin, omega_m, sigma_8.",   "files": [],   "metada
+[tool] list_observables {}
+[10/23/26 08:34:36] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] list_observables -> ok: {   "status": "success",   "message": "14 observables available: GSMF, HMF, fGas, Pk-ratio, CSFR, CGD, CGED, CPP, CTP, CEP, CEEP, CMP, CYP, Pk_GO.",   "files": 
+[tool] predict_observable {"stat_name": "GSMF", "z": 0.5, "kappa_w": 3.0, "e_w": 0.6, "m_seed": 1.3, "v_kin": 0.65, "eps_kin": 0.61, "omega_m": 0.1375, "sigma_8": 0.8, "output_dir": "/Users/nramachandra/hep-genesis-testing/pro
+[10/23/26 08:34:43] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_observable -> ok: {   "status": "success",   "message": "Predicted GSMF at z=0.5000 (16 bins).",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs
+[tool] predict_observable {"stat_name": "GSMF", "z": 1.0, "kappa_w": 3.0, "e_w": 0.6, "m_seed": 1.3, "v_kin": 0.65, "eps_kin": 0.61, "omega_m": 0.1375, "sigma_8": 0.8, "output_dir": "/Users/nramachandra/hep-genesis-testing/pro
+[10/23/26 08:34:44] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_observable -> ok: {   "status": "success",   "message": "Predicted GSMF at z=1.0000 (16 bins).",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs
+[tool] plot_observable_comparison {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261023_083416", "prediction_files": ["/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261023_083416/GSMF
+[10/23/26 08:34:47] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] plot_observable_comparison -> ok: {   "status": "success",   "message": "Plotted 2 GSMF predictions.",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-core/runs/261023_08
+Tokens: 36K in (25K cached) · 2.8K out · 4 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/hydro-1023.json

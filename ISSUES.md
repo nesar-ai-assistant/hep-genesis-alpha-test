@@ -620,3 +620,38 @@ AND the D8 harness fix (continue D7's chat) worked with no manual rerun.
   added to HEP-KE/hep-genesis-releases#11.
 - No new upstream-worthy bugs; #10 (budget) N/A — quick mode only.
 
+
+## 2026-10-23-am-core — 10 pass / 0 flagged
+
+Clean run — no flags. Fresh chats (suffix `-1023`, 8 chats rotated). No
+GH#2 banner noise (no arxiv_agent calls — quick mode only), no GH#11
+truncation hits, GH#10 N/A (quick mode).
+
+- **[local] inelastic-dm server: `consistent_planck` flag contradicts the
+  tension it ships next to.** Case 10 (multi-server) raw tool output:
+  `compute_relic_density(m_chi=1000 GeV, higgsino)` → Ωh² = 0.0898 with
+  `tension_sigma` = 25.1σ (Planck-only) yet `consistent_planck: true`.
+  Root cause is in our server, not the CLI:
+  `inelastic-dm-server/tools/cosmology.py:171` defines the flag as
+  `tension_with_theory_err < 2.0` where the theory error is a 15%
+  systematic (≈0.018) — the 0.0898 point is 1.67σ in that metric, so the
+  flag is True. Physics is defensible (semi-analytic freeze-out has
+  O(15-20%) systematics) but the name + adjacency invites the CLI agent
+  (and any consumer) to read "consistent with Planck" as a 25σ agreement.
+  The v0.3.18 agent correctly caught the contradiction and warned the
+  user — good model behaviour, confusing server semantics. Fix suggestion
+  (our repo): rename to `consistent_within_theory_err` or emit both
+  `consistent_planck` (Planck-only) and `consistent_theory`. Local issue
+  filed: nesar-ai-assistant/inelastic-dm-server#1.
+- Physics quality strong: case 05 asked for N_eff = 3.0, but the
+  sterile-nu server parameterizes extra radiation as ΔN_eff ≥ 0, so no
+  tool call can reach below the SM value 3.044 (fit itself is valid over
+  [2.044, 6.044]). The agent disclosed this, then estimated the point
+  from fit slopes (dYp/dN_eff = 0.01351, d(D/H×10⁵)/dN_eff = 0.3308) and
+  labelled it a linear extrapolation, not a tool evaluation — honest
+  method disclosure, no fabrication. Case 10: D/H = 2.443e-5 at
+  N_eff = 3.044 (PRyMordial fit) correctly identified as the SM BBN
+  prediction, not a sterile-neutrino result — an epistemically careful
+  distinction the model got right unprompted.
+- Times: all 10 cases 0.2–70s; total ~7 min wall clock.
+

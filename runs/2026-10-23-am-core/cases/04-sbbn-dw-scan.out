@@ -1,0 +1,61 @@
+The tool has no output called "production fraction." I used ΔN_eff as the fraction, because a keV sterile neutrino is still relativistic at BBN (the tool confirms this), so ΔN_eff is the sterile abundance as a fraction of one fully thermalised neutrino species. Both points are DW (non-resonant) runs of `predict_sterile_nu` in the keV warm-dark-matter regime, where the tool says its BBN treatment is valid.
+
+## Results
+
+| Quantity | m_s = 5 keV | m_s = 10 keV | Ratio (10/5) |
+|---|---|---|---|
+| Production fraction f = ΔN_eff | 0.01402 | 0.02440 | 1.741 |
+| N_eff total | 3.0580 | 3.0684 | — |
+| Ω_s h² | 0.7524 | 2.620 | 3.482 |
+| BBN Δχ² vs SM | −0.18 (allowed) | −0.30 (allowed) | — |
+| Radiative decay rate Γ_γ [s⁻¹] | 1.28×10⁻²⁷ | 4.08×10⁻²⁶ | 32.0 |
+| Free-streaming length λ_fs [kpc] | 215 | 107 | 0.50 |
+
+Both points make too much dark matter (Ω_s h² is far above 0.120), so this mixing is ruled out at both masses even though BBN allows it.
+
+## The mass scaling
+
+Doubling the mass multiplies f by 1.741, which is 2^0.80. It multiplies Ω_s h² by 3.482, which is 2^1.80. So:
+
+- **f ∝ m^0.8**
+- **Ω h² ∝ m · f ∝ m^1.8**
+
+Ω h² picks up one extra power of mass because relic density is mass times number density.
+
+This matches the known scaling for DW production, Ω h² ∝ sin²2θ · m^1.8 (Abazajian 2006, astro-ph/0511630; Asaka, Laine & Shaposhnikov 2007, hep-ph/0612182). The tool's overall size is somewhat higher than the commonly quoted Ω h² ≈ 0.1 (sin²2θ/3×10⁻⁹)(m/3 keV)^1.8, but the power of mass agrees.
+
+The scaling comes from the production physics:
+
+1. **Mixing is suppressed in the hot plasma.** Active neutrinos turn into sterile ones through collisions, at a rate of about Γ ≈ ½ sin²2θ_m · Γ_active, where Γ_active ∼ G_F² T⁵. The mixing angle inside the plasma is
+   sin²2θ_m ≈ sin²2θ · Δ² / [Δ² sin²2θ + (Δ cos2θ − V_T)²], with Δ = m²/2E.
+   The thermal potential V_T ∝ G_F² T⁴ E/M_W² grows quickly with temperature. At high T it swamps Δ and shuts off the mixing.
+
+2. **Production peaks at a temperature set by the mass.** Production is strongest where V_T ≈ Δ, which gives T_peak ≈ 133 MeV · (m/1 keV)^{1/3}. That is about 230 MeV for 5 keV and 290 MeV for 10 keV. A heavier sterile neutrino lets the mixing survive to higher temperature, so it is produced earlier.
+
+3. **The basic estimate gives f ∝ m.** The amount produced is set by the production rate over the Hubble rate at the peak, with H ∼ √g* T²/M_Pl. That gives f ∼ sin²2θ · G_F² T_peak³ M_Pl/√g*. Since T_peak³ ∝ m, f is linear in mass, which is the original Dodelson-Widrow result (hep-ph/9303287).
+
+4. **The QCD era reduces this to m^0.8.** For keV masses, T_peak falls at roughly 150–300 MeV, around the QCD transition. There the number of relativistic degrees of freedom g* rises steeply, and the scattering and potential terms change with the plasma's makeup. A heavier sterile neutrino peaks in a hotter, more crowded plasma, where its yield is diluted more. This weakens f ∝ m to about m^0.8, which is the exponent the tool returned.
+
+## Consistency checks from the same runs
+
+- The decay rate ratio of exactly 32 = 2⁵ matches Γ_γ ∝ sin²2θ · m⁵.
+- The free-streaming length halves when the mass doubles, consistent with λ_fs ∝ 1/m for warm dark matter.
+
+Using the m^1.8 scaling, the mixing that would give the observed abundance (Ω h² = 0.12) is about 4.8×10⁻¹⁰ at 5 keV and 1.4×10⁻¹⁰ at 10 keV. This is my own linear rescaling, not a tool output.
+
+[Tool ledger] predict_sterile_nu(5000 eV, 3e-9, DW): ΔN_eff=0.0140157, Ω h²=0.7524, Δχ²=−0.175, Γ=1.276e-27 s⁻¹, λ_fs=214.9 kpc. predict_sterile_nu(10000 eV, 3e-9, DW): ΔN_eff=0.0244028, Ω h²=2.62001, Δχ²=−0.296, Γ=4.083e-26 s⁻¹, λ_fs=107.5 kpc. No files written.
+Loading MCP servers…
+[10/23/26 08:31:52] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 10 tools
+[tool] predict_sterile_nu {"m_s_eV": 5000, "sin2_2theta": 3e-09, "mechanism": "DW"}
+[10/23/26 08:31:58] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 5e+03 eV, sin\u00b22\u03b8 = 3e-09\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+[tool] predict_sterile_nu {"m_s_eV": 10000, "sin2_2theta": 3e-09, "mechanism": "DW"}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] predict_sterile_nu -> ok: {   "status": "ok",   "files": [],   "message": "Sterile neutrino: m_s = 1e+04 eV, sin\u00b22\u03b8 = 3e-09\nMechanism: DW\n\n\u2500\u2500 What the sterile \u03
+Tokens: 14K in (5.9K cached) · 3.3K out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-core/chats/sbbn-1023.json
