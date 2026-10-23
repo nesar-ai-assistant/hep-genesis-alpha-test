@@ -655,3 +655,35 @@ truncation hits, GH#10 N/A (quick mode).
   distinction the model got right unprompted.
 - Times: all 10 cases 0.2–70s; total ~7 min wall clock.
 
+
+## 2026-10-23-midday-research — 2 pass / 0 flagged
+
+Clean run — no flags. Topic rotation landed on baryonic-pk (same as 10-17),
+so the board now accumulates two research runs (33 findings / 11 directions
+total; today's run 261023_110038-4455 added 11 findings across d-07..d-11).
+Report PDF + supplement + transcript generated (report-261023_111024); the
+known first-pass LaTeX failure auto-recovered again (local #29, third time).
+No GH#2 banner noise (0 JSONRPC parse errors — no arxiv_agent sub-agent
+calls this run).
+
+- **GH#10 reproduced: 67/60 tool calls (+7)** — worst observed yet (prior
+  band +1..+4 single-server). Amplifier: d-08 and d-10 each burned their
+  remaining budget on the GH#8 workaround (reading prediction CSVs via
+  read_arxiv_chunk char offsets; dead-end x-06 logged). Both directions
+  ended "blocked (budget)" but the wave-2 reopen logic worked as designed.
+  Comment posted to #10.
+- **GH#8 third occurrence** — load_table_data rejects hydroemu CSV header
+  row; agent workaround notable. Comment posted to #8.
+- **Physics quality: verified independently.** Spot-checked 3 computed
+  findings against a direct cosmohydro_emu run in the server venv:
+  f-033 (fiducial z=0/z=1: S(1.013)=0.9766/0.9848, S(3.71)=0.8924/0.9458)
+  and f-023 (k(1%)=0.59→0.60, k(5%)=2.11→2.13) reproduce to 3-4 decimals.
+  This is the first research run where the agent chained Pk-ratio + fGas
+  emulator predictions into a physics narrative (weak-AGN boost S>1 peak
+  ~1.011 at k~2.4 from cooled baryons in halos; suppression deepens toward
+  z=0 consistent with FLAMINGO literature findings f-002/f-019) — the
+  emulation + literature bracket reads coherently.
+- Agent honestly declared the Omega_b/Omega_m Elbers+2024 comparison
+  impossible (emulator has no baryon-fraction parameter) instead of forcing
+  it — good epistemic behaviour (f-024).
+
