@@ -1,0 +1,346 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Baryonic Suppression of the $z=0$ Matter Power Spectrum: HACC Emulator Predictions and Weak-Lensing Context}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-combo-baryonic-pk}
+\date{2026-10-23}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+We report a two-wave computational and literature study of baryonic suppression of the matter power spectrum. Predictions came from a HACC-based hydrodynamics emulator that returns $S(k)=P_{\rm hydro}(k)/P_{\rm grav}(k)$ and the cluster gas fraction $f_{\rm gas}(M_{500c})$ over a seven-parameter design space: five AGN and black-hole parameters plus $\omega_m$ and $\sigma_8$. Nine $z=0$ feedback points were sampled, all at fixed cosmology $\omega_m=0.14$, $\sigma_8=0.8$.
+
+At the centre of the design range, the suppression $1-S$ is $2.2\%$ at $k\simeq1\,h\,{\rm Mpc}^{-1}$ and $8.0\%$ at $k\simeq3\,h\,{\rm Mpc}^{-1}$. The most suppressed point sampled ($\kappa_w=2$, $e_w=1$, $M_{\rm seed}=0.6$, maximal kinetic feedback) gives $4.4\pm0.3\%$ and $14.8\pm0.9\%$ at these scales. Setting the kinetic-feedback parameters to their minimum removes the suppression almost entirely up to $k=3.7\,h\,{\rm Mpc}^{-1}$. The emulator $k$-grid ends at $\approx12.6\,h\,{\rm Mpc}^{-1}$. For the strong-AGN point, $S(k)$ flattens to $\approx0.789$ at $k\approx11.6$--$12.6\,h\,{\rm Mpc}^{-1}$, so no high-$k$ upturn is resolved. For one extreme point the suppression at $k\simeq3\,h\,{\rm Mpc}^{-1}$ falls from $13.0\%$ at $z=0$ to $7.0\%$ at $z=1$.
+
+No sampled point reaches the eROSITA+kSZ preference of $10\pm2\%$ at $k=1\,h\,{\rm Mpc}^{-1}$. All are consistent with HSC-XXL ($5\pm4\%$); the significances quoted are contested. Gas fractions at $M_{500c}=1.26\times10^{14}\,h^{-1}M_\odot$ do not separate the fiducial and strong-AGN points, although their $S(k)$ differ.
+
+From the literature read in the session:
+\begin{itemize}
+\item Reconciling DES Y3 cosmic shear with Planck requires $A_{\rm mod}=0.858\pm0.052$. The corresponding KiDS-1000 value is $A_{\rm mod}\approx0.69$.
+\item FLAMINGO finds that baryons are unlikely to drive the $S_8$ tension.
+\item A theoretical-error covariance strongly reduces baryon-induced $\Omega_m$ biases in a Euclid-like forecast.
+\end{itemize}
+No lensing observable was computed.
+\end{abstract}
+
+\section{Introduction}
+The user asked for four things: a survey of recent work on baryonic suppression of the matter power spectrum; predictions from the available hydrodynamics emulator of the $z=0$ power-spectrum ratio at a few parameter points; an explanation of the AGN-feedback physics behind the suppression; and an assessment of the impact on weak-lensing cosmology. The same request was issued twice. The second issue started a second research wave aimed at the gaps left by the first. These gaps were:
+\begin{itemize}
+\item the unresolved high-$k$ behaviour of the emulator curves;
+\item the maximum suppression reachable within the design range;
+\item redshift evolution;
+\item the gas-fraction--suppression link;
+\item several literature numbers, notably the DES Y3 suppression amplitude and the depth of the FLAMINGO $z=0$ minimum.
+\end{itemize}
+
+The scope is a power-spectrum-level study at fixed cosmology. No shear power spectrum $C_\ell$, correlation function $\xi_\pm$, or $S_8$ forecast was computed. The weak-lensing assessment therefore rests on published results.
+
+\section{Methods}
+\paragraph{Emulator.} All emulator calls ran locally (dispatch: local execution) through the \texttt{serve-hydro.sh} server. Its tools were \texttt{list\_observables}, \texttt{describe\_parameters}, \texttt{predict\_observable}, \texttt{plot\_prediction} and \texttt{plot\_observable\_comparison}.
+
+The server exposes 14 observables. Two were used:
+\begin{itemize}
+\item \texttt{Pk-ratio}: $S(k)=P_{\rm hydro}(k)/P_{\rm grav}(k)$ on 799 $k$-bins in $h\,{\rm Mpc}^{-1}$, trained at $z=0,0.1,0.5,1.0,2.0$.
+\item \texttt{fGas}: $M_{\rm gas}/M_{500c}$ within $R_{500c}$ in three bins, $M_{500c}=5.01\times10^{13}$, $7.94\times10^{13}$ and $1.26\times10^{14}\,h^{-1}M_\odot$.
+\end{itemize}
+The reference spectrum is the emulator's gravity-only $P_{\rm grav}$. Whether it is equivalent to the dark-matter-only spectra used in the literature was not checked.
+
+The design ranges reported by \texttt{describe\_parameters} are listed below. The design is built from 110 simulations in $400\,h^{-1}$Mpc boxes.
+\begin{itemize}
+\item $\kappa_w\in[2,4]$: AGN wind coupling.
+\item $e_w\in[0.2,1.0]$: AGN energy efficiency or wind energy fraction.
+\item $M_{\rm seed}\in[0.6,2.0]$: black-hole seed mass, in units of $10^6M_\odot$.
+\item $v_{\rm kin}\in[0.1,1.2]$: kinetic feedback velocity, in units of $10^4$ km/s.
+\item $\epsilon_{\rm kin}\in[0.02,1.2]$: kinetic efficiency, in units of 10.
+\item $\omega_m=\Omega_mh^2\in[0.12,0.155]$.
+\item $\sigma_8\in[0.7,0.9]$.
+\end{itemize}
+
+Table~\ref{tab:points} lists the sampled points. All use $\omega_m=0.14$ and $\sigma_8=0.8$, so the cosmology axes were never varied. The ``fiducial'' point is the centre of the parameter ranges, not a calibrated model. We define the suppression as $1-S(k)$. The quoted uncertainties are the emulator's $1\sigma$ output.
+
+\begin{table}
+\centering
+\begin{tabular}{lccccc}
+\toprule
+Point & $\kappa_w$ & $e_w$ & $M_{\rm seed}$ & $v_{\rm kin}$ & $\epsilon_{\rm kin}$\\
+\midrule
+fiducial & 3 & 0.6 & 1.3 & 0.65 & 0.61\\
+strongAGN & 3 & 1.0 & 1.3 & 1.2 & 1.2\\
+weakAGN & 3 & 0.2 & 1.3 & 0.1 & 0.02\\
+$\kappa_w=2$ & 2 & 0.6 & 1.3 & 0.65 & 0.61\\
+$\kappa_w=4$ & 4 & 0.6 & 1.3 & 0.65 & 0.61\\
+$M_{\rm seed}=2$ & 3 & 0.6 & 2.0 & 0.65 & 0.61\\
+maxsupp & 2 & 1.0 & 2.0 & 1.2 & 1.2\\
+maxsupp\_lowkin & 2 & 1.0 & 2.0 & 0.1 & 0.02\\
+maxsupp\_lowM & 2 & 1.0 & 0.6 & 1.2 & 1.2\\
+\bottomrule
+\end{tabular}
+\caption{HACC parameter points sampled at $z=0$, all at $\omega_m=0.14$ and $\sigma_8=0.8$. The fiducial and maxsupp points were also run at $z=1$. \texttt{fGas} was run for the fiducial, strongAGN and weakAGN points.}
+\label{tab:points}
+\end{table}
+
+\paragraph{Reading the outputs.} The table loader \texttt{load\_table\_data} failed on every prediction CSV because it does not skip the header row (``could not convert string `x' to float64''). In the first wave, \texttt{read\_text\_file} was used instead, but it truncated each file near $k\approx3.7\,h\,{\rm Mpc}^{-1}$. In the second wave, offset reads with \texttt{read\_arxiv\_chunk} recovered the full files up to $k\approx12.6\,h\,{\rm Mpc}^{-1}$. Even so, not every file was read in full; the gaps are noted below.
+
+\paragraph{Literature.} Literature work used arXiv abstract search, metadata lookup, full-text download and chunked reading, and a \texttt{cite} tool that stored verbatim quotes in a bibliography file. An attempt to extract figures from arXiv:2410.17109 failed because no HTML rendering had extractable figures.
+
+\paragraph{Review.} Findings were posted to a research board and reviewed by a critic, which contested several of them. The supplement contains the full tool-call log and board.
+
+\section{Results}
+\subsection{Literature: AGN feedback physics of the suppression}
+The mechanism below is assembled from full texts that were read. The critic marked the overall synthesis as contested, so it should be read as the assistant's summary of those texts.
+\begin{itemize}
+\item Energy injected by AGN redistributes gas relative to the dark matter. This suppresses the non-linear matter power by tens of percent relative to dark-matter-only runs (arXiv:2512.02954).
+\item Below about 10 Mpc, AGN push baryons outward. On smaller scales, star formation concentrates baryons in halo centres (arXiv:2309.02920).
+\end{itemize}
+
+In FLAMINGO (arXiv:2410.17109; quoted and cited), the following hold:
+\begin{itemize}
+\item The response is stronger for lower group and cluster gas fractions, for collimated jets instead of thermal AGN feedback, and for lower stellar mass at fixed gas fraction.
+\item The response is converged only for volumes above $200^3$ Mpc$^3$.
+\item The fiducial minimum of $P/P_{\rm DMO}$ moves from $k=6$ at $z=2$ to $k=10\,h\,{\rm Mpc}^{-1}$ at $z=0$.
+\item The departure from unity begins at $k\sim1\,h\,{\rm Mpc}^{-1}$ at $z=2$ and at $k\sim0.1\,h\,{\rm Mpc}^{-1}$ at $z=0$.
+\item Across thermal-AGN variants from $f_{\rm gas}-10\sigma$ to $+4\sigma$, the $z=0$ minimum stays at $k=8$--$10\,h\,{\rm Mpc}^{-1}$. The $f_{\rm gas}$ parameter mainly changes the normalisation, and the response saturates below $f_{\rm gas}-8\sigma$, which is an emulator extrapolation. The jet model gives a stronger response at negative $f_{\rm gas}$ with a similar minimum position.
+\item The cosmology dependence is about $1\%$ at $k<10\,h\,{\rm Mpc}^{-1}$.
+\item The FLAMINGO emulator reaches all literature models except Illustris and cosmo-OWLS-AGN-$\Delta T$8.7. Its $f_{\rm gas}-8\sigma$ thermal and jet runs resemble cosmo-OWLS $\Delta T_{\rm AGN}=8.3$ and $8.5$.
+\end{itemize}
+The paper gives no number for the depth of the $z=0$ minimum; it appears only in its figures. That depth therefore stayed open.
+
+The first-wave survey summary described a 10--30\% minimum at $k\approx5$--$20\,h\,{\rm Mpc}^{-1}$ followed by an upturn. The assistant itself flagged this description as general knowledge not sourced from the papers (arXiv:1104.1174, arXiv:1906.00968).
+
+\paragraph{Observational benchmarks.} Siegel et al. (arXiv:2512.02954) analyse haloes with $13<\log_{10}M_{500}<14$ at $0<z<1$.
+\begin{itemize}
+\item Joint eROSITA X-ray gas fractions and SDSS/DESI+ACT kSZ profiles give a suppression of $10\pm2\%$ at $k=1\,h\,{\rm Mpc}^{-1}$.
+\item HSC-XXL gas fractions give $5\pm4\%$.
+\item Only the strong-feedback runs BAHAMAS 8.0 and FLAMINGO $f_{\rm gas}-8\sigma$ agree with the eROSITA+kSZ value.
+\item The simulations differ from each other by more than 10\% at $k=1\,h\,{\rm Mpc}^{-1}$.
+\end{itemize}
+
+Grandis et al. (arXiv:2309.02920) use clusters above $\sim3\times10^{13}M_\odot$.
+\begin{itemize}
+\item Their fiducial model gives a suppression of $0.042^{+0.012}_{-0.014}$ at $k=1$ and $0.184^{+0.026}_{-0.031}$ at $k=3\,h\,{\rm Mpc}^{-1}$.
+\item Their alternative model gives $0.049$ and $0.179$.
+\item At 97.5\% credibility the impact is below 1\% for $k<0.37\,h\,{\rm Mpc}^{-1}$.
+\end{itemize}
+
+These values carry different verification status in the two waves. In the first wave they were stored with verbatim quotes and supported. In the second wave the critic contested their restatements, because the downloaded full texts had not been re-read to confirm them.
+
+\subsection{Emulator: fiducial, strong and weak AGN points at $z=0$}
+Table~\ref{tab:three} gives $S(k)$ for the three first-wave points.
+
+\begin{table}
+\centering
+\begin{tabular}{lccc}
+\toprule
+$k$ [$h\,$Mpc$^{-1}$] & fiducial & strongAGN & weakAGN\\
+\midrule
+0.10 & 0.99968 & 0.99962 & 1.00009\\
+0.51 & 0.99197 & 0.99062 & 1.00096\\
+1.00 & $0.97832\pm0.00096$ & $0.97506\pm0.00175$ & $1.0023\pm0.0025$\\
+2.00 & $0.95104\pm0.00229$ & $0.94463\pm0.00405$ & 1.0089\\
+3.01 & $0.91968\pm0.00346$ & $0.91207\pm0.00596$ & 1.0074\\
+3.71 & 0.8979 & 0.8904 & $1.0012\pm0.0105$\\
+\bottomrule
+\end{tabular}
+\caption{HACC $S(k)=P_{\rm hydro}/P_{\rm grav}$ at $z=0$ for the first three points.}
+\label{tab:three}
+\end{table}
+
+At the fiducial point the suppression is $2.17\pm0.10\%$ at $k=1\,h\,{\rm Mpc}^{-1}$. At the strong point it is $2.5\%$. Moving the efficiency and kinetic parameters jointly to their maxima therefore deepens the suppression by only 0.3--0.8 percentage points over $k=1$--$3.7\,h\,{\rm Mpc}^{-1}$. The second-wave restatement of this comparison was contested by the critic.
+
+The weak point shows a slight enhancement rather than a suppression. It peaks at $\approx1.0097\pm0.0072$ near $k\approx2.4\,h\,{\rm Mpc}^{-1}$. This finding is contested: its claim that the whole design range spans only $-0.2\%$ to $+2.5\%$ at $k=1$ was later shown to be wrong by the extreme-corner runs.
+
+Figure~\ref{fig:8} overlays the three curves with the fiducial as reference. It shows the strong and fiducial curves close together, and the weak curve near unity, across the resolved range. Figure~\ref{fig:9} shows the fiducial prediction alone.
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Emulator: one-at-a-time sensitivity and extreme corners}
+The one-at-a-time runs at $z=0$ give the following suppressions at $k=0.997$, $3.007$ and $3.714\,h\,{\rm Mpc}^{-1}$:
+\begin{itemize}
+\item $\kappa_w=2$: $2.92(0.15)\%$, $10.93(0.54)\%$, $13.66(0.64)\%$.
+\item $\kappa_w=4$: $1.31(0.13)\%$, $4.95(0.46)\%$, $6.60(0.54)\%$.
+\item $M_{\rm seed}=2.0$: $2.42(0.14)\%$, $9.03(0.49)\%$, $11.40(0.57)\%$.
+\end{itemize}
+Lower wind coupling $\kappa_w$ therefore strengthens the suppression appreciably.
+
+The second wave sampled three corners, shown in Table~\ref{tab:corners}. At the combined extreme (maxsupp), the suppression is $3.6\pm0.2\%$ at $k=1$ and $13.0\pm0.7\%$ at $k=3\,h\,{\rm Mpc}^{-1}$. The curve keeps falling past $k=3.7$: $S=0.8284\pm0.0079$ at $k=4.00$, $0.7942\pm0.0089$ at $5.00$, $0.7680\pm0.0095$ at $6.0$, $0.7479\pm0.0100$ at $7.01$ and $0.7356$ at $7.84\,h\,{\rm Mpc}^{-1}$. Values at $k=0.2$--$0.3$ were not read for this point.
+
+Lowering the seed mass to $0.6$ (maxsupp\_lowM) deepens the suppression to $4.4\pm0.3\%$ and $14.8\pm0.9\%$. This is the strongest sampled point, but it is not shown to be the maximum over the design range.
+
+Setting $v_{\rm kin}$ and $\epsilon_{\rm kin}$ to their minima while keeping $\kappa_w=2$ and $e_w=1$ (maxsupp\_lowkin) leaves $S$ within $\approx1\%$ of unity up to $k=3.7\,h\,{\rm Mpc}^{-1}$. Within this emulator, the kinetic AGN channel therefore drives almost all of the suppression on these scales.
+
+\begin{table}
+\centering
+\begin{tabular}{lccc}
+\toprule
+$k$ [$h\,$Mpc$^{-1}$] & maxsupp & maxsupp\_lowM & maxsupp\_lowkin\\
+\midrule
+0.101 & $0.99944\pm0.00003$ & -- & --\\
+0.212 & -- & 0.9967 & 1.0002\\
+0.510 & $0.9868\pm0.0008$ & $0.9835\pm0.0011$ & $1.0004\pm0.0007$\\
+1.013 & $0.9638\pm0.0020$ & $0.9557\pm0.0029$ & $1.0006\pm0.0019$\\
+2.002 & $0.9179\pm0.0045$ & $0.9026\pm0.0064$ & $1.0033\pm0.0042$\\
+3.007 & $0.8698\pm0.0065$ & $0.8521\pm0.0094$ & $0.9972\pm0.0062$\\
+3.698 & $0.8400\pm0.0076$ & $0.8228\pm0.0109$ & $0.9883\pm0.0071$\\
+\bottomrule
+\end{tabular}
+\caption{HACC $S(k)$ at $z=0$ at the corners sampled in the second wave.}
+\label{tab:corners}
+\end{table}
+
+\subsection{Emulator: high-$k$ behaviour and redshift evolution}
+For the strong-AGN point, $S$ is $0.851$ at $k=5.25$, $0.8205$ at $7.01$, $0.7946$ (std $0.0098$) at $10.01$ and $0.7893$ at $12.55\,h\,{\rm Mpc}^{-1}$, the last tabulated bin. The curve flattens to a plateau of $\approx0.789$--$0.790$ for $k\approx11.6$--$12.6$ and is still decreasing by less than $0.001$ per $0.1\,h\,{\rm Mpc}^{-1}$ at the grid edge. The minimum thus sits at or just beyond $k_{\rm max}\approx12.6\,h\,{\rm Mpc}^{-1}$, with a depth of about $21\%$. No upturn lies inside the grid.
+
+For the maxsupp point, $S(k)$ rises from $z=0$ to $z=1$ at every $k$ read:
+\begin{itemize}
+\item $k=1.013$: from $0.9638\pm0.0020$ to $0.9781\pm0.0018$, so the suppression falls from $3.6\%$ to $2.2\%$.
+\item $k=3.007$: from $0.8698\pm0.0065$ to $0.9299\pm0.0055$, so from $13.0\%$ to $7.0\%$.
+\item $k=3.70$: from $0.8400\pm0.0076$ to $0.9214\pm0.0064$, so from $16.0\%$ to $7.9\%$.
+\end{itemize}
+The response therefore grows as $z$ falls, which agrees qualitatively with FLAMINGO. The minimum lies beyond the range read at both redshifts, so its shift could not be measured. The fiducial $z=1$ file was written but not read.
+
+Figure~\ref{fig:28} shows these $z=0$ and $z=1$ curves for the fiducial and maxsupp points, relative to the fiducial at $z=0$. A planned companion plot of the $z=0$ corner variants was overwritten by this one because the plotting tool writes a fixed filename.
+
+
+
+
+
+
+\subsection{Emulator: gas fraction versus suppression}
+In the $M_{500c}=1.26\times10^{14}\,h^{-1}M_\odot$ bin, $f_{\rm gas}$ is:
+\begin{itemize}
+\item fiducial: $0.1214\pm0.0010$;
+\item strongAGN: $0.1221\pm0.0019$;
+\item weakAGN: $0.1414\pm0.0023$.
+\end{itemize}
+At $7.94\times10^{13}$ the values are $0.1090$, $0.1098$ and $0.1375$.
+
+The fiducial and strong points have $f_{\rm gas}$ that agree within errors, with strongAGN nominally higher, yet strongAGN is 0.3--0.8 points more suppressed. This pair shows no resolvable van Daalen-type relation, and its nominal trend runs the wrong way. The comparison is confounded, because $e_w$ changes together with the kinetic parameters. The critic marked this result as contested. The weak point combines a much higher $f_{\rm gas}$ with the near-unity $S(k)$ of Table~\ref{tab:three}, but the board did not complete the formal three-point pairing.
+
+\subsection{Comparison with calibrated suppression amplitudes}
+In the first wave, the largest sampled $k=1$ suppression ($2.92\pm0.15\%$ at $\kappa_w=2$) was within $\approx0.5\sigma$ of HSC-XXL. It fell short of eROSITA+kSZ by $\approx3.5\sigma$. At $k=3$, the largest sampled value ($10.9\pm0.5\%$) was $\approx2.4\sigma$ below Grandis et al.
+
+An earlier first-wave statement put the HACC values a factor $2.1$--$2.3$ (about $3.1$--$3.4\sigma$) low at $k=3$. That statement was contested. In the second wave, emulator and published errors were combined in quadrature for the maxsupp point, giving:
+\begin{itemize}
+\item $0.4\sigma$ against Grandis et al. at $k=1$;
+\item $1.7\sigma$ against Grandis et al. at $k=3$;
+\item $3.2\sigma$ against eROSITA+kSZ;
+\item $0.35\sigma$ against HSC-XXL.
+\end{itemize}
+This calculation replaced earlier emulator-error-only figures of about 3 and $8\sigma$. It is itself contested. For maxsupp\_lowM, the assistant's report quotes a shortfall of about $2.8$--$3.2\sigma$ against eROSITA+kSZ.
+
+\subsection{Weak-lensing impact (literature)}
+\paragraph{KiDS-1000.} Amon \& Efstathiou (arXiv:2206.11794) find that KiDS-1000 shear ($S_8=0.759^{+0.024}_{-0.021}$) is consistent with Planck $\Lambda$CDM if the non-linear power is suppressed through $P_m=P_L+A_{\rm mod}(P_{\rm NL}-P_L)$ with $A_{\rm mod}\approx0.69$. The suppression must extend to $k\sim0.2\,h\,{\rm Mpc}^{-1}$, outside the BAHAMAS range. A later correction on the board notes that this is a sufficient route, not shown to be the only one.
+
+\paragraph{DES Y3.} Preston, Amon \& Efstathiou (arXiv:2305.09827, Eq.~3) give $A_{\rm mod}=0.858\pm0.052$ for DES Y3, with no scale cuts and a Planck prior on $S_8$ and $\Omega_m$. This is weaker than the KiDS value but ``still more extreme than predictions from recent numerical simulations''. Without $A_{\rm mod}$, DES Y3 $S_8$ lies $0.9\sigma$ (variant 3) to $1.8\sigma$ (variant 4) below Planck $S_8=0.828\pm0.016$. The authors note that the suppression need not be baryonic.
+
+\paragraph{FLAMINGO.} FLAMINGO (arXiv:2309.07959) finds it ``unlikely that baryon physics is driving this modification''. Grandis et al. likewise question whether feedback drives the shear--CMB discrepancy.
+
+\paragraph{Mitigation by gas-calibrated priors.} In an LSST-Y1-like mock, Siegel et al. find that ignoring baryons biases $S_8$ significantly; the bias is shown only graphically. An uninformed baryonification model removes the bias but roughly doubles the $S_8$ uncertainty. A kSZ+eROSITA-calibrated prior recovers about half the lost precision.
+
+\paragraph{Mitigation by theoretical-error covariance.} Maraio, Hall \& Taylor (arXiv:2410.12500) replace scale cuts with a theoretical-error covariance on $P(k)$. Their Table~3 uses an idealised Euclid-like survey with $\ell_{\rm max}=5000$; the critic contested this extraction. The values are:
+\begin{itemize}
+\item Illustris as truth, one-parameter HMCode model, no theory error: $100\,\Delta\Omega_m=-1.317$ ($-5.69\sigma$).
+\item The same case with the theory error added: $0.128$ ($0.249\sigma$).
+\item BAHAMAS as truth with the one-parameter model: $0.057$ ($0.258\sigma$).
+\item EAGLE with the six-parameter model, theory error included: $0.573$ ($1.459\sigma$).
+\end{itemize}
+No numerical $S_8$ shift was extracted from this paper.
+
+\paragraph{Emulator versus required suppression.} At its sampled points the HACC emulator gives sub-percent suppression at $k\le0.5\,h\,{\rm Mpc}^{-1}$, with $S=0.9967$ at $k=0.212$ for maxsupp\_lowM. The assistant concluded that this is far below the $A_{\rm mod}$-type suppression that must reach $k\sim0.2\,h\,{\rm Mpc}^{-1}$. This comparison is approximate and contested, and no $A_{\rm mod}$-equivalent $S(k)$ was computed.
+
+\section{Discussion}
+\paragraph{What the emulator says about the physics.} Within the HACC design, the suppression is controlled mainly by the kinetic AGN channel ($v_{\rm kin}$, $\epsilon_{\rm kin}$). It is modulated by the wind coupling $\kappa_w$, where lower values give more suppression, and by the seed mass. The dependence on seed mass is not monotonic in an obvious way: $M_{\rm seed}=2$ deepens the suppression relative to the fiducial in the one-at-a-time test, yet $M_{\rm seed}=0.6$ gives the deepest corner. This qualitative picture, feedback-driven suppression growing toward low redshift, matches the FLAMINGO description.
+
+\paragraph{Tension with gas-fraction trends.} The fiducial and strong points have the same group-scale $f_{\rm gas}$ but different $S(k)$. This sits uneasily with the literature view that suppression tracks halo gas fractions. The test used only two points, a single radius ($R_{500c}$) and mass bins below $1.3\times10^{14}\,h^{-1}M_\odot$, and the parameter changes were confounded. It is therefore not evidence against the relation.
+
+\paragraph{Amplitude comparison.} The emulator's sampled amplitudes are compatible with HSC-XXL and, at $k=1$, with Grandis et al. They fall short of the eROSITA+kSZ preference and of the strong suppression invoked to reconcile shear with Planck. A three-to-nine-point corner search cannot establish the emulator's true maximum, as the critic stressed.
+
+\paragraph{Limitations and failures.}
+\begin{itemize}
+\item \textbf{Fixed cosmology.} Cosmology was never varied.
+\item \textbf{Reference spectrum.} The equivalence of $P_{\rm grav}$ with $P_{\rm DMO}$ was not checked.
+\item \textbf{$k$-range.} The grid ends at $\approx12.6\,h\,{\rm Mpc}^{-1}$, so the minimum and the high-$k$ upturn are not resolved for any point. For most points the curves were only read to $k\approx3.7$ or $7.8$.
+\item \textbf{Tool failures.} \texttt{load\_table\_data} failed on all CSVs. \texttt{read\_text\_file} truncated them. Figure extraction from arXiv:2410.17109 failed, so the FLAMINGO minimum depth stayed open. A comparison plot was overwritten.
+\item \textbf{Unread files.} Several written outputs were never read: fiducial at $z=1$, and maxsupp at $k=0.2$--$0.3$.
+\item \textbf{Unverified quotes.} The second-wave full texts of arXiv:2512.02954, arXiv:2309.02920 and arXiv:2410.17109 were downloaded but not read for verbatim confirmation.
+\item \textbf{Survey preamble.} The automated survey text at the start of each wave stated, incorrectly, that no emulator tool was available. Emulator calls were in fact run throughout. Its unsourced shape description should not be read as a finding.
+\end{itemize}
+
+\section{Conclusions}
+The session established the following HACC emulator results, all at $\omega_m=0.14$ and $\sigma_8=0.8$:
+\begin{itemize}
+\item The design-centre point gives $2.2\%$ suppression at $k=1$ and $8.0\%$ at $k=3\,h\,{\rm Mpc}^{-1}$ at $z=0$.
+\item The strongest sampled point gives $4.4\pm0.3\%$ and $14.8\pm0.9\%$.
+\item Kinetic AGN feedback is responsible for nearly all of the suppression up to $k=3.7\,h\,{\rm Mpc}^{-1}$.
+\item The strong-AGN curve flattens at $S\approx0.789$ near the grid edge ($k\approx12.6\,h\,{\rm Mpc}^{-1}$) without a resolved upturn.
+\item Suppression roughly halves between $z=0$ and $z=1$ at $k\simeq3\,h\,{\rm Mpc}^{-1}$ for the extreme point.
+\end{itemize}
+
+From the literature, we sourced:
+\begin{itemize}
+\item the DES Y3 requirement $A_{\rm mod}=0.858\pm0.052$, against KiDS $A_{\rm mod}\approx0.69$;
+\item the FLAMINGO minimum location of $k=8$--$10\,h\,{\rm Mpc}^{-1}$ at $z=0$;
+\item the FLAMINGO conclusion that baryons are unlikely to drive the $S_8$ tension;
+\item a Euclid-like $\Omega_m$ bias of $-5.7\sigma$ that is reduced to $0.25\sigma$ by a theoretical-error covariance (contested extraction).
+\end{itemize}
+
+The board did not rank its remaining open items. In the order they were raised, they are:
+\begin{enumerate}
+\item Verify verbatim the $10\pm2\%$, $5\pm4\%$, $0.042$ and $0.184$ values from the downloaded full texts, and quote the depth of the FLAMINGO $z=0$ minimum and its $S(k=1)$.
+\item Make the weak-lensing impact quantitative: obtain a numerical $S_8$ bias with its survey configuration, and compare the HACC $S(k)$ at $k=0.2$--$0.5$ with the $A_{\rm mod}$ requirement.
+\item Complete the three-point $f_{\rm gas}$--suppression test including the weak-AGN point.
+\item Read the fiducial $z=1$ prediction.
+\item Establish whether low $M_{\rm seed}$ combined with $\kappa_w=2$ and maximal kinetic feedback is the true design-range maximum.
+\end{enumerate}
+
+\section*{References}
+\begin{itemize}
+\item arXiv:2410.17109 --- The FLAMINGO project: Baryon effects on the matter power spectrum. M.~Schaller, J.~Schaye, R.~Kugel, J.~C.~Broxterman, M.~P.~van Daalen.
+\item arXiv:2309.07959 --- The FLAMINGO project: revisiting the $S_8$ tension and the role of baryonic physics. I.~G.~McCarthy, J.~Salcido, J.~Schaye, et al.
+\item arXiv:2206.11794 --- A non-linear solution to the $S_8$ tension? A.~Amon, G.~Efstathiou.
+\item arXiv:2305.09827 --- A non-linear solution to the $S_8$ tension II: Analysis of DES Year 3 cosmic shear. C.~Preston, A.~Amon, G.~Efstathiou.
+\item arXiv:2512.02954 --- The suppression of the matter power spectrum: strong feedback from X-ray gas mass fractions, kSZ effect profiles, and galaxy-galaxy lensing. J.~Siegel, L.~Bigwood, A.~Amon, et al.
+\item arXiv:2309.02920 --- Determining the Baryon Impact on the Matter Power Spectrum with Galaxy Clusters. S.~Grandis, G.~Aric\`o, A.~Schneider, L.~Linke.
+\item arXiv:2410.12500 --- Mitigating baryon feedback bias in cosmic shear through a theoretical error covariance in the matter power spectrum. A.~Maraio, A.~Hall, A.~Taylor.
+\item arXiv:1104.1174 --- The effects of galaxy formation on the matter power spectrum: A challenge for precision cosmology.
+\item arXiv:1906.00968 --- Exploring the effects of galaxy formation on matter clustering through a library of simulation power spectra.
+\end{itemize}
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/ramp-combo-baryonic-pk}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}ramp-combo-baryonic-pk}}.
+The session produced 27 data files; the supplement lists them.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}

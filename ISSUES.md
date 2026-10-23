@@ -363,24 +363,37 @@ Judge heuristic can't see this (rc=0, substantive output → PASS).
 - Follow-up 2026-10-21: chat names still fixed; am-core 10-21 cases again
   replayed prior results. Rotate before the next core battery.
 
-### 29. `--report`: first-pass LaTeX compile failure, silently auto-recovered — first occurrence in 10+ report runs **[local observation, app quality]** — open
+### 29. `--report`: first-pass LaTeX compile failure, silently auto-recovered — seen in 7 of 18 report runs (~39%) **[local observation, app quality]** — open
 
 - Seen 2026-10-21 pm-combo (v0.3.18). C2 report build printed
   `LaTeX failed to compile — asking the report model to fix its markup…`
   then compiled successfully on retry. All three PDFs valid (report 10 pp /
   3,850 words, supplement, transcript).
-- Not seen in any prior report run (2026-10-16..10-21 midday, all clean
-  first-pass compiles), so first-pass failures are rare but the recovery
-  path works. No reproducible trigger; noting for pattern tracking.
-  Not filed upstream (single occurrence, auto-recovered).
+- **CORRECTION 2026-10-23 (pm-combo): the "first occurrence" claim above was
+  wrong.** Re-grepping all `runs/*/cases/*report*.out` shows the failure in
+  2026-10-16-midday, 2026-10-17-midday and 2026-10-20-midday as well —
+  identical `Compiling PDF… / LaTeX failed to compile… / Compiling the
+  supplement and the transcript…` sequence. The earlier note's "not seen in
+  any prior report run" was a record-keeping miss, not reality.
+- **Actual pattern as of 2026-10-23: 7 of 18 report runs (~39%) hit a
+  first-pass LaTeX compile failure; every one auto-recovered on the report
+  model's retry and produced three valid PDFs.** Occurrences: 10-16-midday,
+  10-17-midday, 10-20-midday, 10-21-pm-combo, 10-22-pm-combo,
+  10-23-midday-research, 10-23-pm-combo (today: report 10 pp / supplement
+  59 pp / transcript 39 pp, all valid after retry).
+- **Filed upstream 2026-10-23 as HEP-KE/hep-genesis-releases#13** after the
+  re-grep revealed the real frequency (7/18, ~39%) — the systematic-rate
+  evidence plus the invisible-failure-cause problem (first-pass report.log
+  is overwritten by the retry) justified it. Recovery path works every
+  time; ask is: retain failure artifacts + deterministic .tex sanitizer
+  pass. All 7 occurrence logs offered to upstream.
 - **Second occurrence 2026-10-22 pm-combo** (v0.3.18, C2 for the higgsino-dd
   combo run): same `LaTeX failed to compile — asking the report model to fix
   its markup…` → successful retry. All three PDFs valid (report 307 KB,
   supplement 950 KB, transcript 352 KB; 4 figures). Two occurrences in two
   consecutive pm-combo runs, both on long multi-figure research boards —
   still auto-recovered both times, but the pattern is now real, not a
-  one-off. Watch for a third; if it recurs, worth filing upstream as a
-  report-model robustness issue.
+  one-off.
 
  ---
 
@@ -686,4 +699,38 @@ calls this run).
 - Agent honestly declared the Omega_b/Omega_m Elbers+2024 comparison
   impossible (emulator has no baryon-fraction parameter) instead of forcing
   it — good epistemic behaviour (f-024).
+
+
+## 2026-10-23-pm-combo — 3 pass / 0 flagged
+
+Clean run — no flags. Topic (rotation): baryonic suppression of the matter
+power spectrum — HACC emulator S(k) predictions vs published feedback
+levels (eROSITA+kSZ, HSC-XXL, Grandis), 4 servers (SBBN+IDM+HYD+DOM, 52
+tools/5 server-instances incl. arxiv), 2 waves, 3 workers.
+
+Notables:
+- **GH#10 (budget overrun) reproduced**: 53 calls vs `--max-tool-calls 50`
+  (+3). First combo-profile occurrence (midday research runs showed +7).
+  Two wave-2 directions (d-12, d-13) were blocked mid-direction when the
+  budget ran out — run stopped cleanly on the 2/2-wave limit regardless.
+- **GH#2 (arxiv banner) did NOT reproduce**: 0 JSONRPC parse errors despite
+  18 `read_arxiv_chunk` + 7 `download_arxiv_full_text` calls this run
+  (Oct 22 combo run had 1,663). No banner text in transcript.
+- **#29 (LaTeX first-pass failure) recurred — and the #29 record was wrong**:
+  re-grep found the failure also in 10-16/10-17/10-20 midday runs, so it's
+  7 of 18 report runs (~39%), not "first seen 10-21". #29 entry corrected
+  and **filed upstream as GH#13**. Today: auto-recovered, report 10 pp /
+  supplement 59 pp / transcript 39 pp, all valid.
+- **4-server orchestration worked well**: 48 model calls total routed
+  cleanly across servers — hydro emulator (9× predict_observable for
+  Pk-ratio/fGas at fiducial + 5 extreme-corner points, 2× comparison
+  plots), SBBN (list_sterile_nu_skills), DOM (get_dispatch, list_datasets,
+  list_input_files/agent_files), arxiv survey (10× search, 7× download, 18×
+  read chunks). No cross-server confusion; each direction picked the right
+  server for its sub-question.
+- Report flags contested findings honestly ("the significances quoted are
+  contested", wave-2 restatements marked unverified vs wave-1 verbatim
+  quotes) — the critic-wave mechanism is doing its job.
+- Tokens: 1.5M in (1.1M cached) / 85K out for the research case.
+
 

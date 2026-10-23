@@ -1,0 +1,1591 @@
+Title: Mitigating baryon feedback bias in cosmic shear through a theoretical error covariance in the matter power spectrum
+Authors: Alessandro Maraio, Alex Hall, Andy Taylor
+Year: 2024
+arXiv ID: 2410.12500
+
+============================================================
+
+--- Page 1 ---
+MNRAS000, 1–15 (2024) Preprint 17 October 2024 Compiled using MNRAS L ATEX style file v3.0
+Mitigating baryon feedback bias in cosmic shear through a theoretical
+error covariance in the matter power spectrum
+Alessandro Maraio★, Alex Hall, Andy Taylor
+Institute for Astronomy, University of Edinburgh, Royal Observatory, Blackford Hill, Edinburgh EH9 3HJ, UK
+Last updated 16 October 2024
+ABSTRACT
+Forthcoming cosmic shear surveys will make precise measurements of the matter density field down to very small scales,
+scales which are dominated by baryon feedback. The modelling of baryon feedback is crucial to ensure unbiased cosmological
+parameter constraints; the most efficient approach is to use analytic models, but these are limited by how well they can capture
+the physics of baryon feedback. We investigate the fitting and residual errors of various baryon feedback models to a suite of
+hydrodynamicsimulations,andpropagatethesetocosmologicalparameterconstraintsforcosmicshear.Wepresentanalternative
+formalism to binary scale-cuts through the use of a theoretical error covariance, which is a well-motivated alternative using
+errors in the power spectrum modelling itself. We depart from previous works by modelling baryonic feedback errors directly
+in the matter power spectrum, which is the natural basis to do so and thus preserves information in the lensing kernels. When
+including angular multipoles up toℓmax= 5000, and assumingEuclid-like survey properties, we find that even multi-parameter
+models of baryon feedback can introduce significant levels of bias. In contrast, our theoretical error reduces the bias inΩm and
+𝑆8 to acceptable levels, with only a modest increase in parameter variances. The theoretical error approach bypasses the need
+to directly determine the per-binℓmax values, as it naturally suppresses the biassing small-scale information. We also present a
+detailed study of how flexibleHMCode-2020, a widely-used non-linear and baryonic feedback model, is at fitting a range of
+hydrodynamical simulations.
+Key words:gravitational lensing: weak — large-scale structure of Universe — methods: statistical
+1 INTRODUCTION
+Cosmic shear is the coherent distortion in the apparent shapes of
+galaxies due to the matter distribution of the large-scale structure
+of the universe (Bartelmann & Schneider 2001; Bartelmann 2010;
+Kilbinger 2015). These distortions are sensitive to the total mat-
+ter inhomogeneities along the line-of-sight, and thus are a powerful
+probe of the non-luminous dark matter, which ordinarily cannot be
+directly observed using telescopes. Cosmic shear is also sensitive to
+the detailed physics of baryons, particularly on small scales, within
+the Universe. By making accurate measurements, along with ro-
+bust theoretical modelling, cosmic shear is able to provide detailed
+knowledge about the physics and geometry of the universe.
+Cosmic shear surveys have already placed tight constraints on the
+fundamental physics and properties of our universe, especially on
+the growth of structure parameter𝑆8, defined as𝑆8≡𝜎8
+√︁
+Ωm/0.3.
+The results from existing surveys have been well-studied, with data
+coming from the Kilo-Degree Survey (KiDS-1000) (Heymans et al.
+2021; Asgari et al. 2021; Li et al. 2023b), the Dark Energy Survey
+(DES-Y3) (Abbott et al. 2022; Amon et al. 2022; Secco et al. 2022;
+Doux et al. 2022), and Hyper Suprime-Cam (HSC-Y3) (Li et al.
+2023a; Dalal et al. 2023).
+Over the next decade, an unprecedented amount of high-quality
+cosmic sheardata will bereleased. This willcome fromthe recently
+★ Contact e-mail: maraio@roe.ac.uk
+launched Euclid space telescope (Laureĳs et al. 2011; Mellier et al.
+2024), the Legacy Survey of Space and Time (LSST) at theRubin
+observatory (Abate et al. 2012), and theRoman space telescope
+(Spergel et al. 2015). Since the quality and quantity of cosmic shear
+data that is expected to be produced is so vast, the accuracy of the
+theoretical modelling is required to be as equally precise.
+While the majority of the matter in the universe is dark matter,
+whichonlyinteractsgravitationally,thebaryonsintheuniverse,while
+appearing to be lighter in total mass, have an equally large affect on
+the dynamics of the universe – particularly on small scales. Baryons
+are responsible for the heating and cooling of gas, the creation and
+demise of stars, and play an important part in the feedback from
+Active Galactic Nuclei (AGN), which can have considerable impact
+onthematterpowerspectrumoverawiderangeofscales(vanDaalen
+et al. 2011).
+The modelling of baryon feedback and its effects on cosmic shear
+cosmologyhasbeendiscussedextensivelyintheliterature,withvery
+manydifferentmethodsandimplementationsproposedtomitigateits
+effects.TheseincludeSchneider&Teyssier(2015),Giri&Schneider
+(2021),Aricòetal.(2021),Huangetal.(2019),Salcidoetal.(2023)
+and Mead et al. (2020), among many others. Cosmic shear is a
+measurement in angular-space due to the necessity of using coarse
+photometric redshift estimates, and so this makes the measurements
+of cosmic shear sensitive to high-𝑘 wavenumbers throughout anyℓ
+values in the angular power spectrum. It is at high𝑘 where feedback
+effects become relevant.
+© 2024 The Authors
+arXiv:2410.12500v1  [astro-ph.CO]  16 Oct 2024
+
+--- Page 2 ---
+2 A. Maraio et al.
+Apopularapproachtomitigatingbaryoniceffectsincosmicshear
+analyses is to introduce scale-cuts into the data-vector. Here, phys-
+ically smaller scale elements in the data vector beyond a cut-off,
+either in real-space𝜃min or in Fourier-spaceℓmax, are completely
+discarded even if high signal-to-noise observations have been taken.
+These scale-cuts are often dependent on the redshift of the source
+galaxies, as for further away redshift bins the same physical scale is
+given by larger𝜃 or smallerℓ. One issue that arises with such scale-
+cuts is that it by definition is ahard cut on the data. For example, if
+it was chosen thatℓmax = 2000, thenℓ = 2000 would be included
+in an analysis whereas theℓ = 2001 mode would be excluded, even
+thoughthesemodeswillbehighlycoupledandhaveverysimilarthe-
+oretical uncertainties. The use of these binary scale cuts have been
+discussed heavily in previous cosmic shear results, most recently in
+the Dark Energy Survey’s Year 3 results (real-space) (Krause et al.
+2021;Abbottetal.2022),theKilo-DegreeSurveyfourthdatarelease
+(KiDS-1000, in real-space) (Li et al. 2023b), and Hyper Suprime-
+Cam’s Year 3 results (harmonic-space) (Dalal et al. 2023).
+Since the use and location of a hard scale cut could be considered
+somewhatunphysical,inthesensethatwehavetwoconsecutivedata
+pointsonewithlittleerrorandonewithinfiniteerror,weinvestigate
+andpresentresultsforanalternative:theuseofatheoreticalerrorco-
+variancewhichactsasasoftscalecutthatisinformedbyourinability
+tocorrectlymodelbaryonicfeedbackdowntoarbitrarilysmallscales.
+This has been explored in the literature previously, with the theory
+being originally presented in Baldauf et al. (2016), expanded upon
+inSprengeretal.(2019),andappliedtomockcosmicshearanalyses
+inMoreiraetal.(2021),amongothers(Pellejero-Ibanezetal.2023).
+Baryonicfeedbackeffectsdirectlyimpactthematterpowerspectrum,
+whichisthenintegratedovertoproduceeffectsinthelensingangular
+power spectrum. Thus, when we model our theoretical uncertainties
+coming from baryonic feedback, it is most natural to do so in the
+matter power spectrum and propagate these uncertainties to the an-
+gular power spectrum. Moreira et al. (2021) investigated theoretical
+uncertainties with respect to theangular power spectrum, and so
+we are revisiting this formalism but extending it to the underlying
+matter power spectrum. Since baryonic feedback contaminates only
+the matter power spectrum, not the lensing kernels associated with
+cosmic shear, isolating the errors associated with the matter power
+spectrum then propagating these to the angular power spectrum is a
+sensiblealternativeapproach.Thetheoreticaluncertaintiesapproach
+is similar to analytic marginalisation of small-scale physics, which
+also results in an additional term to the covariance matrix (Kitching
+& Taylor 2011).
+Thispaperisstructuredasfollows:inSection2weoutlinetheneed
+for analytic baryon feedback models and the use of hydrodynamical
+simulations, Section 3 discusses our methodology for constructing
+our theoretical error covariance, in Section 4 we present our results
+for cosmological parameter constraints using a selection of baryon
+feedback models, and Section 5 summarises our findings.
+2 MODELLING BARYONIC FEEDBACK IN THE MATTER
+POWER SPECTRUM
+Accurateevaluationsofthenon-lineardark-matter-onlymatterpower
+spectrum is of extreme importance to any cosmic shear analysis
+(Schneideretal.2016).Therearenumerouswaystoaccuratelyeval-
+uate this. For example, many models descend from the original halo
+model presented in the early 2000s (Seljak 2000; Peacock & Smith
+2000;Cooray&Sheth2002;Smithetal.2003):the HaloFitmodel
+presented in Takahashi et al. (2012), and HMCode models that
+originate with HMCode-2015 (Mead et al. 2015), thenHMCode-
+2016 (Mead et al. 2016), and most recentlyHMCode-2020 (Mead
+etal.2020).Allthesemodelsservetoprovideaccuratepredictionsfor
+thenon-lineardark-matter-onlymatterpowerspectrumasafunction
+of cosmological parameters.
+The most accurate way of modelling baryonic feedback physics
+is through full hydrodynamical cosmological simulations (hydro-
+sims) (van Daalen et al. 2011; Vogelsberger et al. 2020). There are
+many different hydro-sims within the literature, which mainly differ
+in their implementations of sub-grid physics. There are suggestions
+that these sub-grid physics differences are connected to the gas frac-
+tioningalaxygroupsandclusters(Salcido&McCarthy2024).These
+simulationsareextremelycomputationallyexpensiveduetotheneed
+for large volumes, to reduce cosmic variance and capture clustering
+oncosmologicalscales,andtheneedtomodelsmall-scalebehaviour,
+which directly impacts the larger-scale clustering. Thus, these simu-
+lations need sufficient resolution else the baryonic feedback physics
+whichwewishtocapturewillsimplybewashedoutonlargerscales
+andalsosufficientvolume.Thispresentsachallengingdynamicrange
+problem, hence the very many different simulations that implement
+these range of physics.
+Toisolatetheeffectofbaryonicphysicsonthematterpowerspec-
+trumwhencomparedtothedark-matter-onlynon-linearpowerspec-
+trum, we use the baryon response function,𝑅(𝑘,𝑧), defined as
+𝑅(𝑘,𝑧)≡ 𝑃Hy(𝑘,𝑧)
+𝑃DM(𝑘,𝑧), (1)
+which isolates the effects of baryon physics from the general non-
+linear spectrum, and is especially useful for reducing the effects
+of cosmic variance on the power spectrum when using hydro-
+simulations. This ratio is approximately insensitive to the cosmo-
+logical parameters that𝑃Hy(𝑘) and𝑃DM(𝑘) were generated using,
+provided that they are the same cosmology (van Daalen et al. 2020;
+Elbers et al. 2024). This makes the baryon response function espe-
+cially useful when trying to compare predictions between different
+hydro-sims run at different cosmologies. Since every hydro-sim has
+adifferentimplementationoftheirastrophysicalprocesses,therange
+ofcurvesfor 𝑅(𝑘,𝑧) canbeextremelybroad.Figure1plotsthisratio
+for a verity of different hydro-sims for three redshifts. This shows
+the general behaviour of𝑅(𝑘,𝑧) that has been well explored pre-
+viously (van Daalen et al. 2011): there is a dip in expected power
+on non-linear scales (1ℎMpc−1 ≲ 𝑘 ≲ 10ℎMpc−1 at 𝑧 = 0 ) due
+to baryon feedback processes, such as AGN, jets, and supernovae,
+expelling matter reducing clustering, while the dramatic increase
+on highly non-linear scales (𝑘 ≳ 10ℎMpc−1) is due to additional
+clustering from the ability of baryons to undergo radiative cooling,
+increasingsmall-scaleclustering,andfromstarformationwithinthe
+simulations (Chisari et al. 2019). Also shown in Figure 1 is the level
+of scatter in the prediction of𝑅(𝑘,𝑧) for different hydro-sims, with
+the depth and location of the suppression and location of the upturn
+highly simulation dependant with very little common consensus be-
+tween these simulations. van Daalen et al. (2020) has shown that
+muchofthisscatterinthepredictionsforthesuppressioninthesim-
+ulations can be explained by how the amplitude of the suppression
+is strongly correlated with the mean baryon fraction in haloes of
+mass∼1014𝑀⊙ (Salcido & McCarthy 2024).
+Due to the large scatter in the predictions of the hydro-sims, we
+take an agnostic approach to their results: we assume that each of
+these simulations are equally trustworthy, and thus any of these pre-
+dictions for their𝑅(𝑘,𝑧) must be equally reliable. We must also
+assume that the true description of our Universe lies somewhere in
+thisensemble inorder tocorrectly matchobservational data.Hence,
+MNRAS 000, 1–15 (2024)
+
+--- Page 3 ---
+Theoretical uncertainties for cosmic shear 3
+10□1 100 101 102
+k [hMpc□1]
+0.6
+0.8
+1.0
+1.2
+1.4
+1.6
+P Hy(k)/P DM(k)
+z = 0
+Bahamas T76
+Bahamas T78
+Bahamas T80
+HZ-AGN
+10□1 100 101 102
+k [hMpc□1]
+z = 1
+Illustris
+Illustris-TNG
+Eagle
+Simba
+10□1 100 101 102
+k [hMpc□1]
+z = 2
+Figure1. Ratiosofthematterpowerspectrumwithbaryonicfeedbackintotheirdark-matter-onlycounterpartsatredshifts0,1,and2,forvarioushydrodynamical
+simulations, as given in Table 1. Here, ‘Bahamas T𝑋𝑌’ corresponds to the same underlyingBahamas hydro-sim, just run at differentΔ𝑇heat values, which
+corresponds to the amplitude of AGN feedback within their simulation (McCarthy et al. 2017). Note thatSimbawas run on a smaller box-size with respect to
+theothersimulations(asshowninTable1),andthuswedonothaveaccesstodatabelowacertain 𝑘 for Simba,whichismuchlargerthanthesmallest 𝑘 modes
+available for the other hydro-sims.
+anybaryonphysicsmodelmustbeabletorecreateallofthesecurves
+in order for us to sufficiently trust that it could potentially capture
+the real physics of our Universe. This level of scatter in the hydro-
+sims has lead to the development of many baryonic physics mod-
+els, especially those which aim to match the simulations through
+neural-network emulator methods, such as theBaccoemulator pre-
+sentedinAricòetal.(2021). Baccoclaimsaccuracy1-2 %forscales
+1ℎMpc−1 < 𝑘 <5ℎMpc−1 and redshifts 0 < 𝑧 <1.5, and again
+findsthatthemostimportantparameterthatcontrolsbaryonfeedback
+physicsisthegasfractionperhalomass.Furthermore, BCemu(Giri
+&Schneider2021)implementsthe‘baryonificationmodel’prescrip-
+tion (Schneider et al. 2019) which claims percent-level accuracy for
+scales below𝑘∼ 10ℎMpc−1 at redshifts𝑧 <2.
+We are motivated to find correct descriptions of baryon feedback
+physics due to their large impact on results obtained from cosmic
+shear surveys. Future Stage-IV cosmic shear surveys hope to probe
+extremely small scales, up to a maximum multipole ofℓmax∼ 5000
+(Laureĳs et al. 2011). These small angular scales probe the highly
+non-linear regime in the matter power spectrum, as shown in Fig-
+ure2.Here,weplotthecumulativesumofthederivateoftheangular
+power spectrum coefficients𝐶ℓ at certainℓ values as a function of
+𝑘. This shows the relative contribution for each𝑘 mode to each𝐶ℓ
+value. Hence, we find that if we hope to probe angular scales up to
+ℓ= 5000, then we need to have a strong understanding of the matter
+power spectrum up to scales𝑘∼ 10ℎMpc−1 – including the details
+of baryonic physics. If these scales are not correctly modelled, then
+thiscouldinducecatastrophicbiasesinacosmicshearanalysis(Sem-
+bolonietal.2011;Huangetal.2019),particularlyfortheconstraints
+on dark energy (Copeland et al. 2018). The alternative is to reduce
+the maximum multipoleℓmax in our analyses, though this discards
+potentially useful cosmological information.
+Thismotivatesustotesttheaccuracyofbaryonicfeedbackmodels
+uptothesesmallscales,andassesshowdifferenttreatmentsofbary-
+onic physics impact constraints obtained from forthcoming cosmic
+shear surveys.
+10□2 10□1 100 101
+k [h Mpc□1]
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+∑
+k′<k
+∂C𝓁
+∂k′ /
+∑ ∂C𝓁
+∂k′
+𝓁 = 50
+𝓁 = 125
+𝓁 = 250
+𝓁 = 500
+𝓁 = 1000
+𝓁 = 2000
+𝓁 = 5000
+Figure 2.Cumulative sum of the derivate of the cosmic shear power angu-
+lar power spectrum coefficients𝐶ℓ, at certainℓ modes, with respect to the
+wavenumber𝑘 in the Limber integral (Equation 4). The sum of the deriva-
+tives for each multipole is normalised to unity for easy comparison between
+differentmodes.Thisincludesthecontributionsfromthelensingkernelsand
+the matter power spectrum. Derivatives were taken for a Gaussian source
+redshift distribution located at¯𝑧= 0.33 and width𝜎𝑧 = 0.15.
+2.1 Theoretical error formalism
+Since we do not have models of baryonic physics that completely
+match our complete set of hydrodynamical simulations, there will
+always be some residual error for any given model of baryon feed-
+back physics as a function of scale and redshift. Rather than treating
+our models as a perfectly known quantity and limiting our scales of
+interest, we can directly incorporate these known errors through the
+use of the ‘theoretical uncertainty’ formalism first presented in Bal-
+dauf et al. (2016). We now have a theoretical error data-vectore,
+which quantifies the difference between the true, underlying physi-
+cal model and what our approximative methods calculate, which is
+MNRAS000, 1–15 (2024)
+
+--- Page 4 ---
+4 A. Maraio et al.
+bound by an envelopeE. This theoretical error has its associated
+covariance matrix, Ce, which can be written as a function of the
+amplitude of the error,E, and a correlation matrixρ as
+Ce= Eρ E. (2)
+In the Gaussian approximation, we can simply model the inclusion
+of the theoretical error on the likelihood as simply the addition of
+our theoretical error covariance,Ce, to our existing data covariance
+matrix(whichincludesthecontributionsfromcosmicvariance), Cd,
+to give
+Ctot= Cd+ Ce. (3)
+The theoretical error formalism can be, in principle, applied to any
+effect that changes summary statistics that is not yet perfectly mod-
+elled. This approach of marginalising over the errors in the model
+was first applied to baryonic physics effects for cosmic shear sur-
+veys in Moreira et al. (2021), where they modelled the errors and
+correlations directly inℓ-space. They constructed several versions
+of the error envelope function𝐸(ℓ), all featuring the similar term
+of the error ratio of best-fit𝐶ℓ values to the values generated from
+hydro-sims.TheyalsoassumedaGaussian-likefunctionin (ℓ−ℓ′)2
+fortheircorrelationmatrix,withacharacteristiccorrelationlength 𝐿
+determining the widths of the correlation matrix.
+Sincebaryoniceffectsdirectlychangethematterpowerspectrum,
+which is then propagated to cosmic shear summary statistics, we
+are motivated to investigate the theoretical errors in𝑘-space for the
+matter power spectrum and then propagate those toℓ-space. There
+is no theoretical error associated with the lensing kernels, so by
+isolating the theoretical uncertainties to the matter power spectrum
+only,wemighthopetopreserveinformationfromgeometrythisway.
+The task now becomes one to find an appropriate theoretical error
+envelope functionEand correlation matrixρ in𝑘-space.
+3 METHODOLOGY
+3.1 Modelling forthcoming cosmic shear surveys
+We use the standard prescription for the cosmic shear power spec-
+trum (Bartelmann & Schneider 2001; Bartelmann 2010; Kilbinger
+2015) where the power spectrum is, for tomographic redshift bins
+labelled by𝑎 and𝑏, is given as
+𝐶𝑎𝑏
+ℓ = 9
+4
+Ω2m𝐻4
+0
+𝑐4
+∫ 𝜒max
+0
+d𝜒𝑔𝑎(𝜒)𝑔𝑏(𝜒)
+𝑎2(𝜒) 𝑃
+
+𝑘 = ℓ
+𝜒, 𝑧=𝑧(𝜒)
+
+, (4)
+where 𝑎(𝜒) is the scale factor,𝑃 is the non-linear matter power
+spectrum, and𝑔(𝜒) is the lensing kernel given as
+𝑔𝑎(𝜒)=
+∫ 𝜒ℎ
+𝜒
+d𝜒′𝑛𝑎(𝜒′) 𝑓𝐾(𝜒′−𝜒)
+𝑓𝐾(𝜒′) , (5)
+where𝑛(𝜒) is the probability density of source galaxies as a func-
+tion of comoving distance. To evaluate the non-linear matter power
+spectrum with baryonic feedback, we used HMCode-2020 with
+𝑇AGN= 7.8.
+Since every galaxy has an intrinsic ellipticity, this introduces a
+shape noise term into the power spectrum with a flat value𝑁ℓ given
+as
+𝑁𝑎𝑏
+ℓ = 𝜎2𝜖
+¯𝑛 𝛿𝑎𝑏, (6)
+where 𝜎𝜖 is the standard deviation of the intrinsic galaxy elliptic-
+ity dispersion per component,¯𝑛 is the expected number of observed
+galaxies per steradian, and𝛿𝑎𝑏 is the Kronecker-𝛿 symbol. We as-
+sume Euclid-like values where it is expected that 30 galaxies per
+square arcminute will be observed, but we divide these into five
+photometric redshift bins, giving¯𝑛= 6 gals/arcmin2 (Laureĳs et al.
+2011). We take𝜎𝜖 = 0.21.
+We use five Gaussian redshift bins with means located at¯𝑧 =
+{0.33, 0.66, 1.0, 1.33, 1.66}allwithstandarddeviationof 𝜎𝑧 = 0.15.
+This gives us 15 unique power spectrum combinations and 120
+unique covariance matrix blocks.
+We model the Gaussian covariance matrix as the four-point func-
+tion (Blanchard et al. 2020), given by
+Cov[𝐶𝑎𝑏
+ℓ ,𝐶𝑐𝑑
+ℓ′]=
+𝐶𝑎𝑐
+ℓ 𝐶𝑏𝑑
+ℓ +𝐶𝑎𝑑
+ℓ 𝐶𝑏𝑐
+ℓ
+(2ℓ+ 1) 𝑓sky
+𝛿ℓℓ′, (7)
+where 𝑓skyisthefractionofskyobservedbythecosmicshearsurvey.
+We take aEuclid-like value of𝑓sky= 0.35.
+To reduce the dimensionality of our power spectrum and covari-
+ance matrices, we bin the power spectrum. We use linear binning of
+fivebinsupto ℓ= 100,andthenuselogarithmicbinningwithtwenty
+binsfrom ℓ= 100toℓ= 5 000.Weusean ℓ-modeweightof ℓ(ℓ+ 1)
+when binning.
+3.2 Constructing our𝒌-space theoretical covariance
+AsoutlinedinSection2.1,thetheoreticalerrorformalismrequiresus
+to quantify an error envelope functionE and a correlation matrixρ,
+and since our uncertainties from baryonic physics are best specified
+in𝑘-space,wewillfirstconstructour 𝑘-spacecovariancematrix.We
+will first discuss the construction of our envelope functionE.
+There is no absolute choice for the functional form ofE. Moreira
+et al. (2021) investigated many choices for the form ofE, with the
+‘mirror’ envelope being a good fit to the data. Here, we follow their
+method and take the maximum deviation for each𝑘-mode and red-
+shift across a suite of hydrodynamical simulations to the best-fitting
+values of a baryon feedback model (see Section 3.6). This gives
+the maximum relative difference in the baryonic response function
+(Equation 1) as
+Δ𝑅(𝑘,𝑧)= max
+𝑘,𝑧
+
+𝑅Hydro(𝑘,𝑧)
+𝑅Model(𝑘,𝑧)− 1
+. (8)
+We then turn this into an amplitude by multiplying by a fiducial
+dark-matter-only power spectrum,
+𝐸(𝑘,𝑧)=𝑃dm(𝑘,𝑧)Δ𝑅(𝑘,𝑧). (9)
+where𝑃DM(𝑘,𝑧) was evaluated using theHMCode-2020 DM-only
+model.
+With our amplitude function specified, we now wish to construct
+our𝑘-space correlation matrix. Here, we are considering the corre-
+lations between two pairs of points(𝑘1,𝑧 1) and(𝑘2,𝑧 2). We follow
+previous works that have employed the theoretical uncertainties ap-
+proach (for example Baldauf et al. (2016); Sprenger et al. (2019);
+Chudaykin & Ivanov (2019); Moreira et al. (2021)) by choosing a
+factorisable Gaussian correlation matrix of the form
+𝜌[(𝑘1,𝑧 1),(𝑘2,𝑧 2)] = exp
+
+− log(𝑘1/𝑘2)2
+𝜎2
+log𝑘
+
+exp
+"
+−(𝑧1−𝑧2)2
+𝜎2𝑧
+#
+,
+(10)
+where𝜎log𝑘 and𝜎𝑧 arethecharacteristiccorrelationscalesin log𝑘-
+and redshift-space, respectively. In our fiducial analyses, we used
+MNRAS000, 1–15 (2024)
+
+--- Page 5 ---
+Theoretical uncertainties for cosmic shear 5
+values of𝜎log𝑘 = 0.25 and 𝜎𝑧 = 0.25. These values were moti-
+vated from Figure 1 where we see that the baryonic response func-
+tion 𝑅(𝑘,𝑧) is correlated on scales of approximately a quarter of
+a decade in log-𝑘 space with approximately the same coupling in
+redshift-space. We discuss the effects of changing𝜎log𝑘 and𝜎𝑧 in
+Section 4.4.5.
+WearemotivatedtousefactorisableGaussianssinceweknowthat
+baryonfeedbackhasarelativelylocaleffectonthematterpowerspec-
+trum, that is neighbouring wavenumbers and redshifts behave sim-
+ilarly and thus should have highly correlated covariances, whereas
+vastly different wavenumbers and redshifts have very different evo-
+lutionary physics, and thus should be less correlated. Furthermore,
+we are motivated to use the logarithmic differences in𝑘-space since
+ourwavenumbersspanmanyordersofmagnitude(seeFigure1),and
+thus an ordinary difference might not properly reflect this.
+Combining our envelope function and correlation matrix, we find
+that our complete𝑘- and redshift-space covariance matrix is given
+by
+Cov[(𝑘1,𝑧 1),(𝑘2,𝑧 2)] =
+𝑃dm(𝑘1,𝑧 1)Δ𝑅(𝑘1,𝑧 1) 𝑃dm(𝑘2,𝑧 2)Δ𝑅(𝑘2,𝑧 2)×
+exp
+
+− log(𝑘1/𝑘2)2
+𝜎2
+log𝑘
+
+× exp
+"
+−(𝑧1−𝑧2)2
+𝜎2𝑧
+#
+. (11)
+We note that by working directly with errors in the matter power
+spectrum, which is the underlying quantity that we have limited
+knowledge in modelling (not the angular power spectrum values),
+thisshouldcapturethefullphenomenologyoftheerrorsinbaryonic
+feedback effects on the matter power spectrum. This contrasts with
+theworkofMoreiraetal.(2021)whichalsoaimstomitigatebaryonic
+physics effects through the use of a theoretical uncertainty, though
+they quantify their theoretical uncertainty through the differences in
+the angular power spectrum values.
+3.3 Propagating covariances toℓ-space
+With our𝑘- and redshift-space covariance matrix specified, we can
+nowpropagatethisintoan ℓ-spacecovariancematrix,whichcanthen
+beaddedtothedatacovariancetogiveouroverallcovariancematrix.
+Equation 4 gave the cosmic shear power spectrum as the Limber
+integral of the matter power spectrum weighted by the geometrical
+factors. Hence, if we now want to propagate our uncertainties in the
+𝑃(𝑘) into an additional covariance matrix for the𝐶ℓ values, we can
+integrate this again, which yields
+Cov[𝐶𝑎𝑏
+ℓ1
+, 𝐶𝑐𝑑
+ℓ2
+]=
+"
+9
+4
+Ω2𝑚𝐻4
+0
+𝑐4
+#2
+×
+∫ 𝜒max
+0
+∫ 𝜒max
+0
+d𝜒1d𝜒2
+𝑔𝑎(𝜒1)𝑔𝑏(𝜒1)
+𝑎2(𝜒1)
+𝑔𝑐(𝜒2)𝑔𝑑(𝜒2)
+𝑎2(𝜒2) Cov[(𝑘1,𝑧 1),(𝑘2,𝑧 2)], (12)
+where 𝑘1 = ℓ1
+𝜒1 and 𝑘2 = ℓ2
+𝜒2. We are motivated to use Limber’s
+approximation here to simplify the double integral since the lowℓ
+regioninwhichtheapproximationisimprecisewillhaveanegligible
+contribution to the total covariance.
+3.4 Numerical evaluation of the matter power spectrum with
+baryon feedback
+Ourconstructionofthe (𝑘,𝑧)-spacecovariancematrixcanbeapplied
+to any model of baryon feedback, with models ranging from purely
+analyticalmethodsusingtheZel’dovichapproximation(Mohammed
+& Seljak2014), to semi-analytic models(e.g.HMCode, Meadet al.
+2020), to purely numerical emulation (e.g.Bacco, Aricò et al. 2021
+and BCemu, Schneider et al. 2019).
+We have chosenHMCode-2020 as our model of choice for the
+matter power spectrum and baryonic feedback response since they
+claim that their dark-matter-only spectrum has RMS errors of less
+than 5per-cent,andthattheirbaryonicfeedbackresponseisaccurate
+to within the1 per-cent level for redshifts𝑧 < 1 and scales (𝑘 <
+20ℎMpc−1), over a range of cosmologies (Mead et al. 2020). Thus,
+HMCode-2020 is a natural choice for computing the matter power
+spectrum for use in cosmic shear analyses, which is confirmed by
+its use in recent major cosmic shear results such as the joint KiDS-
+1000–DES-Y3 analysis (Abbott et al. 2023).
+HMCode-2020 comes in two distinct flavours for modelling
+baryon physics:
+• Afullsix-parameterdescriptionwithfree-parametersofthehalo
+concentration,𝐵,thestellarmassfractioninhaloes, 𝑓★,andthehalo
+mass break scale,𝑀b, along their redshift evolution counterparts.
+The redshift evolution for each physical parameter𝑋 is given by the
+fixed form of𝑋(𝑧)=𝑋0× 10𝑧𝑋𝑧.
+• Aone-parameterversionwherethefeedbacktemperature 𝑇AGN
+encapsulates the combined baryon physics of the full model. The
+one-parameter model was constructed by fitting a linear relation-
+ship to the six-parameter version using theBahamas simulations.
+Since the one-parameter model was specifically constructed to the
+Bahamassimulations, there is no guarantee of its accuracy to other
+hydrodynamical simulators or even the baryon physics of our own
+Universe.
+• We also test a three-parameter version, which is analogous to
+the six-parameter model but with fixed redshift evolution. This is
+a useful test as there arises significant degeneracies between the
+amplitude and redshift evolution of each parameter, and thus by
+fixing its evolution we can test if this extra degree of freedom is
+necessary.
+While a more general description of baryon feedback physics
+shouldhavemorefreedomtobettermatchdifferentphysicalmodels,
+it comes at the cost of additional nuisance parameters which needs
+to be included and marginalised over in any analysis. This could
+slow down the convergence of analysis pipelines, and in the case of
+very many parameter models, unnecessarily decreasing constraints
+on the core cosmological parameters due to the need to excessively
+marginalise over these baryonic nuisance parameters. Hence, while
+we are focusing on the inclusion of theoretical uncertainties into our
+analysis pipeline, we also look at how going from a one- to three- to
+six-parameter baryonic feedback model changes our results.
+3.5 Chosen hydrodynamical simulations
+Wemakeuseofthe‘powerspectrumlibrary’presentedinvanDaalen
+etal.(2020) 1 andfromthe CamelsProject(Nietal.2023) 2 tobuild
+up a suite of six hydrodynamical simulations (with three flavours of
+the Bahamas simulations) as shown in Table 1. This gives us a wide
+range of baryon feedback models against which we can benchmark
+our analytic models to.
+1 https://powerlib.strw.leidenuniv.nl
+2 https://camels.readthedocs.io/
+MNRAS000, 1–15 (2024)
+
+--- Page 6 ---
+6 A. Maraio et al.
+Table 1.The six hydrodynamical simulations used in this work to benchmark and compare models of baryon feedback physics to.
+Hydro-sim Box-size (Mpc) Number of particles Baryonic mass resolution [𝑀⊙] Cosmology Reference
+Bahamas 400/ℎ 2× 10243 7.66× 108ℎ−1 WMAP9 McCarthy et al. (2017)
+Horizon-AGN 100/ℎ 10243 8.3× 107 WMAP7 Chisari et al. (2018)
+Illustris 106.5 18203 1.6× 106 WMAP7 Nelson et al. (2015)
+Illustris-TNG 100 75/ℎ 2× 18203 9.44× 105ℎ−1 Planck2015 Springel et al. (2018)
+Eagle 100 15043 1.81× 106 Planck2013 Schaye et al. (2015)
+Simba 25/ℎ 10243 2.85× 105 Planck2013 Davé et al. (2019)
+3.6 Fitting HMCode to hydrodynamical simulations
+Armed with our three baryon feedback models and a suite of hy-
+drodynamical simulations, we can now go about performing a best-
+fit analysis of our models to the hydro-sims in order to quantify
+each model’s maximum deviation as a function of wavenumber and
+redshift (Equation 8). To do so, we performed a maximum like-
+lihood fit where we simultaneously fitted across redshifts𝑧 ⩽ 2
+with flat weighting in redshifts, and wavenumbers over the range
+0.01ℎMpc−1 ⩽ 𝑘 ⩽ 20ℎMpc−1 with a 𝑘2 weighting on each
+wavenumber to roughly approximate the cosmic variance contri-
+bution. We are free to choose an arbitrary𝑘-mode weighting since
+our envelope function is arbitrary, and so there is no correct choice
+foreithera 𝑘-or 𝑧-modeweighthere.Weexperimentedwithflat,and
+apurecosmicvarianceweightof 𝑘3,andsettledonour 𝑘2 weighting
+as somewhere in between. Note that, since we use equal spacing in
+log(𝑘),wefind Δ log𝑘 =[Δ𝑘]/𝑘 whensummingover 𝑘.Thisgives
+our loss function for each model and hydro-sim as
+L=
+∑︁
+𝑘,𝑧
+𝑘2
+
+𝑅Hydro(𝑘,𝑧)− 𝑅HMcode(𝑘,𝑧)
+2
+. (13)
+The HMCodepower spectra were generated at the same cosmology
+at which the hydro-sims were run at, with the minimisation routine
+just varying the astrophysical baryonic parameters. TheMinuit op-
+timiser, a robust optimiser as part of theCosmoSiS3 analysis frame-
+work(Zuntzetal.2015),wasusedtomaximisethefitforthebaryonic
+parameters.Sincewethereisfreedomintheformoftheweightfunc-
+tion for each(𝑘,𝑧)-mode, different choices for the analytic form of
+L effectively adds little to that freedom.
+3.7 Fitting the𝑪ℓ values
+To obtain estimates for the biases in cosmological parameters due
+to baryon feedback, many MCMC analyses were run. We used
+a custom CosmoSiS pipeline using the PolyChord nested sam-
+pler(Handleyetal.2015a,b)withparameters LivePoints = 1000 ,
+num_repeats = 60 , boost_posteriors = 10 , and tolerance
+= 0.001 for all analyses. We sampled only overΩc and 𝐴s for our
+cosmological parameters, giving results in terms ofΩm,𝜎8, and𝑆8,
+since cosmic shear surveys are most sensitive to these cosmological
+parameters.Thus,anyinducedbiaswillbegreatestintheseparame-
+ters.Inaddition,wealsosampleoverourone,three,andsixbaryonic
+feedback parameters, depending on the model, with wide priors, as
+shown in Table 2, on these nuisance parameters.
+WerananalyseswithjusttheordinaryGaussiancovariancematrix
+for our cosmic shear fields (Equation 7), and with the additional
+theoretical error covariances (Equation 12) added to the Gaussian
+covariance (Equation 3).
+3 https://cosmosis.readthedocs.io/
+Table 2.Uniform priors used for theHMCode baryonic feedback models.
+𝑇AGN is used only in the one-parameter models, with the three-parameter
+model sampling over just the individual amplitude parameters (𝑋0), and the
+six-parameter model including the redshift dependence too (𝑋𝑧).
+Parameter Uniform prior
+𝑇AGN [4.0, 12.0]
+𝐵0 [0.25, 7.0]
+𝐵𝑧 [− 0.5, 0.5]
+𝑓★,0 [0.0, 5.0]
+𝑓★,𝑧 [− 5.0, 5.0]
+𝑀b,0 [5.0, 20.0]
+𝑀b,𝑧 [− 2.5, 2.5]
+A Gaussian likelihood was used, which has been shown to be
+a good approximation to the full Wishart distribution on the cut-
+sky (Upham et al. 2021; Hall & Taylor 2022) under the assumption
+of Gaussian-only terms in the covariance matrix, which we are em-
+ploying.
+We generate the input cosmic shear𝐶ℓ values for each hydro-
+sim by taking each hydro-sim’s baryon response function𝑅 and
+multiplyingitby HMCode’sdark-matteronlymatterpowerspectrum
+at the hydro-sim’s cosmology, giving
+𝑃Hy(𝑘,𝑧)=𝑅(𝑘,𝑧)× 𝑃HMcode-DM(𝑘,𝑧). (14)
+Thus,weareisolatingtheeffectsofbaryonfeedbackinthe 𝐶ℓ values,
+and not studying other effects, for example the details of the non-
+linear matter power spectrum.
+4 RESULTS
+4.1 Results of fitting HMCode to hydro-sims
+Thefirsttaskwastofitourthree HMCodebaryonphysicsmodelsto
+thesuiteofhydro-sims.Figure3showsthegoodnessoffitstatisticfor
+eachhydro-simforour1-,3-,and6-parametermodel.Weseethatthe
+1-parameter model generally provides a poor fit to our hydro-sims
+due to its inability to match the general baryon feedback models.
+Whenweextendthegeneralityto3-and6-parameters,thegoodness
+of fit increases which matches our intuition that a more general
+model with higher degrees of freedom should do a better job at
+matching arbitrary data sets. It should be noted that theHMCode
+1-parameter model was specifically designed to closely match the
+Bahamassimulations, and so it is no surprise that it has a better fit
+to Bahamasthan other simulations.
+While our goodness of fit values provide a valuable insight into
+howwellourthreemodelsfitthesimulationdataoverall,wecanlook
+attheratiosforthe HMCodepredictionstothehydro-simsresultsto
+seehowourfitchangeswithscales.Figure4plotstheratioofthebest-
+fit HMCodemodeltothehydro-simsbaryonicresponsefunctionfor
+MNRAS000, 1–15 (2024)
+
+--- Page 7 ---
+Theoretical uncertainties for cosmic shear 7
+0.0 0.2 0.4 0.6 0.8 1.0
+Normalised loss function L
+Simba
+Eagle
+TNG
+Illustris
+HZ-AGN
+Bahamas
+Goodness of ﬁt of HMCode models to hydro-sims
+1-param
+3-param
+6-param
+Figure 3.Goodness of fit statistics for theHMCode 1-, 3-, and 6-parameter
+models for our suite of hydro-simulations. We plot the reduced loss function
+L values (Equation 13 divided by the total number of data-points across our
+redshiftandwavenumberranges)sinceeachhydro-simhasadifferentnumber
+of redshift bins and wavenumbers that the power spectra were evaluated at,
+normalised to the one-parameter model for the Eagle hydro-sim. Here, we
+seetheinflexibilityofthe1-parametermodelresultsinsignificantdeviations
+acrossallsimulations(except Bahamaswhichitwasconstructedtofitwell),
+which indicates a poor fit to the data. Extending the model to 3- and then 6-
+parametersfurtherincreasesthegoodnessoffittosimulations,sinceweopen
+up addition degrees of freedom within the model. We note that the feedback
+within Illustrisisquiteextreme,andthusproducesadegradedfitevenwith
+the six-parameter model.
+ourthree 𝑛-parametermodelsasafunctionofscaleatredshift 𝑧= 0.
+We see that the more general three- and six-parameter models are
+better able to match the hydro-sims than the one-parameter model,
+which is to be expected from more general models, and is shown
+by a reduced amplitude in the relative differences. We also see the
+extremenatureofthe Illustrissimulation,wherethesix-parameter
+model can only poorly match its feedback.
+4.2 Constructing the envelope
+Now that we know how well each of our feedback models match
+our suit of hydro-sims, we can combine these to form our ‘envelope
+function’Δ𝑅(𝑘,𝑧) introduced in Equation 8.Δ𝑅 encodes the max-
+imum deviation of each baryon feedback model to all hydro-sims
+as a function of wavenumber and redshift. This acts as a standard
+deviationtoourtheoreticalerroraseachbaryonfeedbackmodelhas
+an inherent uncertainty and we have quantified this with the enve-
+lope of the residual discrepancies between the hydro-sims and the
+best-fitting𝑅(𝑘,𝑧) for each simulation.
+We plotΔ𝑅(𝑘,𝑧) in Figure 5, which shows our envelope function
+as a function of wavenumber𝑘 for select redshift values. We see
+that, in general, the errors increase with𝑘 which corroborates our
+understandingthatourtheoreticalmodelsdoworsethesmallerscales
+weprobe.Wealsoseethathigherredshiftstendtoproduceabetterfit
+across all of the models which can be understood through Figure 1:
+we see that at higher redshifts, the suppression due to baryons is
+reduced, smoothing our response function𝑅, and also moving the
+suppressiontosmallerwavenumbers.Thisactstoallowourbaryonic
+feedback models to better match the hydro-sims, though our errors
+do increase to very large values on at high𝑘 at high redshifts.
+We note that the six parameter model has a distinctive double-
+hump feature, which is a direct result of the poor fit toIllustrison
+scales 10−1ℎMpc−1 < 𝑘 <1ℎMpc−1, as shown in Figure 4. One
+could removeIllustriswhen constructing the maximum deviation
+envelope, and such this double-hump would no longer appear.
+4.3 Constructing theℓ-space theoretical uncertainty covariance
+matrix
+Ournumericalenvelopein (𝑘,𝑧)-spacecanthenbedoublyintegrated
+(Equation12)togiveusour ℓ-spacecovariancematrix.Figure6plots
+theratiooftheblockdiagonalsofthecovariancematrixwithourad-
+ditionaltheoreticalerrortothatwithouttheoreticalerror.Weseethat
+forℓ modes belowℓ≃ 200 there is no effect of our theoretical error
+covariance, since theseℓ modes are unaffected by baryon feedback
+physics. Above this, we see that out theoretical error covariance acts
+to increase the total covariance, thus suppressingℓ modes here and
+down-weightingtheminourlikelihoodanalyses.Wenotethatthisis
+strongly dependent on the combination of spectra considered, with
+low redshift bins having a smaller error than those at high redshift
+(which is a direct consequence of our baryon feedback modelling
+being less accurate at high redshift). We see that, because we are
+considering the covariances of the auto-spectra only, that the ratios
+tend to unity at high-ℓ which is due to the inclusion of shape noise
+(which dominates the auto-spectra for largeℓ modes) in the overall
+covariance matrix.
+We plot the total theoretical uncertainty matrix,Ce in Figure 7.
+Here, we see that the amplitude of the full matrix reflects what is
+shown in the diagonals only of Figure 6, that the amplitude of the
+theoretical uncertainties generally grow as we consider further away
+redshift bin combinations (going from bottom-left to top-right). We
+also see that while each sub-block of the full matrix peaks along its
+diagonal,ithassignificantsupportwithcomparablevaluesformany
+off-diagonalentries,whichactstoboosttheeffectsofthetheoretical
+uncertainties over what the diagonal values can provide.
+4.4 Parameter constraints and biases
+Using our three different baryon feedback models, we can run our
+MCMC pipeline to estimate the biases in our cosmological parame-
+ters, the total matter densityΩm and the lensing amplitude𝑆8, with
+and without our additional theoretical error. We take each hydro-
+dynamical simulations’ baryon feedback response function as the
+ground truth input values into our cosmic shear pipeline (Equa-
+tion14).Werunouranalysesforeachbaryonfeedbackmodelagainst
+each hydro-sim, with and without the additional theoretical error to
+determine the biases on the cosmological parameters due to the ef-
+fects of baryon feedback.
+4.4.1 Binary scale-cuts
+We first look at the value of the biases inΩm and𝑆8 as a function
+of maximum multipole when using a traditional binary scale-cuts
+approach. Figure 8 plots theΩm,𝜎8, and𝑆8 offset contours for the
+Simba hydro-sim when analysed using the one-parameter model for
+a range of maximumℓ-modes allowed in the analysis. We see that
+only theℓmax = 500 analysis produces results that are consistent
+with the input parameters to within1𝜎, with even theℓmax = 1000
+analysis producing biased results. Each subsequent analysis where
+we increase the maximumℓ-mode serves to both increase the raw
+biasinthecosmologicalparameters(sincethehigh ℓ-modescapture
+moreoftheimpactfrombaryonfeedback)andreducetheareaofthe
+MNRAS000, 1–15 (2024)
+
+--- Page 8 ---
+8 A. Maraio et al.
+10□1 100 101
+k [hMpc□1]
+0.85
+0.90
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+RHMCode(k)/RHy(k)
+1-param model
+Bahamas
+HZ-AGN
+Illustris
+10□1 100 101
+k [hMpc□1]
+3-param model
+TNG
+Eagle
+Simba
+10□1 100 101
+k [hMpc□1]
+6-param model
+Figure4. Ratiosofthebest-fitting HMCodeone-,three-,andsix-parametermodelstotheunderlyinghydro-simsbaryonicresponsefunction 𝑅atredshift 𝑧= 0.
+Weseethat HMCodetendstofitthedatabetter,asgivenbythesmalleramplitude,asweincreasethegeneralityofthemodel,whichistobeexpected.Notethat
+we fitted across all redshifts of each of the hydro-sims for𝑧 ⩽ 2, where here we are just plotting the𝑧= 0slice. Similar curves are found at higher redshifts.
+10□1 100 101
+k [hMpc□1]
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+∆ R(k, z)
+1-param model
+z = 0
+z = 0.5
+z = 1
+z = 1.5
+z = 2
+10□1 100 101
+k [hMpc□1]
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+3-param model
+10□1 100 101
+k [hMpc□1]
+0.00
+0.02
+0.04
+0.06
+0.08
+0.10
+0.12
+6-param model
+Figure 5.Our envelope functionΔ𝑅(𝑘,𝑧) encoding the maximum deviation of our threeHMCode models to the hydro-sims as a function of wavenumber𝑘
+plottedforselectredshifts.Weseethattheamplitudeofourenvelopedecreasesaswegofromone-tothree-tosix-parameters(asnotedbythedecreasingvalues
+ineachofthepanel’sindividual 𝑦-axes),andsoweassignlesstheoreticaluncertaintiestothosemodelsthatbettermatchthedata.Theapparentnoisybehaviour
+of these curves is due to numerical noise in the hydro-sims, but also from our choice of envelope function, which uses the absolute value of the error ratio.
+contours (since we are now including the more constraining higher
+ℓ-modes),whichvastlyincreasestherelativebiasinthecosmological
+parameters.
+Hence, if we were to introduce a binary scale-cut for our data
+that keeps theΔΩm−Δ𝑆8 to be consistent within1𝜎, a cut slightly
+larger thanℓmax = 500 might be made for our idealised Stage-IV
+like cosmic shear survey. However, to avoid making these analysis
+decisions ourselves, which have little physical motivation behind
+them and apply simultaneously to all hydro-sims in our ensemble,
+we can turn to our theoretical error modelling instead of making
+binary scale-cuts.
+4.4.2 Including a theoretical error covariance
+Tables 3 and 4 summarises our results for the biases inΩm and𝑆8,
+respectively. Here, we present the amplitude of the bias, that is the
+difference in the mean of our MCMC chains to the fiducial value,
+and the relative bias, which is the difference divided by the reported
+standard deviation from the MCMC chains for each parameter, with
+and without the effects of our additional theoretical error. The bary-
+onicfeedbackparametersforeachmodelaremarginalisedoverwhen
+we present results forΩm,𝜎8 and𝑆8.
+MNRAS000, 1–15 (2024)
+
+--- Page 9 ---
+Theoretical uncertainties for cosmic shear 9
+102 103
+𝓁
+1.00
+1.02
+1.04
+1.06
+1.08
+1.10
+1.12
+CovWh. th.err [𝓁, 𝓁]/CovNo th.err [𝓁, 𝓁]
+0.33
+1.66
+Mean redshift of each bin
+Figure6. Ratioofthediagonalsofauto-spectraelementsofour 𝐶ℓ covariance
+matrix with our additional theoretical error to that without theoretical error.
+Here, we see that the amplitude of the additional theoretical error strongly
+depends on the redshift bins of the auto-spectra considered, with higher
+redshift bins containing more theoretical error than closer bins. We note that
+thereissignificantsupportontheoff-diagonalsforourtheoreticalcovariance,
+and thus the total covariance with theoretical error is much larger than just
+the ratios showed here.
+1x1 1x2 1x3 1x4 1x5 2x2 2x3 2x4 2x5 3x3 3x4 3x5 4x4 4x5 5x5
+bin-ab 𝓁 1
+1x1
+1x2
+1x3
+1x4
+1x5
+2x2
+2x3
+2x4
+2x5
+3x3
+3x4
+3x5
+4x4
+4x5
+5x5bin-cd 𝓁 2
+Binned theoretical error covariance for 1-param model
+□30
+□28
+□26
+□24
+□22
+Log10 Cov[C ab
+𝓁1 , Ccd
+𝓁2 ]
+Figure7. Plotofthebinnedtheoreticalerrormatrix Ce fortheone-parameter
+model across all fifteen redshift bin combinations and twenty five binned
+band-powers. Here, we see that the amplitude of our theoretical error matrix
+generally grows as we consider higher redshift bins (e.g. the 5x5×5x5 sub-
+blockissignificantlybrighter,andthusoflargermagnitude,thanthe1x1 ×1x1
+sub-block).Wealsoseethatforeachsub-block,thetheoreticalerrorisgreatest
+along theℓ1 =ℓ2 diagonal, though there is significant support along the off-
+diagonal terms, which serves to increase the overall effect of our theoretical
+uncertainty modelling.
+4.4.3 One-parameter model
+In general, the one-parameter model without additional theoretical
+error produces a significant biases in the recovered parameters, with
+at least a 3𝜎 offset in eitherΩm or𝑆8 for all hydro-sims excluding
+Bahamas (recall that the one-parameter model was constructed by
+fitting to Bahamas data only). The results of the very significant
+biasesintheremainingfivehydro-simsshowsthattheone-parameter
+modelofbaryonfeedbackfora Euclid-likesurveyupto ℓmax= 5 000
+iscompletelyimpracticalifwewishtorecoverunbiasedresultsfrom
+the analyses of cosmic shear data.
+Whenweintroduceouradditionaltheoreticalerrorintotheanaly-
+sis, we see that biases in both cosmological parameters fall dramat-
+ically across all hydro-sims for our one-parameter model. We see a
+□0.01 0.00 0.01 0.02
+∆ σ8
+□0.02
+□0.01
+0.00
+0.01
+∆Ω m
+□0.01 0.00
+∆ S8
+𝓁max = 500
+𝓁max = 1000
+𝓁max = 2000
+𝓁max = 3000
+𝓁max = 4000
+𝓁max = 5000
+Figure8. 2DΩm-𝜎8andΩm-𝑆8offsetcontoursfortheone-parameterbaryon
+feedback model for theSimba hydro-sim for a range of maximumℓ-modes
+consideredintheanalysis.Asweincrease ℓmax,weareincreasingthenumber
+ofmodesthatarecontaminatedbybaryonfeedback,andthusbiasourcosmo-
+logical parameters away from the fiducial value. It is interesting to note that
+that even for theℓmax = 1000 analysis, which is a considerably conservative
+scale-cut even for Stage-III surveys (e.g. HSC-Y3, Dalal et al. 2023), our
+results are biased by more than2𝜎 in all cosmological parameters for our
+Stage-IV-like survey when usingSimbaas the ground-truth.
+reduction in both the raw offset values, and a significant decrease
+in the relative bias in terms of each parameter’s standard deviation.
+Thisdemonstratesourtheoreticaluncertaintiesmodellingiscorrectly
+identifying the scales in which baryonic feedback are not correctly
+modelled by the one-parameter model, down-weighting them in our
+analyses,andthusresultinginsignificantlylessbiasedcosmological
+parameterconstraints.However,westillseesignificant( > 1𝜎)biases
+in many hydro-sims even when using theoretical error. This is due
+to the one-parameter model being inadequate when considering a
+Euclid-like weak lensing survey.
+4.4.4 Three- and six-parameter models
+As expected, the more general three- and six-parameter models re-
+sult in smaller absolute biases, which reflects their ability to better
+match more general baryon feedback scenarios, but at the cost of
+decreasedprecisionduetotheneedtomarginaliseovermoreparam-
+eters. Hence, we see that the relative biases show a strong decrease
+when going to our many-parameter versions, which is an effect of
+decreased absolute bias and increased uncertainties.
+Figure 9 plots the 2DΩm-𝜎8 andΩm-𝑆8 offset contours for our
+threebaryonfeedbackmodelswithandwithoutourtheoreticalerror
+addedfortheSimbahydro-sim.Thishighlightsthedegeneraciesthat
+exist between these parameters, finding the usual ‘lensing banana’
+that is the natural degeneracy betweenΩm and𝜎8. These contours
+gradually move to the origin as we increase the number of param-
+eters in the baryon feedback model, and increase in size as we are
+marginalising over more parameters.
+Figure 10 plots the 2D Ωm-𝜎8 offset contours for the one-
+parameter model for our suite of hydro-sims for the case of with
+andwithoutourtheoreticalerror.Weseethatwithoutthetheoretical
+errortherecoveredcontoursarehighlyconstraining,whichisaresult
+of marginalising over a single baryon feedback parameter only, with
+a large degree of scatter between the hydro-sims. It is interesting
+to note that this scatter appears to be roughly along the degeneracy
+direction, though it appears random which quadrant each hydro-sim
+falls into.
+MNRAS000, 1–15 (2024)
+
+--- Page 10 ---
+10 A. Maraio et al.
+Table 3.Table summarising our results for the bias inΩm as found from our MCMC analyses using our suite of six hydro-sims and three baryon feedback
+models, without and with our additional theoretical error modelling added to the covariance matrix when going toℓmax= 5000. We see that without theoretical
+error, the one-parameter model generally produces significant biases (> 3𝜎) from the true value, with onlyBahamasgiving small biases inΩm and𝑆8. These
+biases reduce to less than1𝜎 with the inclusion of our theoretical error in the one-parameter model, highlighting the effectiveness of our theoretical error
+modelling. We see that the three- and six-parameter result in less bias inΩm, though some hydro-sims still give large biases for the six-parameter model (i.e.
+Simbaand Eagle). The inclusion of our theoretical error covariance into the three- and six-parameter models further reduces the bias.
+Hydro-sim and model 100ΔΩm No th. err. ΔΩm/𝜎Ωm No th. err. 100ΔΩm With th. err. ΔΩm/𝜎Ωm With th. err.
+Bahamas1-param 0.057 0.258 0.038 0.098
+Bahamas3-param 0.012 0.038 0.049 0.127
+Bahamas6-param 0.100 0.276 -0.085 -0.206
+Eagle1-param -0.306 -1.535 0.224 0.587
+Eagle3-param 0.149 0.520 0.433 1.186
+Eagle6-param 0.274 0.962 0.573 1.459
+Horizon-AGN1-param -0.057 -0.255 0.079 0.199
+Horizon-AGN3-param 0.224 0.631 0.123 0.331
+Horizon-AGN6-param 0.109 0.325 0.105 0.269
+Illustris1-param -1.317 -5.690 0.128 0.249
+Illustris3-param 0.048 0.127 0.373 0.828
+Illustris6-param 0.328 0.761 0.295 0.652
+Simba1-param -2.071 -8.828 -0.158 -0.293
+Simba3-param -1.513 -4.723 -0.155 -0.276
+Simba6-param -0.858 -2.206 -0.257 -0.567
+Illustris-TNG1-param -0.613 -2.885 -0.107 -0.277
+Illustris-TNG3-param -0.110 -0.424 0.035 0.091
+Illustris-TNG6-param -0.055 -0.185 0.181 0.453
+Table 4.Table similar to Table 3 but now for the bias in𝑆8 as found from our MCMC analyses. We see that without theoretical error, the one-parameter model
+resultsinatleasta3- 𝜎 biasfromthetruevalueforallhydro-simsexcept Bahamas,whichreduceswhengoingtoamulti-parametermodel.Ourtheoreticalerror
+is able to significantly reduce the bias in the one-parameter model, though we see a multi-parameter model is essential to ensure unbiased constraints across all
+hydro-sims.
+Hydro-sim and model 100Δ𝑆8 No th. err. Δ𝑆8/𝜎𝑆8 No th. err. 100Δ𝑆8 With th. err. Δ𝑆8/𝜎𝑆8 With th. err.
+Bahamas1-param 0.038 0.386 -0.028 -0.101
+Bahamas3-param 0.083 0.492 -0.210 -0.819
+Bahamas6-param 0.010 0.042 -0.360 -1.468
+Eagle1-param 0.709 8.802 0.660 2.579
+Eagle3-param 0.240 3.742 0.360 2.039
+Eagle6-param 0.240 3.207 0.441 2.443
+Horizon-AGN1-param 0.574 6.002 0.464 1.616
+Horizon-AGN3-param 0.137 0.865 0.158 0.759
+Horizon-AGN6-param 0.165 1.070 0.089 0.448
+Illustris1-param 0.796 3.710 0.377 1.024
+Illustris3-param 0.208 0.950 0.253 0.867
+Illustris6-param 0.325 1.289 0.135 0.435
+Simba1-param -1.059 -7.096 0.081 0.207
+Simba3-param -1.235 -6.469 -0.180 -0.480
+Simba6-param -0.916 -4.903 -0.328 -1.156
+Illustris-TNG1-param 0.281 3.701 0.033 0.130
+Illustris-TNG3-param -0.100 -1.602 -0.193 -1.083
+Illustris-TNG6-param -0.106 -1.628 -0.122 -0.715
+4.4.5 Dependency on 𝜎𝑘 and𝜎𝑧
+In our propagated covariance matrix (Equation 11) we introduced
+two coupling scales,𝜎𝑘 and𝜎𝑧, which were both set at0.25 in our
+fiducial analyses. Here, we investigate the effects of changing their
+values, and the effects it has on parameter constraints. We note that
+in our fiducial analyses, the baryon feedback physics of theSimba
+simulation is strong enough that even the six-parameter model of
+baryon feedback produces significantly biased cosmological param-
+eterconstraints(Figure12).Thus, Simbaisagoodtestinggroundto
+see how the contours react to the changing of these values.
+Ingeneral,as 𝜎𝑘 and𝜎𝑧 increaseweareincreasingthenumberof
+MNRAS000, 1–15 (2024)
+
+--- Page 11 ---
+Theoretical uncertainties for cosmic shear 11
+□0.01 0.00 0.01 0.02
+∆ σ8
+□0.02
+□0.01
+0.00
+0.01
+∆Ω m
+□0.01 0.00 0.01
+∆ S8
+1-param no th.err
+1-param w/ th.err
+3-param no th.err
+3-param w/ th.err
+6-param no th.err
+6-param w/ th.err
+Figure9. 2DΩm-𝜎8andΩm-𝑆8offsetcontoursforthethreebaryonfeedback
+models with and without our theoretical error for theSimba hydro-sim. We
+can clearly see that the one-parameter model without theoretical error (light
+greycontour)producesatightconstraintonourcosmologicalparametersthat
+is extremely far from the correct value. When we add our theoretical error
+to the data covariance (dark green contour), we find that the one-parameter
+model isabletorecoverthecorrectvalues,withanappropriateincreaseinthe
+size of the contour. We see that the three- and six-parameter models, while
+more flexible, are unable to correctly recover unbiased results without the
+addition of our theoretical uncertainties.
+□0.01 0.00 0.01
+∆ S8
+□0.02
+□0.01
+0.00
+0.01
+∆Ω m
+No theoretical error
+1-param
+□0.01 0.00 0.01
+∆ S8
+With theoretical error
+1-param
+Bahamas
+Eagle
+HZ-AGN
+Simba
+Illustris
+Illustris-TNG
+Figure10. 2DΩm-𝑆8 offsetcontoursfortheone-parameterbaryonfeedback
+model without and with the addition of our theoretical error for our range
+of hydro-sims considered. We can see that without theoretical error, the
+one-parameter model produces a large degree of scatter for all hydro-sims,
+with only Bahamas being consistent with the input cosmology. With the
+introduction of theoretical error, we see that the contours increase and all
+except Eaglebecome unbiased at the2𝜎 level.
+wavenumber and redshift modes that contribute to a given(ℓ1, ℓ2)
+pair,respectively.Thisincreasesthesizeour ℓ-spacetheoreticalerror
+covariance, further suppressing the high-ℓ modes that are contami-
+nated by baryonic feedback. However, in the limit that𝜎𝑘 and 𝜎𝑧
+tendtoinfinity,thenbothGaussiantermstendtounityandthedouble
+integralbecomesfactorisablein (𝑘, 𝑘′)-spaceandthusisequivalent
+to some rank-1 update of the formx xt, where x is some vector in
+ℓ-space. Since this is a rank-1 addition to our data covariance ma-
+trix, this is equivalent to marginalisation over a single parameter.
+However, since we know that single parameter models for baryonic
+feedbackdonotcorrectlymodelthewiderangeofbehaviourofbary-
+onicfeedbackeffectsseeninthehydro-sims,itwouldbeincorrectto
+take this limit for the values of𝜎𝑘 and𝜎𝑧.
+The regime in which our theoretical error covariance reduces to a
+rank-1matrixwillbedeterminedbythemaximum 𝑘-spacedifference
+betweendifferent ℓ-modes.Forexample,Figure2showsthatthereis
+anapproximatetwodecadedifferenceinlog- 𝑘 betweenoursmallest
+□0.01 0.00 0.01
+∆ S8
+□0.02
+□0.01
+0.00
+0.01
+∆Ω m
+No theoretical error
+3-param
+□0.01 0.00 0.01
+∆ S8
+With theoretical error
+3-param
+Bahamas
+Eagle
+HZ-AGN
+Simba
+Illustris
+Illustris-TNG
+Figure11. 2DΩm-𝑆8offsetcontoursforthethree-parameterbaryonfeedback
+model without and with the addition of our theoretical error for our range of
+hydro-sims considered. When compared to the less flexible one-parameter
+model, we see that the three parameter model without additional theoretical
+error is better able to recover the input cosmology for a wider range of simu-
+lations, thoughEagle, Illustris-TNG, andSimbaremain biased to at least
+the 2𝜎 level. We note the general increase in the contour’s area going from
+the one- to three-parameter model which is associated with marginalising
+overmorebaryonfeedbackparameters.Weseethatwiththeoreticalerror,all
+contours are unbiased at the2𝜎 level.
+□0.01 0.00 0.01
+∆ S8
+□0.02
+□0.01
+0.00
+0.01
+∆Ω m
+No theoretical error
+6-param
+□0.01 0.00 0.01
+∆ S8
+With theoretical error
+6-param
+Bahamas
+Eagle
+HZ-AGN
+Simba
+Illustris
+Illustris-TNG
+Figure12. 2DΩm-𝑆8 offsetcontoursfortheone-parameterbaryonfeedback
+model without and with the addition of our theoretical error for our range of
+hydro-sims considered. Again, we see an extension of the general trend in
+the contours without additional theoretical error: an increase in the contours
+with them moving towards the origin. We see that even with a six-parameter
+model, it is not sufficient to recover unbiased constraints from theSimba
+simulation.
+and largestℓ-mode. Thus, if one were to choose a value for𝜎𝑘 that
+easilyencompassedthesevalueswithinonestandarddeviation,then
+we would expect our theoretical error covariance to collapse to the
+rank-1 limit. Since our values chosen for𝜎𝑘 are much less than two
+decades, we expect that our values to not fall within this limit.
+In Figure 13, we plot the 2D contours for three different combi-
+nations of𝜎𝑘 and𝜎𝑧. Larger values of these parameters allows for
+longer-scale correlations in wavenumber and redshift, and thus pro-
+duce a larger amplitude for the theoretical error covariance matrix.
+Figure13showsthattheselargervaluessuppresshigh- ℓmodesmore
+than for smaller values, which is seen by the larger contours and
+a reduction in the bias from baryon feedback. While on the range
+of values that we tested larger values increase the effectiveness of
+the theoretical error covariance, larger values also increases the cor-
+relation length between different wavenumbers and redshifts in the
+covariancematrixwhichdecreasestheadaptabilityofourtheoretical
+error covariance to match more general models of baryon feedback
+MNRAS000, 1–15 (2024)
+
+--- Page 12 ---
+12 A. Maraio et al.
+□0.01 0.00 0.01 0.02
+∆ σ8
+□0.02
+□0.01
+0.00
+0.01
+0.02
+∆Ω m
+□0.01 0.00 0.01
+∆ S8
+σk = 0.125, σz = 0.125 σk = 0.25, σz = 0.25 σk = 0.5, σz = 0.5
+Figure 13.2DΩm-𝜎8 andΩm-𝑆8 contours for the Simba hydro-sim using
+the one-parameter model with theoretical error where we are changing the
+values of𝜎𝑘 and 𝜎𝑧. Here, we see that as we increase their values, the
+effects of the theoretical error covariance become larger - increasing the size
+and decreasing the biases in the contours.
+physics.Inthelimitthatthesevaluesgotoinfinity,wewouldbesay-
+ingthatallwavenumbersandredshiftsare 100 %correlated,whichis
+unphysicalsinceweknowthatbaryoniceffectsinthepowerspectrum
+are quite local at high𝑘. Equally, in the limit that these values go to
+zero,wewouldbemaximallydestroyinginformationthroughtheco-
+variancematrixbyassumingthateachwavenumberandredshifthas
+anindependenterrorwhichareuncorrelatedbetweensimilarmodes.
+Ultimately, there is less than a1𝜎 shift in contours plotted in Fig-
+ure 13, and so our implementation of the theoretical error approach
+is broadly insensitive to the values of𝜎𝑘 and𝜎𝑧.
+Weinvestigatetheeffectsofchangingthesecouplingparametersin
+our three- and six-parameter models in Appendix A, which shows a
+similartrendtotheone-parametermodelinthatlargervaluesproduce
+increased contours with less baryonic bias in them.
+4.4.6 Growth-structure split
+The information in the cosmic shear power spectrum (Equation 4)
+comesfromtwopieces:thegeometricalfactorsofthelensingkernels,
+and in the matter power spectrum, both depending on the matter
+densityΩm. It can be advantageous to decouple this matter density
+in two: a factor that describes the geometry of the Universe through
+the computation of the comoving distances in the lensing kernel,
+Ωm geom, and the growth of structure in the universe that is used in
+the computation of the matter power spectrum,Ωm (Matilla et al.
+2017). This growth-structure split of the matter density has been
+appliedtoexistingcosmicsheardata-sets,includingtheDarkEnergy
+Survey (Muir et al. 2021; Zhong et al. 2023) and the Kilo-Degree
+Survey (Ruiz-Zapatero et al. 2021).
+We are motivated to apply this growth-structure split to our ap-
+proachofmodellingthetheoreticaluncertaintiesatthematterpower
+spectrum level. By quantifying the errors directly in𝑃(𝑘), and then
+propagating to the angular power spectrum, we are hopefully pre-
+serving information in the lensing kernels. Our lensing kernels have
+no theoretical uncertainties associated with them, and so we hope to
+preserveinformationabout Ωm geomevenwithourscalecutspresent.
+Thus,wecanrepeatasub-setofourMCMCanalysestoinvestigate
+how the inclusion of our theoretical error changes the constraints on
+Ωm andΩm geom. This is presented in Figure 14. Here, we see that
+without our theoretical uncertainties, the inflexible one-parameter
+modelleadstoabiasin Ωm butremainsunbiasedinthegeometrical
+termΩm geom.Thistellusthatwhileourdata-vectormaystillbecon-
+taminated with baryonic feedback from the matter power spectrum,
+information from the lensing kernels can still be extracted from cos-
+□0.01 0.00 0.01 0.02
+∆Ω m
+□0.01
+0.00
+0.01
+0.02
+∆ S8
+□0.01 0.00 0.01 0.02
+∆Ω m, geom
+1-param no th.err
+1-param w/th.err
+3-param no th.err
+3-param w/th.err
+6-param no th.err
+6-param w/th.err
+Figure14. 2DΩm-𝑆8 andΩm geom-𝑆8 contoursfordifferentbaryonfeedback
+models without and with the addition of our theoretical error with theEagle
+hydro-sim. We see that without theoretical error, the one-parameter model
+produces results that are biased in𝑆8 and Ωm, but can identify that the
+information from the lensing kernels is not affected by baryonic feedback,
+and thus produces unbiased estimates forΩm geom.
+micsheardata.Whenweintroduceourtheoreticalerrortermstothe
+covariance matrix, we down-weight baryonic contaminated modes,
+andsobecomeconsistentin Ωm andΩm geomatthecostofincreased
+contour sizes.
+5 DISCUSSION AND CONCLUSIONS
+We have presented results for parameter constraints using various
+hydrodynamical simulations as ground truths analysed with three
+different baryon feedback models, with and without an additional
+theoreticalerrorcovariance.Wehaveseenthatconstraintsoncosmo-
+logical parameters are significantly biased for a forthcoming Stage-
+IV like cosmic shear survey using as low as a maximumℓ-mode of
+ℓmax = 1000 when analysing the hydrodynamical simulation’s data
+usingasingleparameterforbaryonfeedback.Thisisconsistentwith
+previousresultsintheliterature,forexampleDouxetal.(2021)find-
+ingaharmonic-spacescalecutof ℓmax∼ 500wasneededforthecase
+ofDES-Y3mockdataagainstamodelwithoutbaryonicfeedbackin.
+Hence, we are motivated to more accurately model the errors as-
+sociated in the matter power spectrum arising from baryon feedback
+overthemoretraditionalbinaryscale-cutsapproach,resultinginour
+theoretical error covariance. This theoretical error was then applied
+to our model of baryon feedback across our suite of hydrodynam-
+ical simulations, finding that our our parameters biases decreased
+with smaller absolute and relative off-sets when going to the same
+maximum multipole in our analysis.
+Wenotethatsomehydro-simsstillyieldasignificant( >1𝜎)biasin
+cosmologicalparameterswhenusingourtheoreticalerrorcovariance
+for the single-parameter model, which indicates that such a basic
+model will be unsuitable for application to Stage-IV cosmic shear
+survey data. While the multi-parameter models tended to do better
+in producing unbiased results, our theoretical error covariance was
+still needed to ensure that all hydro-sim results were unbiased when
+going toℓmax= 5000.
+Thetheoreticalerrorformalismisageneralmethodforquantifying
+theknownerrorsofamethodtorealisationsofthedata.Thismethod
+canbeappliedtoawide-rangeofmodellingproblemswithincosmol-
+ogyandastrophysics,wherewehaveappliedittobaryonicfeedback
+within the matter power spectrum. To that end, the theoretical error
+is not a fixed quantity. If next generation hydrodynamical simula-
+tions release that feature, for example, improved subgrid models of
+MNRAS000, 1–15 (2024)
+
+--- Page 13 ---
+Theoretical uncertainties for cosmic shear 13
+physical processes that we know we are currently lacking (Crain &
+van de Voort 2023), then it would make sense to replace the older
+simulationsinoursuitewiththesenewreleases.Thiswouldalterour
+error envelope function, improving or reducing our degree of trust
+in our numerical baryonic feedback models. Alternatively, as new
+baryonic feedback models are developed which are more actuate to
+the hydro-sims, the need for a theoretical error covariance becomes
+diminished.
+With multi-parameter models of baryonic feedback, the effective-
+ness of external priors (that is, information on baryonic feedback
+not from cosmic shear alone) become increasingly powerful. In
+recent years, observational constraints on baryonic feedback have
+come from the thermal Sunyaev-Zeldovich effect in CMB observa-
+tions (Tröster et al. 2022), and diffuse x-ray backgrounds (Ferreira
+et al. 2024). With ever increasing precision data taken on our Uni-
+verseacrosstheentireelectromagneticspectrum,thepowerofexter-
+nal priors and cross-correlation with Stage-IV cosmic shear surveys
+for baryonic feedback physics constraints will be immense.
+The Holy Grail of baryonic feedback models will, of course, be
+a model that can fit all hydro-sims with no free parameters.4 How-
+ever, while we are making progress towards this goal, for example
+Bacco (Aricò et al. 2021), a theoretical error covariance is highly
+valuable until then. We expect the formalism that we have presented
+and validated here will be of significant value to forthcoming Stage-
+IV weak lensing surveys.
+ACKNOWLEDGEMENTS
+We acknowledge HPC resources from the IRIS computing consor-
+tium. AH acknowledges support from a Royal Society University
+Research Fellowship. For the purpose of open access, the author has
+applied a Creative Commons Attribution (CC BY) licence to any
+Author Accepted Manuscript version arising from this submission.
+REFERENCES
+Abate A., et al., 2012, arXiv e-prints (1211.0310)
+Abbott T. M. C., et al., 2022, Phys. Rev. D, 105, 023520
+Abbott T. M. C., et al., 2023, Open J. Astrophys., 6, 2305.17173
+Amon A., et al., 2022, Phys. Rev. D, 105, 023514
+Aricò G., Angulo R. E., Contreras S., Ondaro-Mallea L., Pellejero-Ibañez
+M., Zennaro M., 2021, Mon. Not. Roy. Astron. Soc., 506, 4070
+Asgari M., et al., 2021, Astron. Astrophys., 645, A104
+Baldauf T., Mirbabayi M., Simonović M., Zaldarriaga M., 2016, arXiv e-
+prints 1602.00674
+Bartelmann M., 2010, Class. Quant. Grav., 27, 233001
+Bartelmann M., Schneider P., 2001, Phys. Rept., 340, 291
+Blanchard A., et al., 2020, Astron. Astrophys., 642, A191
+Chisari N. E., et al., 2018, Mon. Not. Roy. Astron. Soc., 480, 3962
+Chisari N. E., et al., 2019, Open J. Astrophys., 2, 4
+Chudaykin A., Ivanov M. M., 2019, JCAP, 11, 034
+Cooray A., Sheth R. K., 2002, Phys. Rept., 372, 1
+Copeland D., Taylor A., Hall A., 2018, Mon. Not. Roy. Astron. Soc., 480,
+2247
+Crain R. A., van de Voort F., 2023, Ann. Rev. Astron. Astrophys., 61, 473
+Dalal R., et al., 2023, Phys. Rev. D, 108, 123519
+4 This is not a requirement on the baryonic feedback models, per se, but on
+therequirementsontheensembleofhydrodynamicalsimulationstoconverge
+to a single prediction for the evolution of𝑃Hy(𝑘,𝑧). With no scatter in
+the hydro-sims, deriving a fitting formulae for baryonic feedback physics
+becomes trivial.
+Davé R., Anglés-Alcázar D., Narayanan D., Li Q., Rafieferantsoa M. H.,
+Appleby S., 2019, Mon. Not. Roy. Astron. Soc., 486, 2827
+Doux C., et al., 2021, Mon. Not. Roy. Astron. Soc., 503, 3796
+Doux C., et al., 2022, Mon. Not. Roy. Astron. Soc., 515, 1942
+Elbers W., et al., 2024, arXiv e-prints2403.12967
+Ferreira T., Alonso D., Garcia-Garcia C., Chisari N. E., 2024, Phys. Rev.
+Lett., 133, 051001
+Giri S. K., Schneider A., 2021, JCAP, 12, 046
+Hall A., Taylor A., 2022, Phys. Rev. D, 105, 123527
+Handley W. J., Hobson M. P., Lasenby A. N., 2015a, Mon. Not. Roy. Astron.
+Soc., 450, L61
+HandleyW.J.,HobsonM.P.,LasenbyA.N.,2015b,Mon.Not.Roy.Astron.
+Soc., 453, 4385
+Heymans C., et al., 2021, Astron. Astrophys., 646, A140
+Huang H.-J., Eifler T., Mandelbaum R., Dodelson S., 2019, Mon. Not. Roy.
+Astron. Soc., 488, 1652
+Kilbinger M., 2015, Rept. Prog. Phys., 78, 086901
+Kitching T. D., Taylor A. N., 2011, Mon. Not. Roy. Astron. Soc., 416, 1717
+Krause E., et al., 2021, arXiv e-prints2105.13548
+Laureĳs R., et al., 2011, arXiv e-prints (1110.3193)
+Li X., et al., 2023a, Phys. Rev. D, 108, 123518
+Li S.-S., et al., 2023b, Astron. Astrophys., 679, A133
+Matilla J. M. Z., Haiman Z., Petri A., Namikawa T., 2017, Phys. Rev. D, 96,
+023513
+McCarthy I. G., Schaye J., Bird S., Le Brun A. M. C., 2017, Mon. Not. Roy.
+Astron. Soc., 465, 2936
+Mead A., Peacock J., Heymans C., Joudaki S., Heavens A., 2015, Mon. Not.
+Roy. Astron. Soc., 454, 1958
+MeadA.,HeymansC.,LombriserL.,PeacockJ.,SteeleO.,WintherH.,2016,
+Mon. Not. Roy. Astron. Soc., 459, 1468
+Mead A., Brieden S., Tröster T., Heymans C., 2020, Mon. Not. Roy. Astron.
+Soc., 502, 1401
+Mellier Y., et al., 2024, arXiv e-prints (2405.13491)
+Mohammed I., Seljak U., 2014, Mon. Not. Roy. Astron. Soc., 445, 3382
+Moreira M. G., Andrade-Oliveira F., Fang X., Huang H.-J., Krause E., Mi-
+randa V., Rosenfeld R., Simonović M., 2021, Mon. Not. Roy. Astron.
+Soc., 507, 5592
+Muir J., et al., 2021, Phys. Rev. D, 103, 023528
+Nelson D., et al., 2015, Astron. Comput., 13, 12
+Ni Y., et al., 2023, Astrophys. J., 959, 136
+Peacock J. A., Smith R. E., 2000, MNRAS, 318, 1144
+Pellejero-Ibanez M., Angulo R. E., Zennaro M., Stuecker J., Contreras S.,
+Arico G., Maion F., 2023, Mon. Not. Roy. Astron. Soc., 520, 3725
+Ruiz-Zapatero J., et al., 2021, Astron. Astrophys., 655, A11
+Salcido J., McCarthy I. G., 2024, arXiv e-prints2409.05716
+SalcidoJ.,McCarthyI.G.,KwanJ.,UpadhyeA.,FontA.S.,2023,Mon.Not.
+Roy. Astron. Soc., 523, 2247
+Schaye J., et al., 2015, Mon. Not. Roy. Astron. Soc., 446, 521
+Schneider A., Teyssier R., 2015, JCAP, 12, 049
+Schneider A., et al., 2016, JCAP, 04, 047
+Schneider A., Teyssier R., Stadel J., Chisari N. E., Le Brun A. M. C., Amara
+A., Refregier A., 2019, JCAP, 03, 020
+Secco L. F., et al., 2022, Phys. Rev. D, 105, 023515
+Seljak U., 2000, Mon. Not. Roy. Astron. Soc., 318, 203
+SemboloniE.,HoekstraH.,SchayeJ.,vanDaalenM.P.,McCarthyI.J.,2011,
+Mon. Not. Roy. Astron. Soc., 417, 2020
+Smith R. E., et al., 2003, Mon. Not. Roy. Astron. Soc., 341, 1311
+Spergel D., et al., 2015, arXiv e-prints (1503.03757)
+Sprenger T., Archidiacono M., Brinckmann T., Clesse S., Lesgourgues J.,
+2019, JCAP, 02, 047
+Springel V., et al., 2018, Mon. Not. Roy. Astron. Soc., 475, 676
+TakahashiR.,SatoM.,NishimichiT.,TaruyaA.,OguriM.,2012,Astrophys.
+J., 761, 152
+Tröster T., et al., 2022, Astron. Astrophys., 660, A27
+UphamR.E.,BrownM.L.,WhittakerL.,2021,Mon.Not.Roy.Astron.Soc.,
+503, 1999
+Vogelsberger M., Marinacci F., Torrey P., Puchwein E., 2020, Nature Rev.
+Phys., 2, 42
+MNRAS000, 1–15 (2024)
+
+--- Page 14 ---
+14 A. Maraio et al.
+ZhongK.,SaraivanovE.,MirandaV.,XuJ.,EiflerT.,KrauseE.,2023,Phys.
+Rev. D, 107, 123529
+Zuntz J., et al., 2015, Astron. Comput., 12, 45
+van Daalen M. P., Schaye J., Booth C. M., Vecchia C. D., 2011, Mon. Not.
+Roy. Astron. Soc., 415, 3649
+van Daalen M. P., McCarthy I. G., Schaye J., 2020, Mon. Not. Roy. Astron.
+Soc., 491, 2424
+APPENDIX A: DEPENDENCY OF THE COVARIANCE ON
+THE COUPLING PARAMETERS
+In Section 4.4.5 we looked at the one-parameter model and its de-
+pendency on the coupling parameters𝜎𝑘 and𝜎𝑧. Here, we present
+a comparison between all three baryon feedback models and inves-
+tigate their dependency on the coupling parameters. Figure A1 uses
+Simbaas the ground-truth, which features quite significant baryonic
+feedback, and Figure A2 usingIllustris-TNG, which has less ex-
+tremefeedback.Whenusing Simbaastheground-truth,weseeathat
+thereisastronglinkbetweenthecouplingparameter’svaluesandthe
+cosmologicalparameterbiasesfortheone-parametermodel,whereas
+themoregeneralthree-andsix-parametermodelsareapproximately
+insensitive to𝜎𝑘 and 𝜎𝑧 due to their ability to better fit the data
+(thus have less significant theoretical uncertainties associated with
+these models). We also see that, when usingIllustris-TNGas the
+ground-truth, since all three feedback models can adequately fit the
+data, increasing𝜎𝑘 and 𝜎𝑧 serves to slightly broaden the contours
+only, with no significant effect on the parameter means.
+MNRAS000, 1–15 (2024)
+
+--- Page 15 ---
+Theoretical uncertainties for cosmic shear 15
+□0.02
+□0.01
+0.00
+0.01
+0.02
+∆Ω m 1-parmeter
+□0.02
+□0.01
+0.00
+0.01
+0.02
+∆Ω m 3-parmeter
+□0.02 0.00 0.02
+∆ σ8
+□0.02
+□0.01
+0.00
+0.01
+0.02
+∆Ω m 6-parmeter
+□0.01 0.00 0.01
+∆ S8
+σk = 0.125, σz = 0.125 σk = 0.25, σz = 0.25 σk = 0.5, σz = 0.5
+Figure A1.Ωm-𝜎8 andΩm-𝑆8 contours for theSimba hydro-sim using the
+one-, three-, and six-parameter models (descending rows) with theoretical
+error for different values of𝜎𝑘 and 𝜎𝑧 (different coloured contours). We
+see that increasing these values produces a stronger effect for the theoretical
+covariance,increasingthesuppressionofsmall-scalemodesandthusreducing
+the bias from baryonic feedback.
+This paper has been typeset from a TEX/LATEX file prepared by the author.
+□0.01
+0.00
+0.01
+∆Ω m 1-parmeter
+□0.01
+0.00
+0.01
+∆Ω m 3-parmeter
+□0.02 □0.01 0.00 0.01
+∆ σ8
+□0.01
+0.00
+0.01
+∆Ω m 6-parmeter
+□0.01 0.00 0.01
+∆ S8
+σk = 0.125, σz = 0.125 σk = 0.25, σz = 0.25 σk = 0.5, σz = 0.5
+Figure A2.Similar plot to Figure A1, but for theIllustris-TNGhydro-sim
+instead of Simba. Since Illustris-TNG can be well fitted by each of our
+HMCodemodelswiththeoreticalerror,theeffectofchanging 𝜎𝑘 and𝜎𝑧 is
+justtoincreaseordecreasethesizeofthecontours,withouteffectingthebias
+in these parameters.
+MNRAS000, 1–15 (2024)
