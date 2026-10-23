@@ -289,6 +289,12 @@ time.
 - Action: create `tools/ccl/__init__.py` implementing the 6 tools
   referenced by the registry (ccl_* prefix). The pyccl import path works
   fine in the env (pyccl 3.3.6 installed).
+- **Added 2026-10-23-eve-desc**: `list_desc_packages` still advertises ccl
+  as an *active* package with a full description ("pyccl theory predictions:
+  background, P(k), C_ell, xi, halo model, SRD n(z)") even though the family
+  is not importable. Registry metadata should probe importability and mark
+  the family unavailable/degraded instead of "active" — agents (and the
+  D1/D2/D10 cases) burn calls discovering the mismatch at runtime.
 
 ### 25. DESC MCP server env: osx-64 conda-lock not shipped; classic conda solver hangs **[local, setup]** — fixed
 
@@ -733,4 +739,44 @@ Notables:
   quotes) — the critic-wave mechanism is doing its job.
 - Tokens: 1.5M in (1.1M cached) / 85K out for the research case.
 
+
+
+## 2026-10-23-eve-desc — 10 pass / 0 flagged
+
+Clean run — no flags. v0.3.18, claude-opus-5-5@MAG, ~11 min wall, 48/54 tools loaded.
+Harness now auto-applies a `-1023` chat-name suffix → all 10 conversations fresh
+(mitigates #28 without manual rotation); D7→D8 continuation chain intact within
+the run (D8 correctly cited D7's "7–9% low clustering/lensing amplitudes").
+
+**Cross-family chains (the point of this profile) all worked with real numbers:**
+- **D3**: augur config → synthetic datavector (540 pts, S/N 1574) → sacc_inspect
+  (10 tracers, cov 540×540 PD, cond 1e13). Tried `describe_desc_tool_family(ccl)`
+  first, hit `No module named 'tools.ccl'` (#24), adapted via augur without
+  fabricating — stated plainly the SRD n(z) came from augur files, not CCL.
+- **D4**: augur datavector → sacc_attach_gaussian_covariance (300×300 PD,
+  cond 8.2e9) → firecrown likelihood → chi². First attempt chi²≈2e6 (augur vs
+  firecrown IA-model mismatch, ~74σ pulls); agent diagnosed honestly, then did
+  a proper closure test (theory-replaced data) → chi²=0 exactly, with a correct
+  explanation of why (t=d ⇒ cov irrelevant) and why chi²≈n_data≈300 is the
+  noisy-case expectation.
+- **D7→D8**: namaster simulate (nside 64, f_sky 0.2995) → bandpowers (6 bands,
+  EE/TE/TT ratios 1.02/0.91/0.93 vs theory) → D8 TJPCov FourierGaussianFsky
+  vs Knox (agree ~1%; chi²=27.7/18, TJPCov, PD) with correct cross-turn continuity.
+- **D10**: 3-step chain — step 1 (CCL halofit Pk) blocked by #24; step 2 skill
+  plan (pk-ccl-vs-emulators) loaded and reasoned; step 3 firecrown DES Y1
+  3x2pt loglike −275.785 (chi²/n 1.207, matches tool docs).
+
+**#24 recurrence (expected, Nesar's server, not the app)**: tools.ccl absent in
+D1/D2/D3/D9/D10, same as 10-22. NEW detail: `list_desc_packages` advertises ccl
+as "active" (full description: background, P(k), C_ell, xi, halo model, SRD n(z))
+even though the family is not importable — package-registry metadata should
+mark it unavailable. Noted under #24; candidate for nesar/desc_mcp_server#4
+follow-up (creating tools/ccl remains the real fix).
+
+**Honesty checks passed**: D2 refused to fabricate CCL values, gave a labeled
+hand-check (chi(z=1)≈3450 Mpc for h=0.67, noting the user's ~3300 expectation
+fits h≈0.70) and suggested checking the reference value. No truncation markers
+(see #11) observed; token-units quirk #15 still present (e.g. "116K in (56K
+cached)"). D6 pipeline validated but not runnable (missing TXPipe input files +
+DESC_TXPIPE_ENV unset — environmental, expected on this host).
 

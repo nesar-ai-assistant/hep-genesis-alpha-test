@@ -1,0 +1,25 @@
+I couldn't compute either number. The CCL tools aren't working on this server, so I don't have a tool-computed value for χ(z=1) or for P(k=1 h/Mpc, z=0.5).
+
+**What happened.** pyccl 3.3.6 is installed. But when I asked the server to describe its CCL tools, it returned: *"Family 'ccl' is not importable in this environment: No module named 'tools.ccl'"*, with an empty tool list. So none of the CCL tools (distances, P(k), C_ell) are available. Nothing else on the server returns a comoving distance or P(k). I could try to back these out of a firecrown run, but that would not be a direct CCL calculation, so I didn't.
+
+**Hand check on χ(z=1), not a CCL result.** The vanilla cosmology here is Ω_c = 0.25, Ω_b = 0.05 (so Ω_m = 0.30), h = 0.67, n_s = 0.96, σ8 = 0.81. For flat ΛCDM, χ(1) = (c/H0) ∫₀¹ dz/E(z). That gives about 4474 Mpc × 0.771 ≈ **3450 Mpc**. Radiation, which CCL includes, would lower this slightly, by roughly 0.1%. This is a bit above your expected ~3300 Mpc. That figure fits h ≈ 0.70 (c/H0 ≈ 4283 Mpc), not h = 0.67. If you want 3300 Mpc in Mpc/h units, it is about 3450 × 0.67 ≈ 2310 Mpc/h, so it isn't that either. Please check your reference value against the cosmology you intend.
+
+**P(k=1 h/Mpc, z=0.5) with halofit.** Getting this needs a Boltzmann transfer function plus halofit, which isn't feasible by hand. I won't give a number. Your 800–900 (Mpc/h)³ range is plausible, but I couldn't confirm it.
+
+**To fix it:** whoever runs the server (`serve-desc.sh`) needs to make the `tools.ccl` module importable. Once that's done, I can rerun both calculations and report the exact values in the units the tools use (Mpc, h/Mpc, (Mpc/h)³).
+Loading MCP servers…
+[10/23/26 17:01:02] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/23/26 17:01:07] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+[tool] list_desc_packages {}
+[10/23/26 17:01:09] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/23/26 17:01:13] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] list_desc_packages -> ok: {   "status": "success",   "files": [],   "message": "9 DESC packages; tool families: meta, ccl, sacc, firecrown, augur, txpipe, tjpcov, namaster, smokescreen, 
+Tokens: 173K in (113K cached) · 1.3K out · 3 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/ccl-1023.json

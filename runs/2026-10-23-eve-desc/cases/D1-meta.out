@@ -1,0 +1,26 @@
+pyccl 3.3.6 · sacc 2.4 · firecrown 1.16.0 · augur 1.2.4.1
+
+I couldn't describe the ccl family. `describe_desc_tool_family("ccl")` returned an empty tool list with the error "No module named 'tools.ccl'". pyccl 3.3.6 itself is installed, but this server's CCL tool wrappers didn't load, so I have no ccl_ tool list, weights or caveats to give you.
+
+`list_desc_packages` still lists ccl as active and describes it as "pyccl theory predictions: background, P(k), C_ell, xi, halo model, SRD n(z)". Its stated conventions are:
+- **Units:** CCL is h-free (Mpc, 1/Mpc, Msun), but these tools take z and use h/Mpc by default.
+- **Angles and multipoles:** theta is in arcmin and ell is an integer.
+- **Parameter names:** Omega_c, Omega_b, h, n_s, sigma8|A_s, m_nu, w0, wa.
+
+The other DESC tools (firecrown, augur, sacc, tjpcov) still call pyccl internally, so theory predictions are available through them. To get the ccl_ tools themselves, whoever runs the server would need to check that the `tools/ccl` module is in the server's package and restart it.
+Loading MCP servers…
+[10/23/26 17:00:32] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] list_desc_packages {}
+[10/23/26 17:00:37] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/23/26 17:00:50] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] list_desc_packages -> ok: {   "status": "success",   "files": [],   "message": "9 DESC packages; tool families: meta, ccl, sacc, firecrown, augur, txpipe, tjpcov, namaster, smokescreen, 
+[tool] describe_desc_tool_family {"family": "ccl"}
+[10/23/26 17:00:52] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] describe_desc_tool_family -> ok: {   "status": "success",   "files": [],   "message": "Family 'ccl' is not importable in this environment: No module named 'tools.ccl'",   "metadata": {     "fam
+Tokens: 116K in (56K cached) · 554 out · 2 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/meta-1023.json

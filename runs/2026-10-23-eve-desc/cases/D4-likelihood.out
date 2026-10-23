@@ -1,0 +1,95 @@
+I'll generate a cosmic-shear data vector, swap in the requested Gaussian covariance, build the firecrown likelihood, and evaluate it at the generating cosmology. First, the base sacc (LSST Y1-like, 5 source bins, harmonic space):
+The final chi² is **exactly 0** (loglike = -0.000, 300 points, all 15 tracer-pair blocks 0, max pull 0). Getting there took a second data vector, though. My first attempt gave chi² ≈ 2×10⁶, and that failure is part of the explanation.
+
+## What ran (all on this machine)
+
+1. **Data vector:** I wrote an augur config for LSST Y1 cosmic shear: 5 source bins with the DESC SRD n(z), 15 bin pairs × 20 log-spaced ell bands from 20 to 15000, so 300 points. The cosmology was the DESC SRD fiducial: Omega_c = 0.2664, Omega_b = 0.0492, h = 0.6727, n_s = 0.9645, sigma8 = 0.831, with the Eisenstein-Hu transfer function and halofit. augur turned that into a fiducial sacc file (Figure 6).
+2. **Covariance:** `sacc_attach_gaussian_covariance` with f_sky = 0.4, sigma_e = 0.26 and n_gal = 10 arcmin⁻² per bin. This is the simple disconnected Gaussian (mode-counting) form, Cov = (C_ac C_bd + C_ad C_bc) / [(2ℓ+1) Δℓ f_sky], where each auto-spectrum includes the shape noise sigma_e²/n̄. No super-sample or non-Gaussian terms. The result is a 300×300 matrix that is positive definite, has condition number 8.2×10⁹, and gives a total S/N of 1684.
+   - I let it replace the covariance augur had already attached.
+   - The S/N differs from augur's own estimate (366) because n_gal = 10 is per bin here, while augur splits 10 arcmin⁻² across all five bins.
+3. **Likelihood:** a firecrown harmonic-space experiment, 300 points, no scale cuts. It has a photo-z shift and a multiplicative shear bias per bin, and global linear-alignment intrinsic alignments (ia_bias, alphaz, z_piv).
+4. **Evaluation at the generating cosmology:**
+
+| Data in the sacc | chi² (n = 300) |
+|---|---|
+| augur's C_ell, ia_bias = 0.5, z_piv = 0.62 | 2.01×10⁶ |
+| augur's C_ell, ia_bias = 0 | 2.21×10⁶ |
+| firecrown's own theory at the same point, same covariance (`shear_closure_e0ec78_theory_3e9d08.hdf5`) | **0.00** |
+
+All three runs had every delta_z = 0 and every mult_bias = 0.
+
+## Why chi² is 0
+
+firecrown's Gaussian likelihood computes chi² = (d − t)ᵀ C⁻¹ (d − t), where d is the data, t the theory and C the covariance. The working data vector is a copy of the sacc whose values were *replaced* by firecrown's own theory at that exact point. It used the same model, the same n(z), the same cosmology and the same nuisance values: no photo-z shift, no shear bias, the same IA settings. So when the likelihood is evaluated there, t = d, the residual is zero, and chi² = 0 whatever covariance you use (Figure 23).
+
+Three points follow from this:
+- **The covariance cannot affect chi² here.** f_sky, sigma_e and n_gal only scale C, and C multiplies a zero residual. They would matter if you varied a parameter, for example in a scan or Fisher matrix, where they set the error bars.
+- **chi² = 0 is not "too good".** The data are noiseless, with no scatter drawn from C. A noisy realization would instead give chi² ≈ n_data ≈ 300 ± 24. That is the next closure test (`add_noise=True`) if you want it.
+- **The test only shows the pipeline closes on itself.** Data → sacc → firecrown → theory is wired consistently. It does not test whether the model is correct.
+
+## Why the first attempt gave about 2×10⁶
+
+augur's C_ell were made with augur's own model choices, not the ones in this firecrown likelihood. The residuals were huge: typical pulls of about 74σ, up to about 200σ. They were worst for pairs involving the lowest-redshift bin, src0, which is where intrinsic alignments matter most.
+
+That points to a different IA setup in augur's SRD config, perhaps also other differences such as how ell is sampled within the bands. I did not check which settings differ, so this is a likely cause, not a confirmed one. Turning IA off made it worse (2.21×10⁶), so IA alone does not explain the gap.
+
+The general lesson: a "zero chi²" check only holds when the data vector comes from the same likelihood and parameter values you test against. Otherwise you are measuring the mismatch between two codes, and with S/N of about 1700 even tiny mismatches show up as huge chi².
+
+## Files
+
+All in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218`:
+- `shear_y1_gausscov.hdf5` (augur's C_ell + the requested covariance)
+- `shear_closure_e0ec78_theory_3e9d08.hdf5` (firecrown's theory + the same covariance)
+- `shear_closure_fc_d8f596.yaml` (the likelihood used for the chi² = 0 result)
+- `theory_vs_data_6f373d.csv` / `.png` (theory vs data, Figure 23)
+Loading MCP servers…
+[10/23/26 17:02:20] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+Loaded 48 tools
+[tool] augur_generate_forecast_config {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218", "probes": "shear", "survey_year": "Y1", "ndens_source": 10, "fsky": 0.4, "sigma_e": 0.26, "var_pars": ["
+[10/23/26 17:02:36] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/23/26 17:02:40] INFO     NumExpr defaulting to 4 threads.       utils.py:164
+[tool] augur_generate_forecast_config -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/augur_shear_closure_08b16a/forecast_con
+[tool] augur_generate_synthetic_datavector {"config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/augur_shear_closure_08b16a/forecast_config.yml", "output_dir": "/Users/nramachandra/hep-genesis-testing/p
+[10/23/26 17:02:43] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[10/23/26 17:02:46] INFO     loading filters                     generate.py:823
+[10/23/26 17:02:47] INFO     Warning: UserWarning: No bandpower    server.py:723
+                             windows associated with these data                 
+[tool] augur_generate_synthetic_datavector -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/datavector_bfe29c.csv",     "/Users/nra
+[tool] sacc_attach_gaussian_covariance {"sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/augur_shear_closure_08b16a/fiducial_datavector.sacc", "output_dir": "/Users/nramachandra/hep-genesis-testin
+[10/23/26 17:02:54] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_attach_gaussian_covariance -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/shear_y1_gausscov.hdf5",     "/Users/nr
+[tool] firecrown_build_likelihood {"correlation_space": "harmonic", "name": "shear_closure", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218", "sacc_path": "/Users/nramachandra/hep-genesis-
+[10/23/26 17:03:01] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_build_likelihood -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/shear_closure_e0ec78.yaml",     "/Users
+[tool] firecrown_compute_loglike {"cosmology": {"preset": "desc_srd", "transfer_function": "eisenstein_hu", "matter_power_spectrum": "halofit"}, "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/2610
+[10/23/26 17:03:10] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/theory_vs_data_53a299.csv",     "/Users
+[tool] firecrown_compute_loglike {"cosmology": {"matter_power_spectrum": "halofit", "preset": "desc_srd", "transfer_function": "eisenstein_hu"}, "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/2610
+[10/23/26 17:03:25] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/theory_vs_data_aed989.csv"   ],   "mess
+[tool] firecrown_theory_data_vector {"cosmology": {"matter_power_spectrum": "halofit", "preset": "desc_srd", "transfer_function": "eisenstein_hu"}, "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/2610
+[10/23/26 17:03:32] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_theory_data_vector -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/theory_vector_3e9d08.csv",     "/Users/
+[tool] firecrown_build_likelihood {"correlation_space": "harmonic", "name": "shear_closure_fc", "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218", "sacc_path": "/Users/nramachandra/hep-genes
+[10/23/26 17:03:46] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_build_likelihood -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/shear_closure_fc_d8f596.yaml",     "/Us
+[tool] sacc_inspect {"output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218", "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/shear_closur
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] sacc_inspect -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/shear_closure_e0ec78_theory_3e9d08_trac
+[tool] firecrown_compute_loglike {"cosmology": {"matter_power_spectrum": "halofit", "preset": "desc_srd", "transfer_function": "eisenstein_hu"}, "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/2610
+[10/23/26 17:03:51] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[tool] firecrown_compute_loglike -> ok: {   "status": "success",   "files": [     "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170218/theory_vs_data_6f373d.csv",     "/Users
+Tokens: 679K in (597K cached) · 8.5K out · 10 calls
+
+Chat: /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/chats/like-1023.json

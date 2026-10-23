@@ -1,0 +1,702 @@
+{
+  "id": "fb00c1f774c3",
+  "name": "nm-1023",
+  "created_at": "2026-10-23T17:06:00",
+  "messages": [
+    {
+      "id": "50f0f69f3dd6",
+      "role": "user",
+      "content": "Simulate shear+density maps (nside 64, f_sky 0.3), measure 3x2pt bandpowers with NaMaster in linear bins of width 20, show measured spectra against input theory.",
+      "ts": "2026-10-23T17:06:00",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "aba218edddae",
+      "role": "assistant",
+      "content": "I simulated shear and density maps at nside 64 with f_sky 0.3, measured all three 3x2pt spectra with NaMaster in linear bins of width 20, and plotted them against the input theory (Figure 15). The measurements broadly match the input, but I can't yet say how well: the measurement file has no covariance, so these are point comparisons with no error bars.\n\n**Simulation** (maps in Figure 9)\n- **Tracers:**\n  - **src0 (shear):** Gaussian n(z) with z_mean 0.9 and z_sigma 0.25, 8 galaxies/arcmin\u00b2, shape noise \u03c3_e = 0.26.\n  - **lens0 (density):** z_mean 0.5, z_sigma 0.1, linear bias 1.6, 4 galaxies/arcmin\u00b2.\n- **Cosmology:** \u03a9_m = 0.30, \u03c38 = 0.81, h = 0.67, halofit.\n- **Map settings:** lmax 191 in the realization, white noise added, seed 0.\n- **Mask:** a binary polar cap (no apodization) covering f_sky = 0.2995.\n\n**Measurement**\n- **Bins:** 6 bandpowers with edges 2, 22, 42, 62, 82, 102, 129, so \u2113_eff \u2248 11.5, 31.5, 51.5, 71.5, 91.5, 115.\n- **Why only 6:** the tool's default \u2113_max is 2\u00b7nside = 128, because higher bands are biased by pixelization. The last band is wider (102\u2013129).\n- **Noise:** white noise was subtracted analytically from the auto-spectra.\n- **Spectra:** shear EE (with EB, BE, BB), galaxy\u2013galaxy lensing TE (with TB), and clustering TT.\n\n**Measured vs. binned theory** (average over the 6 bandpowers)\n\n| Spectrum | Measured mean | Theory mean | Ratio |\n|---|---|---|---|\n| Shear EE (src0\u2013src0) | 1.45e-8 | 1.42e-8 | ~1.02 |\n| Galaxy\u2013galaxy lensing TE (lens0\u2013src0) | 2.76e-7 | 3.03e-7 | ~0.91 |\n| Clustering TT (lens0\u2013lens0) | 1.56e-5 | 1.69e-5 | ~0.93 |\n\nShear agrees within about 2%. The 7\u20139% shortfall in the other two is about the size of cosmic variance you'd expect at these low \u2113 with f_sky 0.3 and a single realization. The B-mode spectra (EB, BE, BB, TB) are in the file and should scatter around zero, since the input had no B-modes. That is visible in Figure 15; I haven't pulled out numbers for it.\n\n**Caveats**\n- **Edge bandpowers:** the unapodized binary mask causes some E-to-B leakage and mode coupling at the mask edge. NaMaster corrects for this in the mean, but it adds scatter.\n- **Error bars:** to get proper error bars and a \u03c7\u00b2 against theory, the next step is a covariance. Options are a Gaussian covariance on the sacc file (`sacc_attach_gaussian_covariance` with f_sky 0.2995 and the same number densities, after dropping the B-mode entries) or TJPCov `FourierGaussianNmt` using the same mask.\n\nFiles are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/`:\n- `namaster_32676c.sacc` (bandpowers with windows and n(z), no covariance)\n- `namaster_src0_src0.csv`\n- `namaster_lens0_src0.csv`\n- `namaster_lens0_lens0.csv`\n- `sim_theory_cls.csv`\n- `namaster_cls_32676c.png` (Figure 15)",
+      "ts": "2026-10-23T17:06:00",
+      "tool_calls": [
+        {
+          "id": "tooluse_4P9RdNXqtMbbcFBPbRpZpu",
+          "tool": "namaster_simulate_maps",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556",
+            "tracers": [
+              {
+                "name": "src0",
+                "kind": "shear",
+                "z_mean": 0.9,
+                "z_sigma": 0.25,
+                "n_gal_arcmin2": 8,
+                "sigma_e": 0.26
+              },
+              {
+                "name": "lens0",
+                "kind": "density",
+                "z_mean": 0.5,
+                "z_sigma": 0.1,
+                "bias": 1.6,
+                "n_gal_arcmin2": 4
+              }
+            ],
+            "nside": 64,
+            "f_sky": 0.3,
+            "seed": 0
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_theory_cls.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_nz_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_nz_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_src0_Q.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_src0_U.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_lens0.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_fields.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_maps.png\"\n  ],\n  \"message\": \"Simulated 2 tracer maps at nside 64 (lmax 191, f_sky 0.299, with noise, cosmology Om=0.300, sigma8=0.81, h=0.67). Next: namaster_compute_cls(fields_json='sim_fields.json').\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 191,\n    \"f_sky\": 0.2994791666666667,\n    \"tracers\": [\n      \"src0\",\n      \"lens0\"\n    ],\n    \"fields_json\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_fields.json\",\n    \"theory_cls_csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_theory_cls.csv\",\n    \"mask\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits\",\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"seed\": 0,\n    \"noise\": true\n  }\n}\n[1 figure(s) displayed to the user as Figure 9 (sim_maps.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_theory_cls.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_nz_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_nz_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_src0_Q.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_src0_U.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_lens0.fits\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_fields.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_maps.png\"\n  ],\n  \"message\": \"Simulated 2 tracer maps at nside 64 (lmax 191, f_sky 0.299, with noise, cosmology Om=0.300, sigma8=0.81, h=0.67). Next: namaster_compute_cls(fields_json='sim_fields.json').\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 191,\n    \"f_sky\": 0.2994791666666667,\n    \"tracers\": [\n      \"src0\",\n      \"lens0\"\n    ],\n    \"fields_json\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_fields.json\",\n    \"theory_cls_csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_theory_cls.csv\",\n    \"mask\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits\",\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"seed\": 0,\n    \"noise\": true\n  }\n}\n[1 figure(s) displayed to the user as Figure 9 (sim_maps.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "fb7865d1e502",
+            "504b4de2a5a1",
+            "47436672b43d",
+            "e64764dd952c",
+            "2cddc194743f",
+            "63dfcb248c24",
+            "30565dd12c99",
+            "a0c1f6388299",
+            "83519c684e88"
+          ]
+        },
+        {
+          "id": "tooluse_MZUsdK6kP0hb5qkwQW27Pr",
+          "tool": "namaster_compute_cls",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556",
+            "fields_json": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_fields.json",
+            "binning": {
+              "scheme": "linear",
+              "nlb": 20,
+              "ell_min": 2
+            },
+            "theory_csv": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_theory_cls.csv",
+            "pairs": "all"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.npz\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_src0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.json\"\n  ],\n  \"message\": \"3 pair(s), 6 bandpowers (ell 2-129, nside 64) on local in 0.1 s; f_sky,eff {'src0': 0.2995, 'lens0': 0.2995}; sacc namaster_32676c.sacc with 7 data types.\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 128,\n    \"n_bins\": 6,\n    \"ell_eff\": [\n      11.499999999999996,\n      31.499999999999993,\n      51.499999999999986,\n      71.49999999999999,\n      91.49999999999997,\n      115.00000000000009\n    ],\n    \"ell_edges\": [\n      2,\n      22,\n      42,\n      62,\n      82,\n      102,\n      129\n    ],\n    \"fields\": {\n      \"src0\": {\n        \"spin\": 2,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 2.1412903477845348e-10,\n        \"apodize_deg\": 0.0\n      },\n      \"lens0\": {\n        \"spin\": 0,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 6.335178543741226e-9,\n        \"apodize_deg\": 0.0\n      }\n    },\n    \"pairs\": [\n      {\n        \"a\": \"src0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"EE\",\n          \"EB\",\n          \"BE\",\n          \"BB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_src0_src0.csv\",\n        \"first_component_mean\": 1.4477953657794844e-8,\n        \"theory_binned\": [\n          3.2341190967441876e-8,\n          2.0263362854274444e-8,\n          1.2494699366195306e-8,\n          8.67853230106963e-9,\n          6.451024882215997e-9,\n          4.794906763392039e-9\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"TE\",\n          \"TB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_src0.csv\",\n        \"first_component_mean\": 2.7552519638691557e-7,\n        \"theory_binned\": [\n          4.804172229397567e-7,\n          4.756552333010361e-7,\n          3.127529040601838e-7,\n          2.316624601859047e-7,\n          1.814995067363255e-7,\n          1.33310119177746e-7\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"lens0\",\n        \"components\": [\n          \"TT\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_lens0.csv\",\n        \"first_component_mean\": 0.00001564567452219015,\n        \"theory_binned\": [\n          0.000025335963082371408,\n          0.000026830634865885603,\n          0.000017718534124897755,\n          0.000013174927788663169,\n          0.000010579804182622263,\n          7.736536863472613e-6\n        ]\n      }\n    ],\n    \"sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc\",\n    \"sacc_entries\": [\n      [\n        \"galaxy_shear_cl_ee\",\n        \"src0\",\n        \"src0\",\n        \"EE\"\n      ],\n      [\n        \"galaxy_shear_cl_eb\",\n        \"src0\",\n        \"src0\",\n        \"EB\"\n      ],\n      [\n        \"galaxy_shear_cl_be\",\n        \"src0\",\n        \"src0\",\n        \"BE\"\n      ],\n      [\n        \"galaxy_shear_cl_bb\",\n        \"src0\",\n  ",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.npz\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_src0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_src0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_lens0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.png\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.json\"\n  ],\n  \"message\": \"3 pair(s), 6 bandpowers (ell 2-129, nside 64) on local in 0.1 s; f_sky,eff {'src0': 0.2995, 'lens0': 0.2995}; sacc namaster_32676c.sacc with 7 data types.\",\n  \"metadata\": {\n    \"nside\": 64,\n    \"lmax\": 128,\n    \"n_bins\": 6,\n    \"ell_eff\": [\n      11.499999999999996,\n      31.499999999999993,\n      51.499999999999986,\n      71.49999999999999,\n      91.49999999999997,\n      115.00000000000009\n    ],\n    \"ell_edges\": [\n      2,\n      22,\n      42,\n      62,\n      82,\n      102,\n      129\n    ],\n    \"fields\": {\n      \"src0\": {\n        \"spin\": 2,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 2.1412903477845348e-10,\n        \"apodize_deg\": 0.0\n      },\n      \"lens0\": {\n        \"spin\": 0,\n        \"fsky_mask\": 0.2994791666666667,\n        \"mean_w\": 0.2994791666666667,\n        \"mean_w2\": 0.2994791666666667,\n        \"fsky_eff\": 0.2994791666666667,\n        \"noise_coupled\": 6.335178543741226e-9,\n        \"apodize_deg\": 0.0\n      }\n    },\n    \"pairs\": [\n      {\n        \"a\": \"src0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"EE\",\n          \"EB\",\n          \"BE\",\n          \"BB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_src0_src0.csv\",\n        \"first_component_mean\": 1.4477953657794844e-8,\n        \"theory_binned\": [\n          3.2341190967441876e-8,\n          2.0263362854274444e-8,\n          1.2494699366195306e-8,\n          8.67853230106963e-9,\n          6.451024882215997e-9,\n          4.794906763392039e-9\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"src0\",\n        \"components\": [\n          \"TE\",\n          \"TB\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_src0.csv\",\n        \"first_component_mean\": 2.7552519638691557e-7,\n        \"theory_binned\": [\n          4.804172229397567e-7,\n          4.756552333010361e-7,\n          3.127529040601838e-7,\n          2.316624601859047e-7,\n          1.814995067363255e-7,\n          1.33310119177746e-7\n        ]\n      },\n      {\n        \"a\": \"lens0\",\n        \"b\": \"lens0\",\n        \"components\": [\n          \"TT\"\n        ],\n        \"csv\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_lens0.csv\",\n        \"first_component_mean\": 0.00001564567452219015,\n        \"theory_binned\": [\n          0.000025335963082371408,\n          0.000026830634865885603,\n          0.000017718534124897755,\n          0.000013174927788663169,\n          0.000010579804182622263,\n          7.736536863472613e-6\n        ]\n      }\n    ],\n    \"sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc\",\n    \"sacc_entries\": [\n      [\n        \"galaxy_shear_cl_ee\",\n        \"src0\",\n        \"src0\",\n        \"EE\"\n      ],\n      [\n        \"galaxy_shear_cl_eb\",\n        \"src0\",\n        \"src0\",\n        \"EB\"\n      ],\n      [\n        \"galaxy_shear_cl_be\",\n        \"src0\",\n        \"src0\",\n        \"BE\"\n      ],\n      [\n        \"galaxy_shear_cl_bb\",\n        \"src0\",\n        \"src0\",\n        \"BB\"\n      ],\n      [\n        \"galaxy_shearDensity_cl_e\",\n        \"src0\",\n        \"lens0\",\n        \"TE\"\n      ],\n      [\n        \"galaxy_shearDensity_cl_b\",\n        \"src0\",\n        \"lens0\",\n        \"TB\"\n      ],\n      [\n        \"galaxy_density_cl\",\n        \"lens0\",\n        \"lens0\",\n        \"TT\"\n      ]\n    ],\n    \"windows_in_sacc\": true,\n    \"computed_on\": \"local\",\n    \"elapsed_s\": 0.1,\n    \"n_workspaces\": 3\n  }\n}\n[1 figure(s) displayed to the user as Figure 15 (namaster_cls_32676c.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "95594ce1797b",
+            "bbcb13b427b7",
+            "3763da164209",
+            "1300a76edd13",
+            "08e610a84adf",
+            "cf9bf22f71b1",
+            "bbb361bbe9d5"
+          ]
+        }
+      ],
+      "artifact_ids": [
+        "fb7865d1e502",
+        "504b4de2a5a1",
+        "47436672b43d",
+        "e64764dd952c",
+        "2cddc194743f",
+        "63dfcb248c24",
+        "30565dd12c99",
+        "a0c1f6388299",
+        "83519c684e88",
+        "95594ce1797b",
+        "bbcb13b427b7",
+        "3763da164209",
+        "1300a76edd13",
+        "08e610a84adf",
+        "cf9bf22f71b1",
+        "bbb361bbe9d5"
+      ],
+      "usage": {
+        "quick": {
+          "input": 174192,
+          "cached": 114108,
+          "output": 2329,
+          "reasoning": 0,
+          "calls": 3
+        }
+      }
+    },
+    {
+      "id": "11b63438e235",
+      "role": "user",
+      "content": "For the sacc you measured with NaMaster: generate a TJPCov FourierGaussianFsky covariance config (f_sky from the mask, n_gal, galaxy bias), compute the covariance, compare with plain Knox, report chi2 at input cosmology and whether positive definite.",
+      "ts": "2026-10-23T17:06:36",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "7cdf84ebc91f",
+      "role": "assistant",
+      "content": "Now compare, and build likelihoods for chi2.\n\nNext I evaluate \u03c7\u00b2 at the input cosmology (vanilla \u039bCDM: \u03a9_c 0.25, \u03a9_b 0.05, h 0.67, \u03c38 0.81, n_s 0.96) with lens0_bias = 1.6, under both covariances.\n\nThe TJPCov `FourierGaussianFsky` covariance is positive definite. At the input cosmology it gives \u03c7\u00b2 = 27.7 for 18 points (\u03c7\u00b2/n = 1.54). It agrees with the plain Knox covariance to about 1%, so which one you use barely changes the result.\n\n**What I set up**\n- I kept only the E-mode spectra: shear EE, galaxy\u2013galaxy lensing TE and clustering TT, which is 18 points. The four B-mode data types were dropped. That file is `namaster_Eonly.hdf5`.\n- **f_sky from the mask:** 0.2995 (12,354 deg\u00b2). The mask is binary, so the effective and raw values are the same.\n- **TJPCov config** (`tjpcov_config_7480e6.yaml`):\n  - Gaussian term only, using the file's bandpower windows.\n  - Number densities: 8 galaxies/arcmin\u00b2 for src0 and 4 for lens0; shape noise \u03c3_e = 0.26.\n  - lens0 bias 1.6; same cosmology as the simulation (\u03a9_m 0.30, \u03c38 0.81, h 0.67).\n- **Knox covariance:** the same inputs fed to the simple mode-counting formula. That file is `namaster_Eonly_knox.hdf5`.\n\n**TJPCov vs. Knox** (Figure 26)\n\n| | Knox | TJPCov |\n|---|---|---|\n| Positive definite | yes | yes |\n| Smallest eigenvalue | 1.11e-20 | 1.11e-20 |\n| Condition number | 1.03e9 | 1.01e9 |\n| Total signal-to-noise | 64.3 | 64.9 |\n\nTJPCov's error bars (\u03c3) relative to Knox, by spectrum:\n\n| Spectrum | Median ratio | Range |\n|---|---|---|\n| Shear EE | 0.991 | 0.88 to 1.00 |\n| Lensing TE | 0.989 | 0.94 to 1.00 |\n| Clustering TT | 0.991 | 0.97 to 1.00 |\n\nThe two correlation matrices differ by at most 0.026 in any entry, and the largest off-diagonal correlation is about 0.78 in both. The biggest gap (12% in shear) is presumably at the lowest bandpower, where the two methods bin the \u2113 range differently; I didn't check which bandpower it is. The condition number near 1e9 comes from the spectra having very different amplitudes (the diagonal spans 3e-20 to 1e-11), not from a degeneracy. TJPCov did not flag the matrix as ill-conditioned.\n\n**\u03c7\u00b2 at the input cosmology** (\u03a9_c 0.25, \u03a9_b 0.05, h 0.67, \u03c38 0.81, n_s 0.96, lens0 bias 1.6, no other systematics)\n\n| Spectrum (6 points each) | \u03c7\u00b2, TJPCov | \u03c7\u00b2, Knox |\n|---|---|---|\n| Shear EE | 8.1 | 7.9 |\n| Lensing TE | 5.4 | 5.1 |\n| Clustering TT | 8.6 | 8.4 |\n| **All 18 points, with cross-correlations** | **27.7** (\u03c7\u00b2/n 1.54) | **26.1** (\u03c7\u00b2/n 1.45) |\n\n- **Pulls (TJPCov):** largest is 2.1\u03c3, root-mean-square 1.11. Figure 32 shows theory against data with these error bars.\n- **How unusual this is:** by my estimate, a \u03c7\u00b2 this large happens by chance about 7% of the time with TJPCov and about 10% with Knox. So it is high but not significant.\n- **Consistency with the last turn:** the slightly high \u03c7\u00b2 matches the 7\u20139% low clustering and lensing amplitudes you saw earlier, which looked like cosmic variance in a single realization.\n\n**Caveat:** both covariances assume a simple sky-fraction scaling, with no mode coupling from the mask. With an unapodized binary mask, the off-diagonal terms between neighbouring bandpowers are probably somewhat underestimated. The next step would be `FourierGaussianNmt` using `sim_mask.fits`, which models the mask directly. Neither covariance includes super-sample or non-Gaussian terms.\n\nFiles are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/`:\n- `namaster_Eonly_tjpcov_4569f2.hdf5` (data with the TJPCov covariance)\n- `namaster_Eonly_tjpcov_4569f2_diagnostics.json`\n- `namaster_Eonly_tjpcov_4569f2_corr.png` (Figure 24, TJPCov correlation matrix)\n- `namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_sigma_ratio.csv`\n- `namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png` (Figure 26)\n- `theory_vs_data_85eda8.csv` and `.png` (TJPCov \u03c7\u00b2; Figure 32)\n- `theory_vs_data_76cf8f.csv` (Knox \u03c7\u00b2)\n- `tjpcov_5fbab1.yaml` and `knox_12c961.yaml` (likelihood setups)\n\n[Tool ledger \u2014 exact record of this turn]\n- sacc_prepare_for_firecrown ok \u2014 namaster_Eonly.hdf5, 18 pts, B-modes dropped, no cov.\n- namaster_mask_properties ok \u2014 sim_mask.fits nside 64, f_sky raw = eff = 0.2995, 12354 deg^2.\n- tjpcov_generate_config ok \u2014 tjpcov_config_7480e6.yaml, FourierGaussianFsky, f_sky 0.2995, n_gal src0 8 / lens0 4, sigma_e 0.26, bias lens0 1.6, windows present.\n- sacc_attach_gaussian_covariance ok \u2014 namaster_Eonly_knox.hdf5, S/N 64.3, cond 1.03e9, min eig 1.11e-20, PD true.\n- tjpcov_compute_covariance ok (local, 1.1 s) \u2014 namaster_Eonly_tjpcov_4569f2.hdf5, S/N 64.9, cond 1.01e9, min eig 1.11e-20, PD true, ill_conditioned false; Figure 24 (corr PNG).\n- tjpcov_compare_covariances ok \u2014 median sigma ratio TJPCov/Knox: EE 0.991 (0.883-0.999), TE 0.989 (0.936-1.001), TT 0.991 (0.967-1.002); max |corr diff| 0.026; Figure 26.\n- firecrown_build_likelihood x2 ok \u2014 tjpcov_5fbab1.yaml, knox_12c961.yaml (no systematics, n_data 18).\n- firecrown_compute_loglike (TJPCov) ok \u2014 chi2 27.72, chi2/n 1.540, blocks EE 8.14 / TE 5.37 / TT 8.56, max pull 2.12, rms 1.107; Figure 32.\n- firecrown_compute_loglike (Knox) ok \u2014 chi2 26.09, chi2/n 1.449, blocks EE 7.89 / TE 5.10 / TT 8.35, max pull 2.12, rms 1.089.",
+      "ts": "2026-10-23T17:06:36",
+      "tool_calls": [
+        {
+          "id": "tooluse_vKY0qzFKkvx70wUWV8TKSk",
+          "tool": "sacc_prepare_for_firecrown",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc",
+            "keep_data_types": [
+              "galaxy_shear_cl_ee",
+              "galaxy_shearDensity_cl_e",
+              "galaxy_density_cl"
+            ],
+            "output_name": "namaster_Eonly"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\"\n  ],\n  \"message\": \"Wrote namaster_Eonly.hdf5: renamed 0 tracers (none needed), quantities {'src0': 'galaxy_shear', 'lens0': 'galaxy_density'}, dropped data types ['galaxy_shear_cl_eb', 'galaxy_shear_cl_be', 'galaxy_shear_cl_bb', 'galaxy_shearDensity_cl_b'], 18 points. NO covariance: call sacc_attach_gaussian_covariance (harmonic file).\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"renamed\": {},\n    \"quantities\": {\n      \"src0\": \"galaxy_shear\",\n      \"lens0\": \"galaxy_density\"\n    },\n    \"dropped_data_types\": [\n      \"galaxy_shear_cl_eb\",\n      \"galaxy_shear_cl_be\",\n      \"galaxy_shear_cl_bb\",\n      \"galaxy_shearDensity_cl_b\"\n    ],\n    \"kept_data_types\": [\n      \"galaxy_shear_cl_ee\",\n      \"galaxy_shearDensity_cl_e\",\n      \"galaxy_density_cl\"\n    ],\n    \"n_points\": 18,\n    \"covariance\": {\n      \"present\": false\n    },\n    \"space\": \"harmonic\",\n    \"firecrown_ready\": true,\n    \"next_step\": \"NO covariance: call sacc_attach_gaussian_covariance (harmonic file)\"\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\"\n  ],\n  \"message\": \"Wrote namaster_Eonly.hdf5: renamed 0 tracers (none needed), quantities {'src0': 'galaxy_shear', 'lens0': 'galaxy_density'}, dropped data types ['galaxy_shear_cl_eb', 'galaxy_shear_cl_be', 'galaxy_shear_cl_bb', 'galaxy_shearDensity_cl_b'], 18 points. NO covariance: call sacc_attach_gaussian_covariance (harmonic file).\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"renamed\": {},\n    \"quantities\": {\n      \"src0\": \"galaxy_shear\",\n      \"lens0\": \"galaxy_density\"\n    },\n    \"dropped_data_types\": [\n      \"galaxy_shear_cl_eb\",\n      \"galaxy_shear_cl_be\",\n      \"galaxy_shear_cl_bb\",\n      \"galaxy_shearDensity_cl_b\"\n    ],\n    \"kept_data_types\": [\n      \"galaxy_shear_cl_ee\",\n      \"galaxy_shearDensity_cl_e\",\n      \"galaxy_density_cl\"\n    ],\n    \"n_points\": 18,\n    \"covariance\": {\n      \"present\": false\n    },\n    \"space\": \"harmonic\",\n    \"firecrown_ready\": true,\n    \"next_step\": \"NO covariance: call sacc_attach_gaussian_covariance (harmonic file)\"\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "7165ce386142"
+          ]
+        },
+        {
+          "id": "tooluse_KA0kuDbd2t3o07ZbvfGI8E",
+          "tool": "namaster_mask_properties",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "mask_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits",
+            "plot": false
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/sim_mask_mask_stats.json\"\n  ],\n  \"message\": \"sim_mask.fits: nside 64, f_sky raw 0.2995, f_sky,eff 0.2995 (12354 deg^2).\",\n  \"metadata\": {\n    \"mask\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits\",\n    \"nside\": 64,\n    \"npix\": 49152,\n    \"pixel_area_arcmin2\": 3021.4571227602005,\n    \"raw\": {\n      \"fsky_raw\": 0.2994791666666667,\n      \"mean_w\": 0.2994791666666667,\n      \"mean_w2\": 0.2994791666666667,\n      \"fsky_eff\": 0.2994791666666667,\n      \"area_deg2\": 12354.402083333334,\n      \"w_min\": 0.0,\n      \"w_max\": 1.0,\n      \"n_pix_nonzero\": 14720\n    }\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/sim_mask_mask_stats.json\"\n  ],\n  \"message\": \"sim_mask.fits: nside 64, f_sky raw 0.2995, f_sky,eff 0.2995 (12354 deg^2).\",\n  \"metadata\": {\n    \"mask\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits\",\n    \"nside\": 64,\n    \"npix\": 49152,\n    \"pixel_area_arcmin2\": 3021.4571227602005,\n    \"raw\": {\n      \"fsky_raw\": 0.2994791666666667,\n      \"mean_w\": 0.2994791666666667,\n      \"mean_w2\": 0.2994791666666667,\n      \"fsky_eff\": 0.2994791666666667,\n      \"area_deg2\": 12354.402083333334,\n      \"w_min\": 0.0,\n      \"w_max\": 1.0,\n      \"n_pix_nonzero\": 14720\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "51d70b22d872"
+          ]
+        },
+        {
+          "id": "tooluse_A0VsRITa9YH2YKdZYGyNvA",
+          "tool": "tjpcov_generate_config",
+          "server": "serve-desc.sh",
+          "args": {
+            "cov_types": [
+              "FourierGaussianFsky"
+            ],
+            "n_gal": {
+              "src0": 8,
+              "lens0": 4
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5",
+            "f_sky": 0.2995,
+            "galaxy_bias": {
+              "lens0": 1.6
+            },
+            "sigma_e": 0.26
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml\"\n  ],\n  \"message\": \"Wrote tjpcov_config_7480e6.yaml: harmonic-space, 2 tracers (1 shear, 1 density), terms ['gauss'], f_sky=0.2995, bandpower windows present.\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"space\": \"harmonic\",\n    \"n_points\": 18,\n    \"tracer_kinds\": {\n      \"lens0\": \"density\",\n      \"src0\": \"shear\"\n    },\n    \"cov_types\": [\n      \"FourierGaussianFsky\"\n    ],\n    \"terms\": [\n      \"gauss\"\n    ],\n    \"f_sky\": 0.2995,\n    \"n_gal_arcmin2\": {\n      \"src0\": 8.0,\n      \"lens0\": 4.0\n    },\n    \"sigma_e\": {\n      \"src0\": 0.26\n    },\n    \"galaxy_bias\": {\n      \"lens0\": 1.6\n    },\n    \"ia_amplitude\": null,\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"has_windows\": true,\n    \"lmax\": null,\n    \"warnings\": [],\n    \"next_step\": \"tjpcov_compute_covariance(config_path=...)\"\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml\"\n  ],\n  \"message\": \"Wrote tjpcov_config_7480e6.yaml: harmonic-space, 2 tracers (1 shear, 1 density), terms ['gauss'], f_sky=0.2995, bandpower windows present.\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"space\": \"harmonic\",\n    \"n_points\": 18,\n    \"tracer_kinds\": {\n      \"lens0\": \"density\",\n      \"src0\": \"shear\"\n    },\n    \"cov_types\": [\n      \"FourierGaussianFsky\"\n    ],\n    \"terms\": [\n      \"gauss\"\n    ],\n    \"f_sky\": 0.2995,\n    \"n_gal_arcmin2\": {\n      \"src0\": 8.0,\n      \"lens0\": 4.0\n    },\n    \"sigma_e\": {\n      \"src0\": 0.26\n    },\n    \"galaxy_bias\": {\n      \"lens0\": 1.6\n    },\n    \"ia_amplitude\": null,\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"has_windows\": true,\n    \"lmax\": null,\n    \"warnings\": [],\n    \"next_step\": \"tjpcov_compute_covariance(config_path=...)\"\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "b801635e59cf"
+          ]
+        },
+        {
+          "id": "tooluse_ABGk3JJgWnhhUTS8j7sgqq",
+          "tool": "sacc_attach_gaussian_covariance",
+          "server": "serve-desc.sh",
+          "args": {
+            "f_sky": 0.2995,
+            "n_gal": {
+              "src0": 8,
+              "lens0": 4
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5",
+            "galaxy_bias": {
+              "lens0": 1.6
+            },
+            "output_name": "namaster_Eonly_knox"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_77baf9.json\"\n  ],\n  \"message\": \"Wrote namaster_Eonly_knox.hdf5 with a 18x18 Gaussian covariance (f_sky=0.2995, sigma_e=0.26, delta_ell 18.7-26.8); total S/N 64.3; condition number 1.03e+09.\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"f_sky\": 0.2995,\n    \"sigma_e\": 0.26,\n    \"n_gal_arcmin2\": {\n      \"src0\": 8.0,\n      \"lens0\": 4.0\n    },\n    \"tracer_kinds\": {\n      \"lens0\": \"density\",\n      \"src0\": \"shear\"\n    },\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"delta_ell_source\": \"window\",\n    \"snr_total\": 64.29996661925276,\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.261832140048319e-20,\n      \"diag_max\": 1.1440118055112033e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1027851538.2182544,\n      \"min_eigenvalue\": 1.113409891514276e-20,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.7778408060024533,\n      \"is_diagonal\": false\n    },\n    \"n_points\": 18,\n    \"formula\": \"Cov = (C13 C24 + C14 C23)/((2l+1) dl f_sky); noise sigma_e^2/nbar (shear), 1/nbar (density)\"\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_77baf9.json\"\n  ],\n  \"message\": \"Wrote namaster_Eonly_knox.hdf5 with a 18x18 Gaussian covariance (f_sky=0.2995, sigma_e=0.26, delta_ell 18.7-26.8); total S/N 64.3; condition number 1.03e+09.\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"f_sky\": 0.2995,\n    \"sigma_e\": 0.26,\n    \"n_gal_arcmin2\": {\n      \"src0\": 8.0,\n      \"lens0\": 4.0\n    },\n    \"tracer_kinds\": {\n      \"lens0\": \"density\",\n      \"src0\": \"shear\"\n    },\n    \"cosmology\": \"Om=0.300, sigma8=0.81, h=0.67\",\n    \"delta_ell_source\": \"window\",\n    \"snr_total\": 64.29996661925276,\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.261832140048319e-20,\n      \"diag_max\": 1.1440118055112033e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1027851538.2182544,\n      \"min_eigenvalue\": 1.113409891514276e-20,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.7778408060024533,\n      \"is_diagonal\": false\n    },\n    \"n_points\": 18,\n    \"formula\": \"Cov = (C13 C24 + C14 C23)/((2l+1) dl f_sky); noise sigma_e^2/nbar (shear), 1/nbar (density)\"\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "2fe74acc919b",
+            "9c49c3b363ab"
+          ]
+        },
+        {
+          "id": "tooluse_p3vZRLaXHhBKyBo10WuWby",
+          "tool": "tjpcov_compute_covariance",
+          "server": "serve-desc.sh",
+          "args": {
+            "config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2_diagnostics.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2_corr.png\"\n  ],\n  \"message\": \"Wrote namaster_Eonly_tjpcov_4569f2.hdf5 (18x18 covariance, terms ['gauss']) on local in 1.1 s. S/N 64.9; condition number 1.01e+09; positive definite.\",\n  \"metadata\": {\n    \"config\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml\",\n    \"input_sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"output_sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"cov_types\": [\n      \"FourierGaussianFsky\"\n    ],\n    \"terms\": {\n      \"gauss\": {\n        \"diag_mean\": 9.17020532178253e-13,\n        \"diag_min\": 3.2570064036618813e-20,\n        \"diag_max\": 1.122591464610397e-11,\n        \"frac_of_total_diag\": 1.0\n      }\n    },\n    \"covariance\": {\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.2570064036618813e-20,\n      \"diag_max\": 1.122591464610397e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1012240498.8131167,\n      \"min_eigenvalue\": 1.1093983656169484e-20,\n      \"positive_definite\": true,\n      \"ill_conditioned\": false,\n      \"max_abs_offdiag_corr\": 0.7775634138846832\n    },\n    \"snr_total\": 64.90570821449637,\n    \"computed_on\": \"local\",\n    \"elapsed_s\": 1.1,\n    \"warnings\": [],\n    \"n_points\": 18,\n    \"next_step\": \"firecrown_build_likelihood(sacc_path=<output_sacc>) or tjpcov_compare_covariances\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 24 (namaster_Eonly_tjpcov_4569f2_corr.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2_diagnostics.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2_corr.png\"\n  ],\n  \"message\": \"Wrote namaster_Eonly_tjpcov_4569f2.hdf5 (18x18 covariance, terms ['gauss']) on local in 1.1 s. S/N 64.9; condition number 1.01e+09; positive definite.\",\n  \"metadata\": {\n    \"config\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml\",\n    \"input_sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5\",\n    \"output_sacc\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"cov_types\": [\n      \"FourierGaussianFsky\"\n    ],\n    \"terms\": {\n      \"gauss\": {\n        \"diag_mean\": 9.17020532178253e-13,\n        \"diag_min\": 3.2570064036618813e-20,\n        \"diag_max\": 1.122591464610397e-11,\n        \"frac_of_total_diag\": 1.0\n      }\n    },\n    \"covariance\": {\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.2570064036618813e-20,\n      \"diag_max\": 1.122591464610397e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1012240498.8131167,\n      \"min_eigenvalue\": 1.1093983656169484e-20,\n      \"positive_definite\": true,\n      \"ill_conditioned\": false,\n      \"max_abs_offdiag_corr\": 0.7775634138846832\n    },\n    \"snr_total\": 64.90570821449637,\n    \"computed_on\": \"local\",\n    \"elapsed_s\": 1.1,\n    \"warnings\": [],\n    \"n_points\": 18,\n    \"next_step\": \"firecrown_build_likelihood(sacc_path=<output_sacc>) or tjpcov_compare_covariances\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 24 (namaster_Eonly_tjpcov_4569f2_corr.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "8255733996dc",
+            "f2e770a5b241",
+            "9b0bc3e025db"
+          ]
+        },
+        {
+          "id": "tooluse_CvkWQU4WkXxxox2c9ooW5X",
+          "tool": "tjpcov_compare_covariances",
+          "server": "serve-desc.sh",
+          "args": {
+            "label_a": "Knox",
+            "label_b": "TJPCov",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "sacc_a": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5",
+            "sacc_b": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_sigma_ratio.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png\"\n  ],\n  \"message\": \"TJPCov vs Knox over 18 points: median sigma ratio by data type {'galaxy_shear_cl_ee': 0.991, 'galaxy_shearDensity_cl_e': 0.989, 'galaxy_density_cl': 0.991}; max |corr difference| 0.026; S/N Knox 64.3, TJPCov 64.9.\",\n  \"metadata\": {\n    \"a\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"b\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"n_points\": 18,\n    \"per_data_type\": {\n      \"galaxy_shear_cl_ee\": {\n        \"n\": 6,\n        \"median_ratio\": 0.9907963669036637,\n        \"min_ratio\": 0.8828227081193006,\n        \"max_ratio\": 0.9992599983128206\n      },\n      \"galaxy_shearDensity_cl_e\": {\n        \"n\": 6,\n        \"median_ratio\": 0.9889434455499886,\n        \"min_ratio\": 0.9357735778136764,\n        \"max_ratio\": 1.0007725170730808\n      },\n      \"galaxy_density_cl\": {\n        \"n\": 6,\n        \"median_ratio\": 0.9905596869704149,\n        \"min_ratio\": 0.9673161160548719,\n        \"max_ratio\": 1.002060926401551\n      }\n    },\n    \"max_abs_corr_difference\": 0.026294291100269374,\n    \"snr_total\": {\n      \"Knox\": 64.29996661925276,\n      \"TJPCov\": 64.90570821449637\n    },\n    \"covariance_a\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.261832140048319e-20,\n      \"diag_max\": 1.1440118055112033e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1027851538.2182544,\n      \"min_eigenvalue\": 1.113409891514276e-20,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.7778408060024533,\n      \"is_diagonal\": false\n    },\n    \"covariance_b\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.2570064036618813e-20,\n      \"diag_max\": 1.122591464610397e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1012240498.8131167,\n      \"min_eigenvalue\": 1.1093983656169484e-20,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.7775634138846832,\n      \"is_diagonal\": false\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 26 (namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_sigma_ratio.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png\"\n  ],\n  \"message\": \"TJPCov vs Knox over 18 points: median sigma ratio by data type {'galaxy_shear_cl_ee': 0.991, 'galaxy_shearDensity_cl_e': 0.989, 'galaxy_density_cl': 0.991}; max |corr difference| 0.026; S/N Knox 64.3, TJPCov 64.9.\",\n  \"metadata\": {\n    \"a\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"b\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"n_points\": 18,\n    \"per_data_type\": {\n      \"galaxy_shear_cl_ee\": {\n        \"n\": 6,\n        \"median_ratio\": 0.9907963669036637,\n        \"min_ratio\": 0.8828227081193006,\n        \"max_ratio\": 0.9992599983128206\n      },\n      \"galaxy_shearDensity_cl_e\": {\n        \"n\": 6,\n        \"median_ratio\": 0.9889434455499886,\n        \"min_ratio\": 0.9357735778136764,\n        \"max_ratio\": 1.0007725170730808\n      },\n      \"galaxy_density_cl\": {\n        \"n\": 6,\n        \"median_ratio\": 0.9905596869704149,\n        \"min_ratio\": 0.9673161160548719,\n        \"max_ratio\": 1.002060926401551\n      }\n    },\n    \"max_abs_corr_difference\": 0.026294291100269374,\n    \"snr_total\": {\n      \"Knox\": 64.29996661925276,\n      \"TJPCov\": 64.90570821449637\n    },\n    \"covariance_a\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.261832140048319e-20,\n      \"diag_max\": 1.1440118055112033e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1027851538.2182544,\n      \"min_eigenvalue\": 1.113409891514276e-20,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.7778408060024533,\n      \"is_diagonal\": false\n    },\n    \"covariance_b\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        18,\n        18\n      ],\n      \"diag_min\": 3.2570064036618813e-20,\n      \"diag_max\": 1.122591464610397e-11,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 1012240498.8131167,\n      \"min_eigenvalue\": 1.1093983656169484e-20,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.7775634138846832,\n      \"is_diagonal\": false\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 26 (namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "dff04eb33e9f",
+            "e69e48858d32"
+          ]
+        },
+        {
+          "id": "tooluse_twXdk5kiG1V1K1fWxXDvyA",
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5",
+            "name": "tjpcov",
+            "wl_global": [],
+            "wl_per_bin": [],
+            "nc_per_bin": []
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1_params.json\"\n  ],\n  \"message\": \"Experiment YAML tjpcov_5fbab1.yaml: harmonic space, 3 statistics, n_data=18; 12 parameters required (11 cosmology + 1 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 18,\n    \"n_data_total\": 18,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"w0\",\n      \"Omega_c\",\n      \"Omega_b\",\n      \"Neff\",\n      \"wa\",\n      \"h\",\n      \"T_CMB\",\n      \"sigma8\",\n      \"n_s\",\n      \"Omega_k\"\n    ],\n    \"nuisance_parameters\": {\n      \"lens0_bias\": 1.5\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [],\n      \"wl_global\": [],\n      \"nc_per_bin\": [],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"boltzmann_camb\"\n    }\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1_params.json\"\n  ],\n  \"message\": \"Experiment YAML tjpcov_5fbab1.yaml: harmonic space, 3 statistics, n_data=18; 12 parameters required (11 cosmology + 1 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 18,\n    \"n_data_total\": 18,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"w0\",\n      \"Omega_c\",\n      \"Omega_b\",\n      \"Neff\",\n      \"wa\",\n      \"h\",\n      \"T_CMB\",\n      \"sigma8\",\n      \"n_s\",\n      \"Omega_k\"\n    ],\n    \"nuisance_parameters\": {\n      \"lens0_bias\": 1.5\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [],\n      \"wl_global\": [],\n      \"nc_per_bin\": [],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"boltzmann_camb\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "e55d3bcab2c0",
+            "128bec50955e"
+          ]
+        },
+        {
+          "id": "tooluse_foELi8IuEYWXyR9719eU2z",
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5",
+            "name": "knox",
+            "wl_global": [],
+            "wl_per_bin": [],
+            "nc_per_bin": []
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961_params.json\"\n  ],\n  \"message\": \"Experiment YAML knox_12c961.yaml: harmonic space, 3 statistics, n_data=18; 12 parameters required (11 cosmology + 1 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 18,\n    \"n_data_total\": 18,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"w0\",\n      \"Omega_c\",\n      \"Omega_b\",\n      \"Neff\",\n      \"wa\",\n      \"h\",\n      \"T_CMB\",\n      \"sigma8\",\n      \"n_s\",\n      \"Omega_k\"\n    ],\n    \"nuisance_parameters\": {\n      \"lens0_bias\": 1.5\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [],\n      \"wl_global\": [],\n      \"nc_per_bin\": [],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"boltzmann_camb\"\n    }\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961_params.json\"\n  ],\n  \"message\": \"Experiment YAML knox_12c961.yaml: harmonic space, 3 statistics, n_data=18; 12 parameters required (11 cosmology + 1 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5\",\n    \"correlation_space\": \"harmonic\",\n    \"n_data\": 18,\n    \"n_data_total\": 18,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      }\n    ],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"cosmology_parameters\": [\n      \"m_nu\",\n      \"w0\",\n      \"Omega_c\",\n      \"Omega_b\",\n      \"Neff\",\n      \"wa\",\n      \"h\",\n      \"T_CMB\",\n      \"sigma8\",\n      \"n_s\",\n      \"Omega_k\"\n    ],\n    \"nuisance_parameters\": {\n      \"lens0_bias\": 1.5\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [],\n      \"wl_global\": [],\n      \"nc_per_bin\": [],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"boltzmann_camb\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "3a725835e13d",
+            "9801c580c06b"
+          ]
+        },
+        {
+          "id": "tooluse_kqtC1f2ZyixNARdnrjPdwp",
+          "tool": "firecrown_compute_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml",
+            "nuisance": {
+              "lens0_bias": 1.6
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_85eda8.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_85eda8.png\"\n  ],\n  \"message\": \"loglike = -13.859, chi2 = 27.72 for n_data = 18 (chi2/n = 1.540) at Om=0.300, sigma8=0.81, h=0.67. Worst statistics by chi2_block/n: density_cl lens0-lens0 (8.6/6), shear_cl_ee src0-src0 (8.1/6), shearDensity_cl_e src0-lens0 (5.4/6). \",\n  \"metadata\": {\n    \"loglike\": -13.858864067709817,\n    \"chi2\": 27.717728135419634,\n    \"n_data\": 18,\n    \"chi2_per_dof\": 1.5398737853010909,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6,\n        \"chi2_block\": 8.13536365197336,\n        \"chi2_share\": 16.498782439151746\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 5.369673336318892,\n        \"chi2_share\": -3.2827372614252397\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 8.55520785830399,\n        \"chi2_share\": 14.501682957693125\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"lens0_bias\": 1.6\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"max_abs_pull\": 2.1225699148319026,\n    \"rms_pull\": 1.1070542706408912,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 32 (theory_vs_data_85eda8.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_85eda8.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_85eda8.png\"\n  ],\n  \"message\": \"loglike = -13.859, chi2 = 27.72 for n_data = 18 (chi2/n = 1.540) at Om=0.300, sigma8=0.81, h=0.67. Worst statistics by chi2_block/n: density_cl lens0-lens0 (8.6/6), shear_cl_ee src0-src0 (8.1/6), shearDensity_cl_e src0-lens0 (5.4/6). \",\n  \"metadata\": {\n    \"loglike\": -13.858864067709817,\n    \"chi2\": 27.717728135419634,\n    \"n_data\": 18,\n    \"chi2_per_dof\": 1.5398737853010909,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6,\n        \"chi2_block\": 8.13536365197336,\n        \"chi2_share\": 16.498782439151746\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 5.369673336318892,\n        \"chi2_share\": -3.2827372614252397\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 8.55520785830399,\n        \"chi2_share\": 14.501682957693125\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"lens0_bias\": 1.6\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"max_abs_pull\": 2.1225699148319026,\n    \"rms_pull\": 1.1070542706408912,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81\n    }\n  }\n}\n[1 figure(s) displayed to the user as Figure 32 (theory_vs_data_85eda8.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "0b3bf7a99cfe",
+            "154df6086aec"
+          ]
+        },
+        {
+          "id": "tooluse_5PvQX3wrwIAXnK9SHDYTMz",
+          "tool": "firecrown_compute_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml",
+            "nuisance": {
+              "lens0_bias": 1.6
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632",
+            "plot": false
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_76cf8f.csv\"\n  ],\n  \"message\": \"loglike = -13.043, chi2 = 26.09 for n_data = 18 (chi2/n = 1.449) at Om=0.300, sigma8=0.81, h=0.67. Worst statistics by chi2_block/n: density_cl lens0-lens0 (8.4/6), shear_cl_ee src0-src0 (7.9/6), shearDensity_cl_e src0-lens0 (5.1/6). \",\n  \"metadata\": {\n    \"loglike\": -13.042720834267195,\n    \"chi2\": 26.08544166853439,\n    \"n_data\": 18,\n    \"chi2_per_dof\": 1.4491912038074661,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6,\n        \"chi2_block\": 7.892376991110087,\n        \"chi2_share\": 15.684756458978978\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 5.097396834457333,\n        \"chi2_share\": -4.138188436009401\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 8.354405834857568,\n        \"chi2_share\": 14.53887364556483\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"lens0_bias\": 1.6\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"max_abs_pull\": 2.120999209513771,\n    \"rms_pull\": 1.088938822392011,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81\n    }\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_76cf8f.csv\"\n  ],\n  \"message\": \"loglike = -13.043, chi2 = 26.09 for n_data = 18 (chi2/n = 1.449) at Om=0.300, sigma8=0.81, h=0.67. Worst statistics by chi2_block/n: density_cl lens0-lens0 (8.4/6), shear_cl_ee src0-src0 (7.9/6), shearDensity_cl_e src0-lens0 (5.1/6). \",\n  \"metadata\": {\n    \"loglike\": -13.042720834267195,\n    \"chi2\": 26.08544166853439,\n    \"n_data\": 18,\n    \"chi2_per_dof\": 1.4491912038074661,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_shear_cl_ee\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 6,\n        \"chi2_block\": 7.892376991110087,\n        \"chi2_share\": 15.684756458978978\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_cl_e\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 5.097396834457333,\n        \"chi2_share\": -4.138188436009401\n      },\n      {\n        \"data_type\": \"galaxy_density_cl\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 8.354405834857568,\n        \"chi2_share\": 14.53887364556483\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"lens0_bias\": 1.6\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"Neff\": 3.044,\n      \"wa\": 0.0,\n      \"h\": 0.67,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"lens0_bias\": 1.5\n    },\n    \"max_abs_pull\": 2.120999209513771,\n    \"rms_pull\": 1.088938822392011,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "b321232d3792"
+          ]
+        }
+      ],
+      "artifact_ids": [
+        "7165ce386142",
+        "51d70b22d872",
+        "b801635e59cf",
+        "2fe74acc919b",
+        "9c49c3b363ab",
+        "8255733996dc",
+        "f2e770a5b241",
+        "9b0bc3e025db",
+        "dff04eb33e9f",
+        "e69e48858d32",
+        "e55d3bcab2c0",
+        "128bec50955e",
+        "3a725835e13d",
+        "9801c580c06b",
+        "0b3bf7a99cfe",
+        "154df6086aec",
+        "b321232d3792"
+      ],
+      "usage": {
+        "quick": {
+          "input": 388364,
+          "cached": 315956,
+          "output": 5982,
+          "reasoning": 0,
+          "calls": 6
+        }
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "fb7865d1e502",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_theory_cls.csv",
+      "name": "sim_theory_cls.csv",
+      "kind": "csv",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 1,
+      "caption": ""
+    },
+    {
+      "id": "504b4de2a5a1",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_mask.fits",
+      "name": "sim_mask.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 2,
+      "caption": ""
+    },
+    {
+      "id": "47436672b43d",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_nz_src0.csv",
+      "name": "sim_nz_src0.csv",
+      "kind": "csv",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 3,
+      "caption": ""
+    },
+    {
+      "id": "e64764dd952c",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_nz_lens0.csv",
+      "name": "sim_nz_lens0.csv",
+      "kind": "csv",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 4,
+      "caption": ""
+    },
+    {
+      "id": "2cddc194743f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_src0_Q.fits",
+      "name": "sim_src0_Q.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 5,
+      "caption": ""
+    },
+    {
+      "id": "63dfcb248c24",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_src0_U.fits",
+      "name": "sim_src0_U.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 6,
+      "caption": ""
+    },
+    {
+      "id": "30565dd12c99",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_lens0.fits",
+      "name": "sim_lens0.fits",
+      "kind": "other",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 7,
+      "caption": ""
+    },
+    {
+      "id": "a0c1f6388299",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_fields.json",
+      "name": "sim_fields.json",
+      "kind": "text",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 8,
+      "caption": ""
+    },
+    {
+      "id": "83519c684e88",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/sim_maps.png",
+      "name": "sim_maps.png",
+      "kind": "image",
+      "tool": "namaster_simulate_maps",
+      "server": "serve-desc.sh",
+      "figure": 9,
+      "caption": ""
+    },
+    {
+      "id": "95594ce1797b",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.npz",
+      "name": "namaster_cls_32676c.npz",
+      "kind": "other",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 10,
+      "caption": ""
+    },
+    {
+      "id": "bbcb13b427b7",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_src0_src0.csv",
+      "name": "namaster_src0_src0.csv",
+      "kind": "csv",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 11,
+      "caption": ""
+    },
+    {
+      "id": "3763da164209",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_src0.csv",
+      "name": "namaster_lens0_src0.csv",
+      "kind": "csv",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 12,
+      "caption": ""
+    },
+    {
+      "id": "1300a76edd13",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_lens0_lens0.csv",
+      "name": "namaster_lens0_lens0.csv",
+      "kind": "csv",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 13,
+      "caption": ""
+    },
+    {
+      "id": "08e610a84adf",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_32676c.sacc",
+      "name": "namaster_32676c.sacc",
+      "kind": "other",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 14,
+      "caption": ""
+    },
+    {
+      "id": "cf9bf22f71b1",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.png",
+      "name": "namaster_cls_32676c.png",
+      "kind": "image",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 15,
+      "caption": ""
+    },
+    {
+      "id": "bbb361bbe9d5",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170556/namaster_cls_32676c.json",
+      "name": "namaster_cls_32676c.json",
+      "kind": "text",
+      "tool": "namaster_compute_cls",
+      "server": "serve-desc.sh",
+      "figure": 16,
+      "caption": ""
+    },
+    {
+      "id": "7165ce386142",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly.hdf5",
+      "name": "namaster_Eonly.hdf5",
+      "kind": "other",
+      "tool": "sacc_prepare_for_firecrown",
+      "server": "serve-desc.sh",
+      "figure": 17,
+      "caption": ""
+    },
+    {
+      "id": "51d70b22d872",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/sim_mask_mask_stats.json",
+      "name": "sim_mask_mask_stats.json",
+      "kind": "text",
+      "tool": "namaster_mask_properties",
+      "server": "serve-desc.sh",
+      "figure": 18,
+      "caption": ""
+    },
+    {
+      "id": "b801635e59cf",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_config_7480e6.yaml",
+      "name": "tjpcov_config_7480e6.yaml",
+      "kind": "other",
+      "tool": "tjpcov_generate_config",
+      "server": "serve-desc.sh",
+      "figure": 19,
+      "caption": ""
+    },
+    {
+      "id": "2fe74acc919b",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox.hdf5",
+      "name": "namaster_Eonly_knox.hdf5",
+      "kind": "other",
+      "tool": "sacc_attach_gaussian_covariance",
+      "server": "serve-desc.sh",
+      "figure": 20,
+      "caption": ""
+    },
+    {
+      "id": "9c49c3b363ab",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_77baf9.json",
+      "name": "namaster_Eonly_knox_77baf9.json",
+      "kind": "text",
+      "tool": "sacc_attach_gaussian_covariance",
+      "server": "serve-desc.sh",
+      "figure": 21,
+      "caption": ""
+    },
+    {
+      "id": "8255733996dc",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2.hdf5",
+      "name": "namaster_Eonly_tjpcov_4569f2.hdf5",
+      "kind": "other",
+      "tool": "tjpcov_compute_covariance",
+      "server": "serve-desc.sh",
+      "figure": 22,
+      "caption": ""
+    },
+    {
+      "id": "f2e770a5b241",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2_diagnostics.json",
+      "name": "namaster_Eonly_tjpcov_4569f2_diagnostics.json",
+      "kind": "text",
+      "tool": "tjpcov_compute_covariance",
+      "server": "serve-desc.sh",
+      "figure": 23,
+      "caption": ""
+    },
+    {
+      "id": "9b0bc3e025db",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_tjpcov_4569f2_corr.png",
+      "name": "namaster_Eonly_tjpcov_4569f2_corr.png",
+      "kind": "image",
+      "tool": "tjpcov_compute_covariance",
+      "server": "serve-desc.sh",
+      "figure": 24,
+      "caption": ""
+    },
+    {
+      "id": "dff04eb33e9f",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_sigma_ratio.csv",
+      "name": "namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_sigma_ratio.csv",
+      "kind": "csv",
+      "tool": "tjpcov_compare_covariances",
+      "server": "serve-desc.sh",
+      "figure": 25,
+      "caption": ""
+    },
+    {
+      "id": "e69e48858d32",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png",
+      "name": "namaster_Eonly_knox_vs_namaster_Eonly_tjpcov_4569f2_compare.png",
+      "kind": "image",
+      "tool": "tjpcov_compare_covariances",
+      "server": "serve-desc.sh",
+      "figure": 26,
+      "caption": ""
+    },
+    {
+      "id": "e55d3bcab2c0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1.yaml",
+      "name": "tjpcov_5fbab1.yaml",
+      "kind": "other",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 27,
+      "caption": ""
+    },
+    {
+      "id": "128bec50955e",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/tjpcov_5fbab1_params.json",
+      "name": "tjpcov_5fbab1_params.json",
+      "kind": "text",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 28,
+      "caption": ""
+    },
+    {
+      "id": "3a725835e13d",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961.yaml",
+      "name": "knox_12c961.yaml",
+      "kind": "other",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 29,
+      "caption": ""
+    },
+    {
+      "id": "9801c580c06b",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/knox_12c961_params.json",
+      "name": "knox_12c961_params.json",
+      "kind": "text",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh",
+      "figure": 30,
+      "caption": ""
+    },
+    {
+      "id": "0b3bf7a99cfe",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_85eda8.csv",
+      "name": "theory_vs_data_85eda8.csv",
+      "kind": "csv",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 31,
+      "caption": ""
+    },
+    {
+      "id": "154df6086aec",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_85eda8.png",
+      "name": "theory_vs_data_85eda8.png",
+      "kind": "image",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 32,
+      "caption": ""
+    },
+    {
+      "id": "b321232d3792",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170632/theory_vs_data_76cf8f.csv",
+      "name": "theory_vs_data_76cf8f.csv",
+      "kind": "csv",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh",
+      "figure": 33,
+      "caption": ""
+    }
+  ],
+  "digest": null,
+  "title": "Simulate shear+density maps (nside 64, f_sky 0.3), measur\u2026"
+}

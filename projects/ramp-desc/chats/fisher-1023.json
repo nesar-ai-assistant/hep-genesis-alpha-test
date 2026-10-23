@@ -1,0 +1,211 @@
+{
+  "id": "61c52287254a",
+  "name": "fisher-1023",
+  "created_at": "2026-10-23T17:04:26",
+  "messages": [
+    {
+      "id": "de4965885003",
+      "role": "user",
+      "content": "Generate an LSST Y1 shear-only Fisher forecast with augur (3 var_pars), validate it, compute the Fisher matrix locally, and plot contours. Report the marginalised sigma(sigma8) and sigma(w0).",
+      "ts": "2026-10-23T17:04:26",
+      "tool_calls": [],
+      "artifact_ids": []
+    },
+    {
+      "id": "c8d80db8c711",
+      "role": "assistant",
+      "content": "I ran the LSST Y1 cosmic-shear Fisher forecast with augur, varying \u03a9_c, \u03c38 and w0. It ran locally in about 8 s. With no priors and marginalised over the other two parameters:\n\n- **\u03c3(\u03c38) = 0.0062**, around a fiducial of 0.831\n- **\u03c3(w0) = 0.0165**, around a fiducial of \u22121.0\n\nThese numbers are much tighter than a realistic Y1 forecast, because everything except these three parameters is held fixed at its fiducial value. That includes \u03a9_b, h, n_s, wa, the intrinsic-alignment parameters, the photo-z shifts (`src{i}_delta_z`) and the shear calibration biases (`src{i}_mult_bias`). For \u03c3(w0) in particular, letting wa, h and the photo-z/IA nuisances vary would loosen it by a large factor.\n\n**Setup**\n- **Data:** shear only, 5 source bins (15 bin pairs), 10 galaxies per arcmin\u00b2, shape noise \u03c3_e = 0.26.\n- **Scales and covariance:** 20 log-spaced ell bands from 20 to 15000 with no shear scale cut, giving 300 data points. The covariance is augur's simple Gaussian estimate (`gaus_internal`) with f_sky = 0.3.\n- **Cosmology:** the DESC SRD fiducial (\u03a9_c = 0.2664, \u03a9_b = 0.0492, h = 0.6727, n_s = 0.9645), with the eisenstein_hu transfer function and halofit.\n- **Derivatives:** numdifftools with an absolute step of 0.01, 7 evaluations in total.\n\n**Checks:** the config validator passed with no errors or warnings. The Fisher matrix is symmetric (relative error about 5e-16) and positive definite, with condition number about 1.2e3.\n\n**Full results**\n\n| Parameter | Fiducial | \u03c3 (marginalised, no prior) |\n|---|---|---|\n| \u03a9_c | 0.2664 | 0.00364 |\n| \u03c38 | 0.831 | 0.00622 |\n| w0 | \u22121.0 | 0.0165 |\n| \u03a9_m (derived) | 0.3156 | 0.00364 |\n| S8 (derived) | 0.852 | 0.00173 |\n\nS8 is constrained about 3.6 times better than \u03c38, which reflects the strong \u03a9_m\u2013\u03c38 degeneracy typical of lensing. Figure 8 shows the 68% and 95% Fisher ellipses. The w0\u2013wa Figure of Merit is undefined here because wa was not varied.\n\nA natural next step is to rerun with wa and the source photo-z, shear-bias and IA nuisances added to the varied parameters, with or without SRD priors, for a realistic \u03c3(w0) and a Figure of Merit.\n\nFiles are in `/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/`:\n- `augur_y1_shear_3par_c7bb5d/forecast_config.yml`\n- `fisher_d093c0.csv`\n- `marginalized_sigmas_d093c0.csv`\n- `fom_d093c0.json`\n- `fisher_contours_880415.png`\n\n[Tool ledger]\n- augur_generate_forecast_config \u2192 `.../augur_y1_shear_3par_c7bb5d/forecast_config.yml` (300 pts, gaus_internal, fsky 0.3)\n- augur_validate_forecast_config \u2192 go, 0 errors / 0 warnings\n- augur_compute_fisher (local) \u2192 `fisher_d093c0.csv`; \u03c3: Omega_c 0.003637, sigma8 0.006225, w0 0.016526; Omega_m 0.003637, S8 0.001731; PD, cond 1186\n- augur_plot_fisher_contours \u2192 `fisher_contours_880415.png` (Figure 8)",
+      "ts": "2026-10-23T17:04:26",
+      "tool_calls": [
+        {
+          "id": "tooluse_qB2vAEK9vW0SGOIap5gYhr",
+          "tool": "augur_generate_forecast_config",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423",
+            "survey_year": "Y1",
+            "probes": "shear",
+            "var_pars": [
+              "Omega_c",
+              "sigma8",
+              "w0"
+            ],
+            "label": "y1_shear_3par"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.json\"\n  ],\n  \"message\": \"Wrote augur Y1 shear forecast config (15 tracer pairs x 20 ells = 300 data points before cuts; 3 varied parameters -> ~8 likelihood evaluations; cov gaus_internal).\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml\",\n    \"run_dir\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d\",\n    \"survey_year\": \"Y1\",\n    \"probes\": \"shear\",\n    \"n_source_bins\": 5,\n    \"n_lens_bins\": 0,\n    \"ndens_arcmin2\": {\n      \"source\": 10.0,\n      \"lens\": null\n    },\n    \"ell_bands\": {\n      \"n\": 20,\n      \"edges\": [\n        20.0,\n        27.847,\n        38.774,\n        53.987,\n        75.17,\n        104.664,\n        145.73,\n        202.909,\n        282.523,\n        393.376,\n        547.723,\n        762.63,\n        1061.859,\n        1478.495,\n        2058.604,\n        2866.328,\n        3990.975,\n        5556.893,\n        7737.223,\n        10773.038,\n        15000.0\n      ]\n    },\n    \"scale_cuts\": {\n      \"lens_probes\": {\n        \"kmax\": 0.202\n      },\n      \"shear_lmax\": null,\n      \"kmax_units\": \"Mpc^-1 (no h)\"\n    },\n    \"n_pairs\": {\n      \"galaxy_shear_cl_ee\": 15\n    },\n    \"n_data_before_cuts\": 300,\n    \"cov_type\": \"gaus_internal\",\n    \"fsky\": 0.3,\n    \"srd_covariance_layout_match\": false,\n    \"cosmology\": {\n      \"preset\": \"desc_srd\",\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"sigma8\": 0.831,\n      \"A_s\": null,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"mass_split\": \"normal\",\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"transfer_function\": \"eisenstein_hu\",\n      \"matter_power_spectrum\": \"halofit\",\n      \"baryons\": \"none\",\n      \"baryon_params\": {},\n      \"hmcode_logT_AGN\": 7.8,\n      \"mg_mu0\": 0.0,\n      \"mg_sigma0\": 0.0\n    },\n    \"cosmology_label\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"gaussian_priors\": {},\n    \"step_absolute\": 0.01,\n    \"derivative_method\": \"numdifftools\",\n    \"estimated_likelihood_evaluations\": 8,\n    \"fisher_bias_params\": null,\n    \"validator\": {\n      \"errors\": [],\n      \"warnings\": []\n    },\n    \"nuisance_parameters_available\": [\n      \"alphaz\",\n      \"ia_bias\",\n      \"src0_delta_z\",\n      \"src0_mult_bias\",\n      \"src1_delta_z\",\n      \"src1_mult_bias\",\n      \"src2_delta_z\",\n      \"src2_mult_bias\",\n      \"src3_delta_z\",\n      \"src3_mult_bias\",\n      \"src4_delta_z\",\n      \"src4_mult_bias\",\n      \"z_piv\"\n    ],\n    \"units\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (split per bin by the n(z) integral)\",\n      \"sigma_e\": \"per-component shape noise (SRD: 0.26); noise power = sigma_e^2 / nbar\",\n      \"ells\": \"dimensionless; bands are geometric centres of log-spaced edges (SRD: 20 bands in 20..15000)\",\n      \"step\": \"ABSOLUTE finite-difference step in parameter units (not relative); default 0.01\",\n      \"fsky\": \"sky fraction for gaus_internal / tjpcov (LSST Y1 ~0.3, Y10 ~0.4)\",\n      \"parameter_names\": \"firecrown/CCL: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu w0 wa; nuisance src{i}_delta_z src{i}_mult_bias lens{i}_bias lens{i}_delta_z lens{i}_sigma_z, global IA ia_bias alphaz z_piv\",\n      \"fisher_units\": \"F_ij in (parameter units)^-2; sigma_i = sqrt((F^-1)_ii) marginalised over the rest\",\n      \"fom\": \"DETF FoM = 1/sqrt(det Cov(w0,wa)); augur's get_FoM_all div",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.json\"\n  ],\n  \"message\": \"Wrote augur Y1 shear forecast config (15 tracer pairs x 20 ells = 300 data points before cuts; 3 varied parameters -> ~8 likelihood evaluations; cov gaus_internal).\",\n  \"metadata\": {\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml\",\n    \"run_dir\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d\",\n    \"survey_year\": \"Y1\",\n    \"probes\": \"shear\",\n    \"n_source_bins\": 5,\n    \"n_lens_bins\": 0,\n    \"ndens_arcmin2\": {\n      \"source\": 10.0,\n      \"lens\": null\n    },\n    \"ell_bands\": {\n      \"n\": 20,\n      \"edges\": [\n        20.0,\n        27.847,\n        38.774,\n        53.987,\n        75.17,\n        104.664,\n        145.73,\n        202.909,\n        282.523,\n        393.376,\n        547.723,\n        762.63,\n        1061.859,\n        1478.495,\n        2058.604,\n        2866.328,\n        3990.975,\n        5556.893,\n        7737.223,\n        10773.038,\n        15000.0\n      ]\n    },\n    \"scale_cuts\": {\n      \"lens_probes\": {\n        \"kmax\": 0.202\n      },\n      \"shear_lmax\": null,\n      \"kmax_units\": \"Mpc^-1 (no h)\"\n    },\n    \"n_pairs\": {\n      \"galaxy_shear_cl_ee\": 15\n    },\n    \"n_data_before_cuts\": 300,\n    \"cov_type\": \"gaus_internal\",\n    \"fsky\": 0.3,\n    \"srd_covariance_layout_match\": false,\n    \"cosmology\": {\n      \"preset\": \"desc_srd\",\n      \"Omega_c\": 0.2664,\n      \"Omega_b\": 0.0492,\n      \"h\": 0.6727,\n      \"n_s\": 0.9645,\n      \"sigma8\": 0.831,\n      \"A_s\": null,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"mass_split\": \"normal\",\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"transfer_function\": \"eisenstein_hu\",\n      \"matter_power_spectrum\": \"halofit\",\n      \"baryons\": \"none\",\n      \"baryon_params\": {},\n      \"hmcode_logT_AGN\": 7.8,\n      \"mg_mu0\": 0.0,\n      \"mg_sigma0\": 0.0\n    },\n    \"cosmology_label\": \"Om=0.316, sigma8=0.831, h=0.6727\",\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"gaussian_priors\": {},\n    \"step_absolute\": 0.01,\n    \"derivative_method\": \"numdifftools\",\n    \"estimated_likelihood_evaluations\": 8,\n    \"fisher_bias_params\": null,\n    \"validator\": {\n      \"errors\": [],\n      \"warnings\": []\n    },\n    \"nuisance_parameters_available\": [\n      \"alphaz\",\n      \"ia_bias\",\n      \"src0_delta_z\",\n      \"src0_mult_bias\",\n      \"src1_delta_z\",\n      \"src1_mult_bias\",\n      \"src2_delta_z\",\n      \"src2_mult_bias\",\n      \"src3_delta_z\",\n      \"src3_mult_bias\",\n      \"src4_delta_z\",\n      \"src4_mult_bias\",\n      \"z_piv\"\n    ],\n    \"units\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (split per bin by the n(z) integral)\",\n      \"sigma_e\": \"per-component shape noise (SRD: 0.26); noise power = sigma_e^2 / nbar\",\n      \"ells\": \"dimensionless; bands are geometric centres of log-spaced edges (SRD: 20 bands in 20..15000)\",\n      \"step\": \"ABSOLUTE finite-difference step in parameter units (not relative); default 0.01\",\n      \"fsky\": \"sky fraction for gaus_internal / tjpcov (LSST Y1 ~0.3, Y10 ~0.4)\",\n      \"parameter_names\": \"firecrown/CCL: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu w0 wa; nuisance src{i}_delta_z src{i}_mult_bias lens{i}_bias lens{i}_delta_z lens{i}_sigma_z, global IA ia_bias alphaz z_piv\",\n      \"fisher_units\": \"F_ij in (parameter units)^-2; sigma_i = sqrt((F^-1)_ii) marginalised over the rest\",\n      \"fom\": \"DETF FoM = 1/sqrt(det Cov(w0,wa)); augur's get_FoM_all divides Cov by chi2.ppf(CL,2)\",\n      \"tracer_names\": \"src{i} (galaxy_shear) and lens{i} (galaxy_density) - required by augur\",\n      \"ggl_pairs\": \"statistics.galaxy_shearDensity_cl_e.tracer_combs are [lens_i, src_j]\"\n    }\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "03576484d1f1",
+            "401c4c34c159"
+          ]
+        },
+        {
+          "id": "tooluse_5bBIU2MdbGULE7rfEY5UR5",
+          "tool": "augur_validate_forecast_config",
+          "server": "serve-desc.sh",
+          "args": {
+            "config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"go: 0 errors, 0 warnings for /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml.\",\n  \"metadata\": {\n    \"verdict\": \"go\",\n    \"ok\": true,\n    \"errors\": [],\n    \"warnings\": [],\n    \"n_data_before_cuts\": 300,\n    \"n_var_pars\": 3,\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"n_priors_applied\": 0,\n    \"estimated_likelihood_evaluations\": 8,\n    \"derivative_method\": \"numdifftools\",\n    \"step\": 0.01,\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml\"\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"go: 0 errors, 0 warnings for /Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml.\",\n  \"metadata\": {\n    \"verdict\": \"go\",\n    \"ok\": true,\n    \"errors\": [],\n    \"warnings\": [],\n    \"n_data_before_cuts\": 300,\n    \"n_var_pars\": 3,\n    \"var_pars\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"n_priors_applied\": 0,\n    \"estimated_likelihood_evaluations\": 8,\n    \"derivative_method\": \"numdifftools\",\n    \"step\": 0.01,\n    \"config_path\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml\"\n  }\n}",
+          "is_error": false,
+          "artifact_ids": []
+        },
+        {
+          "id": "tooluse_iEiBSeyLxwl7iqSsutN6c6",
+          "tool": "get_dispatch",
+          "server": "serve-desc.sh",
+          "args": {},
+          "result": "Dispatch: local execution.",
+          "raw": "Dispatch: local execution.",
+          "is_error": false,
+          "artifact_ids": []
+        },
+        {
+          "id": "tooluse_VcoHNUXkKXDu8wnw7K2jnf",
+          "tool": "augur_compute_fisher",
+          "server": "serve-desc.sh",
+          "args": {
+            "config_path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_d093c0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/marginalized_sigmas_d093c0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/derivatives_d093c0.npy\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fom_d093c0.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/fiducial_datavector.sacc\"\n  ],\n  \"message\": \"Fisher matrix for 3 parameters from 300 data points (7 evaluations, 5 s on local). Marginalised sigma (no prior): Omega_c=0.00364, sigma8=0.00622, w0=0.0165.\",\n  \"metadata\": {\n    \"computed_on\": \"local\",\n    \"params\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"fiducials\": {\n      \"Omega_c\": 0.2664,\n      \"sigma8\": 0.831,\n      \"w0\": -1.0\n    },\n    \"sigma_no_prior\": {\n      \"Omega_c\": 0.003637003885036745,\n      \"sigma8\": 0.006224533327080838,\n      \"w0\": 0.016526317483428005\n    },\n    \"sigma_with_prior\": null,\n    \"priors\": {},\n    \"fom\": {\n      \"no_prior\": null,\n      \"with_prior\": null\n    },\n    \"derived\": {\n      \"no_prior\": {\n        \"Omega_m\": {\n          \"fiducial\": 0.31560000000000005,\n          \"sigma\": 0.003637003885036745\n        },\n        \"S8\": {\n          \"fiducial\": 0.8523321958016136,\n          \"sigma\": 0.0017311159745965555\n        }\n      }\n    },\n    \"fisher_bias\": null,\n    \"checks\": {\n      \"symmetric_rel_err\": 4.839504579066904e-16,\n      \"positive_definite\": true,\n      \"condition_number\": 1186.350308957789,\n      \"min_eigenvalue\": 3255.03863703053\n    },\n    \"n_data\": 300,\n    \"n_evaluations\": 7,\n    \"derivative_method\": \"numdifftools\",\n    \"step_absolute\": 0.01,\n    \"cov_type\": \"gaus_internal\",\n    \"timing_s\": {\n      \"generate\": 3.110774040222168,\n      \"fisher\": 5.188260078430176,\n      \"total\": 8.329561948776245\n    },\n    \"versions\": {\n      \"augur\": \"present\",\n      \"firecrown\": \"1.16.0\",\n      \"pyccl\": \"3.3.6\",\n      \"sacc\": \"2.4\",\n      \"numdifftools\": \"0.11.1\",\n      \"tjpcov\": \"present\"\n    },\n    \"augur_text_outputs\": [\n      \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/augur_out/fisher.dat\",\n      \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/augur_out/fiducials.dat\"\n    ],\n    \"validator_warnings\": []\n  }\n}",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_d093c0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/marginalized_sigmas_d093c0.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/derivatives_d093c0.npy\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fom_d093c0.json\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/fiducial_datavector.sacc\"\n  ],\n  \"message\": \"Fisher matrix for 3 parameters from 300 data points (7 evaluations, 5 s on local). Marginalised sigma (no prior): Omega_c=0.00364, sigma8=0.00622, w0=0.0165.\",\n  \"metadata\": {\n    \"computed_on\": \"local\",\n    \"params\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"fiducials\": {\n      \"Omega_c\": 0.2664,\n      \"sigma8\": 0.831,\n      \"w0\": -1.0\n    },\n    \"sigma_no_prior\": {\n      \"Omega_c\": 0.003637003885036745,\n      \"sigma8\": 0.006224533327080838,\n      \"w0\": 0.016526317483428005\n    },\n    \"sigma_with_prior\": null,\n    \"priors\": {},\n    \"fom\": {\n      \"no_prior\": null,\n      \"with_prior\": null\n    },\n    \"derived\": {\n      \"no_prior\": {\n        \"Omega_m\": {\n          \"fiducial\": 0.31560000000000005,\n          \"sigma\": 0.003637003885036745\n        },\n        \"S8\": {\n          \"fiducial\": 0.8523321958016136,\n          \"sigma\": 0.0017311159745965555\n        }\n      }\n    },\n    \"fisher_bias\": null,\n    \"checks\": {\n      \"symmetric_rel_err\": 4.839504579066904e-16,\n      \"positive_definite\": true,\n      \"condition_number\": 1186.350308957789,\n      \"min_eigenvalue\": 3255.03863703053\n    },\n    \"n_data\": 300,\n    \"n_evaluations\": 7,\n    \"derivative_method\": \"numdifftools\",\n    \"step_absolute\": 0.01,\n    \"cov_type\": \"gaus_internal\",\n    \"timing_s\": {\n      \"generate\": 3.110774040222168,\n      \"fisher\": 5.188260078430176,\n      \"total\": 8.329561948776245\n    },\n    \"versions\": {\n      \"augur\": \"present\",\n      \"firecrown\": \"1.16.0\",\n      \"pyccl\": \"3.3.6\",\n      \"sacc\": \"2.4\",\n      \"numdifftools\": \"0.11.1\",\n      \"tjpcov\": \"present\"\n    },\n    \"augur_text_outputs\": [\n      \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/augur_out/fisher.dat\",\n      \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/augur_out/fiducials.dat\"\n    ],\n    \"validator_warnings\": []\n  }\n}",
+          "is_error": false,
+          "artifact_ids": [
+            "cf2ef3d39a84",
+            "5600db74d6c0",
+            "850120dd4596",
+            "70a8444b5bf3",
+            "14afbb331367"
+          ]
+        },
+        {
+          "id": "tooluse_oQHQYFTIGUmrW7TE1jpTQq",
+          "tool": "augur_plot_fisher_contours",
+          "server": "serve-desc.sh",
+          "args": {
+            "fisher_csvs": [
+              "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_d093c0.csv"
+            ],
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423",
+            "labels": [
+              "LSST Y1 shear (Omega_c, sigma8, w0)"
+            ],
+            "title": "LSST Y1 cosmic shear Fisher forecast"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_contours_880415.png\"\n  ],\n  \"message\": \"Triangle plot for 3 parameters from 1 Fisher matrix(es) at 68%, 95% CL.\",\n  \"metadata\": {\n    \"params\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"confidence_levels\": [\n      0.68,\n      0.95\n    ],\n    \"per_file\": [\n      {\n        \"file\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_d093c0.csv\",\n        \"label\": \"LSST Y1 shear (Omega_c, sigma8, w0)\",\n        \"sigma\": {\n          \"Omega_c\": 0.0036370017390372927,\n          \"sigma8\": 0.006224529785854774,\n          \"w0\": 0.016526311655689067\n        },\n        \"detf_fom_w0wa\": null\n      }\n    ],\n    \"fom_ratio_to_first\": {},\n    \"note\": \"sigmas are marginalised over ALL parameters of each Fisher matrix, not only the shown subset\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 8 (fisher_contours_880415.png) \u2014 reference them by figure number.]",
+          "raw": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_contours_880415.png\"\n  ],\n  \"message\": \"Triangle plot for 3 parameters from 1 Fisher matrix(es) at 68%, 95% CL.\",\n  \"metadata\": {\n    \"params\": [\n      \"Omega_c\",\n      \"sigma8\",\n      \"w0\"\n    ],\n    \"confidence_levels\": [\n      0.68,\n      0.95\n    ],\n    \"per_file\": [\n      {\n        \"file\": \"/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_d093c0.csv\",\n        \"label\": \"LSST Y1 shear (Omega_c, sigma8, w0)\",\n        \"sigma\": {\n          \"Omega_c\": 0.0036370017390372927,\n          \"sigma8\": 0.006224529785854774,\n          \"w0\": 0.016526311655689067\n        },\n        \"detf_fom_w0wa\": null\n      }\n    ],\n    \"fom_ratio_to_first\": {},\n    \"note\": \"sigmas are marginalised over ALL parameters of each Fisher matrix, not only the shown subset\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 8 (fisher_contours_880415.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "artifact_ids": [
+            "da4c1ae72b4d"
+          ]
+        }
+      ],
+      "artifact_ids": [
+        "03576484d1f1",
+        "401c4c34c159",
+        "cf2ef3d39a84",
+        "5600db74d6c0",
+        "850120dd4596",
+        "70a8444b5bf3",
+        "14afbb331367",
+        "da4c1ae72b4d"
+      ],
+      "usage": {
+        "quick": {
+          "input": 296797,
+          "cached": 235293,
+          "output": 2236,
+          "reasoning": 0,
+          "calls": 5
+        }
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "03576484d1f1",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.yml",
+      "name": "forecast_config.yml",
+      "kind": "other",
+      "tool": "augur_generate_forecast_config",
+      "server": "serve-desc.sh",
+      "figure": 1,
+      "caption": ""
+    },
+    {
+      "id": "401c4c34c159",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/forecast_config.json",
+      "name": "forecast_config.json",
+      "kind": "text",
+      "tool": "augur_generate_forecast_config",
+      "server": "serve-desc.sh",
+      "figure": 2,
+      "caption": ""
+    },
+    {
+      "id": "cf2ef3d39a84",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_d093c0.csv",
+      "name": "fisher_d093c0.csv",
+      "kind": "csv",
+      "tool": "augur_compute_fisher",
+      "server": "serve-desc.sh",
+      "figure": 3,
+      "caption": ""
+    },
+    {
+      "id": "5600db74d6c0",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/marginalized_sigmas_d093c0.csv",
+      "name": "marginalized_sigmas_d093c0.csv",
+      "kind": "csv",
+      "tool": "augur_compute_fisher",
+      "server": "serve-desc.sh",
+      "figure": 4,
+      "caption": ""
+    },
+    {
+      "id": "850120dd4596",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/derivatives_d093c0.npy",
+      "name": "derivatives_d093c0.npy",
+      "kind": "other",
+      "tool": "augur_compute_fisher",
+      "server": "serve-desc.sh",
+      "figure": 5,
+      "caption": ""
+    },
+    {
+      "id": "70a8444b5bf3",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fom_d093c0.json",
+      "name": "fom_d093c0.json",
+      "kind": "text",
+      "tool": "augur_compute_fisher",
+      "server": "serve-desc.sh",
+      "figure": 6,
+      "caption": ""
+    },
+    {
+      "id": "14afbb331367",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/augur_y1_shear_3par_c7bb5d/fiducial_datavector.sacc",
+      "name": "fiducial_datavector.sacc",
+      "kind": "other",
+      "tool": "augur_compute_fisher",
+      "server": "serve-desc.sh",
+      "figure": 7,
+      "caption": ""
+    },
+    {
+      "id": "da4c1ae72b4d",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/ramp-desc/runs/261023_170423/fisher_contours_880415.png",
+      "name": "fisher_contours_880415.png",
+      "kind": "image",
+      "tool": "augur_plot_fisher_contours",
+      "server": "serve-desc.sh",
+      "figure": 8,
+      "caption": ""
+    }
+  ],
+  "digest": null,
+  "title": "Generate an LSST Y1 shear-only Fisher forecast with augur\u2026"
+}
