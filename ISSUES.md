@@ -747,6 +747,45 @@ Notables:
 
 
 
+## 2026-10-25-expert-schneider15-cl-bias — expert-physicist session
+
+Deep multi-server chain, not a battery run. See
+`research-results/2026-10-25/expert-schneider15-cl-bias/SESSION_REPORT.md`
+for full writeup. Headline: chained hydroemu-mcp-server (HACC Pk-ratio
+suppression curve) → direct pyccl `BaryonsSchneider15` fit → direct
+firecrown/pyccl Python API (bypassing the broken YAML `pk_modifier` path,
+#5) → Fisher-bias propagation on a DES-Y1-like shear-only sacc file. Result:
+baryon-induced bias on (Omega_c, sigma8) is sub-0.1-sigma at DES-Y1
+shear-only statistical power (delta(Omega_c)=-0.0001=-0.01σ,
+delta(sigma8)=+0.0005=+0.02σ), with sigma(Omega_c)=0.0134,
+sigma(sigma8)=0.0204. Caveat: this run's "fiducial" cosmology
+(omega_m=0.143, sigma_8=0.82) is a guess, not the true HACC fiducial — see
+#12 below.
+
+**MAG backend note:** `claude-opus-5-5` returned HTTP 403
+`amsc_allocation_expired` on 2026-10-25 (allocation
+`genesis-mission-october-2026-hackathon`) — fell back to
+`gpt-5.6-luna@openai` for this session. Needs a check/renewal before the
+next ramp-up cron batteries run, or `scripts/test-env.sh`'s default should
+change.
+
+**#12 (new, local)**: `hydroemu-mcp-server::describe_parameters` never
+surfaces `cosmohydro_emu.get_parameter_info()["fiducial"]`
+(`omega_m=0.14176, sigma_8=0.8102`, documented in the package as
+`FIDUCIAL_COSMOLOGY`) even though the package ships it — agents are forced
+to guess the fiducial design point from the min/max range, and two sessions
+(2026-10-24 and 2026-10-25) guessed two *different* wrong values for the
+identical "predict at the fiducial point" request. Filed upstream:
+https://github.com/nesar-ai-assistant/hydroemu-mcp-server/issues/1
+
+**#5 status**: still open (confirmed via `gh issue view` before this
+session). Added a comment with the validated direct-Python workaround,
+numbers, and a methodological warning not to report a bare chi2 delta as a
+parameter bias (self-caught mid-session: delta_chi2=9.87 at one point is
+97% a cross-term artifact of the synthetic data vector's generation, not the
+baryon effect size — the Fisher-bias vector is the correct quantity).
+https://github.com/nesar/desc_mcp_server/issues/5#issuecomment-6403684059
+
 ## 2026-10-23-eve-desc — 10 pass / 0 flagged
 
 Clean run — no flags. v0.3.18, claude-opus-5-5@MAG, ~11 min wall, 48/54 tools loaded.

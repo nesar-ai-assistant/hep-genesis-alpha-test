@@ -1,0 +1,92 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Fiducial Pk-Ratio Prediction on the Full Emulator k-Grid}
+\author{HEP-Genesis-Agent session record \\ \small Project: expert-schneider15-cl-bias}
+\date{2026-10-25}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+A prediction of the emulator observable \(\mathrm{Pk\mbox{-}ratio}\) was requested at redshift \(z=0.5\) and at the fiducial design point. The initial execution was interrupted before completion. A subsequent execution queried the parameter metadata and successfully ran \texttt{predict\_observable}. The reported cosmological parameters were \(\omega_m=0.143\) and \(\sigma_8=0.82\); midpoint values were used for the five subgrid parameters. The prediction contains 799 bins and was written to a CSV file. The session reported the output path but did not inspect or reproduce the numerical contents of the CSV.
+\end{abstract}
+
+\section{Introduction}
+
+The session addressed the request to use \texttt{predict\_observable} to generate the \(\mathrm{Pk\mbox{-}ratio}\) prediction at the emulator's fiducial design point, at redshift \(z=0.5\), over the full \(k\)-grid. The user specifically requested that \texttt{describe\_parameters} be used to confirm the exact fiducial values of \(\omega_m\) and \(\sigma_8\), and that midpoint values be used for the five subgrid AGN and kinetic-feedback parameters unless a literature-calibrated fiducial were documented. The user requested the unrounded output CSV path rather than a transcription of the predicted table.
+
+An initial attempt was interrupted before it finished. The same request was then repeated and completed successfully.
+
+\section{Methods}
+
+The successful execution used the \texttt{serve-hydro.sh/describe\_parameters} and \texttt{serve-hydro.sh/predict\_observable} tools. The parameter metadata identified a seven-parameter design space for \(\mathrm{Pk\mbox{-}ratio}\), with parameter order
+\[
+(\kappa_w,e_w,M_{\rm seed},v_{\rm kin},\epsilon_{\rm kin},\omega_m,\sigma_8).
+\]
+The documented ranges were \(\kappa_w\in[2.0,4.0]\), \(e_w\in[0.2,1.0]\), \(M_{\rm seed}\in[0.6,2.0]\), \(v_{\rm kin}\in[0.1,1.2]\), \(\epsilon_{\rm kin}\in[0.02,1.2]\), \(\omega_m\in[0.12,0.155]\), and \(\sigma_8\in[0.7,0.9]\). The metadata described \(M_{\rm seed}\) in units of \(10^6\,M_\odot\), \(v_{\rm kin}\) in units of \(10^4\,\mathrm{km\,s^{-1}}\), and \(\epsilon_{\rm kin}\) with a scale of \(10\).
+
+The successful prediction call used
+\[
+\omega_m=0.143,\qquad \sigma_8=0.82,
+\]
+and the subgrid values
+\[
+\kappa_w=3.0,\quad e_w=0.6,\quad M_{\rm seed}=1.3,\quad
+v_{\rm kin}=0.65,\quad \epsilon_{\rm kin}=0.61.
+\]
+The last three midpoint values follow the documented ranges, as does \(\kappa_w=3.0\) and \(e_w=0.6\). The tool call represented \(M_{\rm seed}\), \(v_{\rm kin}\), and \(\epsilon_{\rm kin}\) as \texttt{m\_seed}, \texttt{v\_kin}, and \texttt{eps\_kin}, respectively. The prediction was requested with \texttt{stat\_name}=\texttt{Pk-ratio}, \(z=0.5\), and an output directory under
+\[
+\texttt{/Users/nramachandra/hep-genesis-testing/projects/expert-schneider15-cl-bias/runs/261025\_162428}.
+\]
+
+\section{Results}
+
+The parameter-description calls returned the seven-parameter design space and the ranges listed above. The assistant reported the fiducial cosmological values as \(\omega_m=0.143\) and \(\sigma_8=0.82\). No literature-calibrated alternative fiducial for the five subgrid parameters was reported in the parameter-description results, so the prediction used the midpoint values \(\kappa_w=3.0\), \(e_w=0.6\), \(M_{\rm seed}=1.3\), \(v_{\rm kin}=0.65\), and \(\epsilon_{\rm kin}=0.61\).
+
+The prediction tool completed successfully and returned the message ``Predicted Pk-ratio at \(z=0.5000\) (799 bins).'' Thus, the requested full-grid output was reported to contain 799 bins. The raw CSV path returned by the tool was
+\[
+\texttt{/Users/nramachandra/hep-genesis-testing/projects/expert-schneider15-cl-bias/runs/261025\_162428/Pk-ratio\_z0.5000\_prediction.csv}.
+\]
+
+The session did not open the CSV or report individual \(k\)-values or \(\mathrm{Pk\mbox{-}ratio}\) values. Consequently, no numerical shape, scale dependence, or other behavior of the predicted spectrum can be established from the session record beyond the reported number of bins and file location.
+
+\section{Discussion}
+
+The second execution fulfilled the file-generation portion of the request after the first execution was interrupted. The successful tool result explicitly recorded \(z=0.5\), 799 bins, and the seven parameter values supplied to the predictor. The output path was preserved without rounding or abbreviation.
+
+The session established the parameter ranges and the values used in the successful call, but it did not provide the contents of the prediction table. It therefore does not support conclusions about the predicted \(\mathrm{Pk\mbox{-}ratio}\) itself, its dependence on \(k\), or comparisons with another model or dataset. The record also does not contain a separate numerical verification of the CSV contents after writing; the available evidence is the successful tool response identifying the output file.
+
+\section{Conclusions}
+
+A successful \(\mathrm{Pk\mbox{-}ratio}\) prediction was generated at \(z=0.5\) using \(\omega_m=0.143\), \(\sigma_8=0.82\), and the subgrid values \(\kappa_w=3.0\), \(e_w=0.6\), \(M_{\rm seed}=1.3\), \(v_{\rm kin}=0.65\), and \(\epsilon_{\rm kin}=0.61\). The result was reported on a 799-bin full \(k\)-grid. The output CSV is located at \texttt{/Users/nramachandra/hep-genesis-testing/projects/expert-schneider15-cl-bias/runs/261025\_162428/Pk-ratio\_z0.5000\_prediction.csv}. The session did not inspect the table values, so interpretation of the predicted spectrum remains open.
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/expert-schneider15-cl-bias}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}expert-schneider15-cl-bias}}.
+The session produced 1 data file; the supplement lists them.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}
