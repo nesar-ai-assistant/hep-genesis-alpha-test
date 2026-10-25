@@ -1,0 +1,554 @@
+{
+  "schema": 1,
+  "source": "cli",
+  "title": "We have two P_hydro/P_grav(k) curves (S(k)) from a HACC b\u2026",
+  "conversation_id": "de5a36116130",
+  "created_at": "2026-10-24T19:03:42",
+  "generated_at": "2026-10-24T19:13:19",
+  "project": {
+    "name": "expert-baryon-lensing-bias-3",
+    "dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3"
+  },
+  "models": {
+    "quick": {
+      "name": "quick",
+      "model": "claude-opus-5-5",
+      "base_url": "https://mag.genesis.americansciencecloud.org/v1"
+    },
+    "report": {
+      "name": "report",
+      "model": "claude-opus-5-5",
+      "base_url": "https://mag.genesis.americansciencecloud.org/v1"
+    },
+    "coder": {
+      "name": "coder",
+      "model": "claude-opus-5-5",
+      "base_url": "https://mag.genesis.americansciencecloud.org/v1"
+    }
+  },
+  "servers": [
+    {
+      "name": "hep-research-aid",
+      "transport": "stdio",
+      "url": null,
+      "command": "python -m hep_genesis.domain.mcp_server",
+      "args": null
+    },
+    {
+      "name": "alcf-tools",
+      "transport": "stdio",
+      "url": null,
+      "command": "python -m hep_genesis.iri.alcf.mcp_server",
+      "args": null
+    },
+    {
+      "name": "nersc-tools",
+      "transport": "stdio",
+      "url": null,
+      "command": "python -m hep_genesis.iri.nersc.mcp_server",
+      "args": null
+    }
+  ],
+  "turns": [
+    {
+      "role": "user",
+      "text": "We have two P_hydro/P_grav(k) curves (S(k)) from a HACC baryonic-feedback hydrodynamics emulator, interpolated at k = 0.1, 0.5, 1, 2, 3, 5, 8 h/Mpc, at z = 0, 0.5, 1:\n\nFIDUCIAL point (kappa_w=3.0, e_w=0.6, m_seed=1.3, v_kin=0.65, eps_kin=0.61, omega_m=0.1375, sigma_8=0.8) -- standard AGN suppression:\nz=0:   S = [0.999672, 0.991616, 0.976974, 0.948006, 0.915237, 0.856390, 0.802947]\nz=0.5: S = [0.999774, 0.992759, 0.978298, 0.950904, 0.925438, 0.885998, 0.864809]\nz=1:   S = [0.999888, 0.995517, 0.984937, 0.964613, 0.950974, 0.944283, 0.968580]\n\nWEAK-KINETIC-FEEDBACK point (same but v_kin=0.1, eps_kin=0.02, the minimum of the emulator's design range) -- an UNUSUAL regime where S(k) > 1 (power ENHANCEMENT, not suppression) at high k:\nz=0:   S = [1.000136, 1.001737, 1.004678, 1.014715, 1.016499, 0.997683, 0.963204]\nz=0.5: S = [1.000110, 1.001621, 1.002254, 1.004092, 1.003961, 0.995231, 0.986147]\nz=1:   S = [1.000051, 1.000640, 1.000640, 0.998997, 1.000016, 1.011048, 1.043216]\n\n(k grid for all: [0.1, 0.5, 1, 2, 3, 5, 8] h/Mpc; emulator's native grid spans k=0.022 to 12.56 h/Mpc with 799 points, these are linear interpolations)\n\nI want to know: if a DES/LSST-like cosmic shear 3x2pt analysis assumed gravity-only power (no baryon correction) when the sky actually followed the FIDUCIAL suppression, how biased would the inferred cosmological parameters be? Please:\n1. Build a representative 3x2pt-like firecrown likelihood (use firecrown_list_examples to pick a reasonable DES-Y1-like or similar sacc/example setup; standard weak-lensing + photometric systematics is fine, we don't need number counts).\n2. Use the CCL baryons mechanism (cosmology.baryons = 'schneider15' or similar, or whatever pk_modifier path is available) to inject something resembling our suppression at z=0 into the theory predictions, OR if that's not directly possible with our tabulated S(k), explain exactly why and what the closest available knob is (e.g. BaryonsSchneider15 parameters that would approximately reproduce an 8% suppression at k=3 h/Mpc at z=0, 20% at k=8).\n3. Compute the theory data vector (firecrown_theory_data_vector) once assuming NO baryon correction (baryons=none) and once WITH your best approximation of our suppression, at the same fiducial cosmology and nuisance parameters.\n4. Report how much the chi^2 (firecrown_compute_loglike) changes, and if you can, how much a parameter like sigma_8 or S_8 would need to shift to compensate (even a rough estimate from the augur Fisher matrix is useful -- augur_run_fisher or similar).\n5. Be explicit about every approximation, every tool failure, and every place where you are not confident in a number. Do not fabricate anything you can't compute from a tool call.",
+      "ts": "2026-10-24T19:03:42"
+    },
+    {
+      "role": "assistant",
+      "mode": "quick",
+      "text": "I couldn't measure the bias. In this toolset, the firecrown likelihood ignores any baryon setting, so the run \"with suppression\" gave exactly the same result as the run without it. Below is what did run, where it failed, and what's needed to finish.\n\n## What ran\n\n**1. Likelihood (partly as you asked).**\n- I used firecrown's offline DES-Y1-like test file (`firecrown/tests/sacc_data.hdf5`). It is in real space, has 457 points (\u03be+, \u03be\u2212, \u03b3_t and w(\u03b8)) and a full covariance.\n- Systematics: shear calibration and photo-z shift per source bin, plus a standard intrinsic-alignment model (NLA). The nuisance values are the DES-Y1 example values (m = 0.012, the listed \u0394z, A_IA = 0.5, galaxy biases 1.4\u20132.0). Cosmology: \u03a9_c 0.25, \u03a9_b 0.05, h 0.67, n_s 0.96, \u03c38 0.81, with CAMB and halofit, and no scale cuts.\n- **Failure:** you didn't need number counts, so I made a shear-only copy (\u03be+/\u03be\u2212, 227 points). firecrown rejected it: *\"Tracer lens0 does not have data points associated with it. Inconsistent SACC object.\"* The file-preparation tool removes the clustering data but keeps the lens tracers. So I fell back to the full 3x2pt. Removing the lens tracers would fix this, but no tool here does it.\n\n**2\u20133. Two theory data vectors at the same parameters.**\n- Without baryons: \u03c7\u00b2 against the file's own data = 551.57 (Fig. 6).\n- With `baryons = schneider15` (log10Mc = 14.095, \u03b7_b = 0.213, k_s = 1000): \u03c7\u00b2 = **551.57, identical**. The tool warned: *\"firecrown (pure-CCL mode) uses halofit without baryons/MG here; the cosmology's matter_power_spectrum/baryons/MG switches are ignored.\"* The two vectors are the same, so this is not a baryon measurement.\n\n**4. Partial results that did work.**\n- **Self-consistency check:** I rebuilt the likelihood on the noiseless no-baryon vector. It gives \u03c7\u00b2 = 0.00 at the fiducial point, so the pipeline recovers its own input.\n- **\u03c38 sensitivity:** with all other parameters fixed, \u03c7\u00b2 changes by 1 for \u03c38 = 0.810 \u00b1 0.0099 (range 0.800\u20130.820; Fig. 14). This uses the DES-Y1 covariance with no scale cuts.\n\n## Your other questions\n\n**Can your tabulated S(k) go in directly?** Not here. There is no way to pass a table of S(k, z) in, and the pyccl tools are not available on this server (`No module named 'tools.ccl'`). Even the built-in Schneider15 option is dropped by firecrown's pure-CCL setup. The forecasting tool (augur) also states it does not produce baryonic P(k). Two side notes:\n- Schneider15 has no redshift dependence, so it cannot follow your fiducial S(k). At k = 8 h/Mpc your suppression goes from about 20% at z = 0 to about 3% at z = 1, where it is turning back up (S rises from 0.944 at k = 5 to 0.969 at k = 8).\n- It also cannot produce the power enhancement (S > 1) in your weak-kinetic point.\n\n**Are those Schneider15 numbers a fit to your curve?** No. They are untested guesses, and I couldn't evaluate them. Since the call that used them ignored them, I can't say whether they give the 8% suppression at k = 3 or the 20% at k = 8. Please don't take them as calibrated. Fitting them needs a pyccl call that evaluates the Schneider15 suppression for trial parameters, and none is available here.\n\n**How much would \u03c38 or S8 shift?** I can't give a number. That needs the change in the data vector caused by baryons, which no tool here could produce. The \u00b10.0099 width only tells you that any baryon-induced shift should be compared against about 0.01 in \u03c38, before marginalising over other parameters. As a rule of thumb (my reasoning, not a tool result), \u03be+ scales roughly as \u03c38\u00b2, so a constant fractional amplitude drop \u03b5 in the shear correlations would pull \u03c38 down by about \u03b5/2. Your suppression depends on scale, though, so the real shift would also feed into \u03a9_m, the IA amplitude and the shear calibration. I did not run a Fisher matrix with augur, because its data vector also has no baryon option.\n\n## What's needed to finish\n1. A firecrown setup that applies an S(k, z) correction to the power spectrum. firecrown has a `pk_modifier` example type, but this server's likelihood builder doesn't offer it. Otherwise, a pyccl environment where I can apply your table to P(k, z) and compute the shear correlations directly.\n2. With the suppressed data vector in hand, the steps are all available: build the likelihood on it, compute \u03c7\u00b2 of the no-baryon model, and profile \u03c38 to find the best-fit offset. Running a chain on \u03a9_c and \u03c38 with nuisance parameters free would give the shift in S8.\n3. For a DES-like analysis, add the standard small-scale cuts on \u03be\u00b1. The likelihood builder supports this.\n\n## Files\nAll files are in `/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/`:\n- `desy1_3x2pt_38aa48.yaml` \u2014 the likelihood on the original test data\n- `desy1_3x2pt_38aa48_theory_912d53.hdf5` \u2014 the noiseless no-baryon data vector\n- `desy1_3x2pt_noiseless_0ccc86.yaml` \u2014 the likelihood rebuilt on that vector\n- `scan_sigma8_63cd84.csv` / `.png` \u2014 the \u03c38 profile (Fig. 14)\n- `desy1_3x2pt_38aa48_theory_c7d16c.hdf5` \u2014 the \"with baryons\" vector, which is identical to the no-baryon one; don't use it",
+      "error": null,
+      "ts": "2026-10-24T19:03:42",
+      "tool_calls": [
+        {
+          "id": "tooluse_XBQPvZRhCY69ObRmxR9ybN",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_list_examples",
+          "server": "serve-desc.sh",
+          "args": {},
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"4 firecrown examples; offline test data vector: /Users/nramachandra/github-integration/firecrown/tests/sacc_data.hdf5. firecrown 1.16.0 installed.\",\n  \"metadata\": {\n    \"examples\": {\n      \"cosmic_shear\": {\n        \"data\": \"synthetic (generated with pyccl, offline)\",\n        \"space\": \"harmonic\",\n        \"statistics\": \"galaxy_shear_cl_ee for all pairs of trc{i} Gaussian n(z) bins\",\n        \"systematics\": \"PhotoZShift per bin\",\n        \"params\": \"trc{i}_delta_z\",\n        \"cli\": \"firecrown examples cosmic_shear OUT --n-bins 2 --ell-min 10 --ell-max 10000\"\n      },\n      \"cmb_cross\": {\n        \"data\": \"synthetic NZ + CMB-lensing Map tracer (z_lss 1100), offline\",\n        \"space\": \"harmonic\",\n        \"statistics\": \"galaxy_shear_cl_ee + cmbGalaxy_convergenceShear_cl_e ...\",\n        \"systematics\": \"PhotoZShift per bin\",\n        \"params\": \"trc{i}_delta_z\"\n      },\n      \"sn_srd\": {\n        \"data\": \"download srd-y1.sacc (firecrown GitHub release files-v1.0.0)\",\n        \"space\": \"n/a\",\n        \"statistics\": \"Supernova distance moduli (tracer sn_ddf_sample)\",\n        \"params\": \"sn_ddf_sample_M (~-19.4)\",\n        \"note\": \"uses amplitude_parameter A_s, no P(k) needed\"\n      },\n      \"des_y1_3x2pt\": {\n        \"data\": \"download des_y1_3x2pt.sacc (release files-v1.1.0): real DES Y1 3x2pt, 457 points\",\n        \"space\": \"real\",\n        \"statistics\": \"xi+ (10), xi- (10), gamma_t (20), w(theta) (5) over src0-3 / lens0-4\",\n        \"systematics\": \"WL: MultiplicativeShearBias + PhotoZShift per bin, LinearAlignment global; NC: PhotoZShift per bin (+ bias)\",\n        \"params\": \"ia_bias alphaz z_piv lens{i}_bias lens{i}_delta_z src{i}_delta_z src{i}_mult_bias\",\n        \"factory_types\": \"standard|pt|tatt|hmia|pk_modifier|yaml_default|yaml_pure_ccl|yaml_mu_sigma\"\n      }\n    },\n    \"offline_test_sacc\": \"/Users/nramachandra/github-integration/firecrown/tests/sacc_data.hdf5\",\n    \"offline_test_description\": \"DES-Y1-like 3x2pt real space; NZ tracers lens0-4, src0-3 (400 z points); galaxy_shear_xi_plus 167, xi_minus 60, galaxy_shearDensity_xi_t 176, galaxy_density_xi 54; dense 457x457 covariance\",\n    \"des_y1_fiducial\": {\n      \"lens0_bias\": 1.4,\n      \"lens1_bias\": 1.6,\n      \"lens2_bias\": 1.6,\n      \"lens3_bias\": 1.9,\n      \"lens4_bias\": 2.0,\n      \"lens0_delta_z\": 0.001,\n      \"lens1_delta_z\": 0.002,\n      \"lens2_delta_z\": 0.001,\n      \"lens3_delta_z\": 0.003,\n      \"lens4_delta_z\": 0.0,\n      \"src0_delta_z\": -0.001,\n      \"src1_delta_z\": -0.019,\n      \"src2_delta_z\": 0.009,\n      \"src3_delta_z\": -0.018,\n      \"src0_mult_bias\": 0.012,\n      \"src1_mult_bias\": 0.012,\n      \"src2_mult_bias\": 0.012,\n      \"src3_mult_bias\": 0.012,\n      \"ia_bias\": 0.5,\n      \"alphaz\": 0.0,\n      \"z_piv\": 0.62\n    },\n    \"parameter_conventions\": \"firecrown == pyccl: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu[eV] w0 wa T_CMB; nuisance {tracer}_{param}: src0_delta_z src0_mult_bias lens0_bias lens0_delta_z lens0_sigma_z lens0_alphaz lens0_mag_bias; global IA: ia_bias alphaz z_piv\",\n    \"systematics_factories\": {\n      \"weak_lensing_per_bin\": [\n        \"MultiplicativeShearBiasFactory\",\n        \"PhotoZShiftFactory\",\n        \"PhotoZShiftandStretchFactory\"\n      ],\n      \"weak_lensing_global\": [\n        \"LinearAlignmentSystematicFactory\",\n        \"PhotoZShiftFactory\",\n        \"PhotoZShiftandStretchFactory\"\n      ],\n      \"number_counts_per_bin\": [\n        \"PhotoZShiftFactory\",\n        \"PhotoZShiftandStretchFactory\",\n        \"LinearBiasSystematicFactory\",\n        \"MagnificationBiasSystematicFactory\",\n        \"ConstantMagnificationBiasSystematicFactory\"\n      ],\n      \"number_counts_global\": [\n        \"PhotoZShiftFactory\",\n        \"PhotoZShiftandStretchFactory\"\n      ],\n      \"parameters\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"firecrown_version\": \"1.16.0\"\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        },
+        {
+          "id": "tooluse_Oq1Alc1rnyUo0bzrDsHOGP",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "describe_desc_tool_family",
+          "server": "serve-desc.sh",
+          "args": {
+            "family": "firecrown"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"Family 'firecrown': 10 tools. build likelihoods from sacc + systematics; loglike, theory vectors, scans, chains.\",\n  \"metadata\": {\n    \"family\": \"firecrown\",\n    \"summary\": \"build likelihoods from sacc + systematics; loglike, theory vectors, scans, chains\",\n    \"tools\": {\n      \"firecrown_list_examples\": {\n        \"purpose\": \"List firecrown's maintained examples (`firecrown examples` CLI), the offline test data vector, and the parameter-name conventions.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_build_likelihood\": {\n        \"purpose\": \"Turn a sacc file + systematics choices into a validated firecrown experiment YAML and list every parameter the likelihood needs.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_compute_loglike\": {\n        \"purpose\": \"Evaluate the firecrown log-likelihood, chi2 and per-statistic chi2 of an experiment at one cosmology + nuisance point.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_theory_data_vector\": {\n        \"purpose\": \"Compute the theory data vector of an experiment and optionally write it as a new (noiseless or noisy) sacc realization.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_scan_loglike\": {\n        \"purpose\": \"Profile the log-likelihood along one parameter (all others fixed) and report the chi2 minimum and 1-sigma crossing.\",\n        \"weight\": \"dispatchable\"\n      },\n      \"firecrown_run_chain\": {\n        \"purpose\": \"Run a Cobaya MCMC over a firecrown experiment in pure-CCL mode (no theory block) and summarise the posterior.\",\n        \"weight\": \"heavy\"\n      },\n      \"firecrown_chain_status\": {\n        \"purpose\": \"Cheap poll of a running or finished Cobaya chain: accepted samples so far, the latest acceptance rate and R-1 from the .progress file, and whether it is still running.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_plot_chain\": {\n        \"purpose\": \"Posterior summary and plots from an existing Cobaya chain file: weighted means, std, 68% intervals after burn-in, a corner plot and a trace plot.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_chain_cancel\": {\n        \"purpose\": \"Stop a background chain started by firecrown_run_chain(background=True): terminates the detached process (SIGTERM, then SIGKILL after 10 s) and leaves the chain files for firecrown_plot_chain or resume=True.\",\n        \"weight\": \"light\"\n      },\n      \"firecrown_collect_chain\": {\n        \"purpose\": \"Collect a facility chain submitted with firecrown_run_chain(wait=False): one non-blocking look at the job.\",\n        \"weight\": \"dispatchable\"\n      }\n    },\n    \"conventions\": {\n      \"parameter_names\": \"firecrown == pyccl: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu[eV] w0 wa T_CMB; nuisance {tracer}_{param}: src0_delta_z src0_mult_bias lens0_bias lens0_delta_z lens0_sigma_z lens0_alphaz lens0_mag_bias; global IA: ia_bias alphaz z_piv\",\n      \"experiment_yaml\": \"firecrown TwoPointExperiment YAML (data_source + two_point_factory + ccl_factory); sacc path stored absolute; produced by firecrown_build_likelihood\",\n      \"ccl_mode\": \"pure_ccl_mode: CCL computes background and P(k) itself (no CAMB/CLASS sampler block)\",\n      \"lifecycle\": \"every evaluation is tools.update -> tools.prepare -> like.update -> compute -> like.reset; tools.reset\",\n      \"loglike\": \"ConstGaussian: loglike = -chi2/2 with the sacc covariance (dense, must be positive definite)\",\n      \"units\": \"theta arcmin, ell integer, C_ell dimensionless, xi dimensionless\",\n      \"cache\": \"the (likelihood, tools) pair per experiment YAML is cached in-process (reloaded if the YAML changes)\"\n    },\n    \"caveats\": [\n      \"Every sampler parameter must be present (ParamsMap): the tools fill firecrown defaults for anything you do not pass, so check metadata.required_parameters and metadata.unused_keys (keys you passed that the likelihood does not use - typos are silent otherwise).\",\n      \"MultiplicativeShearBias defaults to 1.0 (!) in firecrown; DES-like analyses use ~0.01. NumberCounts bias defaults to 1.5. Pass nuisance values explicitly.\",\n      \"sigma8 vs A_s is fixed at build time (amplitude_parameter); passing the other name is reported as unused.\",\n      \"m_nu is the summed neutrino mass in eV (0 = massless); firecrown 1.16 shows its default as [] internally.\",\n      \"firecrown_run_chain is a Cobaya MCMC with CCL in the loop (~0.4 s per DES-Y1 3x2pt evaluation): hundreds of samples locally in the foreground, background=True for longer local runs, dispatch (env_setup) for real chains. Its walltime_s (default ~5 s/sample, capped at 12 h) is what the facility job requests; continue a chain that stopped at its walltime with resume=True.\",\n      \"w0-wa chains: CAMB's fluid dark energy cannot cross w = -1; firecrown_run_chain switches to the PPF model automatically when wa is sampled (dark_energy_model='auto'), writing a *_ppf.yaml experiment copy.\",\n      \"TATT / PT bias / halo-model IA factories need a pt_calculator/hm_calculator in ModelingTools and are not exposed here (they are not expressible in a plain TwoPointExperiment YAML).\",\n      \"Remote runs: the experiment YAML and its sacc file are shipped inline (sacc <= 8 MB) unless you give sacc_remote_path (a facility path).\"\n    ],\n    \"dispatch_kernels\": {\n      \"firecrown_loglike\": {\n        \"function\": \"inner.firecrown_loglike.main\",\n        \"inner\": \"firecrown_loglike\",\n        \"args_shape\": \"{'params': <the params object below>}; the pack's env/conda-lock.yml supplies firecrown - no env_setup, no pip_deps (override: function='envkernel.run_in_env')\",\n        \"params\": {\n          \"experiment_yaml\": \"<path or inline via experiment_yaml_text + sacc_b64/sacc_remote_path>\",\n          \"points\": [\n            {\n              \"Omega_c\": 0.25,\n              \"sigma8\": 0.81,\n              \"lens0_bias\": 1.4\n            }\n          ],\n          \"return_vectors\": true,\n          \"per_statistic\": true\n        },\n        \"env_setup_required\": false,\n        \"suitable_envs\": [\n          \"desc-cosmology\",\n          \"desc-python\"\n        ],\n        \"duration_hint_s\": 1800,\n        \"returns\": \"required params with defaults, n_data, per-point loglike/chi2/per-statistic chi2, theory/data vectors\"\n      },\n      \"firecrown_theory\": {\n        \"function\": \"inner.firecrown_theory.main\",\n        \"inner\": \"firecrown_theory\",\n        \"args_shape\": \"{'params': <the params object below>}; the pack's env/conda-lock.yml supplies firecrown - no env_setup, no pip_deps (override: function='envkernel.run_in_env')\",\n        \"params\": {\n          \"experiment_yaml\": \"<path>\",\n          \"params\": {},\n          \"write_sacc\": true,\n          \"add_noise\": false,\n          \"seed\": null,\n          \"sacc_output\": \"theory_realization.hdf5\"\n        },\n        \"env_setup_required\": false,\n        \"suitable_envs\": [\n          \"desc-cosmology\",\n          \"desc-python\"\n        ],\n        \"duration_hint_s\": 1800,\n        \"returns\": \"theory/data/sigma per statistic and the realization sacc path (job CWD)\"\n      },\n      \"firecrown_chain\": {\n        \"function\": \"inner.firecrown_chain.main\",\n        \"inner\": \"firecrown_chain\",\n        \"mpi\": {\n          \"tasks_per_node\": 4,\n          \"cpus_per_task\": 8,\n          \"note\": \"nodes=N launches N x tasks_per_node MPI processes, one Cobaya chain each (same max_samples per chain); R-1 is then the cross-chain statistic and the result combines all chains. Walltime is per chain, charge is nodes x walltime; resume needs the same chain count.\"\n        },\n        \"args_shape\": \"{'params': <the params object below>}; the pack's env/conda-lock.yml supplies firecrown - no env_setup, no pip_deps (override: function='envkernel.run_in_env')\",\n        \"params\": {\n          \"experiment_yaml\": \"<path>\",\n          \"fixed\": {},\n          \"priors\": {\n            \"sigma8\": {\n              \"min\": 0.6,\n              \"max\": 1.0\n            }\n          },\n          \"max_samples\": 2000,\n          \"rminus1_stop\": 0.05,\n          \"work_dir\": \".\",\n          \"chain_prefix\": \"chain\",\n          \"resume\": false,\n          \"file_locking\": false\n        },\n        \"env_setup_required\": false,\n        \"suitable_envs\": [\n          \"desc-cosmology\",\n          \"desc-python\"\n        ],\n        \"duration_hint_s\": 7200,\n        \"duration_note\": \"request ~5 s per sample as the job walltime (duration=), at most the facility's long-queue cap (Perlmutter regular 12 h); pass the same value minus 60 s as timeout_s; continue a chain that hit its walltime with resume=True (and the same nodes)\",\n        \"returns\": \"Cobaya chain files (job CWD) + weighted means/stds/68% limits per sampled parameter\"\n      }\n    }\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        },
+        {
+          "id": "tooluse_nzZqqzabSXnvLSXrcQlGKd",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "describe_desc_tool_family",
+          "server": "serve-desc.sh",
+          "args": {
+            "family": "ccl"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"Family 'ccl' is not importable in this environment: No module named 'tools.ccl'\",\n  \"metadata\": {\n    \"family\": \"ccl\",\n    \"summary\": \"pyccl theory predictions: background, P(k), C_ell, xi, halo model, SRD n(z)\",\n    \"tools\": {}\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        },
+        {
+          "id": "tooluse_HMV5q8yrEaNGBcJ4XW3zhJ",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "sacc_path": "/Users/nramachandra/github-integration/firecrown/tests/sacc_data.hdf5",
+            "name": "desy1_3x2pt"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_params.json\"\n  ],\n  \"message\": \"Experiment YAML desy1_3x2pt_38aa48.yaml: real space, 45 statistics, n_data=457; 32 parameters required (11 cosmology + 21 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/github-integration/firecrown/tests/sacc_data.hdf5\",\n    \"correlation_space\": \"real\",\n    \"n_data\": 457,\n    \"n_data_total\": 457,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 12\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens4\",\n        \"tracer2\": \"lens4\",\n        \"n\": 13\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 4\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      }\n    ],\n    \"required_parameters\": {\n      \"lens2_bias\": 1.5,\n      \"Omega_c\": 0.25,\n      \"lens0_bias\": 1.5,\n      \"lens3_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"src2_delta_z\": 0.0,\n      \"n_s\": 0.96,\n      \"m_nu\": 0.0,\n      \"lens2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"src0_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"lens1_delta_z\": 0.0,\n      \"Omega_k\": 0.0,\n      \"lens1_bias\": 1.5,\n      \"src3_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"Neff\": 3.044,\n      \"lens4_delta_z\": 0.0,\n      \"src2_mult_bias\": 1.0,\n      \"lens3_bias\": 1.5,\n      \"src1_delta_z\": 0.0,\n      \"ia_bias\": 0.5,\n      \"wa\": 0.0,\n      \"sigma8\": 0.81,\n      \"T_CMB\": 2.7255,\n      \"lens0_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src3_delta_z\": 0.0,\n      \"w0\": -1.0,\n      \"src0_mult_bias\": 1.0,\n      \"lens4_bias\": 1.5\n    },\n    \"cosmology_parameters\": [\n      \"Omega_c\",\n      \"Omega_b\",\n      \"n_s\",\n      \"m_nu\",\n      \"Omega_k\",\n      \"h\",\n      \"Neff\",\n      \"wa\",\n      \"sigma8\",\n      \"T_CMB\",\n      \"w0\"\n    ],\n    \"nuisance_parameters\": {\n      \"lens2_bias\": 1.5,\n      \"lens0_bias\": 1.5,\n      \"lens3_delta_z\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"lens2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"src0_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"lens1_delta_z\": 0.0,\n      \"lens1_bias\": 1.5,\n      \"src3_mult_bias\": 1.0,\n      \"lens4_delta_z\": 0.0,\n      \"src2_mult_bias\": 1.0,\n      \"lens3_bias\": 1.5,\n      \"src1_delta_z\": 0.0,\n      \"ia_bias\": 0.5,\n      \"lens0_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src3_delta_z\": 0.0,\n      \"src0_mult_bias\": 1.0,\n      \"lens4_bias\": 1.5\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [\n        \"MultiplicativeShearBiasFactory\",\n        \"PhotoZShiftFactory\"\n      ],\n      \"wl_global\": [\n        \"LinearAlignmentSystematicFactory\"\n      ],\n      \"nc_per_bin\": [\n        \"PhotoZShiftFactory\"\n      ],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"boltzmann_camb\"\n    }\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml",
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_params.json"
+          ]
+        },
+        {
+          "id": "tooluse_4eeCr1mhS0LnVk4VO1ayNt",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "sacc_prepare_for_firecrown",
+          "server": "serve-desc.sh",
+          "args": {
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "sacc_path": "/Users/nramachandra/github-integration/firecrown/tests/sacc_data.hdf5",
+            "keep_data_types": [
+              "galaxy_shear_xi_plus",
+              "galaxy_shear_xi_minus"
+            ],
+            "output_name": "desy1_shear_only"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_shear_only.hdf5\"\n  ],\n  \"message\": \"Wrote desy1_shear_only.hdf5: renamed 0 tracers (none needed), quantities {'lens0': 'galaxy_density', 'lens1': 'galaxy_density', 'lens2': 'galaxy_density', 'lens3': 'galaxy_density', 'lens4': 'galaxy_density', 'src0': 'galaxy_shear', 'src1': 'galaxy_shear', 'src2': 'galaxy_shear', 'src3': 'galaxy_shear'}, dropped data types ['galaxy_density_xi', 'galaxy_shearDensity_xi_t'], 227 points. covariance present: call firecrown_build_likelihood.\",\n  \"metadata\": {\n    \"input\": \"/Users/nramachandra/github-integration/firecrown/tests/sacc_data.hdf5\",\n    \"output\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_shear_only.hdf5\",\n    \"renamed\": {},\n    \"quantities\": {\n      \"lens0\": \"galaxy_density\",\n      \"lens1\": \"galaxy_density\",\n      \"lens2\": \"galaxy_density\",\n      \"lens3\": \"galaxy_density\",\n      \"lens4\": \"galaxy_density\",\n      \"src0\": \"galaxy_shear\",\n      \"src1\": \"galaxy_shear\",\n      \"src2\": \"galaxy_shear\",\n      \"src3\": \"galaxy_shear\"\n    },\n    \"dropped_data_types\": [\n      \"galaxy_density_xi\",\n      \"galaxy_shearDensity_xi_t\"\n    ],\n    \"kept_data_types\": [\n      \"galaxy_shear_xi_minus\",\n      \"galaxy_shear_xi_plus\"\n    ],\n    \"n_points\": 227,\n    \"covariance\": {\n      \"present\": true,\n      \"type\": \"FullCovariance\",\n      \"shape\": [\n        227,\n        227\n      ],\n      \"diag_min\": 2.3846984499999998e-14,\n      \"diag_max\": 3.198459689e-10,\n      \"n_nonpositive_diag\": 0,\n      \"condition_number\": 18731.251668403205,\n      \"min_eigenvalue\": 1.7118620285109092e-14,\n      \"positive_definite\": true,\n      \"max_abs_offdiag_corr\": 0.6770017331021201,\n      \"is_diagonal\": false\n    },\n    \"space\": \"real\",\n    \"firecrown_ready\": true,\n    \"next_step\": \"covariance present: call firecrown_build_likelihood\"\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_shear_only.hdf5"
+          ]
+        },
+        {
+          "id": "tooluse_j84ThEZaRr9ZVMX7z6gDUs",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "name": "desy1_shear",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_shear_only.hdf5",
+            "nc_per_bin": []
+          },
+          "result": "Error executing tool firecrown_build_likelihood: firecrown rejected the experiment: ValueError: Tracer lens0 does not have data points associated with it. Inconsistent SACC object.",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        },
+        {
+          "id": "tooluse_EjpT7dEbVuUEfNy6rRHcX6",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_theory_data_vector",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "cosmology": {
+              "baryons": "none"
+            },
+            "nuisance": {
+              "lens0_bias": 1.4,
+              "lens1_bias": 1.6,
+              "lens2_bias": 1.6,
+              "lens3_bias": 1.9,
+              "lens4_bias": 2.0,
+              "lens0_delta_z": 0.001,
+              "lens1_delta_z": 0.002,
+              "lens2_delta_z": 0.001,
+              "lens3_delta_z": 0.003,
+              "lens4_delta_z": 0.0,
+              "src0_delta_z": -0.001,
+              "src1_delta_z": -0.019,
+              "src2_delta_z": 0.009,
+              "src3_delta_z": -0.018,
+              "src0_mult_bias": 0.012,
+              "src1_mult_bias": 0.012,
+              "src2_mult_bias": 0.012,
+              "src3_mult_bias": 0.012,
+              "ia_bias": 0.5,
+              "alphaz": 0.0,
+              "z_piv": 0.62
+            }
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_912d53.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_912d53.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_912d53.png\"\n  ],\n  \"message\": \"Theory vector of 457 points at Om=0.300, sigma8=0.81, h=0.67 (chi2 vs the file's data = 551.6); wrote theory realization sacc desy1_3x2pt_38aa48_theory_912d53.hdf5. \",\n  \"metadata\": {\n    \"n_data\": 457,\n    \"loglike_at_point\": -275.7848708854582,\n    \"chi2_at_point\": 551.5697417709164,\n    \"sacc_file\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_912d53.hdf5\",\n    \"add_noise\": false,\n    \"seed\": null,\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"lens0_bias\": 1.4,\n      \"lens1_bias\": 1.6,\n      \"lens2_bias\": 1.6,\n      \"lens3_bias\": 1.9,\n      \"lens4_bias\": 2.0,\n      \"lens0_delta_z\": 0.001,\n      \"lens1_delta_z\": 0.002,\n      \"lens2_delta_z\": 0.001,\n      \"lens3_delta_z\": 0.003,\n      \"lens4_delta_z\": 0.0,\n      \"src0_delta_z\": -0.001,\n      \"src1_delta_z\": -0.019,\n      \"src2_delta_z\": 0.009,\n      \"src3_delta_z\": -0.018,\n      \"src0_mult_bias\": 0.012,\n      \"src1_mult_bias\": 0.012,\n      \"src2_mult_bias\": 0.012,\n      \"src3_mult_bias\": 0.012,\n      \"ia_bias\": 0.5,\n      \"alphaz\": 0.0,\n      \"z_piv\": 0.62\n    },\n    \"warnings\": [],\n    \"theory_min\": -0.0005240445971964342,\n    \"theory_max\": 0.05862724978078481,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 12\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens4\",\n        \"tracer2\": \"lens4\",\n        \"n\": 13\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 4\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      }\n    ],\n    \"computed_on\": \"local\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 6 (theory_vector_912d53.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "figures": [
+            6
+          ],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_912d53.csv",
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_912d53.hdf5"
+          ]
+        },
+        {
+          "id": "tooluse_rVusIRLZWczXLXhMZmVkjo",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_theory_data_vector",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "cosmology": {
+              "baryons": "schneider15",
+              "baryon_params": {
+                "log10Mc": 14.095,
+                "eta_b": 0.213,
+                "k_s": 1000.0
+              }
+            },
+            "nuisance": {
+              "lens0_bias": 1.4,
+              "lens1_bias": 1.6,
+              "lens2_bias": 1.6,
+              "lens3_bias": 1.9,
+              "lens4_bias": 2.0,
+              "lens0_delta_z": 0.001,
+              "lens1_delta_z": 0.002,
+              "lens2_delta_z": 0.001,
+              "lens3_delta_z": 0.003,
+              "lens4_delta_z": 0.0,
+              "src0_delta_z": -0.001,
+              "src1_delta_z": -0.019,
+              "src2_delta_z": 0.009,
+              "src3_delta_z": -0.018,
+              "src0_mult_bias": 0.012,
+              "src1_mult_bias": 0.012,
+              "src2_mult_bias": 0.012,
+              "src3_mult_bias": 0.012,
+              "ia_bias": 0.5,
+              "alphaz": 0.0,
+              "z_piv": 0.62
+            }
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_c7d16c.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_c7d16c.hdf5\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_c7d16c.png\"\n  ],\n  \"message\": \"Theory vector of 457 points at Om=0.300, sigma8=0.81, h=0.67 (chi2 vs the file's data = 551.6); wrote theory realization sacc desy1_3x2pt_38aa48_theory_c7d16c.hdf5. firecrown (pure-CCL mode) uses halofit without baryons/MG here; the cosmology's matter_power_spectrum/baryons/MG switches are ignored.\",\n  \"metadata\": {\n    \"n_data\": 457,\n    \"loglike_at_point\": -275.7848708854582,\n    \"chi2_at_point\": 551.5697417709164,\n    \"sacc_file\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_c7d16c.hdf5\",\n    \"add_noise\": false,\n    \"seed\": null,\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"lens0_bias\": 1.4,\n      \"lens1_bias\": 1.6,\n      \"lens2_bias\": 1.6,\n      \"lens3_bias\": 1.9,\n      \"lens4_bias\": 2.0,\n      \"lens0_delta_z\": 0.001,\n      \"lens1_delta_z\": 0.002,\n      \"lens2_delta_z\": 0.001,\n      \"lens3_delta_z\": 0.003,\n      \"lens4_delta_z\": 0.0,\n      \"src0_delta_z\": -0.001,\n      \"src1_delta_z\": -0.019,\n      \"src2_delta_z\": 0.009,\n      \"src3_delta_z\": -0.018,\n      \"src0_mult_bias\": 0.012,\n      \"src1_mult_bias\": 0.012,\n      \"src2_mult_bias\": 0.012,\n      \"src3_mult_bias\": 0.012,\n      \"ia_bias\": 0.5,\n      \"alphaz\": 0.0,\n      \"z_piv\": 0.62\n    },\n    \"warnings\": [\n      \"firecrown (pure-CCL mode) uses halofit without baryons/MG here; the cosmology's matter_power_spectrum/baryons/MG switches are ignored.\"\n    ],\n    \"theory_min\": -0.0005240445971964342,\n    \"theory_max\": 0.05862724978078481,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 12\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens4\",\n        \"tracer2\": \"lens4\",\n        \"n\": 13\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 4\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      }\n    ],\n    \"computed_on\": \"local\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 9 (theory_vector_c7d16c.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "figures": [
+            9
+          ],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_c7d16c.csv",
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_c7d16c.hdf5"
+          ]
+        },
+        {
+          "id": "tooluse_5JWqAxkdlByzq1m4e5vVPS",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "describe_desc_tool_family",
+          "server": "serve-desc.sh",
+          "args": {
+            "family": "augur"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [],\n  \"message\": \"Family 'augur': 6 tools. LSST Y1/Y10 Fisher forecasts: config, synthetic data, Fisher, contours.\",\n  \"metadata\": {\n    \"family\": \"augur\",\n    \"summary\": \"LSST Y1/Y10 Fisher forecasts: config, synthetic data, Fisher, contours\",\n    \"tools\": {\n      \"augur_list_examples\": {\n        \"purpose\": \"List augur's shipped example forecast configs, SRD data files and parameter conventions.\",\n        \"weight\": \"light\"\n      },\n      \"augur_generate_forecast_config\": {\n        \"purpose\": \"Write a complete, Jinja-free augur forecast YAML (absolute paths) for an LSST Y1/Y10 forecast.\",\n        \"weight\": \"light\"\n      },\n      \"augur_validate_forecast_config\": {\n        \"purpose\": \"Check an augur forecast YAML for the known traps before any (possibly remote) run; returns go/no-go.\",\n        \"weight\": \"light\"\n      },\n      \"augur_generate_synthetic_datavector\": {\n        \"purpose\": \"Run augur.generate: fiducial theory C_ell for every tracer pair + covariance -> sacc, CSV, n(z), PNG.\",\n        \"weight\": \"dispatchable\"\n      },\n      \"augur_compute_fisher\": {\n        \"purpose\": \"Compute the Fisher matrix (augur.Analyze) -> fisher.csv, priors, marginalised sigmas, w0-wa FoM, derivatives.\",\n        \"weight\": \"heavy\"\n      },\n      \"augur_plot_fisher_contours\": {\n        \"purpose\": \"Triangle plot of Fisher ellipses (68/95% CL) for a parameter subset, overlaying several Fisher matrices.\",\n        \"weight\": \"light\"\n      }\n    },\n    \"conventions\": {\n      \"kmax\": \"Mpc^-1 (NO h): augur converts kmax -> lmax = kmax * chi(z_mean) with CCL's h-free chi\",\n      \"lmax\": \"dimensionless multipole; mutually exclusive with kmax per statistic\",\n      \"ndens\": \"arcmin^-2, total over all bins of a tracer kind (split per bin by the n(z) integral)\",\n      \"sigma_e\": \"per-component shape noise (SRD: 0.26); noise power = sigma_e^2 / nbar\",\n      \"ells\": \"dimensionless; bands are geometric centres of log-spaced edges (SRD: 20 bands in 20..15000)\",\n      \"step\": \"ABSOLUTE finite-difference step in parameter units (not relative); default 0.01\",\n      \"fsky\": \"sky fraction for gaus_internal / tjpcov (LSST Y1 ~0.3, Y10 ~0.4)\",\n      \"parameter_names\": \"firecrown/CCL: Omega_c Omega_b h n_s sigma8|A_s Omega_k Neff m_nu w0 wa; nuisance src{i}_delta_z src{i}_mult_bias lens{i}_bias lens{i}_delta_z lens{i}_sigma_z, global IA ia_bias alphaz z_piv\",\n      \"fisher_units\": \"F_ij in (parameter units)^-2; sigma_i = sqrt((F^-1)_ii) marginalised over the rest\",\n      \"fom\": \"DETF FoM = 1/sqrt(det Cov(w0,wa)); augur's get_FoM_all divides Cov by chi2.ppf(CL,2)\",\n      \"tracer_names\": \"src{i} (galaxy_shear) and lens{i} (galaxy_density) - required by augur\",\n      \"ggl_pairs\": \"statistics.galaxy_shearDensity_cl_e.tracer_combs are [lens_i, src_j]\"\n    },\n    \"caveats\": [\n      \"Step sizes are absolute (passed straight to numdifftools / the 5-point stencil); the shipped SRD examples use 1e-5, which can be spline-noise dominated - 1e-2 to 1e-3 is safer for cosmology.\",\n      \"Every gaussian_priors key must be in var_pars (or be Omega_m/S8 with the transform on) or augur raises; the shipped srd_y1/y10 examples list 30 priors for 9 varied parameters and do NOT run as is.\",\n      \"cov_type SRD needs exactly the SRD layout (Y1: 5 source + 5 lens bins, Y10: 5 + 10), the SRD tracer-pair lists, all three statistics and 20 ell bands; anything else needs gaus_internal or tjpcov.\",\n      \"general.ignore_scale_cuts_likelihood must stay False with a Firecrown_Factory: True silently drops all systematics from the likelihood (legacy ConstGaussian fallback).\",\n      \"transfer_function boltzmann_camb needs cosmo.extra_parameters.camb.halofit_version; eisenstein_hu + halofit (the SRD examples) is ~5x faster per evaluation.\",\n      \"augur mutates global pyccl spline/gsl accuracy parameters (ccl_accuracy) for the whole process.\",\n      \"Nz_type TopHat/Gaussian are documented but not in augur's registry; use ZDist, SourceSRD2018, LensSRD2018 or ZDistFromFile.\",\n      \"Remote runs embed the n(z) tables (and the SRD covariance, <= 6 MB) in the kernel params; the facility environment must provide augur + firecrown >= 1.14 + numdifftools.\",\n      \"mu-Sigma modified gravity and baryonic-feedback P(k) are not generated by this tool (edit a YAML by hand after augur/examples/srd_y1_3x2_mg.yml).\"\n    ],\n    \"dispatch_kernels\": {\n      \"augur_forecast\": {\n        \"function\": \"inner.augur_forecast.main\",\n        \"inner\": \"augur_forecast\",\n        \"args_shape\": \"{'params': <the params object below>}; the pack's env/conda-lock.yml supplies augur + firecrown - no env_setup, no pip_deps (override: function='envkernel.run_in_env')\",\n        \"params\": {\n          \"config\": \"<augur config dict with absolute paths>\",\n          \"mode\": \"generate | fisher\",\n          \"inline_files\": \"{basename: {kind: ascii|npy_b64, data}} n(z) tables / SRD cov\",\n          \"relocate_outputs\": true,\n          \"include_bias\": null,\n          \"max_cov_return\": 600\n        },\n        \"env_setup_required\": false,\n        \"suitable_envs\": [\n          \"desc-python\",\n          \"desc-cosmology\"\n        ],\n        \"duration_hint_s\": 1800,\n        \"returns\": \"data vector rows, n(z), covariance diagonal, Fisher matrix (nested lists), fiducials, priors, derivatives, optional Fisher bias; sacc written in the job cwd\"\n      }\n    }\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        },
+        {
+          "id": "tooluse_tVaZ8SExMVe9RAQlAgd3FO",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_build_likelihood",
+          "server": "serve-desc.sh",
+          "args": {
+            "name": "desy1_3x2pt_noiseless",
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "sacc_path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_912d53.hdf5"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86_params.json\"\n  ],\n  \"message\": \"Experiment YAML desy1_3x2pt_noiseless_0ccc86.yaml: real space, 45 statistics, n_data=457; 32 parameters required (11 cosmology + 21 nuisance). Pass nuisance values to firecrown_compute_loglike; defaults listed in metadata.required_parameters.\",\n  \"metadata\": {\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml\",\n    \"sacc_path\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_912d53.hdf5\",\n    \"correlation_space\": \"real\",\n    \"n_data\": 457,\n    \"n_data_total\": 457,\n    \"statistics\": [\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 12\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens4\",\n        \"tracer2\": \"lens4\",\n        \"n\": 13\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 4\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 5\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 6\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 7\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 8\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 15\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 16\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 17\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 18\n      }\n    ],\n    \"required_parameters\": {\n      \"lens2_bias\": 1.5,\n      \"Omega_c\": 0.25,\n      \"lens0_bias\": 1.5,\n      \"lens3_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"src2_delta_z\": 0.0,\n      \"n_s\": 0.96,\n      \"m_nu\": 0.0,\n      \"lens2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"src0_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"lens1_delta_z\": 0.0,\n      \"Omega_k\": 0.0,\n      \"lens1_bias\": 1.5,\n      \"src3_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"Neff\": 3.044,\n      \"lens4_delta_z\": 0.0,\n      \"src2_mult_bias\": 1.0,\n      \"lens3_bias\": 1.5,\n      \"src1_delta_z\": 0.0,\n      \"ia_bias\": 0.5,\n      \"wa\": 0.0,\n      \"sigma8\": 0.81,\n      \"T_CMB\": 2.7255,\n      \"lens0_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src3_delta_z\": 0.0,\n      \"w0\": -1.0,\n      \"src0_mult_bias\": 1.0,\n      \"lens4_bias\": 1.5\n    },\n    \"cosmology_parameters\": [\n      \"Omega_c\",\n      \"Omega_b\",\n      \"n_s\",\n      \"m_nu\",\n      \"Omega_k\",\n      \"h\",\n      \"Neff\",\n      \"wa\",\n      \"sigma8\",\n      \"T_CMB\",\n      \"w0\"\n    ],\n    \"nuisance_parameters\": {\n      \"lens2_bias\": 1.5,\n      \"lens0_bias\": 1.5,\n      \"lens3_delta_z\": 0.0,\n      \"src2_delta_z\": 0.0,\n      \"lens2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"src0_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"lens1_delta_z\": 0.0,\n      \"lens1_bias\": 1.5,\n      \"src3_mult_bias\": 1.0,\n      \"lens4_delta_z\": 0.0,\n      \"src2_mult_bias\": 1.0,\n      \"lens3_bias\": 1.5,\n      \"src1_delta_z\": 0.0,\n      \"ia_bias\": 0.5,\n      \"lens0_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src3_delta_z\": 0.0,\n      \"src0_mult_bias\": 1.0,\n      \"lens4_bias\": 1.5\n    },\n    \"scale_cuts\": [],\n    \"systematics\": {\n      \"wl_per_bin\": [\n        \"MultiplicativeShearBiasFactory\",\n        \"PhotoZShiftFactory\"\n      ],\n      \"wl_global\": [\n        \"LinearAlignmentSystematicFactory\"\n      ],\n      \"nc_per_bin\": [\n        \"PhotoZShiftFactory\"\n      ],\n      \"nc_global\": [],\n      \"parameters_by_factory\": {\n        \"MultiplicativeShearBiasFactory\": \"{tracer}_mult_bias (default 1.0; DES ~0.012)\",\n        \"PhotoZShiftFactory\": \"{tracer}_delta_z (0.0)\",\n        \"PhotoZShiftandStretchFactory\": \"{tracer}_delta_z (0.0), {tracer}_sigma_z (1.0)\",\n        \"LinearAlignmentSystematicFactory\": \"ia_bias (0.5), alphaz (0.0), z_piv (0.5); alphag fixed by ia_alphag\",\n        \"LinearBiasSystematicFactory\": \"{tracer}_alphaz (0.0), {tracer}_alphag (0.0), {tracer}_z_piv (0.5) on top of {tracer}_bias\",\n        \"MagnificationBiasSystematicFactory\": \"{tracer}_r_lim, _sig_c, _eta, _z_c, _z_m\",\n        \"ConstantMagnificationBiasSystematicFactory\": \"{tracer}_mag_bias (1.0)\"\n      }\n    },\n    \"ccl_factory\": {\n      \"creation_mode\": \"pure_ccl_mode\",\n      \"require_nonlinear_pk\": true,\n      \"amplitude_parameter\": \"sigma8\",\n      \"pure_ccl_transfer_function\": \"boltzmann_camb\"\n    }\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml",
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86_params.json"
+          ]
+        },
+        {
+          "id": "tooluse_4U6bAq367a0bvyi5gDlBSQ",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_compute_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml",
+            "nuisance": {
+              "alphaz": 0,
+              "ia_bias": 0.5,
+              "lens0_bias": 1.4,
+              "lens0_delta_z": 0.001,
+              "lens1_bias": 1.6,
+              "lens1_delta_z": 0.002,
+              "lens2_bias": 1.6,
+              "lens2_delta_z": 0.001,
+              "lens3_bias": 1.9,
+              "lens3_delta_z": 0.003,
+              "lens4_bias": 2,
+              "lens4_delta_z": 0,
+              "src0_delta_z": -0.001,
+              "src0_mult_bias": 0.012,
+              "src1_delta_z": -0.019,
+              "src1_mult_bias": 0.012,
+              "src2_delta_z": 0.009,
+              "src2_mult_bias": 0.012,
+              "src3_delta_z": -0.018,
+              "src3_mult_bias": 0.012,
+              "z_piv": 0.62
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326",
+            "plot": false
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vs_data_f82587.csv\"\n  ],\n  \"message\": \"loglike = -0.000, chi2 = 0.00 for n_data = 457 (chi2/n = 0.000) at Om=0.300, sigma8=0.81, h=0.67. Worst statistics by chi2_block/n: density_xi lens0-lens0 (0.0/8), density_xi lens1-lens1 (0.0/10), density_xi lens2-lens2 (0.0/11), density_xi lens3-lens3 (0.0/12), density_xi lens4-lens4 (0.0/13). \",\n  \"metadata\": {\n    \"loglike\": -0.0,\n    \"chi2\": 0.0,\n    \"n_data\": 457,\n    \"chi2_per_dof\": 0.0,\n    \"per_statistic\": [\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 8,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 10,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 11,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 12,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_density_xi\",\n        \"tracer1\": \"lens4\",\n        \"tracer2\": \"lens4\",\n        \"n\": 13,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens0\",\n        \"n\": 6,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens1\",\n        \"n\": 8,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens2\",\n        \"n\": 9,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens3\",\n        \"n\": 10,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shearDensity_xi_t\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"lens4\",\n        \"n\": 11,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 4,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 5,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 5,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 5,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 6,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 6,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 7,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 7,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 7,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_minus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 8,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src0\",\n        \"n\": 15,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src1\",\n        \"n\": 15,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src2\",\n        \"n\": 16,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src0\",\n        \"tracer2\": \"src3\",\n        \"n\": 16,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src1\",\n        \"n\": 17,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src2\",\n        \"n\": 17,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src1\",\n        \"tracer2\": \"src3\",\n        \"n\": 17,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src2\",\n        \"n\": 18,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src2\",\n        \"tracer2\": \"src3\",\n        \"n\": 18,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      },\n      {\n        \"data_type\": \"galaxy_shear_xi_plus\",\n        \"tracer1\": \"src3\",\n        \"tracer2\": \"src3\",\n        \"n\": 18,\n        \"chi2_block\": 0.0,\n        \"chi2_share\": 0.0\n      }\n    ],\n    \"point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"alphaz\": 0.0,\n      \"ia_bias\": 0.5,\n      \"lens0_bias\": 1.4,\n      \"lens0_delta_z\": 0.001,\n      \"lens1_bias\": 1.6,\n      \"lens1_delta_z\": 0.002,\n      \"lens2_bias\": 1.6,\n      \"lens2_delta_z\": 0.001,\n      \"lens3_bias\": 1.9,\n      \"lens3_delta_z\": 0.003,\n      \"lens4_bias\": 2.0,\n      \"lens4_delta_z\": 0.0,\n      \"src0_delta_z\": -0.001,\n      \"src0_mult_bias\": 0.012,\n      \"src1_delta_z\": -0.019,\n      \"src1_mult_bias\": 0.012,\n      \"src2_delta_z\": 0.009,\n      \"src2_mult_bias\": 0.012,\n      \"src3_delta_z\": -0.018,\n      \"src3_mult_bias\": 0.012,\n      \"z_piv\": 0.62\n    },\n    \"warnings\": [],\n    \"unused_keys\": [],\n    \"unknown_keys\": [],\n    \"required_parameters\": {\n      \"lens2_bias\": 1.5,\n      \"Omega_c\": 0.25,\n      \"lens0_bias\": 1.5,\n      \"lens3_delta_z\": 0.0,\n      \"Omega_b\": 0.05,\n      \"src2_delta_z\": 0.0,\n      \"n_s\": 0.96,\n      \"m_nu\": 0.0,\n      \"lens2_delta_z\": 0.0,\n      \"src1_mult_bias\": 1.0,\n      \"src0_delta_z\": 0.0,\n      \"alphaz\": 0.0,\n      \"lens1_delta_z\": 0.0,\n      \"Omega_k\": 0.0,\n      \"lens1_bias\": 1.5,\n      \"src3_mult_bias\": 1.0,\n      \"h\": 0.67,\n      \"Neff\": 3.044,\n      \"lens4_delta_z\": 0.0,\n      \"src2_mult_bias\": 1.0,\n      \"lens3_bias\": 1.5,\n      \"src1_delta_z\": 0.0,\n      \"ia_bias\": 0.5,\n      \"wa\": 0.0,\n      \"sigma8\": 0.81,\n      \"T_CMB\": 2.7255,\n      \"lens0_delta_z\": 0.0,\n      \"z_piv\": 0.5,\n      \"src3_delta_z\": 0.0,\n      \"w0\": -1.0,\n      \"src0_mult_bias\": 1.0,\n      \"lens4_bias\": 1.5\n    },\n    \"max_abs_pull\": 0.0,\n    \"rms_pull\": 0.0,\n    \"computed_on\": \"local\",\n    \"firecrown_version\": \"1.16.0\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml\",\n    \"cosmology\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81\n    }\n  }\n}",
+          "is_error": false,
+          "figures": [],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vs_data_f82587.csv"
+          ]
+        },
+        {
+          "id": "tooluse_oynOstyj7nk7ir3Ps75Pc3",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "firecrown_scan_loglike",
+          "server": "serve-desc.sh",
+          "args": {
+            "experiment_yaml": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml",
+            "parameter": "sigma8",
+            "min_value": 0.78,
+            "max_value": 0.84,
+            "n_points": 13,
+            "nuisance": {
+              "alphaz": 0,
+              "ia_bias": 0.5,
+              "lens0_bias": 1.4,
+              "lens0_delta_z": 0.001,
+              "lens1_bias": 1.6,
+              "lens1_delta_z": 0.002,
+              "lens2_bias": 1.6,
+              "lens2_delta_z": 0.001,
+              "lens3_bias": 1.9,
+              "lens3_delta_z": 0.003,
+              "lens4_bias": 2,
+              "lens4_delta_z": 0,
+              "src0_delta_z": -0.001,
+              "src0_mult_bias": 0.012,
+              "src1_delta_z": -0.019,
+              "src1_mult_bias": 0.012,
+              "src2_delta_z": 0.009,
+              "src2_mult_bias": 0.012,
+              "src3_delta_z": -0.018,
+              "src3_mult_bias": 0.012,
+              "z_piv": 0.62
+            },
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326"
+          },
+          "result": "{\n  \"status\": \"success\",\n  \"files\": [\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/scan_sigma8_63cd84.csv\",\n    \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/scan_sigma8_63cd84.png\"\n  ],\n  \"message\": \"Profiled sigma8 over 13 points [0.78, 0.84]: min chi2 = 0.00 (n_data 457) at sigma8 = 0.81 (parabolic best 0.81 +/- 0.00992); 1-sigma interval [0.8, 0.8198]. \",\n  \"metadata\": {\n    \"parameter\": \"sigma8\",\n    \"grid\": [\n      0.78,\n      0.785,\n      0.79,\n      0.795,\n      0.8,\n      0.805,\n      0.81,\n      0.815,\n      0.82,\n      0.825,\n      0.83,\n      0.835,\n      0.84\n    ],\n    \"loglike\": [\n      -4.373504764940217,\n      -3.059542234549221,\n      -1.9724914975700438,\n      -1.117707695619263,\n      -0.5004180878593151,\n      -0.12603856152155457,\n      -0.0,\n      -0.1278418622127456,\n      -0.5149987036613608,\n      -1.1671914612985088,\n      -2.0900916095927853,\n      -3.2894347423085355,\n      -4.771003341929388\n    ],\n    \"chi2\": [\n      8.747009529880433,\n      6.119084469098442,\n      3.9449829951400877,\n      2.235415391238526,\n      1.0008361757186301,\n      0.25207712304310914,\n      0.0,\n      0.2556837244254912,\n      1.0299974073227216,\n      2.3343829225970176,\n      4.180183219185571,\n      6.578869484617071,\n      9.542006683858776\n    ],\n    \"delta_chi2\": [\n      8.747009529880433,\n      6.119084469098442,\n      3.9449829951400877,\n      2.235415391238526,\n      1.0008361757186301,\n      0.25207712304310914,\n      0.0,\n      0.2556837244254912,\n      1.0299974073227216,\n      2.3343829225970176,\n      4.180183219185571,\n      6.578869484617071,\n      9.542006683858776\n    ],\n    \"min_chi2\": 0.0,\n    \"n_data\": 457,\n    \"grid_minimum\": 0.81,\n    \"parabolic_best_fit\": {\n      \"value\": 0.8099822426177556,\n      \"sigma\": 0.009923283457096158\n    },\n    \"one_sigma_lower\": 0.8000055837436332,\n    \"one_sigma_upper\": 0.8198062968020241,\n    \"errors\": [],\n    \"warnings\": [],\n    \"fixed_point\": {\n      \"Omega_c\": 0.25,\n      \"Omega_b\": 0.05,\n      \"h\": 0.67,\n      \"n_s\": 0.96,\n      \"Omega_k\": 0.0,\n      \"Neff\": 3.044,\n      \"m_nu\": 0.0,\n      \"w0\": -1.0,\n      \"wa\": 0.0,\n      \"T_CMB\": 2.7255,\n      \"sigma8\": 0.81,\n      \"alphaz\": 0.0,\n      \"ia_bias\": 0.5,\n      \"lens0_bias\": 1.4,\n      \"lens0_delta_z\": 0.001,\n      \"lens1_bias\": 1.6,\n      \"lens1_delta_z\": 0.002,\n      \"lens2_bias\": 1.6,\n      \"lens2_delta_z\": 0.001,\n      \"lens3_bias\": 1.9,\n      \"lens3_delta_z\": 0.003,\n      \"lens4_bias\": 2.0,\n      \"lens4_delta_z\": 0.0,\n      \"src0_delta_z\": -0.001,\n      \"src0_mult_bias\": 0.012,\n      \"src1_delta_z\": -0.019,\n      \"src1_mult_bias\": 0.012,\n      \"src2_delta_z\": 0.009,\n      \"src2_mult_bias\": 0.012,\n      \"src3_delta_z\": -0.018,\n      \"src3_mult_bias\": 0.012,\n      \"z_piv\": 0.62\n    },\n    \"computed_on\": \"local\",\n    \"experiment_yaml\": \"/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml\"\n  }\n}\n[1 figure(s) displayed to the user as Figure 14 (scan_sigma8_63cd84.png) \u2014 reference them by figure number.]",
+          "is_error": false,
+          "figures": [
+            14
+          ],
+          "files": [
+            "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/scan_sigma8_63cd84.csv"
+          ]
+        },
+        {
+          "id": "tooluse_M5iEQj6VlVxJTETLmLKD26",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "namaster_simulate_maps",
+          "server": "serve-desc.sh",
+          "args": {
+            "add_noise": false,
+            "cosmology": {
+              "baryons": "none"
+            },
+            "name": "nobar",
+            "nside": 64,
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/sim_nobar",
+            "tracers": [
+              {
+                "name": "src0",
+                "kind": "shear",
+                "z_mean": 0.8,
+                "z_sigma": 0.25
+              }
+            ]
+          },
+          "result": "Error executing tool namaster_simulate_maps: Buffer has wrong number of dimensions (expected 1, got 2)",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        },
+        {
+          "id": "tooluse_swEYyGBy5KeMiyKne6n1Sv",
+          "direction_id": "",
+          "wave": 0,
+          "tool": "namaster_simulate_maps",
+          "server": "serve-desc.sh",
+          "args": {
+            "add_noise": false,
+            "cosmology": {
+              "baryons": "schneider15",
+              "baryon_params": {
+                "log10Mc": 14.095,
+                "eta_b": 0.213,
+                "k_s": 1000
+              }
+            },
+            "name": "bar",
+            "nside": 64,
+            "output_dir": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/sim_bar",
+            "tracers": [
+              {
+                "name": "src0",
+                "kind": "shear",
+                "z_mean": 0.8,
+                "z_sigma": 0.25
+              }
+            ]
+          },
+          "result": "Error executing tool namaster_simulate_maps: Buffer has wrong number of dimensions (expected 1, got 2)",
+          "is_error": false,
+          "figures": [],
+          "files": []
+        }
+      ],
+      "board": null
+    }
+  ],
+  "figures": [
+    {
+      "figure": 6,
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_912d53.png",
+      "name": "theory_vector_912d53.png",
+      "caption": "",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh"
+    },
+    {
+      "figure": 9,
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_c7d16c.png",
+      "name": "theory_vector_c7d16c.png",
+      "caption": "",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh"
+    },
+    {
+      "figure": 14,
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/scan_sigma8_63cd84.png",
+      "name": "scan_sigma8_63cd84.png",
+      "caption": "",
+      "tool": "firecrown_scan_loglike",
+      "server": "serve-desc.sh"
+    }
+  ],
+  "files": [
+    {
+      "name": "desy1_3x2pt_38aa48.yaml",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48.yaml",
+      "kind": "other",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "desy1_3x2pt_38aa48_params.json",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_params.json",
+      "kind": "text",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "desy1_shear_only.hdf5",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_shear_only.hdf5",
+      "kind": "other",
+      "tool": "sacc_prepare_for_firecrown",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "theory_vector_912d53.csv",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_912d53.csv",
+      "kind": "csv",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "desy1_3x2pt_38aa48_theory_912d53.hdf5",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_912d53.hdf5",
+      "kind": "other",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "theory_vector_c7d16c.csv",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vector_c7d16c.csv",
+      "kind": "csv",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "desy1_3x2pt_38aa48_theory_c7d16c.hdf5",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_38aa48_theory_c7d16c.hdf5",
+      "kind": "other",
+      "tool": "firecrown_theory_data_vector",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "desy1_3x2pt_noiseless_0ccc86.yaml",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86.yaml",
+      "kind": "other",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "desy1_3x2pt_noiseless_0ccc86_params.json",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/desy1_3x2pt_noiseless_0ccc86_params.json",
+      "kind": "text",
+      "tool": "firecrown_build_likelihood",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "theory_vs_data_f82587.csv",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/theory_vs_data_f82587.csv",
+      "kind": "csv",
+      "tool": "firecrown_compute_loglike",
+      "server": "serve-desc.sh"
+    },
+    {
+      "name": "scan_sigma8_63cd84.csv",
+      "path": "/Users/nramachandra/hep-genesis-testing/projects/expert-baryon-lensing-bias-3/runs/261024_190326/scan_sigma8_63cd84.csv",
+      "kind": "csv",
+      "tool": "firecrown_scan_loglike",
+      "server": "serve-desc.sh"
+    }
+  ],
+  "jobs": [],
+  "coding_tasks": [],
+  "notes": [],
+  "dispatch_target": "local"
+}

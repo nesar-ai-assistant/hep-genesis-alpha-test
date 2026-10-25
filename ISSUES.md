@@ -4,6 +4,12 @@ All problems encountered during alpha testing, filed on GitHub or not.
 Updated automatically by the test harness (flags appended per run) and
 manually by the testing agent for broader observations.
 
+| Date | Finding |
+|---|---|
+| 2026-10-24 | [local] **CLI `--project NAME` silently auto-suffixes on dir collision** — if a project directory is pre-created on disk (e.g. by `mkdir` before the first `--quick` call) the CLI does not reuse it; it creates `NAME-2`, then `NAME-3` on the next invocation with the same `--project` name, rather than treating the existing empty dir as the project. Minor but confusing for scripted/cron-driven sessions that pre-stage directories. Workaround: let the CLI create the project dir itself, never `mkdir` it first. |
+| 2026-10-24 | [nesar/desc_mcp_server#5] **firecrown silently ignores `cosmology.baryons` in pure-CCL mode** — `firecrown_theory_data_vector` gave byte-identical output for `baryons=none` vs `baryons=schneider15`; only a metadata warning (easy to miss) flags this. `pk_modifier` factory type is advertised in `firecrown_list_examples()` metadata but not implemented in `firecrown_build_likelihood`'s actual parameters — no way to inject any custom/tabulated P(k) correction into a real likelihood evaluation. Blocks baryon/MG/emulator-bias forecasting workflows entirely. |
+| 2026-10-24 | [nesar/desc_mcp_server#6] **`namaster_simulate_maps` crashes**: "Buffer has wrong number of dimensions (expected 1, got 2)" — 2/2 reproductions, independent of `cosmology.baryons` setting. Blocks the simulate-from-scratch entry point of the NaMaster map->bandpower->covariance chain. |
+
 Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases/issues/n
 **[local]** = observation not (yet) filed upstream. Status: open / fixed-in-vX / wontfix / monitoring.
 
