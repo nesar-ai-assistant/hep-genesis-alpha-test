@@ -7,8 +7,9 @@ manually by the testing agent for broader observations.
 | Date | Finding |
 |---|---|
 | 2026-10-24 | [local] **CLI `--project NAME` silently auto-suffixes on dir collision** — if a project directory is pre-created on disk (e.g. by `mkdir` before the first `--quick` call) the CLI does not reuse it; it creates `NAME-2`, then `NAME-3` on the next invocation with the same `--project` name, rather than treating the existing empty dir as the project. Minor but confusing for scripted/cron-driven sessions that pre-stage directories. Workaround: let the CLI create the project dir itself, never `mkdir` it first. |
-| 2026-10-24 | [nesar/desc_mcp_server#5] **firecrown silently ignores `cosmology.baryons` in pure-CCL mode** — `firecrown_theory_data_vector` gave byte-identical output for `baryons=none` vs `baryons=schneider15`; only a metadata warning (easy to miss) flags this. `pk_modifier` factory type is advertised in `firecrown_list_examples()` metadata but not implemented in `firecrown_build_likelihood`'s actual parameters — no way to inject any custom/tabulated P(k) correction into a real likelihood evaluation. Blocks baryon/MG/emulator-bias forecasting workflows entirely. |
-| 2026-10-24 | [nesar/desc_mcp_server#6] **`namaster_simulate_maps` crashes**: "Buffer has wrong number of dimensions (expected 1, got 2)" — 2/2 reproductions, independent of `cosmology.baryons` setting. Blocks the simulate-from-scratch entry point of the NaMaster map->bandpower->covariance chain. |
+| 2026-10-24 | [nesar/desc_mcp_server#5] **firecrown silently ignores `cosmology.baryons` in pure-CCL mode** — `firecrown_theory_data_vector` gave byte-identical output for `baryons=none` vs `baryons=schneider15`; only a metadata warning (easy to miss) flags this. `pk_modifier` factory type is advertised in `firecrown_list_examples()` metadata but not implemented in `firecrown_build_likelihood`'s actual parameters — no way to inject any custom/tabulated P(k) correction into a real likelihood evaluation. Blocks baryon/MG/emulator-bias forecasting workflows entirely. Re-checked 2026-10-27: still open, unchanged. |
+| 2026-10-24 | [nesar/desc_mcp_server#6] **`namaster_simulate_maps` crashes**: "Buffer has wrong number of dimensions (expected 1, got 2)" — 2/2 reproductions, independent of `cosmology.baryons` setting. Blocks the simulate-from-scratch entry point of the NaMaster map->bandpower->covariance chain. Re-checked 2026-10-27: still open, unchanged. |
+| 2026-10-27 | **v0.4.2 issue audit** — installed v0.4.2 (was v0.3.18), diffed source against v0.3.18, and verified every open HEP-KE/hep-genesis-releases issue against the actual code (plus live CLI tests where the broken MAG allocation allowed). **Closed on GitHub as genuinely fixed: #1, #2, #3, #4, #5, #6, #7, #9, #10, #11** (all code-level confirmed; #4 and #7 also live-tested). #8 and #12 (load_table_data) were already closed and re-confirmed fixed. desc_mcp_server#5 and #6 re-checked: still open, no code change. desc_mcp_server#4 (`tools.ccl` missing): **corrected a prior mis-statement** — the "fix" I'd been relying on was my own uncommitted local testing patch to pyproject.toml, not an upstream commit; origin/main still references the never-committed `tools.ccl` module and the server still crashes at startup on a clean checkout. Commented accordingly on all three desc_mcp_server issues. |
 
 Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases/issues/n
 **[local]** = observation not (yet) filed upstream. Status: open / fixed-in-vX / wontfix / monitoring.
@@ -17,13 +18,13 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
 
 ## App bugs
 
-### 1. `--servers <path/git>` fails for servers without `[project.scripts]` **[GH#1]** — open
+### 1. `--servers <path/git>` fails for servers without `[project.scripts]` **[GH#1]** — fixed in v0.4.2
 - v0.3.16. CLI pip-installs the repo, then execs a console script named after
   the package dir. Servers run via `python -m mcp_server` (common HEP-KE
   pattern) crash with `FileNotFoundError`.
 - Workaround: `command:` specs + wrapper scripts (`scripts/serve-*.sh`).
 
-### 2. `arxiv_agent` Rich banner pollutes MCP stdio stdout **[GH#2]** — open
+### 2. `arxiv_agent` Rich banner pollutes MCP stdio stdout **[GH#2]** — fixed in v0.4.2
 - v0.3.16. smolagents console output goes to stdout of the stdio MCP server:
   1,663 `Failed to parse JSONRPC message` pydantic errors in one 5-min
   research run. Client survives; protocol pollution; real errors hard to spot.
@@ -40,7 +41,7 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
   partially succeeded via arXiv-HTML reads, so #3 is softer than "always
   fails" — the `'Search'.results` crash hits the PDF download path only.
 
-### 3. `arxiv_agent` full-text extraction broken **[GH#3]** — open
+### 3. `arxiv_agent` full-text extraction broken **[GH#3]** — fixed in v0.4.2
 - v0.3.16. Sub-agent PDF/TXT downloads fail:
   `RuntimeError: 'Search' object has no attribute 'results'` (python-arxiv API
   misuse). Degrades to abstract-level synthesis (honestly, to its credit).
@@ -69,13 +70,13 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
 
 ## Behavior observations (not bugs, worth watching) **[local]**
 
-### 11. `--board` auto-creates missing projects **[local → GH#4]**
+### 11. `--board` auto-creates missing projects **[local → GH#4]** — fixed in v0.4.2
 - v0.3.16 (found 2026-10-15, features battery F2/F3). Running `--board
   --project <name>` on a NONEXISTENT project silently creates the project
   directory, then prints "No board for chat 'default'...". Read-only info
   commands should not have filesystem side effects.
 
-### 12. `--list-runs` on empty project prints nothing **[local → GH#4]**
+### 12. `--list-runs` on empty project prints nothing **[local → GH#4]** — fixed in v0.4.2
 - v0.3.16. Exit 0, zero output — indistinguishable from success-with-runs in
   scripts. Should print "no runs yet" (and `--list-projects` similarly prints
   nothing when empty).
@@ -103,7 +104,7 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
   embedding a compact summary (bin centers/values or knee/endpoint stats) in
   the tool payload. (Nesar's server, not the app.)
 
-### 14. arXiv API transient failures (HTTP 429/503) reported as "Paper not found" **[GH#5]** — open
+### 14. arXiv API transient failures (HTTP 429/503) reported as "Paper not found" **[GH#5]** — fixed in v0.4.2
 - v0.3.16 (found 2026-10-16 pm-combo). `get_arxiv_metadata`,
   `download_arxiv_full_text` and `cite()` surface arXiv export-API rate
   limits (HTTP 429) and outages (HTTP 503) as the message "Paper <id> not
@@ -138,7 +139,7 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
 - Evidence: runs/2026-10-16-pm-combo/cases/C1-multi-server-research.out
   line 858; runs/2026-10-16-midday-research/cases/R1-higgsino-dd.out line 802.
 
-### 16. Quick `--report` + query asking for a report → report generated twice **[GH#6]** — open
+### 16. Quick `--report` + query asking for a report → report generated twice **[GH#6]** — fixed in v0.4.2
 - v0.3.16 (found 2026-10-15, confirmed 2026-10-16). When the `--quick` query
   asks for a report in natural language AND `--report` is passed, the report is
   built twice: once by the in-turn `write_report` tool call, once by the
@@ -149,7 +150,7 @@ Format legend: **[GH#n]** = also filed at github.com/HEP-KE/hep-genesis-releases
   261017_170253 (flag pass), 40 s apart.
 - Filed upstream: https://github.com/HEP-KE/hep-genesis-releases/issues/6
 
-### 17. Invalid `--servers` spec → raw pip traceback, no usage hint **[GH#7]** — open
+### 17. Invalid `--servers` spec → raw pip traceback, no usage hint **[GH#7]** — fixed in v0.4.2
 - v0.3.16 (found 2026-10-16, ad-hoc verification). `--servers sbbn` (bare
   name) makes the CLI run `pip install git+sbbn`, which fails with
   `ERROR: Invalid requirement: 'git+sbbn'` and an uncaught RuntimeError
@@ -191,7 +192,7 @@ Suggested upstream: persist the exact matched text snippet (chars offset +
 length, or the first ~300 chars) in each evidence entry at finding-creation
 time.
 
-### 20. `load_table_data` cannot parse CSVs with a column-name header row **[GH#8]** — open
+### 20. `load_table_data` cannot parse CSVs with a column-name header row **[GH#8]** — fixed (confirmed still fixed in v0.4.2)
 
 - v0.3.16 (found 2026-10-17-pm-combo, baryonic-pk, 4-server combo). The
   bundled DOM tool `load_table_data` fails on its sibling HYD server's own
@@ -230,7 +231,7 @@ time.
   closed direction is silent. One occurrence so far — monitoring; will file
   upstream if it recurs.
 
-### 22. Plan-phase brief falsely claims MCP server tools are unavailable **[GH#9]** — open
+### 22. Plan-phase brief falsely claims MCP server tools are unavailable **[GH#9]** — fixed in v0.4.2
 
 - v0.3.16 (found 2026-10-17-pm-combo, reproduced 2026-10-19-pm-combo; 4-server
   research mode, 2/2 occurrences). The `[brief]` produced after the survey phase
@@ -278,7 +279,7 @@ time.
   agent itself noted the constant exponent implies a fitted power law
   rather than a production-equation solve.
 
-### 24. DESC MCP server: `tools.ccl` module listed in pyproject.toml but never created **[local, Nesar's server]** — open
+### 24. DESC MCP server: `tools.ccl` module listed in pyproject.toml but never created **[local, Nesar's server]** — open (re-confirmed 2026-10-27: corrected earlier mis-statement — only a local uncommitted testing patch masked this; origin/main is unchanged and still broken on a clean checkout)
 
 - Found 2026-10-19-eve-desc. `pyproject.toml [tool.mcp-server].tool_modules`
   lists `"tools.ccl"` and `tools/meta/registry.py` FAMILIES maps
@@ -317,7 +318,7 @@ time.
   the shipped lock (which lacks osx-64).
 - Also fixed: `serve-desc.sh` lacked the executable bit (chmod +x applied).
 
-### 26. Research mode: final tool-call count exceeds `--max-tool-calls` in every run **[GH#10]** — open
+### 26. Research mode: final tool-call count exceeds `--max-tool-calls` in every run **[GH#10]** — fixed in v0.4.2
 
 - Found 2026-10-20 (pm-combo, v0.3.18). The final `[run] done (..., tool
   calls F, ...)` line exceeds the `--max-tool-calls B` budget in 11 of 12
@@ -331,7 +332,7 @@ time.
 - Low severity (cost-control softening, not correctness). Filed as
   HEP-KE/hep-genesis-releases#10 with the full 12-run evidence table.
 
-### 27. Quick mode: MCP tool results silently truncated at 20,000 chars, no marker **[GH#11]** — open
+### 27. Quick mode: MCP tool results silently truncated at 20,000 chars, no marker **[GH#11]** — fixed in v0.4.2
 
 - Found 2026-10-20 (eve-desc, v0.3.18; also present in 2026-10-19-eve-desc
   case D6). `txpipe_validate_pipeline` returns 27 per-stage dry-run commands;
