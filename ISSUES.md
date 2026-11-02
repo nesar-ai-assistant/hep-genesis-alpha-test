@@ -826,3 +826,12 @@ fits h≈0.70) and suggested checking the reference value. No truncation markers
 cached)"). D6 pipeline validated but not runnable (missing TXPipe input files +
 DESC_TXPIPE_ENV unset — environmental, expected on this host).
 
+
+## 2026-11-02-spark-deep-1030-research — 2 pass / 1 flagged
+
+### R3-report — Generate PDF report for the research run
+
+- rc=1, duration=14.7s, note: rc=1, output=12263 chars
+
+- transcript: runs/2026-11-02-spark-deep-1030-research/cases/R3-report.out
+

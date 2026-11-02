@@ -357,12 +357,56 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
         topic = pick_topic()
         proj = f"ramp-research-{topic['slug']}"
         topic_srv = S[topic["server_key"]]
+        # Deeper research-mode: 3 waves / 4 workers / higher tool budget so the
+        # agent can branch, compare, and ask follow-up sub-questions. A
+        # follow-up pass is queued automatically by running this case twice
+        # (see profile == "research-deep" below for the canonical 2-pass setup).
         add(f"R1-{topic['slug']}", "research",
             f'"{topic["query"]}" --project {proj} --servers {DOM} --servers {topic_srv} '
+            '--max-waves 3 --workers 4 --max-tool-calls 80 --wall-clock 40',
+            f"Research (deep): {topic['title']}", 3000)
+        # Explicit second pass that asks the model to critique and deepen its
+        # own first-pass findings — exercises research-mode branching / back-and-forth.
+        followup = (
+            f"Continue the prior research on '{topic['title']}'. Read the board, identify the two weakest "
+            f"claims (missing evidence or thinnest tool support), and deepen them: rerun the relevant emulator/tool "
+            f"at a contrasting parameter point, fetch one additional paper per weak claim, and post corrected findings. "
+            f"Then write the updated report."
+        )
+        add(f"R2-{topic['slug']}-followup", "research",
+            f'"{followup}" --project {proj} --servers {DOM} --servers {topic_srv} '
             '--max-waves 2 --workers 3 --max-tool-calls 60 --wall-clock 30',
-            f"Research: {topic['title']}", 2400)
-        add("R2-report", "cli", f"--report --project {proj}",
+            f"Research follow-up (deepening pass): {topic['title']}", 2400)
+        add("R3-report", "cli", f"--report --project {proj}",
             "Generate PDF report for the research run", 900)
+        return cases
+
+    if profile == "research-deep":
+        # Canonical deep-research battery: two *different* topics, each with a
+        # follow-up pass, so ~50% of harness wall-time is in research mode
+        # with genuine multi-pass back-and-forth (Nesar request 2026-10-30).
+        topics = research_topics()
+        # Pick two distinct topics deterministically: today's + tomorrow's
+        t1 = topics[datetime.now().timetuple().tm_yday % len(topics)]
+        t2 = topics[(datetime.now().timetuple().tm_yday + 1) % len(topics)]
+        for idx, topic in enumerate([t1, t2], start=1):
+            proj = f"ramp-research-{topic['slug']}"
+            topic_srv = S[topic["server_key"]]
+            add(f"R{idx}a-{topic['slug']}", "research",
+                f'"{topic["query"]}" --project {proj} --servers {DOM} --servers {topic_srv} '
+                '--max-waves 3 --workers 4 --max-tool-calls 80 --wall-clock 40',
+                f"Research deep {idx}a: {topic['title']}", 3000)
+            followup = (
+                f"Continue the prior research on '{topic['title']}'. Read the board, identify the two weakest "
+                f"claims, deepen them with a contrasting emulator/tool call and one new paper per weak claim, "
+                f"and post corrected findings before writing the report."
+            )
+            add(f"R{idx}b-{topic['slug']}-followup", "research",
+                f'"{followup}" --project {proj} --servers {DOM} --servers {topic_srv} '
+                '--max-waves 2 --workers 3 --max-tool-calls 60 --wall-clock 30',
+                f"Research deep {idx}b follow-up: {topic['title']}", 2400)
+            add(f"R{idx}c-report", "cli", f"--report --project {proj}",
+                f"Report deep {idx}: {topic['title']}", 900)
         return cases
 
     if profile == "combo":
@@ -593,7 +637,7 @@ def append_issues(run_id, metas):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--profile", default="core",
-                    choices=["smoke", "core", "research", "combo", "features", "desc"])
+                    choices=["smoke", "core", "research", "research-deep", "combo", "features", "desc"])
     ap.add_argument("--date-suffix", default=None,
                     help="e.g. 'am' to make runs/2026-10-16-am-core/'")
     ap.add_argument("--chat-suffix", default=None,
