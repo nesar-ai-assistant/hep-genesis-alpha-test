@@ -1,0 +1,336 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{The 1.0--1.2 TeV Thermal Higgsino Against Planck, LZ, XENONnT and Gamma-Ray Limits: A Toy-Model Study}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-combo-higgsino-dd}
+\date{2026-10-16}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+We report an interactive study of the pure-higgsino thermal-relic target at $m_\chi \simeq 1.0$--$1.2$ TeV. It combines calculations with an inelastic-dark-matter (inelastic-DM) tool server and an abstract-level literature survey.
+
+The server's higgsino relic module rescales a fixed annihilation cross section, $\sigma v = 2.5\times10^{-26}\,\mathrm{cm^3\,s^{-1}}\,(1100\,\mathrm{GeV}/m_\chi)^2$, inside a Kolb--Turner freeze-out estimate. It contains no Sommerfeld enhancement or coannihilation. It gives $\Omega h^2 = 0.0731$, $0.0898$, $0.1083$, $0.1285$ and $0.1503$ at $m_\chi = 900$--$1300$ GeV, crossing the server's Planck value $0.120$ at $m_\chi \approx 1158$ GeV. This crossing lies inside the 1.08--1.2 TeV range quoted in the literature, but it reflects the tool's calibration and is not an independent prediction.
+
+For inelastic (Z-mediated, $\sigma_n = 7.43\times10^{-39}\,\mathrm{cm^2}$) scattering in the LZ 2.84 tonne-year extended nuclear-recoil window, the server predicts the following counts at 1.1 TeV:
+\begin{itemize}
+\item 744.6 events at a mass splitting $\delta = 300$ keV;
+\item 1.97 events at 350 keV;
+\item zero events for $\delta \geq 370$ keV.
+\end{itemize}
+The cutoff comes from a hard halo-velocity limit of 776 km/s, which corresponds to $\delta_{\max} \approx 368$ keV. The window giving 1 to 0.3 expected events is only about 4 keV wide, at $\delta \approx 352.5$--$356.4$ keV.
+
+The literature results below come from OpenAlex abstracts only; none could be verified through the arXiv API or cited formally. Solar-capture/IceCube bounds of $\delta > 566$ keV would place every allowed thermal higgsino beyond xenon's inelastic reach. The elastic rate is described as lying below the neutrino floor. Current gamma-ray line searches do not exclude the thermal higgsino, and CTA/CTAO is named as the decisive future test.
+
+Several tool outputs were judged unreliable, including the constraint-checker verdicts, its p-wave indirect-detection model and its Planck pass flag. Several literature anchors were marked contested by the session's critic.
+\end{abstract}
+
+\section{Introduction}
+The user asked for four things concerning the higgsino thermal-relic target in the mass range 1.0--1.2 TeV:
+\begin{enumerate}
+\item a survey of recent arXiv work on the target;
+\item computation of the relic density at several masses using the available inelastic-DM tools;
+\item comparison with LZ and XENONnT sensitivities and with the Planck dark-matter abundance;
+\item an assessment of where the higgsino sits relative to current limits.
+\end{enumerate}
+
+The session organised this into six lines of work:
+\begin{enumerate}
+\item a tool-based relic-density scan and Planck crossing;
+\item tool-based LZ event counts and the kinematic reach of xenon in the $(m_\chi,\delta)$ plane;
+\item verification of the key 2026-dated literature;
+\item an established, non-2026 baseline, added at the critic's request;
+\item a fine map of the splitting $\delta$ that yields about 1 and about 0.3 LZ events, compared against published fits;
+\item the indirect-detection status from the literature. This replaced the server's annihilation treatment, which the session judged physically inappropriate for a higgsino.
+\end{enumerate}
+Lines 3 and 4 ended blocked because the arXiv-API tools failed.
+
+The scope is therefore limited in two ways. All calculations come from a simplified tool server, described below. All literature content was taken from abstracts returned by an OpenAlex-backed search. Most of that literature carries 2026 dates, so the identifiers need checking on arxiv.org before citation.
+
+\section{Methods}
+\paragraph{Tool server.} Calculations used an inelastic-DM server. It describes itself as bridging WIMP mass, mass splitting and cross section with relic density, recoil spectra, indirect detection and CMB constraints, and as being motivated by the LZ 248 keV event. Its built-in observational inputs are:
+\begin{itemize}
+\item the LZ event at $248\pm23$ keV;
+\item an LZ exposure of 2.84 tonne-years;
+\item a Planck abundance of $\Omega_{\rm DM}h^2 = 0.12\pm0.0012$.
+\end{itemize}
+The server's reference list attributes arXiv:2609.02608 to the LZ Collaboration as the extended nuclear-recoil search. The literature search, however, returned arXiv:2609.02608 as a single-author interpretation paper by M. Di Mauro, and returned the LZ result as arXiv:2609.02823. This report follows the search records.
+
+The tools used were:
+\begin{itemize}
+\item \texttt{compute\_relic\_density}: inputs $m_\chi$, a higgsino flag and an optional $\sigma v$;
+\item \texttt{predict\_recoil}: inputs $m_\chi$, $\delta$, $\sigma_n$ and the higgsino flag;
+\item \texttt{check\_all\_constraints};
+\item \texttt{scan\_mass\_splitting};
+\item \texttt{predict\_annual\_modulation};
+\item \texttt{plot\_recoil\_spectrum} and \texttt{plot\_constraint\_summary}.
+\end{itemize}
+
+With the higgsino flag set, the relic tool uses $\sigma v = 2.5\times10^{-26}\,(1100\,\mathrm{GeV}/m_\chi)^2\ \mathrm{cm^3\,s^{-1}}$ in a Kolb--Turner freeze-out estimate with $g_* = 86.25$ and $x_f \approx 24.4$--$24.8$. The recoil tool assumes Z exchange with $\sigma_n = 7.43\times10^{-39}\,\mathrm{cm^2}$, the LZ extended nuclear-recoil window and a hard velocity cutoff $v_{\rm esc}+v_E = 776$ km/s. It exposes no halo parameters.
+
+\paragraph{Calculations run.} All calculations ran by local execution:
+\begin{itemize}
+\item relic densities at $m_\chi = 900, 1000, 1100, 1200, 1300$ GeV, plus a check at 1159 GeV;
+\item recoil predictions at 1100 GeV for $\delta = 300, 350, 355, 360, 365, 370, 375, 380, 500, 566$ and $700$ keV;
+\item recoil predictions at $\delta = 380$ keV for 1000 and 1200 GeV, and at $\delta = 360$ keV for 1159 GeV;
+\item constraint checks at (1100 GeV; 400, 566, 1000 keV) and (1159 GeV; 400 keV);
+\item a $17\times17$ scan over $m_\chi = 800$--$1400$ GeV and $\delta = 0$--$800$ keV;
+\item an annual-modulation calculation at (1100 GeV, 350 keV, $E_R = 248$ keV).
+\end{itemize}
+
+\paragraph{Hand estimates.} The kinematic edge was estimated by hand as $\delta_{\max} = \mu v_{\max}^2/2$, with $m_{\rm Xe}\approx122$ GeV, giving $\mu = 109.8$ GeV at $m_\chi = 1100$ GeV. Splitting values for given event counts were obtained by log-linear interpolation in $N$.
+
+\paragraph{Literature tools.} Two arXiv-API tools were tried: \texttt{search\_arxiv\_abstracts} (HTTP 503/429) and \texttt{get\_arxiv\_metadata} together with the two full-text download tools. All of them failed, returning ``not found'' even for arXiv:1807.06209, or an internal error. The \texttt{cite} tool failed its metadata check. Only an OpenAlex-backed \texttt{search\_arxiv} returned results, and it returns abstracts only.
+
+The full tool-call log accompanies this report as a supplement. The two plots were written to the server output directory, but no numbered figures were produced for this report.
+
+\section{Results}
+\subsection{Literature survey (abstracts only)}
+The abstracts retrieved place the thermal pure-higgsino mass, with Sommerfeld enhancement and coannihilation, at roughly 1.0--1.2 TeV:
+\begin{itemize}
+\item $m_\chi \simeq 1.08$ TeV is called the cosmologically preferred mass in arXiv:2609.02775;
+\item about 1.1 TeV in arXiv:2609.01504;
+\item ``the observed DM abundance is realized with the Higgsino mass of $\sim$1.2 TeV'' in arXiv:2410.15733 (Fukuda, Li, Moroi, Niki);
+\item a thermal higgsino-like mass ``between about 100 GeV and 1150 GeV'' in arXiv:2403.19598 (S. P. Martin).
+\end{itemize}
+The critic contested the use of arXiv:2410.15733 as an established anchor, so it is reported here as an abstract-level statement only.
+
+The LZ extended-window search, arXiv:2609.02823, is reported in its OpenAlex record as follows:
+\begin{itemize}
+\item an exposure of 2.84 tonne-years;
+\item a recoil window extending up to about 270 keV;
+\item one event consistent with a $248\pm23\,(\mathrm{stat})\pm23\,(\mathrm{sys})$ keV nuclear recoil;
+\item a global significance of $2.6\sigma$ and a maximum local significance of $3.4\sigma$.
+\end{itemize}
+The arXiv API returned ``not found'' for this identifier, and the critic contested the finding.
+
+Interpretations of the event as an inelastic higgsino prefer the following splittings:
+\begin{itemize}
+\item about 350 keV under the Standard Halo Model (arXiv:2609.01504);
+\item about 500 keV when Large Magellanic Cloud effects on the halo tail are included (arXiv:2609.01504);
+\item 481--519 keV for $m_\chi = 1000$--$1183$ GeV with the LMC tail (arXiv:2609.01590);
+\item 377 keV (arXiv:2609.02608);
+\item 339 keV from a sideband-ratio optimum (arXiv:2609.26698).
+\end{itemize}
+
+Three tensions with this interpretation appear in the abstracts:
+\begin{itemize}
+\item \textbf{Solar capture.} arXiv:2609.02775 (Pospelov and Ramani) derives $\delta > 566$ keV from IceCube non-observation of solar neutrinos at $m_\chi \simeq 1.08$ TeV. The assistant reported that arXiv:2609.11833 and arXiv:2609.07807 support this, and that arXiv:2609.06760 quotes 0.51--0.56 MeV. arXiv:2609.01590 states that ten years of IceCube data exclude $\delta \lesssim 475$ keV near elastic blind spots.
+\item \textbf{Empty sideband.} The absence of events above about 350 keV is in tension with the thermal-mass fit, according to the assistant's reading of arXiv:2609.09385 and arXiv:2609.26698.
+\item \textbf{Halo uncertainties.} arXiv:2609.15321 reports that halo uncertainties cannot close the gap.
+\end{itemize}
+arXiv:2609.09136 (Lee and Randall) states that the thermal higgsino with $\delta\sim350$ keV is ``essentially excluded'' and proposes a warped-extra-dimension alternative. A Planck-compatible branch at $\delta \approx 0.85$--$1.34$ MeV was attributed by the assistant to arXiv:2610.00226.
+
+\subsection{Relic density with the inelastic-DM tool}
+Table~\ref{tab:relic} lists the tool output. Linear interpolation crosses $\Omega h^2 = 0.120$ at $m_\chi \approx 1158$ GeV. The uncertainty is $\pm6$ GeV for the server's $\pm0.0012$ band and about $\pm5$ GeV for $\pm0.001$. A direct call at 1159 GeV returned $\Omega h^2 = 0.120$.
+
+The crossing lies inside the 1.08--1.2 TeV literature range, 60--80 GeV above the 1.08--1.1 TeV values and close to the $\sim$1.2 TeV value of arXiv:2410.15733. However, the higgsino setting is a $1/m^2$ rescaling normalised at 1100 GeV, with no Sommerfeld or coannihilation switch. The agreement therefore reflects how the tool was calibrated, not a higgsino calculation. Two planned tests could not be performed: a comparison with and without Sommerfeld enhancement, and a check of how the relic density depends on the splitting.
+
+The tool's Planck-consistency flag is unreliable. It reports ``consistent'' at 1000, 1100, 1200 and 1300 GeV despite stated tensions of 25.1, 9.8, 7.1 and 25.2$\sigma$, and ``inconsistent'' only at 900 GeV ($39.1\sigma$).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+\toprule
+$m_\chi$ (GeV) & $\sigma v$ ($10^{-26}$ cm$^3$/s) & $\Omega h^2$ & $x_f$ & $T_f$ (GeV) & stated tension ($\sigma$)\\
+\midrule
+900 & 3.73 & 0.0731 & 24.8 & 36.33 & 39.1\\
+1000 & 3.03 & 0.0898 & 24.7 & 40.53 & 25.1\\
+1100 & 2.50 & 0.1083 & 24.6 & 44.76 & 9.8\\
+1159 & -- & 0.120 & -- & -- & 0.0\\
+1200 & 2.10 & 0.1285 & 24.5 & 48.98 & 7.1\\
+1300 & 1.79 & 0.1503 & 24.4 & 53.24 & 25.2\\
+\bottomrule
+\end{tabular}
+\caption{Thermal relic density from the inelastic-DM server (higgsino flag, toy freeze-out with $g_*=86.25$). The 1159 GeV entry comes from the constraint checker.}
+\label{tab:relic}
+\end{table}
+
+\subsection{LZ inelastic event counts and the kinematic reach of xenon}
+Table~\ref{tab:recoil} gives the server's expected counts in the LZ 2.84 tonne-year extended window at $m_\chi = 1100$ GeV.
+
+At $\delta = 300$ keV the prediction of 744.6 events is grossly excluded by the single observed event. At $\delta = 350$ keV the expected count is 1.97, with $P(N\geq1) = 0.86$, and the 248 keV event requires $v_{\min} = 762$ km/s, below the 776 km/s cutoff. For $\delta \geq 370$ keV the count is zero.
+
+At $\delta = 380$ keV, $v_{\min}$ for a 248 keV recoil is 802, 799 and 796 km/s at 1000, 1100 and 1200 GeV. All three exceed the cutoff, so the reach depends only weakly on mass.
+
+The hand estimate $\delta_{\max} = \mu v_{\max}^2/2$ gives about 368 keV for $v_{\max} = 776$ km/s and about 385 keV for $v_{\max} = 794$ km/s. The latter value was taken as 544+250 km/s. Both are consistent with the tool's transition.
+
+Taken at face value, a literature bound of $\delta > 566$ keV places every solar-capture-allowed thermal higgsino beyond LZ's inelastic reach under this halo cutoff.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+\toprule
+$\delta$ (keV) & $N_{\rm LZ}$ & peak $E_R$ (keV) & $v_{\min}(248\,\mathrm{keV})$ (km/s)\\
+\midrule
+300 & 744.6 & 270.0 & 701\\
+350 & 1.97 & 315.1 & 762\\
+355 & 0.494 & 319.6 & 768\\
+360 & 0.085 & 324.1 & 774\\
+365 & 0.009 & 328.6 & 781\\
+370 & 0.00 & 333.1 & 787\\
+375 & 0.00 & 337.6 & 793\\
+380 & 0.00 & 342.1 & 799\\
+500 & 0.00 & 450.1 & 945\\
+566 & 0.00 & 509.5 & 1025\\
+700 & 0.00 & 630.1 & 1189\\
+\bottomrule
+\end{tabular}
+\caption{Expected LZ extended-window events at $m_\chi=1100$ GeV from \texttt{predict\_recoil}, with $\sigma_n = 7.43\times10^{-39}$ cm$^2$ and a hard cutoff at 776 km/s.}
+\label{tab:recoil}
+\end{table}
+
+At the event's recoil energy of 248 keV (1100 GeV, 350 keV), the annual-modulation tool gives the following:
+\begin{itemize}
+\item a fractional amplitude of 0.985;
+\item a peak on June 2 and a trough on December 2;
+\item 22.5\% of the peak rate on the event date of September 1.
+\end{itemize}
+
+\subsection{The one-event splitting window and halo sensitivity}
+Log-linear interpolation of Table~\ref{tab:recoil} gives $\delta(N=1) = 352.5$ keV and $\delta(N=0.3) = 356.4$ keV. The window is therefore about 4 keV wide, and $N$ drops by a factor of about 4--6 per 5 keV. The 248 keV event becomes kinematically inaccessible between 360 and 365 keV.
+
+At the tool's thermal mass of 1159 GeV, $\delta = 360$ keV gives $N = 0.135$, compared with 0.085 at 1100 GeV. This shifts $\delta(N=1)$ up by about 1--2 keV.
+
+The zero counts at $\delta \geq 370$ keV come from the hard 776 km/s cutoff, not from the energy window. Because the tool has no halo inputs, the requested test of halo sensitivity could not be run. An analytic rescaling by $(794/776)^2 = 1.047$ would move the edge to about 385 keV and the window to about 369--373 keV. This is a heuristic, because near the edge the count depends on how the velocity tail is populated.
+
+Against the literature fits:
+\begin{itemize}
+\item The 350 keV of arXiv:2609.01504 agrees with the tool directly.
+\item The 377 keV of arXiv:2609.02608 is offset by 24.5 keV. About 17 keV of this would be accounted for if that work used a 794 km/s cutoff, which is an assumption rather than a sourced fact. The remaining 5--8 keV is unexplained and was not tested.
+\item The 339 keV of arXiv:2609.26698 is a normalisation-free sideband optimum. With the tool's normalisation it would imply hundreds of events, so the comparison is not like-for-like.
+\end{itemize}
+
+\subsection{Parameter scan and constraint checker}
+The $17\times17$ scan reported:
+\begin{itemize}
+\item 144 of 289 points ``viable'';
+\item 9 points predicting 0.3--5 LZ events;
+\item a best-fit point at $m_\chi = 988$ GeV, $\delta = 350$ keV.
+\end{itemize}
+These numbers are not physically meaningful, for three reasons. The viability test uses the faulty Planck flag. The best fit sits where the tool's own relic curve is under-abundant ($\Omega h^2 \approx 0.087$ by the assistant's interpolation). And the indirect-detection model is inappropriate for a higgsino, as described next.
+
+The constraint checker rated all four tested points VIABLE: (1100 GeV; 400, 566, 1000 keV) and (1159 GeV; 400 keV). Each had $N_{\rm LZ} = 0.00$ and no Fermi-LAT or CMB exclusion. Its present-day cross section, $\sigma v \approx 6.7\times10^{-42}$--$5.2\times10^{-41}\,\mathrm{cm^3\,s^{-1}}$, is labelled ``p-wave + mass-splitting suppressed''. The comparison values were a Fermi limit of $2.3\times10^{-25}$ and a CMB $p_{\rm ann}$ limit of $3.2\times10^{-28}$.
+
+The assistant judged this treatment wrong for an s-wave, Sommerfeld-enhanced higgsino with $\sigma v$ of order $10^{-26}\,\mathrm{cm^3\,s^{-1}}$. The finding built on these checker outputs was marked contested.
+
+\subsection{Elastic scattering and the neutrino fog (literature only)}
+The XENONnT results available from abstracts are:
+\begin{itemize}
+\item \textbf{3.1 tonne-year search} (arXiv:2502.18005): a minimum spin-independent limit of $1.7\times10^{-47}$ cm$^2$ at 30 GeV (90\% CL), with a best median sensitivity of $1.4\times10^{-47}$ cm$^2$ at 41 GeV;
+\item \textbf{earlier 1.09 tonne-year search} (arXiv:2303.14729): $2.58\times10^{-47}$ cm$^2$ at 28 GeV.
+\end{itemize}
+Neither abstract quotes the limit at 1 TeV. The value of about $10^{-45}$ cm$^2$ near 1 TeV is the assistant's extrapolation from linear high-mass scaling, and the finding was contested.
+
+According to the assistant's survey, the XLZD design study (arXiv:2410.17137) reaches the neutrino fog, with $3\sigma$ evidence potential down to $3\times10^{-49}$ cm$^2$ at 40 GeV. arXiv:2607.20588 states that NLO corrections lower the pure-higgsino nucleon cross section ``below the neutrino floor'', but gives no number. The loop-level target of about $10^{-48}$--$10^{-49}$ cm$^2$ therefore remained unsourced. The assistant also attributed to arXiv:2606.31013 the point that higgsino--gaugino mixing raises the elastic rate.
+
+\subsection{Indirect detection (literature only)}
+The abstracts indicate that current gamma-ray searches do not exclude the 1.0--1.2 TeV thermal higgsino, with the conclusion depending on the halo profile:
+\begin{itemize}
+\item \textbf{Fermi-LAT.} A 15-year Fermi-LAT line-like search, arXiv:2405.13104 (Rodd, Safdi, Xu), comes ``within an order one factor'' of the sensitivity needed for some Milky Way analogue profiles. In that analysis H.E.S.S. is subleading.
+\item \textbf{IACTs.} arXiv:2210.03140 (Montanari, Moulin, Rodd) finds the higgsino ``out of reach by at least a factor of a few'' even at the ultimate sensitivity of current IACTs.
+\item \textbf{H.E.S.S. Inner Galaxy Survey.} The 2026-dated survey, arXiv:2608.07234, quotes a line limit of $2.3\times10^{-28}$ cm$^3$/s at 1 TeV for an Einasto profile. It states that thermal higgsino dark matter is probed for the first time, without saying whether it is excluded.
+\item \textbf{MAGIC.} No MAGIC-specific higgsino limit was found.
+\end{itemize}
+
+For future tests:
+\begin{itemize}
+\item arXiv:2008.00692 (Rinchiuso et al.) finds that CTA could be the first experiment sensitive to the thermal higgsino;
+\item arXiv:2405.13104 projects detection by CTA and SWGO ``at high significance'' for all but the most pessimistic profiles;
+\item arXiv:2506.08084 projects that CTAO-North could reach the required sensitivity within a decade.
+\end{itemize}
+arXiv:2609.01590 also notes that the associated line is within CTAO's projected reach. Both indirect-detection findings were marked contested and rest on abstracts alone; the download of arXiv:2405.13104 failed.
+
+\section{Discussion}
+The quantitative picture from the tools is internally coherent in one respect. The server's inelastic recoil model puts the xenon kinematic edge at the thermal mass near $\delta \approx 368$ keV, which reproduces the hand estimate $\mu v_{\max}^2/2$. The edge depends weakly on $m_\chi$ across 1.0--1.2 TeV.
+
+Combined with the abstract-level solar-capture bound $\delta > 566$ keV, this gives the session's main qualitative conclusion. Higgsino splittings that could produce the LZ 248 keV event, about 350 keV under the Standard Halo Model, are in conflict with IceCube. Splittings allowed by solar capture leave the inelastic channel inaccessible in xenon, and the remaining elastic rate is described as lying below the neutrino floor. The full-abundance thermal higgsino is therefore not excluded, but it is effectively invisible to current xenon searches. Its interpretation as the source of the LZ event is disfavoured.
+
+How tightly the one-event window is fixed (about 4 keV wide) depends on a hard velocity cutoff. That cutoff could not be varied, so the halo sensitivity emphasised in arXiv:2609.01504 remains untested numerically.
+
+The limitations are substantial. The relic module is a calibrated toy, so its 1158 GeV crossing does not test the literature's Sommerfeld/coannihilation result. The relic pass flag, the constraint checker's verdicts and its p-wave indirect-detection model were all judged unreliable. As a result, the scan's ``144 viable points'' and best fit at 988 GeV should not be read as physics.
+
+On the literature side, both baseline and verification directions ended blocked. No quote could be validated with \texttt{cite}. The Planck 2018 value $\Omega_c h^2 = 0.120\pm0.001$ (arXiv:1807.06209) was never retrieved; the comparison used the server's built-in $0.12\pm0.0012$. The XENONnT limit at 1 TeV and the loop-level higgsino cross section were not sourced. Six literature findings were contested by the critic, and the critic's verdict on the final report was ``revise''.
+
+The record also contains an inconsistency. The assistant's initial survey summary stated that no relic densities had been computed and that no inelastic-DM tools were available, although relic and recoil calculations were in fact performed with the server in the same turn.
+
+\section{Conclusions}
+Within the session's limits, five results were established.
+\begin{enumerate}
+\item The inelastic-DM server's toy higgsino relic curve crosses $\Omega h^2 = 0.120$ at $m_\chi \approx 1158\pm6$ GeV. This is consistent with the 1.08--1.2 TeV literature range, but only by construction of the tool's calibration.
+\item In the server's model, a 1.1 TeV higgsino produces 744.6, 1.97 and 0 LZ events at $\delta = 300$, 350 and $\geq370$ keV respectively.
+\item The kinematic edge lies at about 368 keV for a 776 km/s cutoff, or about 385 keV for 794 km/s.
+\item The 1-to-0.3-event window is $\delta \approx 352.5$--$356.4$ keV.
+\item Abstract-level literature, not independently verified, places solar-capture-allowed higgsinos ($\delta > 566$ keV) outside xenon's inelastic reach and below the neutrino floor elastically. It finds them not excluded by current gamma-ray searches, with CTA/CTAO as the main future test.
+\end{enumerate}
+
+Several items remained open:
+\begin{itemize}
+\item verbatim retrieval and citation of the Planck 2018 abundance and of the 2026 literature once the arXiv API is available;
+\item a sourced XENONnT/LZ spin-independent limit at 1 TeV and a sourced loop-level higgsino cross section relative to the neutrino fog;
+\item a Sommerfeld- and coannihilation-inclusive relic calculation;
+\item a test of the LZ window with a variable halo velocity distribution, to explain the remaining 5--8 keV offset from the 377 keV fit;
+\item a corrected s-wave indirect-detection treatment in the constraint checker.
+\end{itemize}
+
+\section*{References}
+\begin{itemize}
+\item arXiv:1803.11210 --- Is natural higgsino-only dark matter excluded? (H. Baer, V. D. Barger, D. Sengupta, X. R. Tata)
+\item arXiv:1807.06209 --- Planck 2018 (referenced; not retrieved)
+\item arXiv:2008.00692 --- Prospects for detecting heavy WIMP dark matter with the Cherenkov Telescope Array: The Wino and Higgsino (L. Rinchiuso, O. Macías, E. Moulin, N. L. Rodd, T. R. Slatyer)
+\item arXiv:2210.03140 --- Montanari, Moulin, Rodd, PRD 107, 043028
+\item arXiv:2303.14729 --- First Dark Matter Search with Nuclear Recoils from the XENONnT Experiment (E. Aprile et al.)
+\item arXiv:2403.19598 --- S. P. Martin, PRD 109, 095045
+\item arXiv:2405.13104 --- Rodd, Safdi, Xu, PRD 110, 043003
+\item arXiv:2410.02723
+\item arXiv:2410.15733 --- Fukuda, Li, Moroi, Niki, JHEP06(2025)091
+\item arXiv:2410.17137 --- XLZD Design Book
+\item arXiv:2502.18005 --- XENONnT 3.1 tonne-year WIMP search
+\item arXiv:2506.08084 --- PoS ICRC2025 (CTAO-North projection)
+\item arXiv:2606.31013
+\item arXiv:2607.20588 --- Bisal et al.
+\item arXiv:2608.07234 --- Search for Gamma-Ray Spectral Lines from Dark Matter Annihilation with the H.E.S.S. Inner Galaxy Survey (F. Aharonian et al.)
+\item arXiv:2609.01504 --- Higgsino Above the Sea of Fog (J. Fan, M. Reece)
+\item arXiv:2609.01590 --- TeV Higgsino Dark Matter from LZ Nuclear Recoil to Fermi-LAT Gamma Rays (L. Wu, Y. Zhang, B. Zhu)
+\item arXiv:2609.02608 --- Dark Matter at the Kinematic Edge: Interpreting the 248 keV LZ Nuclear-Recoil Candidate (M. Di Mauro)
+\item arXiv:2609.02775 --- Strong Constraints on Higgsino Dark Matter from Solar Capture (M. Pospelov, H. Ramani)
+\item arXiv:2609.02823 --- Search for dark matter particle interactions in an extended nuclear recoil energy window with the LUX-ZEPLIN (LZ) experiment (D. S. Akerib et al.)
+\item arXiv:2609.06760
+\item arXiv:2609.07807
+\item arXiv:2609.09136 --- A Warped Extra Dimensional Candidate for the LZ 248 keV Event (V. S. H. Lee, L. Randall)
+\item arXiv:2609.09385
+\item arXiv:2609.11833
+\item arXiv:2609.15321
+\item arXiv:2609.26698
+\item arXiv:2610.00226 --- Thermal Higgsino Dark Matter in GmSUGRA for the LZ Event and Solar-Neutrino Constraint (I. Khan, W. Ahmed, T. Li, S. Raza, et al.)
+\end{itemize}
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/ramp-combo-higgsino-dd}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}ramp-combo-higgsino-dd}}.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}

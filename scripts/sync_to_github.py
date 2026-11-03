@@ -30,6 +30,17 @@ def sh(cmd, cwd=None, capture=True, check=True):
 
 
 def main():
+    # Rebuild the flat papers/ view so GitHub has one browsable folder
+    try:
+        import importlib.util, pathlib
+        spec = importlib.util.spec_from_file_location("build_papers", str(BASE / "scripts/build_papers.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mod.main()
+        print("[sync] papers/ rebuilt")
+    except Exception as e:
+        print(f"[sync] WARNING: build_papers failed: {e} (continuing)")
+
     if not (BASE / ".git").exists():
         print("[sync] initializing repo")
         sh(["git", "init"])

@@ -1,0 +1,352 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Baryonic Suppression of the Matter Power Spectrum: A Literature-Based Survey Without an Emulator Evaluation}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-research-baryonic-pk}
+\date{2026-10-17}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+We report a research session that set out to survey recent work on baryonic suppression of the matter power spectrum, to predict the ratio $S(k)=P_{\rm hydro}/P_{\rm DMO}$ at $z=0$ for two feedback parameter points with a hydrodynamics emulator, to explain the AGN-feedback physics, and to assess the consequences for weak-lensing cosmology. The emulator part could not be done. The session's tool catalogue contained no emulator. BCemu and pyspk could not be installed. Published figures could be saved but not read numerically. No value of $S(k)$ in this report was therefore computed; every number is quoted from the text of a published paper.
+
+From those texts, the $z=0$ bracket runs from essentially no suppression (Astrid) and $<15\%$ at $k\sim10\,h\,{\rm Mpc}^{-1}$ (Horizon-AGN), through OWLS AGN (1\% at $k\approx0.3$, 10\% at $k\approx1$, 30\% at $k\approx10\,h\,{\rm Mpc}^{-1}$), to FLAMINGO $f_{\rm gas}-8\sigma$ thermal and jet variants. Those variants are stated to resemble cosmo-OWLS with $\log\Delta T_{\rm AGN}=8.3$ and $8.5$, but no amplitudes were quoted for them. An X-ray-calibrated BCemu fit gives a maximum suppression of 21--28\% at $k\sim7\,h\,{\rm Mpc}^{-1}$ (68\% CL).
+
+For weak lensing, reconciling cosmic shear with Planck $\Lambda$CDM requires suppression stronger than most simulations: $A_{\rm mod}=0.69\pm0.06$ for KiDS-1000 and $A_{\rm mod}=0.858\pm0.052$ for DES Y3. FLAMINGO concludes that baryonic effects cannot remove the $S_8$ tension. Several earlier-wave findings remained contested by the session's critic and are flagged as such.
+\end{abstract}
+
+\section{Introduction}
+The user posed a single request with four parts:
+\begin{enumerate}
+\item survey recent work on baryonic suppression of the matter power spectrum;
+\item use hydrodynamics-emulator tools to predict the ratio $S(k)=P_{\rm hydro}/P_{\rm DMO}$ at $z=0$ for a couple of parameter points;
+\item explain the AGN-feedback physics behind the suppression;
+\item assess the impact on weak-lensing (WL) cosmology.
+\end{enumerate}
+
+The assistant organised the work into six lines of investigation:
+\begin{itemize}
+\item obtaining $S(k)$ at $z=0$ over $k=0.1$--$10\,h\,{\rm Mpc}^{-1}$ for a weak and a strong feedback setting, giving the depth and position of the minimum and the $k$ at which suppression first reaches 1\%;
+\item explaining the feedback physics and bracketing simulation predictions;
+\item assessing WL impact: the change in $C_\ell$ at $\ell\sim500$--$5000$, the $S_8$ bias from ignoring feedback, whether feedback can resolve the $S_8$ tension, and joint WL+SZ constraints;
+\item a figure-based stand-in for the missing emulator evaluation;
+\item verbatim quotes for the strong end of the simulation bracket;
+\item verbatim support for the WL numbers.
+\end{itemize}
+The two follow-up directions on the figure-based stand-in and the strong end of the bracket ended blocked. This report covers all of these, and states plainly where the session fell short.
+
+\section{Methods}
+\paragraph{Execution environment.} Work ran under local dispatch. Inventory calls showed empty input-file, agent-file and dataset lists. The only job tool, \texttt{run\_test\_job}, was exercised with $n=1000$ and seed 1. It returned normal-distribution samples (mean $-0.0132$, standard deviation $1.003$), computed locally, and has no physics capability. No emulator (BCemu, BACCO, SP(k)/pyspk or the FLAMINGO Gaussian-process emulator) was available, and none was installed.
+
+\paragraph{Literature search.} The abstract-search tool \texttt{search\_arxiv\_abstracts} failed with HTTP 429 (rate limiting) on all three queries. Searches were then made with \texttt{search\_arxiv}, backed by OpenAlex or the arXiv API. Queries covered:
+\begin{itemize}
+\item AGN-feedback suppression;
+\item baryonic emulators;
+\item cosmic shear and the $S_8$ tension;
+\item kSZ combined with WL;
+\item the SP(k) baryon-fraction relation;
+\item BACCO baryonification;
+\item the non-linear solution to $S_8$;
+\item the OWLS power-spectrum study.
+\end{itemize}
+
+\paragraph{Full-text reading.} Full texts were downloaded for arXiv:2206.11794, 1104.1174, 2305.09827, 2108.08863, 1906.00968, 2309.07959, 2410.17109, 2309.06479, 2404.06098, 1801.08559, 2403.12967 and 2605.04176. Selected character ranges were read with \texttt{read\_arxiv\_chunk}. Abstract metadata was retrieved for arXiv:2109.04458, 2203.07128 and 1105.1075.
+
+\paragraph{Figures.} Figures from arXiv:2108.08863 and arXiv:2305.09710 were saved as PNG files with captions using \texttt{get\_paper\_figures}. No tool could view or digitise images, so no number in this report was read from a figure.
+
+\paragraph{Research board and critic.} Findings, dead ends and critic verdicts were logged on a research board. The critic's verdicts were:
+\begin{itemize}
+\item the initial plan: ``revise'';
+\item wave 1: ``continue'', with findings 1--13 marked contested because the stored evidence excerpts showed mainly file headers or abstracts;
+\item wave 2: ``continue'';
+\item the first draft report: ``revise''.
+\end{itemize}
+The supplement contains the full tool-call log.
+
+\section{Results}
+\subsection{Emulator prediction of $S(k)$: not performed}
+No $P_{\rm hydro}/P_{\rm DMO}$ was computed for any parameter point. The board records this as a dead end, with three reasons:
+\begin{itemize}
+\item no emulator tool existed in the catalogue;
+\item the files and datasets were empty;
+\item \texttt{run\_test\_job} only draws random samples.
+\end{itemize}
+
+A planned stand-in was to read $S_{\min}$, $k_{\min}$, $k(1\%)$, $S(k=1)$ and $S(k=5)$ off published emulator curves. The intended points were a weak and a strong BCemu $\log M_c$, or SP(k) $f_b$ at $M_{500}\sim10^{14}$. This was also blocked because images could not be inspected. The papers' text gives numbers only for the X-ray-fitted band, not for named low- or high-$M_c$ points.
+
+Consequently:
+\begin{itemize}
+\item no named weak/strong parameter-point table exists;
+\item no $S(k=1)$ or $S(k=5)$ value was obtained for a named emulator point;
+\item the SP(k) $f_b$--$S$ relation was not reproduced.
+\end{itemize}
+
+\subsection{Published $z=0$ suppression: the simulation bracket}
+Table~\ref{tab:bracket} collects the quoted $z=0$ behaviour, ordered weak to strong.
+
+\begin{table}
+\centering
+\begin{tabular}{llll}
+\toprule
+Model & Quoted $z=0$ behaviour & $k(1\%)$ [$h\,{\rm Mpc}^{-1}$] & $S$ / minimum \\
+\midrule
+Astrid (arXiv:2605.04176) & no significant suppression & not quoted & $S(1)\gtrsim1$; no $S_{\min}<1$ \\
+Horizon-AGN (arXiv:1801.08559) & $<15\%$ at $k\simeq10$ & not quoted & $S(10)>0.85$ \\
+FLAMINGO fiducial (arXiv:2410.17109) & departs from unity at $k\approx0.1$ & $\sim0.1$ & $k_{\min}=10$; amplitude not quoted \\
+OWLS AGN (arXiv:1104.1174) & 1\%, 10\%, 30\% at $k\approx0.3,1,10$ & $\sim0.3$ & $S(1)\approx0.90$, $S(10)\approx0.70$ \\
+FLAMINGO $f_{\rm gas}-8\sigma$ thermal/jet & resemble cosmo-OWLS 8.3/8.5 & not quoted & $k_{\min}=8$--$10$ (thermal) \\
+\bottomrule
+\end{tabular}
+\caption{Quoted $z=0$ baryonic response from paper texts. No entry is a computation from this session. The ordering of the middle rows is provisional.}
+\label{tab:bracket}
+\end{table}
+
+\paragraph{Astrid.} Astrid (arXiv:2605.04176) states verbatim: ``We find no significant suppression at $z = 0$ and mild suppression at $z = 0.2$, weaker than in other state-of-the-art simulations.'' At $z=0.2$ mild suppression extends to $k\sim1\,h\,{\rm Mpc}^{-1}$, before the ratio rises back above unity at $z=0$.
+
+The same paper reports two effects of black-hole dynamics:
+\begin{itemize}
+\item black-hole repositioning boosts kinetic AGN feedback, by a factor of 2 at $z=1.5$;
+\item at $z=0$ the repositioning run lies about 10\% below the dynamical-friction run around $k=20\,h\,{\rm Mpc}^{-1}$.
+\end{itemize}
+
+\paragraph{Horizon-AGN.} Horizon-AGN (arXiv:1801.08559) gives $<15\%$ suppression at $k\simeq10\,h\,{\rm Mpc}^{-1}$ and an enhancement of a factor of a few at smaller scales. Its redshift evolution over $z=0$--5 is non-monotonic. This finding remained contested.
+
+\paragraph{FLAMINGO.} The FLAMINGO response paper (arXiv:2410.17109) gives several verbatim statements.
+\begin{itemize}
+\item The fiducial minimum ``moves from $k = 6\,h\,{\rm Mpc}^{-1}$ at $z = 2$ to $k = 10\,h\,{\rm Mpc}^{-1}$ at $z = 0$''.
+\item For the thermal gas-fraction variants, ``the minimum stays in the range $k = 8$ to $10\,h\,{\rm Mpc}^{-1}$ with a weak dependence on $f_{\rm gas}\pm N\sigma$''.
+\item Below $f_{\rm gas}-8\sigma$ the response ``reaches a saturation value''.
+\item At fixed $f_{\rm gas}$ the jet model gives a larger response than purely thermal AGN.
+\end{itemize}
+The response amplitudes of the strong variants appear only in that paper's Figs.~5, 6, 11 and 13, which were not obtained or read. This is a recorded dead end.
+
+\paragraph{OWLS AGN.} OWLS AGN (arXiv:1104.1174) is quoted verbatim: a decrease in power ``ranging, at $z = 0$, from 1\% at $k \approx 0.3\,h\,{\rm Mpc}^{-1}$ to 10\% at $k \approx 1\,h\,{\rm Mpc}^{-1}$ and to 30\% at $k \approx 10\,h\,{\rm Mpc}^{-1}$''. Cooling is dominant only for $k\gtrsim70\,h\,{\rm Mpc}^{-1}$.
+
+A first-wave finding labelled OWLS the ``strong, fiducial-AGN reference''. That finding was contested and later relabelled ``intermediate''. No quoted FLAMINGO-fiducial amplitude supports placing OWLS above FLAMINGO fiducial, so the ordering is provisional.
+
+\subsection{X-ray-calibrated BCemu constraint}
+Giri and Schneider (arXiv:2108.08863) fit the seven-parameter BCemu baryonification model to X-ray group and cluster gas fractions. The fit assumes Planck cosmology and hydrostatic bias $b_{\rm hse}=0.26\pm0.07$. The posterior lies near $\log_{10}M_c\sim12.6$. It prefers low $\delta$, meaning a slowly falling gas profile with substantial gas beyond the virial radius.
+
+The paper states: ``At the 68 percent confidence level, the baryonic power suppression $\mathcal{S}$ is predicted to exceed the percent level between $k\sim0.1$ and $0.4\,h$/Mpc growing to a maximum 21--28 percent at around $k\sim7\,h$/Mpc.'' This corresponds to $S_{\min}\approx0.72$--$0.79$; the abstract rounds the range to 20--28\%. At 99\% CL:
+\begin{itemize}
+\item $k(1\%)$ lies in 0.1--1.3 $h\,{\rm Mpc}^{-1}$;
+\item the maximum is 14--38\% ($S_{\min}\approx0.62$--$0.86$), reached beyond $k\sim7$.
+\end{itemize}
+
+Against this band:
+\begin{itemize}
+\item only cosmo-OWLS 8.5 is fully consistent;
+\item cosmo-OWLS 8.0, BAHAMAS and OWLS lie between the 68\% and 99\% regions;
+\item Illustris-TNG and Horizon-AGN fall outside the 99\% region, because their suppression is shifted to higher $k$.
+\end{itemize}
+
+The emulator covers the following ranges, with $1\sigma$ emulation error below 1\% (Figure~\ref{fig:1}):
+\begin{itemize}
+\item $\log_{10}M_c\in[11,15]$;
+\item $\theta_{\rm ej}\in[2,8]$;
+\item $\delta\in[3,11]$;
+\item $\eta\in[0.05,0.4]$;
+\item $f_b\in[0.10,0.25]$;
+\item $k\sim0.03$--$12.5\,h\,{\rm Mpc}^{-1}$.
+\end{itemize}
+
+
+
+
+
+
+Figure~\ref{fig:1}, from arXiv:2108.08863, shows the emulator's percentage error on $\mathcal{S}(k)$ over its test set at several redshifts, with $1\sigma$ and $2\sigma$ bands. It supports the claim that BCemu would have been accurate enough for the requested parameter-point predictions, had it been runnable.
+
+
+
+
+
+
+Figure~\ref{fig:2} (arXiv:2108.08863) compares $\mathcal{S}=P/P_{\rm N\text{-}body}$ from the hydrodynamical simulations with best-fitting baryonification curves at three redshifts. The caption states agreement better than 1\% at $z<2$, degrading at $k\gtrsim8\,h\,{\rm Mpc}^{-1}$ at $z=2$. This underpins the use of baryonification as a stand-in for simulations.
+
+
+
+
+
+
+Figure~\ref{fig:3} is one panel of that paper's Figure~3. Here the baryonification model is fitted only to the simulated $f_{\rm gas,500}$ and $f_{\rm star,500}$ and then predicts $\mathcal{S}(k)$, which is compared with cosmo-OWLS, BAHAMAS, OWLS, Illustris-TNG and Horizon-AGN. It illustrates the link between halo gas content and power suppression.
+
+
+
+
+
+
+Figure~\ref{fig:21} (arXiv:2108.08863, their Fig.~8) shows the X-ray constraints on $f_{\rm gas}$, $f_{\rm star}$ and $\mathcal{S}(k)$, with 68\% and 99\% credible regions. It is the source of the 21--28\% band. The values above come from the text, not from this figure.
+
+\subsection{Physics of the suppression}
+The physical account rests on abstract-level quotes. The critic kept these findings contested because the stored excerpts largely showed file headers.
+
+\paragraph{Gas ejection.} Feedback heats gas and ejects it to large distances, which is needed to match X-ray groups (arXiv:1906.00968). AGN feedback moves matter from inside $r_{500c}$ to $r_{200m}$ and possibly beyond in haloes with $M_{500c}\gtrsim10^{13}\,M_\odot/h$ (arXiv:2309.06479).
+
+\paragraph{Halo-mass dependence.} Group-sized haloes ($10^{14\pm0.25}\,M_\odot/h$) dominate the power at $k\lesssim3\,h\,{\rm Mpc}^{-1}$; at smaller scales lower-mass haloes collectively take over. A lower AGN heating temperature damps the effect at $k\gtrsim4\,h\,{\rm Mpc}^{-1}$ for $M_{500c}\ge10^{13.25}$ (arXiv:2309.06479). An IllustrisTNG halo-mass decomposition (arXiv:2511.10634) was identified at the survey stage, but its full text was not read.
+
+\paragraph{Baryon fraction as the controlling variable.} The mean group baryon fraction alone predicts the $z=0$ suppression to 1\% for $k<1\,h\,{\rm Mpc}^{-1}$. Differences in this fraction explain the disagreement between simulations (arXiv:1906.00968, 92 OWLS/cosmo-OWLS/BAHAMAS spectra). A parameter-free model based on halo baryon fractions is accurate at the percent level to $k\sim10\,h\,{\rm Mpc}^{-1}$ (arXiv:2309.06479).
+
+In contrast, FLAMINGO (arXiv:2410.17109, read in full text) reports that SP(k), fed the exact FLAMINGO baryon fractions, predicts a stronger response at $k\approx1$ and a weaker one at $k>3\,h\,{\rm Mpc}^{-1}$. The authors conclude that the halo baryon fraction ``is not a sufficient condition'' to obtain the response. The same paper finds that lower cluster gas fractions strengthen the response, and that lower stellar mass at fixed gas fraction strengthens it for $k>1\,h\,{\rm Mpc}^{-1}$.
+
+\paragraph{Cooling and cosmology coupling.} Cooling raises power only at $k\gtrsim70\,h\,{\rm Mpc}^{-1}$ in OWLS. Feedback couples to cosmology via $f_b/(\Omega_m\sigma_8)^{1/4}$, and combined baryonic and non-baryonic suppression exceeds the sum of its parts (arXiv:2403.12967, contested).
+
+\paragraph{SP(k) figures.} The SP(k) figures (arXiv:2305.09710) were saved, but the paper's text was not read, so only their captions are reported here.
+
+
+
+
+
+
+Figure~\ref{fig:23} shows the fractional baryonic impact for 400 models at $z=0.125$, colour-coded by the total baryon fraction at $M_{200c}=10^{14}\,M_\odot$. It is the relation the session intended, but failed, to use for a parameter-point evaluation.
+
+
+
+
+
+
+Figure~\ref{fig:24} gives the Spearman correlation between suppression and halo baryon fraction as a function of $k$. Per its caption, progressively lower halo masses correlate best at $k\gtrsim4\,h\,{\rm Mpc}^{-1}$, consistent with the halo-mass picture above.
+
+
+
+
+
+
+Figure~\ref{fig:25} shows the SP(k) parameterisation of suppression versus scaled baryon fraction $\tilde f_b$, with fit functions $\lambda(k,z)$, $\mu(k,z)$ and $\nu(k,z)$.
+
+
+
+
+
+
+Figure~\ref{fig:26} compares the model with eight randomly selected simulations.
+
+\subsection{Weak-lensing impact}
+\paragraph{KiDS-1000.} Amon and Efstathiou (arXiv:2206.11794) write $P=P_L+A_{\rm mod}(P_{\rm NL}-P_L)$. With the cosmology fixed to Planck TTTEEE $\Lambda$CDM, the KiDS-1000 $\xi_\pm$ fit gives ``a mean $A_{\rm mod} = 0.69 \pm 0.06$''. The fit has $\chi^2_{\min}=265.5$ for 225 data points. The authors note that this uncertainty is underestimated because it neglects the Planck cosmology error.
+
+With HMCode2020 and a broad prior the same fit requires $\Theta_{\rm AGN}=9.17^{+0.2}_{-0.8}$. This lies well outside the BAHAMAS-calibrated range of 7.6--8.0. The paper calls the required suppression ``more extreme than predicted by most of the hydrodynamic simulations''.
+
+From their Table~1, the KiDS $S_8$ is $0.755\pm0.016$ with feedback off and $0.774\pm0.021$ with the fiducial $\Theta_{\rm AGN}$ prior. That is a shift of about 0.02, roughly $1\sigma$, from ignoring baryons.
+
+A first-wave finding quoted the underlying tensions as KiDS shear $S_8=0.759^{+0.024}_{-0.021}$ and DES Y3 $S_8=0.772^{+0.018}_{-0.017}$ against Planck $0.829\pm0.012$. Those correspond to about 9\% ($2.4$--$2.7\sigma$) and 7\% ($2.3$--$2.6\sigma$) low. That finding remained contested.
+
+\paragraph{DES Y3.} Preston, Amon and Efstathiou (arXiv:2305.09827), with a Planck prior and no scale cuts, find:
+\begin{itemize}
+\item DES Y3: $A_{\rm mod}=0.858\pm0.052$, $2.7\sigma$ from unity;
+\item KiDS re-fit with the same prior: $A_{\rm mod}=0.748\pm0.072$;
+\item a naive combination: $0.820\pm0.042$, so suppression is required at about $4\sigma$.
+\end{itemize}
+Over $k\lesssim1\,h\,{\rm Mpc}^{-1}$, BAHAMAS with $\log_{10}(\Delta T_{\rm heat}/{\rm K})=8.0$ ``is well approximated by $A_{\rm mod} = 0.9$''. The required suppression is stronger, closer to C-OWLS 8.5/8.7, and must extend to $k\sim0.2\,h\,{\rm Mpc}^{-1}$. In their Table~2, using all scales without feedback gives DES $S_8=0.793\pm0.012$. The accompanying significance was truncated in the record and is not reproduced here.
+
+\paragraph{FLAMINGO $S_8$ analysis.} FLAMINGO (arXiv:2309.07959) concludes that baryonic effects, including its extreme variants, are not large enough to remove the $S_8$ tension. Current shear is only marginally sensitive to baryons, and CMB lensing agrees with Planck. The strongest tension comes from tSZ $y$--$y$, then shear$\times$tSZ, then shear--shear. This finding remained contested and was not re-read in the second wave.
+
+FLAMINGO arXiv:2410.17109 adds three verbatim statements:
+\begin{itemize}
+\item both $f_{\rm gas}-8\sigma$ models lie within the ranges demanded by Bigwood et al.\ 2024;
+\item but they ``display gas fractions that are in strong tension'' with X-ray plus WL inferred gas fractions;
+\item the Amon \& Efstathiou response, and to a lesser extent the Preston et al.\ response, ``are out of reach of our emulator''.
+\end{itemize}
+
+\paragraph{Joint WL+SZ analyses.} DES Y3 WL combined with ACT DR5 kSZ (arXiv:2404.06098, BCEmu) gives $S_8=0.823^{+0.019}_{-0.020}$, with feedback more extreme than most simulations. At $M_{500}\sim10^{13}\,M_\odot$ the inferred $f_b$ is about $1.4\sigma$ below HSC-XXL X-ray data. At about $4\times10^{13}\,M_\odot$, FLAMINGO, MillenniumTNG and FABLE predict $f_b$ higher by 1.5, 3.1 and $1.4\sigma$ respectively, and BAHAMAS agrees best. This finding is contested.
+
+Three further results come from abstracts only and are of medium confidence and contested:
+\begin{itemize}
+\item KiDS$\times$tSZ (arXiv:2109.04458) prefers strong feedback alone, with an amplitude about $2\sigma$ low; adding shear tightens $S_8$ by 40\%.
+\item DES Y3 harmonic-space shear (arXiv:2203.07128) gives $S_8=0.793^{+0.038}_{-0.025}$, and extending to $k_{\max}=5\,h\,{\rm Mpc}^{-1}$ leaves $S_8$ essentially unchanged.
+\item An OWLS-based forecast (arXiv:1105.1075) finds a $\sim40\%$ bias in $w_0$ for a Euclid-like survey if baryons are ignored.
+\end{itemize}
+
+No fractional $C_\ell$ change at $\ell\sim500$--$5000$, and no numerical $S(k)$ at $k=0.2$--$1$ for the $A_{\rm mod}$ solution, was found in the text read. The papers work in $\xi_\pm$, and the suppression is shown only graphically. This is a recorded dead end.
+
+\section{Discussion}
+The central limitation is that the user's request for emulator predictions was not met. All quantitative statements about $S(k)$ are transcriptions of published text. They are not tied to defined parameter points, except the X-ray-fitted BCemu posterior at $\log_{10}M_c\sim12.6$. The figure-based fallback failed because no tool could inspect images.
+
+The quoted literature does give a consistent qualitative picture. AGN-driven gas ejection from group-scale haloes produces percent-level suppression from $k\sim0.1$--$0.3\,h\,{\rm Mpc}^{-1}$, deepening to tens of per cent near $k\sim7$--$10\,h\,{\rm Mpc}^{-1}$. Its amplitude is controlled mainly by group gas or baryon fractions.
+
+Several tensions emerged in the session.
+\begin{itemize}
+\item FLAMINGO's direct test indicates that the baryon fraction alone does not fix the response, which qualifies the arXiv:1906.00968 and SP(k) claims.
+\item The simulations that reproduce the WL+kSZ preference (FLAMINGO $f_{\rm gas}-8\sigma$) conflict with X-ray gas fractions.
+\item The $A_{\rm mod}$ values needed to reconcile shear with Planck exceed what FLAMINGO says it can produce.
+\end{itemize}
+The resulting picture is that baryons shift $S_8$ at roughly the $1\sigma$ level in KiDS and DES, but do not plausibly close the tension. This is the FLAMINGO conclusion, though it rests on a contested first-wave finding.
+
+The simulation ordering in Table~\ref{tab:bracket} is provisional. Strong-end amplitudes were never quoted. Thirteen first-wave findings remained contested, including the physics statements, the FLAMINGO $S_8$ conclusion and the joint WL+SZ results. The full-text reading was partial (selected character ranges), and the SP(k) and IllustrisTNG papers were not read.
+
+\section{Conclusions}
+\paragraph{Established in the session (verbatim-supported).}
+\begin{itemize}
+\item OWLS AGN gives $S\approx0.90$ at $k\approx1$ and $\approx0.70$ at $k\approx10\,h\,{\rm Mpc}^{-1}$, with $k(1\%)\approx0.3\,h\,{\rm Mpc}^{-1}$.
+\item X-ray-calibrated BCemu gives 21--28\% maximum suppression at $k\sim7\,h\,{\rm Mpc}^{-1}$ (68\% CL).
+\item The FLAMINGO fiducial minimum is at $k=10\,h\,{\rm Mpc}^{-1}$ at $z=0$, and its strong variants map to cosmo-OWLS 8.3/8.5.
+\item Astrid shows no significant $z=0$ suppression.
+\item Reconciling shear with Planck requires $A_{\rm mod}=0.69\pm0.06$ (KiDS) and $0.858\pm0.052$ (DES Y3), more than BAHAMAS ($A_{\rm mod}\approx0.9$) provides.
+\end{itemize}
+
+\paragraph{Not established.}
+\begin{itemize}
+\item any emulator-computed $S(k)$ at named parameter points;
+\item $S(k=1)$ and $S_{\min}$ for the FLAMINGO strong variants;
+\item a fractional $C_\ell$ change at $\ell\sim500$--$5000$;
+\item a re-verified FLAMINGO $S_8$ conclusion.
+\end{itemize}
+
+\paragraph{Remaining directions raised by the session.} The two blocked directions remain open:
+\begin{enumerate}
+\item Evaluate $S(k,z=0)$ at a weak and a strong parameter point with an emulator the team has (BCemu, BACCO, SP(k)/pyspk or the FLAMINGO emulator), or by digitising the published curves. Report $S_{\min}$, $k_{\min}$, $k(1\%)$, $S(k=1)$ and $S(k=5)$.
+\item Fill the strong end of the bracket with $S(k=1)$ and $S_{\min}$ for the FLAMINGO jet and $f_{\rm gas}-8\sigma$ models, from Figs.~5, 6, 11 and 13 of arXiv:2410.17109.
+\end{enumerate}
+
+\section*{References}
+\begin{itemize}
+\item arXiv:1104.1174 --- The effects of galaxy formation on the matter power spectrum: A challenge for precision cosmology. M. P. van Daalen, J. Schaye, C. M. Booth, C. Dalla Vecchia.
+\item arXiv:1105.1075 --- Quantifying the effect of baryon physics on weak lensing tomography. E. Semboloni, H. Hoekstra, J. Schaye, M. P. van Daalen, I. G. McCarthy.
+\item arXiv:1510.06034 --- A new method to quantify the effects of baryons on the matter power spectrum. A. Schneider, R. Teyssier.
+\item arXiv:1801.08559 --- The impact of baryons on the matter power spectrum from the Horizon-AGN cosmological hydrodynamical simulation. N. E. Chisari et al.
+\item arXiv:1906.00968 --- Exploring the effects of galaxy formation on matter clustering through a library of simulation power spectra. M. P. van Daalen, I. G. McCarthy, J. Schaye.
+\item arXiv:2011.15018 --- The BACCO Simulation Project: A baryonification emulator with Neural Networks. G. Aricò et al.
+\item arXiv:2108.08863 --- Emulation of baryonic effects on the matter power spectrum and constraints from galaxy cluster data. S. K. Giri, A. Schneider.
+\item arXiv:2109.04458 --- Joint constraints on cosmology and the impact of baryon feedback: combining KiDS-1000 lensing with the thermal Sunyaev-Zeldovich effect from Planck and ACT. T. Tröster et al.
+\item arXiv:2203.07128 --- Dark Energy Survey Year 3 results: cosmological constraints from the analysis of cosmic shear in harmonic space. C. Doux et al.
+\item arXiv:2206.11794 --- A non-linear solution to the $S_8$ tension? A. Amon, G. Efstathiou.
+\item arXiv:2305.09710 --- SP(k) - A hydrodynamical simulation-based model for the impact of baryon physics on the non-linear matter power spectrum.
+\item arXiv:2305.09827 --- A non-linear solution to the $S_8$ tension II: Analysis of DES Year 3 cosmic shear. C. Preston, A. Amon, G. Efstathiou.
+\item arXiv:2309.06479 --- The contribution of massive haloes to the matter power spectrum in the presence of AGN feedback. M. L. van Loon, M. P. van Daalen.
+\item arXiv:2309.07959 --- The FLAMINGO project: revisiting the $S_8$ tension and the role of baryonic physics. I. G. McCarthy et al.
+\item arXiv:2403.12967 --- The FLAMINGO project: the coupling between baryonic feedback and cosmology in light of the $S_8$ tension. W. Elbers et al.
+\item arXiv:2404.06098 --- Weak lensing combined with the kinetic Sunyaev Zel'dovich effect: A study of baryonic feedback. L. Bigwood et al.
+\item arXiv:2410.17109 --- The FLAMINGO project: Baryon effects on the matter power spectrum. M. Schaller, J. Schaye, R. Kugel, J. C. Broxterman, M. P. van Daalen.
+\item arXiv:2511.10634 --- IllustrisTNG halo-mass decomposition (title not recorded in the session).
+\item arXiv:2605.04176 --- Matter Clustering in Astrid: Reduced Baryonic Suppression from Realistic Black Hole Dynamics. Y. Yang, S. Bird, Y. Zhou, T. Di Matteo, R. Croft, Y. Ni, N. Chen.
+\end{itemize}
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/ramp-research-baryonic-pk}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}ramp-research-baryonic-pk}}.
+The session produced 12 data files; the supplement lists them.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}
