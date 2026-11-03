@@ -835,3 +835,8 @@ DESC_TXPIPE_ENV unset — environmental, expected on this host).
 
 - transcript: runs/2026-11-02-spark-deep-1030-research/cases/R3-report.out
 
+
+## 2026-11-02-spark-deep-research-deep — 6 pass / 0 flagged
+
+Clean run — no flags.
+

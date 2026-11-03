@@ -1,0 +1,196 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},frame=single,
+  framerule=0.3pt,rulecolor=\color{gray!60},columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,xleftmargin=4pt,xrightmargin=4pt,
+  literate={\_}{{\_}}1}
+\graphicspath{{figures/}}
+\providecommand{\tightlist}{}
+\title{Sterile Neutrino Dark Matter: Joint BBN and X-ray Constraints 2024--2026}
+\author{HEP-Genesis-Agent session record \\ \small Project: ramp-research-sterile-bbn-xray}
+\date{2026-11-02}
+\begin{document}
+\maketitle
+\noindent\textit{\small This document is an AI-generated account of an interactive session with the HEP-Genesis agent. Its text was written by a language model strictly from the session record; figures and numbers come only from tool results obtained during the session. The supplementary material and the transcript, generated alongside, document exactly what ran. Verify independently before use.}
+\vspace{1em}
+
+\begin{abstract}
+A multi-wave survey of 2024--2026 arXiv work on keV sterile-neutrino dark matter was combined with direct calculations from a sterile-neutrino BBN/X-ray bridge server. BBN observables $Y_{p}$, D/H and $\Delta N_{\rm eff}$ were computed over $m_{s}=1$~eV to 100~keV and $\sin^{2}2\theta=10^{-15}$ to $10^{-1}$ for Dodelson--Widrow (DW) and Shi--Fuller (SF) mechanisms, together with radiative decay predictions $E_{\gamma}=m_{s}/2$, $\Gamma$ and lifetime. The server baselines $Y_{p}=0.2449\pm0.004$, D/H$=2.547\pm0.025\times10^{-5}$, $N_{\rm eff,CMB}=2.99\pm0.17$ give a BBN 95\% limit $\Delta N_{\rm eff}<0.548$ ($\Delta\chi^{2}>3.84$). BBN alone allows all keV DW points at X-ray relevant mixings, while built-in NuSTAR M31 and XMM blank-sky limits exclude DW $\Omega_{s}h^{2}=0.12$ at $m_{s}=6$--20~keV. Non-minimal production with large lepton asymmetry $L\gtrsim0.5$--1 at $T>20$~MeV or inflaton-decay branching ratio $\lesssim10^{-4}$ is required to reach the dark-matter abundance at $\sin^{2}2\theta\lesssim10^{-12}$--$10^{-14}$ where X-ray limits weaken. Structure-formation bounds $m_{\rm th}>6.5$~keV (satellites) and $>6.1$~keV (lensing) translate via $m_{s}=4.43$~keV$(m_{\rm th}/{\rm keV})^{4/3}$ to $m_{s}>53.7$~keV and $>49$~keV for DW, but are colder for resonant and reheating production. The DW normalization in the server is a factor $\sim12$ below the published Abazajian 2017 fit, shifting the $\Omega_{s}h^{2}=0.12$ contour. No 2024--2026 eROSITA or INTEGRAL/SPI primary line-search paper was retrieved; several X-ray and BBN robustness checks remained incomplete due to tool-budget exhaustion and DNS failures.
+\end{abstract}
+
+\section{Introduction}
+The session addressed a single overarching question posed repeatedly with evolving emphasis: survey recent arXiv work from 2024 to 2026 on sterile-neutrino dark matter and combine BBN constraints computed with the sterile-nu tools with X-ray decay-line constraints to map viable $(m_{s},\sin^{2}2\theta)$ regions per production mechanism, including structure-formation bounds.
+
+The initial request required using the sterile-neutrino server to compute $Y_{p}$, D/H and $\Delta N_{\rm eff}$ together with relic-density constraints across the $(m_{s},\sin^{2}2\theta)$ plane, quantifying X-ray line energies and fluxes and comparing them with 2024--2026 limits from NuSTAR, INTEGRAL/SPI, Chandra, eROSITA and XRISM, surveying production-mechanism literature on Shi--Fuller resonant production with lepton asymmetry, reheating production and scalar decays, and synthesizing a per-mechanism viability table with provenance and robustness checks. Subsequent continuations narrowed the focus to the two weakest claims identified by the research board: the quantitative X-ray limit table at $m_{s}=7.1,10,20,40,50$~keV and the production-mechanism/structure-formation mapping, including the factor $\sim10$--$17$ DW relic-density normalization dispute and the Viel et al. $m_{\rm th}\to m_{s}$ translation, and to BBN robustness under different $Y_{p}$/D/H baselines and thermalization fractions. Later waves explicitly requested deepening the BBN $L$-dependence and the X-ray exclusion of DW-motivated dark matter versus alternative production and field-of-view systematics, and verification of 2024--2026 $m_{\rm th}$ bounds. The scope remained keV sterile neutrinos as warm/cold dark matter, with eV-scale cross-checks for the BEST short-baseline anomaly, and explicitly excluded MeV+ heavy neutral leptons where decay injection is not modeled.
+
+\section{Methods}
+All quantitative BBN and X-ray numbers were produced with the Sterile Neutrino $\to$ BBN/X-ray Bridge Server via \texttt{serve-sbbn.sh} on local dispatch, complemented by \texttt{hep-research-aid} and \texttt{local} web and arXiv search tools. The server provides two skills, of which \texttt{sterile-nu-bbn-constraints} was loaded. BBN abundances are from a fit to PRyMordial calibrated to $<0.3\%$, with the only BBN input being $\Delta N_{\rm eff}$. The fit is valid for $N_{\rm eff}$ in $[2.044,6.044]$, $\omega_{b}h^{2}$ in $[0.019,0.0257]$ and $\tau_{n}$ in $[866.4,890.4]$~s, and for $m_{s}\lesssim100$~keV where the sterile is relativistic at BBN. For $m_{s}\gtrsim1$~MeV the server flags \texttt{bbn\_treatment\_valid=false} and decay-product injection is not modeled. Exclusion is $\Delta\chi^{2}>3.84$ versus the Standard Model at 95\% for one degree of freedom. Observational baselines adopted by the server are $Y_{p}=0.2449\pm0.004$ from Aver, Olive and Skillman JCAP 07 (2021) 029, D/H$=2.547\pm0.025\times10^{-5}$ from Cooke, Pettini and Steidel ApJ 855 (2018) 102, $N_{\rm eff,CMB}=2.99\pm0.17$ from Planck 2018 TT,TE,EE+lowE+lensing+BAO, and CMB-S4 forecast $3.044\pm0.03$, with Standard Model $N_{\rm eff}=3.044$, $Y_{p}=0.24682$, D/H$=2.4433\times10^{-5}$ and $\chi^{2}=2.77$ at the null. Mechanisms are DW non-resonant and SF resonant, where SF $\Delta N_{\rm eff}$ is a heuristic $0.1\times$ DW and lepton asymmetry $L$ is capped at $0.1$ with no $\xi_{e}$ modeling. X-ray limits in the server are ten tabulated NuSTAR/XMM limits across five targets (Perseus, M31, Milky Way center, Coma, stacked galaxies) including NuSTAR M31 Roach et al. 2020 and XMM blank-sky Dessert et al. 2020, evaluated for whole-halo $f_{\rm DM}=1$ with no field-of-view cut. Radiative decay follows $\Gamma=1.38\times10^{-32}\,{\rm s^{-1}}\,(\sin^{2}2\theta/10^{-10})(m_{s}/{\rm keV})^{5}$, equivalently $\Gamma=1.38\times10^{-29}\,{\rm s^{-1}}\,(\sin^{2}2\theta/10^{-7})(m_{s}/{\rm keV})^{5}$, with $E_{\gamma}=m_{s}/2$.
+
+Computations executed included \texttt{predict\_sterile\_nu} at single points, \texttt{predict\_sterile\_nu\_grid} over masses $[1,3,7.1,10,20,50,100]$~keV and mixings $10^{-15}$ to $10^{-6}$ and over $1$~eV to 100~keV $\times10^{-13}$ to $0.1$, \texttt{predict\_sterile\_nu\_xray\_line} for $E_{\gamma}$, $\Gamma$, lifetime and fluxes, \texttt{scan\_sterile\_nu\_parameters} for 400 to 10000 point scans, \texttt{check\_sterile\_nu\_sbl\_anomaly} for the BEST point, and \texttt{plot\_sterile\_nu\_bbn\_impact} and \texttt{plot\_sterile\_nu\_exclusion} for BBN versus $N_{\rm eff}$ and exclusion-plane figures. Literature searches used \texttt{search\_arxiv\_abstracts}, \texttt{search\_arxiv}, \texttt{get\_arxiv\_metadata}, \texttt{download\_arxiv\_full\_text}, \texttt{read\_arxiv\_chunk}, \texttt{web\_search}, \texttt{get\_paper\_figures} and \texttt{cite}. The supplement holds the full tool-call log and code.
+
+\section{Results}
+\subsection{BBN and relic-density allowed region}
+The server null ($\sin^{2}2\theta\to0$) predicts $Y_{p}=0.24682$, D/H$\times10^{5}=2.4433$, $N_{\rm eff}=3.0440$, $\chi^{2}=2.77$, $\Delta\chi^{2}=0$, which is $+0.48\sigma$ high in $Y_{p}$ and $-4.15\sigma$ low in D/H versus the server baselines, but allowed at 95\% ($\Delta\chi^{2}<3.84$). Versus the brief baselines $Y_{p}=0.245\pm0.003$, D/H$=2.53\pm0.03\times10^{-5}$ the offsets are $+0.61\sigma$ and $-2.89\sigma$. The offset between brief and server baselines is $0.0001$ in $Y_{p}$ ($0.025\sigma$) and $0.047\times10^{-5}$ in D/H ($1.88\sigma$ on the server error). Linearized slopes about the Standard Model are $dY_{p}/dN_{\rm eff}=0.01351$ and $d{\rm D/H}_{5}/dN_{\rm eff}=0.3308$, where ${\rm D/H}_{5}={\rm D/H}\times10^{5}$. The BBN 95\% limit from $Y_{p}$/D/H alone is $\Delta N_{\rm eff}<0.548$ ($\Delta\chi^{2}$ versus Standard Model $>3.84$), quoted also as $<0.55$ and $<0.61$ depending on baseline and whether $\Delta\chi^{2}$ is versus Standard Model or best fit. A fully thermalized sterile with $N_{\rm eff}=4.044$ ($\Delta N_{\rm eff}=1$) predicts $Y_{p}=0.25956$ and D/H$=2.7769\times10^{-5}$, $3.7\sigma$ above $Y_{p}$, with $\Delta\chi^{2}=23.1$ excluded. Planck $N_{\rm eff}=2.99\pm0.17$ gives $\Delta N_{\rm eff}<0.33$ at $1\sigma$ and $<0.61$ at 95\% (approximately $2\sigma$), comparable to BBN, while CMB-S4 $\sigma=0.03$ will give $\Delta N_{\rm eff}<0.06$.
+
+Figure~\ref{fig:57} shows the BBN impact versus $N_{\rm eff}$ with observed $Y_{p}$ and D/H bands and the 95\% limit.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-57.png}
+\caption{bbn\_vs\_neff.png Produced in this session by \texttt{plot\_sterile\_nu\_bbn\_impact} on \textit{serve-sbbn.sh}.}
+\label{fig:57}
+\end{figure}
+
+
+
+The figure displays $Y_{p}$ and D/H as functions of $N_{\rm eff}$ with the server baselines overplotted, illustrating the slopes above and that the Standard Model point lies within the $Y_{p}$ band but low in D/H, with the $\Delta N_{\rm eff}<0.548$ bound set by the combined $\chi^{2}$.
+
+DW grids demonstrate that BBN excludes only large mixings. A 7 mass $\times10$ mixing grid at $1,3,7.1,10,20,50,100$~keV $\times10^{-15}$ to $10^{-6}$ gave 12/70 BBN-excluded ($\Delta\chi^{2}>3.84$) and 31/70 overclosing ($\Omega_{s}h^{2}>0.12$), with e.g. $1$~keV/$10^{-6}$ giving $\Delta N_{\rm eff}=1.0$, $\Omega_{s}h^{2}=13.84$, $\Delta\chi^{2}=23.1$ excluded, while $7.1$~keV/$10^{-10}$ gives $\Delta N_{\rm eff}=6.2\times10^{-4}$, $\Omega_{s}h^{2}=0.047$ allowed. A 6400-point scan $1$--100~keV $\times10^{-15}$--$10^{-6}$ gave 862/6400 BBN-excluded and 2752/6400 overclosing, with BBN 95\% upper limit $\sin^{2}2\theta_{\rm max}$ falling from $3.5\times10^{-7}$ at $1$~keV to $8.9\times10^{-9}$ at 100~keV (intermediate $1.23\times10^{-7}$ at $3.6$~keV, $7.26\times10^{-8}$ at $6.85$~keV, $4.29\times10^{-8}$ at $13.8$~keV, $2.54\times10^{-8}$ at $26.2$~keV, $1.5\times10^{-8}$ at $49.7$~keV). A 169-point grid $1$~eV--100~keV $\times10^{-13}$--$0.1$ gave 70 BBN-excluded and 93 overclosing, with a 10000-point scan giving 3907/10000 BBN-excluded and 5125/10000 overclosing, and $\sin^{2}2\theta_{\rm max}$ from $1.15\times10^{-3}$ at $1$~eV to $9.3\times10^{-9}$ at 100~keV ($1.5\times10^{-7}$ at $3.4$~keV, $3.8\times10^{-8}$ at $17.5$~keV). A 400-point $1$--100~keV $\times10^{-15}$--$10^{-6}$ scan gave 59/400 BBN-excluded and 172/400 overclosing, with $\sin^{2}2\theta_{\rm max}$ from $3.36\times10^{-7}$ at $1$~keV to $4.28\times10^{-9}$ at 100~keV. A 143-point $1$~eV--100~keV $\times10^{-13}$--$0.1$ grid gave 65 BBN-excluded and 89 overclosing. At keV masses relevant to X-ray searches, BBN allows all points with $\sin^{2}2\theta\lesssim10^{-10}$: e.g. $7.1$~keV/$10^{-10}$ $\Delta N_{\rm eff}=0.0006185$, $\Omega_{s}h^{2}=0.04715$, $\Delta\chi^{2}=-0.01$ allowed; $10$~keV/$10^{-10}$ $\Delta N_{\rm eff}=8.1\times10^{-4}$, $\Omega_{s}h^{2}=0.087$ allowed; $20$~keV/$10^{-10}$ $\Delta N_{\rm eff}=0.001416$, $\Omega_{s}h^{2}=0.3041$ overcloses but BBN allowed; $50$~keV/$10^{-10}$ $\Delta N_{\rm eff}=0.00295$, $\Omega_{s}h^{2}=1.58$ overcloses but BBN allowed. A 21-point $5$--70~keV $\times10^{-12}$--$10^{-10}$ grid gave 0/21 BBN-excluded and 7/21 overclosing, with $\Delta N_{\rm eff}=4.7\times10^{-6}$ to $0.0039$. Varying $\omega_{b}h^{2}$ from $0.019$ to $0.0257$ at fixed $N_{\rm eff}=3.044$ shifts $Y_{p}$ $0.24525\to0.24824$ and D/H $3.1843\to1.9422\times10^{-5}$ with absolute $\chi^{2}$ $96.12\to87.27$ versus $2.77$ at fiducial $0.02237$, while $\tau_{n}$ $866.4\to890.4$~s shifts $Y_{p}$ $0.24433\to0.24930$, demonstrating baseline dependence of absolute $\chi^{2}$ but robustness of $\Delta\chi^{2}>3.84$.
+
+The BEST short-baseline best fit $\Delta m^{2}=1.3$~eV$^{2}$, $\sin^{2}2\theta=0.42$, $m_{s}\approx1.14$~eV gives $\Delta N_{\rm eff}=1.0$, $N_{\rm eff}=4.044$, $Y_{p}=0.25956$, D/H$=2.7769\times10^{-5}$, $\Delta\chi^{2}_{\rm BBN}=23.10$ excluded at 95\%, $\Omega_{s}h^{2}=29.3$ overclosing, in $6.2\sigma$ tension with Planck $N_{\rm eff}=2.99\pm0.17$ and $33\sigma$ with CMB-S4 $\sigma=0.03$. The server eV partial thermalization is crude, giving $\Delta N_{\rm eff}=0.40$ at $1$~eV$^{2}$, $10^{-3}$ versus full quantum kinetic $0.93$.
+
+Figure~\ref{fig:62} shows the exclusion plane from a DW scan.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-62.png}
+\caption{exclusion\_scan\_DW\_9d1baf.png Produced in this session by \texttt{plot\_sterile\_nu\_exclusion} on \textit{serve-sbbn.sh}.}
+\label{fig:62}
+\end{figure}
+
+
+
+The figure plots BBN-excluded points ($\Delta\chi^{2}>3.84$) and overclosing points ($\Omega_{s}h^{2}>0.12$) in the $(m_{s},\sin^{2}2\theta)$ plane, with the BBN boundary lying one to two orders of magnitude above the $\Omega_{s}h^{2}=0.12$ contour at keV masses, confirming that overclosure is the binding BBN-related bound for DW.
+
+\subsection{X-ray radiative decay constraints}
+The decay-rate formula was verified to $1$--$2\%$ against the server: at $7.1$~keV/$7\times10^{-11}$ predicted $1.74\times10^{-28}$~s$^{-1}$ versus tool $1.72\times10^{-28}$~s$^{-1}$ ($1.3\%$), at $7.1$~keV/$10^{-10}$ $2.49\times10^{-28}$ versus $2.46\times10^{-28}$ ($1.2\%$), at $10$~keV/$10^{-10}$ $1.38\times10^{-27}$ versus $1.36\times10^{-27}$ ($1.4\%$). Benchmarks for five masses at three mixings give $E_{\gamma}=m_{s}/2=3.55,5,10,20,25$~keV, $\Gamma=2.46\times10^{-28}$ ($7.1$~keV), $1.36\times10^{-27}$ ($10$~keV), $4.36\times10^{-26}$ ($20$~keV), $1.39\times10^{-24}$ ($40$~keV), $4.25\times10^{-24}$~s$^{-1}$ ($50$~keV) at $\sin^{2}2\theta=10^{-10}$, scaling as $(m_{s}/{\rm keV})^{5}$, with lifetimes $4.07\times10^{27}$ to $2.35\times10^{23}$~s at $10^{-10}$, $4.07\times10^{29}$ to $2.35\times10^{25}$~s at $10^{-12}$, and $4.07\times10^{31}$ to $2.35\times10^{27}$~s at $10^{-14}$. DW relic densities at $10^{-10}$ are $\Omega_{s}h^{2}=0.047$ ($7.1$~keV), $0.087$ ($10$~keV), $0.304$ ($20$~keV overcloses), $1.06$ ($40$~keV overcloses), $1.58$ ($50$~keV overcloses), with $\Delta N_{\rm eff}=0.0006$--$0.0029$ and $\Delta\chi^{2}<0$ (no BBN exclusion) for all fifteen points.
+
+Built-in X-ray checks give: $7.1$~keV/$7\times10^{-11}$ ($E=3.55$~keV, $\tau=5.82\times10^{27}$~s, whole-halo fluxes $3.28$~ph\,s$^{-1}$cm$^{-2}$ Milky Way center, $4.8\times10^{-4}$ M31, $2.5\times10^{-5}$ Perseus) excluded by NuSTAR M31 Roach et al. 2020 and XMM blank-sky Dessert et al. 2020; $10$~keV/$10^{-10}$ ($E=5$~keV, $\tau=7.35\times10^{26}$~s, Perseus $1.4\times10^{-4}$) excluded; $20$~keV/$10^{-10}$ ($E=10$~keV, $\tau=2.30\times10^{25}$~s, Perseus $2.24\times10^{-3}$) excluded; $40$~keV/$10^{-10}$ ($E=20$~keV, $\tau=7.18\times10^{23}$~s, Perseus $3.58\times10^{-2}$) and $50$~keV/$10^{-10}$ ($E=25$~keV, $\tau=2.35\times10^{23}$~s, Perseus $8.74\times10^{-2}$) not excluded by tabulated limits within $30\%$ mass. At $\sin^{2}2\theta=10^{-12}$ all masses are BBN-allowed and not overclosing ($\Omega_{s}h^{2}=0.00047$--$0.0158$) with lifetimes $4.07\times10^{29}$ to $2.35\times10^{25}$~s, requiring external limits. Contrasting high-mass points $40$~keV/$3\times10^{-14}$ ($E=20$~keV, $\Gamma=4.18\times10^{-28}$~s$^{-1}$, $\tau=2.39\times10^{27}$~s, $7.58\times10^{19}$~yr) and $10$~keV/$10^{-12}$ ($E=5$~keV, $\Gamma=1.36\times10^{-29}$~s$^{-1}$, $\tau=7.35\times10^{28}$~s) are not excluded by built-in limits, confirming BBN negligible at low mixing where X-ray/SPI dominates. At small mixing the X-ray ceiling is mass-dependent: $7.1$~keV/$10^{-12}$ ($E=3.55$~keV, $\tau=4.07\times10^{29}$~s, M31 $6.9\times10^{-6}$) not excluded, while $20$~keV/$10^{-12}$ ($E=10$~keV, $\tau=2.30\times10^{27}$~s, M31 $4.3\times10^{-4}$) remains excluded by NuSTAR M31 even at $10^{-12}$, and $40$~keV/$10^{-14}$ ($E=20$~keV, $\tau=7.18\times10^{27}$~s) not excluded. The DW $\Omega_{s}h^{2}=0.12$ line at $6,7.1,10,20$~keV requires $\sin^{2}2\theta\sim3.4\times10^{-10},2.5\times10^{-10},1.4\times10^{-10},3.9\times10^{-11}$ (server) and is excluded by built-in limits at $6$--20~keV, while at $40$~keV ($1.1\times10^{-11}$, $E=20$~keV, $\tau=6.35\times10^{24}$~s) it is not excluded by tabulated limits but overcloses at $10^{-10}$.
+
+External literature limits were only partially quantified. A contested finding from arXiv:2510.24560 states XRISM Resolve stacked $3.75$~Ms of ten galaxy clusters over $2.5$--15~keV rest frame found no unidentified lines, with $3\sigma$ upper limit $\Gamma\sim1.0\times10^{-27}$~s$^{-1}$ at $m_{s}\sim7.1$~keV ($E=3.55$~keV), $3$--$4$ times stronger than Hitomi Perseus but $5$ times above the Bulbul et al. 2014 XMM detection, converting to $\sin^{2}2\theta\lesssim4\times10^{-10}$ (XRISM alone) via the server rate $2.46\times10^{-28}$~s$^{-1}$ at $10^{-10}$. A contested finding from arXiv:2405.17861 states Krivonos et al. use 11~years of NuSTAR stray-light data on the Milky Way to set 95\% CL upper limits on $\sin^{2}2\theta$ for $m_{s}\sim6$--40~keV (photon $3$--20~keV), plotted in their Fig.~3 over $10^{-15}$ to $10^{-10}$, reaching the bottom edge of realistic production models, with $\Gamma=1.36\times10^{-22}(m_{s}/{\rm keV})^{5}\sin^{2}2\theta$~s$^{-1}$ ($1.4\%$ below $1.38\times10^{-32}$ normalized form). The server rate agrees to $\sim1.5\%$.
+
+Figure~\ref{fig:39} shows the NuSTAR stray-light limits.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-39.png}
+\caption{Figure 1: 95\% upper limits on sin\textasciicircum{}\{2\}(2\textbackslash{}theta) derived from the NuSTAR unfocused stray light spectrum for reference profile [15] along with some previous constraints [9, NuSTAR 2020, 2023:], [16, XMM 2021:] and updated theoretical lower bounds [17, 18, 19]. Note that the borderline excess at 40 keV is the known instrumental effect caused by absorbed stray light [20, 21, 22]. [arXiv:2405.17861] Reproduced from arXiv:2405.17861 (extracted with \texttt{get\_paper\_figures}).}
+\label{fig:39}
+\end{figure}
+
+
+
+The figure presents 95\% upper limits on $\sin^{2}2\theta$ versus $m_{s}$ from the NuSTAR unfocused stray-light spectrum at $|b|>3^{\circ}$ (117~Ms per FPM) together with previous NuSTAR 2020, 2023 and XMM 2021 constraints and theoretical lower bounds, with a borderline excess at 40~keV noted as an instrumental absorbed stray-light effect. Extracted from arXiv:2405.17861.
+
+Figure~\ref{fig:44} shows X-ray line detections versus constraints.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-44.png}
+\caption{Figure 7: X-ray line detections consistent with sterile neutrino dark matter are shown here. The dark colored regions are 1,2 and 3 \textbackslash{}sigma from the MOS (blue) and PN (red) stacked clusters by Bulbul et al. [29], the Bulbul et al. core-removed Perseus cluster (green), and M31 (orange) from Boyarsky et al. [30]. Also shown are the 1 and 2 \textbackslash{}sigma regions of the detection in the Galactic Center (GC) [210] as well as the \textgreater{}\textbackslash{}!2\textbackslash{}sigma line detections in 1. Abell 85; 2. Abell 2199; 3. Abell 496 (MOS); 4. Abell 496 (PN); 5. Abell 3266; 6. Abell S805; 7. Coma; 8. Abell 2319; 9. Perseus by Iakubovskyi et  [arXiv:1705.01837] Reproduced from arXiv:1705.01837 (extracted with \texttt{get\_paper\_figures}).}
+\label{fig:44}
+\end{figure}
+
+
+
+The figure displays $1,2,3\sigma$ regions for the 3.55~keV line from MOS (blue) and PN (red) stacked clusters, Perseus core-removed (green), M31 (orange) and Galactic Center, versus 90\% constraints from Chandra M31, stacked dwarfs and Suzaku Perseus. Extracted from arXiv:1705.01837.
+
+\subsection{Production mechanisms and structure formation}
+Four arXiv identifiers were verified as real papers: arXiv:2507.18752 (Vogel, Garcia Escudero, Froustey, Abazajian 2025, Shi--Fuller revival), arXiv:2502.17374 (Gorbunov, Kalashnikov, Krugan 2025, flavor-dependent asymmetry), arXiv:2601.03346 (Cline and Xu 2026, reheating/inflaton-decay with branching ratio $\lesssim10^{-4}$) and arXiv:2609.31340 (Gorbunov and Kalashnikov 2026, saturation at high flavor asymmetry). A contested finding from the full text of arXiv:2507.18752 states $L\gtrsim0.5$ at high temperature opens viable space at $m_{s}\gtrsim10$~keV and $\sin^{2}2\theta\lesssim10^{-14}$, compatible with NuSTAR $\sin^{2}2\theta\lesssim10^{-12}$ at $6$--40~keV and INTEGRAL/SPI $\sin^{2}2\theta\lesssim3\times10^{-14}$ for $m_{s}\gtrsim40$~keV (lifetimes $\lesssim10^{20}$~s excluded), with structure bounds $m_{\rm th}>8.4$~keV (galaxy counts, 95\% CL), $>8.5$~keV (counts+strong lensing) and Lyman-alpha preference $m_{\rm th}=4.1^{+33.3}_{-1.5}$~keV. The server cannot test this claim: its SF mode caps $L$ at $0.1$, its SF $\Delta N_{\rm eff}$ is heuristic $0.1\times$ DW, and asymmetry is not fed into the BBN network. At $10,20,30$~keV with $\sin^{2}2\theta=10^{-14}$ it gives $\Delta N_{\rm eff}\sim10^{-8}$ and $\Delta\chi^{2}=0$ allowed, with $Y_{p}=0.24682$, D/H$=2.4433\times10^{-5}$ at $20$~keV, while SF $\Omega_{s}h^{2}$ values are $0.122,0.490,1.10$ for $L=10^{-3}$ and $1.22,4.90,11.0$ for $L=0.1$, all flagged overclosing, demonstrating the heuristic does not capture resonant enhancement.
+
+DW versus SF BBN contrast is stark: same $(m_{s},\sin^{2}2\theta)$ points BBN-excluded under DW become allowed under SF heuristic. For $m_{s}=7100$~eV, $\sin^{2}2\theta=10^{-7}$, DW gives $\Delta N_{\rm eff}=0.6185$, $\Delta\chi^{2}=5.89$ excluded versus SF $0.06185$, $\Delta\chi^{2}=-0.66$ not excluded; for $100$~eV, $10^{-5}$, DW $1.0$ excluded versus $0.1$ not excluded. In a 24-point eV--keV grid $14/24$ DW points are BBN-excluded ($\Delta N_{\rm eff}$ up to $1.0$, $\Delta\chi^{2}=23.1$) versus $0/24$ SF points at $L=0.01$ and $0.1$. At $20$~keV/$10^{-14}$ DW $\Delta N_{\rm eff}=1.42\times10^{-7}$, $\Omega_{s}h^{2}=3.04\times10^{-5}$ allowed versus SF $1.42\times10^{-8}$, $\Omega_{s}h^{2}=4.90$ overcloses by $40\times$; at $50$~keV/$10^{-14}$ DW $1.58\times10^{-4}$ versus SF $30.6$ overcloses by $255\times$. At $10,20,30$~keV/$10^{-14}$ SF gives $\Delta N_{\rm eff}=8.1\times10^{-9},1.42\times10^{-8},1.96\times10^{-8}$ allowed but $\Omega_{s}h^{2}=1.22,4.90,11.0$ overclosing, while DW gives $8.1\times10^{-8}$, $8.7\times10^{-6}$ allowed. The server SF $L$ cap $0.1$ therefore cannot test the $L>0.5$ viable region where recent BBN analyses allow $L>1$ at $T>20$~MeV and washout before BBN reopens parameter space.
+
+For DW at small mixing $\sin^{2}2\theta=10^{-12}$ to $10^{-14}$, $\Omega_{s}h^{2}\ll0.12$ (e.g. $3.5\times10^{-4}$ at $6$~keV/$10^{-12}$ down to $10^{-4}$ at $40$~keV/$10^{-12}$, $3.5\times10^{-6}$ at $6$~keV/$10^{-14}$), so DW cannot make dark matter at X-ray allowed mixing; SF resonant with $L\sim0.1$--1 or inflaton-decay with branching ratio $\lesssim10^{-4}$ is required. Web snippets confirm inflaton-decay produces cold sterile dark matter during reheating at vanishing mixing, probing $T_{\rm RH}$, and that NuSTAR Galactic bulge $190$~ks at $\sim10^{\circ}$ off-plane provides complementary limits to M31 $1.2$~Ms.
+
+Structure-formation bounds from 2024--2026 snippets give thermal-relic $m_{\rm th}>6.5$~keV (Milky Way satellites DES+PS1, Nadler et al. 2024), $>6.1$~keV (strong lensing, 2024) and Lyman-alpha $m_{\rm th}\sim5$--$5.7$~keV. Via the Viel et al. DW mapping $m_{s}=4.43$~keV$(m_{\rm th}/{\rm keV})^{4/3}$ this requires DW $m_{s}>53.7$~keV (satellites), $>49$~keV (lensing), $>29$--$41$~keV (Lyman-alpha $4.1$--$5.3$~keV), consistent with earlier $>28$--$48$~keV (Lyman-alpha) and $>76$~keV (satellites $8.4$--$8.5$~keV, giving $>76$~keV and $>78$~keV). SF resonant and inflaton-decay production are colder (lower $\langle p\rangle/T$ by $\sim1.5$--$3\times$), so same $m_{s}$ corresponds to larger effective $m_{\rm th}$ and bounds shift down, reopening $m_{s}\sim10$--20~keV at $\sin^{2}2\theta<10^{-12}$ where X-ray limits also weaken.
+
+Figure~\ref{fig:45} shows the warm dark matter transfer function.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-45.png}
+\caption{Figure 1: The WDM transfer function T(k) defined in equation (4) for various models (all with the same cosmological parameters \textbackslash{}Omega\_\{\textbackslash{}mathrm\{B\}\}\textbackslash{}!=\textbackslash{}!0.05, \textbackslash{}Omega\_\{\textbackslash{}mathrm\{DM\}\}\textbackslash{}!=\textbackslash{}!0.25, \textbackslash{}Omega\_\{\textbackslash{}Lambda\}\textbackslash{}!=\textbackslash{}!0.70). (a) Pure \textbackslash{}LambdaWDM model with, from left to right, T\_\{x\}/T\_\{\textbackslash{}nu\}=0.5,0.3,0.25,0.226,0.2, corresponding to m\_\{x\}=92,427,738,1000,1441\textbackslash{},\textbackslash{}mathrm\{eV\}. The solid curves are obtained numerically, the long--dashed curves (essentially indistinguishable from the solid curves) show the analytical fits based on equation (7), the short--dashed curves those based on Ref. [7]. (b) Mixed \textbackslash{}LambdaCW [arXiv:astro-ph/0501562] Produced in this session by \texttt{get\_paper\_figures} on \textit{hep-research-aid}.}
+\label{fig:45}
+\end{figure}
+
+
+
+The figure displays the WDM transfer function $T(k)$ for pure $\Lambda$WDM with $T_{x}/T_{\nu}=0.5,0.3,0.25,0.226,0.2$ corresponding to $m_{x}=92,427,738,1000,1441$~eV and for mixed $\Lambda$CWDM models, with numerical curves and analytical fits. Extracted from arXiv:astro-ph/0501562.
+
+Figure~\ref{fig:47} shows the flux power spectrum suppression.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-47.png}
+\caption{Figure 2: Fractional difference of the flux power spectrum for a hydro-dynamical simulation of a \textbackslash{}LambdaWDM model and the flux power spectrum for a \textbackslash{}LambdaCDM model. The simulations have a box size of 30 h\textasciicircum{}\{-1\} Mpc and 2003 gas and 2003 dark matter particles. The results are for three different redshifts (z=4,3,2.5, respectively from left to right) and for five different values of the (thermal WDM) particle mass: 0.5 keV (thick dotted), 1 keV (thin dashed), 2 keV (thin dotted), 4 keV (thick dashed) and 8 keV (continuous). The diamonds show the results for a simulation with a WDM particle of ma [arXiv:astro-ph/0501562] Produced in this session by \texttt{get\_paper\_figures} on \textit{hep-research-aid}.}
+\label{fig:47}
+\end{figure}
+
+
+
+The figure shows fractional difference of flux power spectrum for $\Lambda$WDM versus $\Lambda$CDM at $z=4,3,2.5$ for thermal masses $0.5,1,2,4,8$~keV, illustrating increasing suppression at small scales for lighter masses. Extracted from arXiv:astro-ph/0501562.
+
+Figure~\ref{fig:48} shows the bias function.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.6\textheight,keepaspectratio]{fig-48.png}
+\caption{Figure 3: Bias function b\textasciicircum{}\{2\}(k) between the flux power spectrum and the linear dark matter power spectrum, P\_\{F\}(k)=b\textasciicircum{}\{2\}(k)\textbackslash{},P(k), for two cosmological models: \textbackslash{}LambdaCDM (diamonds) and \textbackslash{}LambdaWDM (squares), with a (thermal WDM) particle mass m\_\{\textbackslash{}rm WDM\}=1 keV. The simulation has a boxsize of 60 comoving h\textasciicircum{}\{-1\}Mpc and 2\textbackslash{}times 400\textasciicircum{}\{3\} (gas and dark matter) particles (see Section III.2 for further details on other simulation parameters). The shaded area indicates the range of wavenumbers used in our analysis. [arXiv:astro-ph/0501562] Produced in this session by \texttt{get\_paper\_figures} on \textit{hep-research-aid}.}
+\label{fig:48}
+\end{figure}
+
+
+
+The figure plots bias $b^{2}(k)$ between flux power spectrum and linear matter power spectrum for $\Lambda$CDM and $\Lambda$WDM with $m_{\rm WDM}=1$~keV, with shaded analysis range. Extracted from arXiv:astro-ph/0501562.
+
+\subsection{Normalization and robustness}
+The server DW relic density scales as $\Omega_{s}h^{2}=0.1\,(\sin^{2}2\theta/10^{-9})(m_{s}/3~{\rm keV})^{1.8}$, verified by $3$~keV/$10^{-9}\to0.100$, $10$~keV/$10^{-9}\to0.873$ (ratio $8.73=(10/3)^{1.8}$), but normalization is $3\times$ higher than the brief $0.1\,(\sin^{2}2\theta/3\times10^{-9})(m_{s}/3~{\rm keV})^{1.8}$. The published Abazajian 2017 review arXiv:1705.01837 Eq.~37 fit $m_{s}\sim3.40$~keV$(\sin^{2}2\theta/10^{-8})^{-0.615}(\Omega_{\rm DM}/0.26)^{0.5}\times0.527\,{\rm erfc}[-1.15\,(T_{\rm QCD}/170~{\rm MeV})^{2.15}]$ inverts to $\sin^{2}2\theta\sim1.23\times10^{-8}$ ($3$~keV), $3.0\times10^{-9}$ ($7.1$~keV), $1.73\times10^{-9}$ ($10$~keV), $5.6\times10^{-10}$ ($20$~keV), $1.26\times10^{-10}$ ($50$~keV) for $\Omega_{s}h^{2}=0.12$, while the server gives $1.2\times10^{-9},2.55\times10^{-10},1.37\times10^{-10},3.9\times10^{-11},7.6\times10^{-12}$, a factor $10\times$ ($3$~keV) to $17\times$ ($50$~keV) lower mixing. Equivalently $\Omega_{s}h^{2}\approx1.4\times10^{7}(m_{s}/1~{\rm keV})^{1.8}\sin^{2}2\theta$ in the server versus $1.74\times10^{8}(m_{s}/1~{\rm keV})^{1.8}\sin^{2}2\theta$ in Abazajian, factor $\sim12.4$. At $7.1$~keV/$7\times10^{-11}$ server $\Omega_{s}h^{2}=0.033$ versus $0.42$ expected, shifting the $\Omega_{s}h^{2}=0.12$ contour to $\sim12\times$ larger mixing. A contested finding notes that at $7.1$~keV the DW verdict versus XRISM $\sin^{2}2\theta\lesssim4\times10^{-10}$ depends on normalization: server line $2.55\times10^{-10}$ survives XRISM, while brief $7.65\times10^{-10}$ and published $3.0\times10^{-9}$ are excluded by $\sim7.5\times$.
+
+BBN robustness checks using linearized slopes about server Standard Model values give 95\% upper bounds $\Delta N_{\rm eff}<0.32$ ($Y_{p}$-only), $<0.58$ [$0.44$ versus best fit] (D/H-only), $<0.47$ [$0.37$] combined for brief data, and $<0.46$, $<0.66$ [$0.46$], $<0.61$ [$0.43$] for server data, with server tool reporting $0.548$. D/H alone prefers $\Delta N_{\rm eff}=0.26$ (brief) and the server notes $dY_{p}/d\xi_{e}\sim-0.25$ for joint $(\Delta N_{\rm eff},\xi_{e})$ bounds, but no emulator call probes $L>0.5$ where $\xi_{e}\sim0.01$--$0.06$ could compensate $\Delta N_{\rm eff}\sim0.5$--$1.0$.
+
+\section{Discussion}
+The combined BBN and X-ray analysis establishes a clear hierarchy: BBN alone is not binding for keV DW dark matter at X-ray relevant mixings, with $\Delta N_{\rm eff}\ll0.548$ and $|\Delta\chi^{2}_{\rm BBN}|<0.15$ along the $\Omega_{s}h^{2}=0.12$ contour, while overclosure and X-ray non-detections are binding. The DW $\Omega_{s}h^{2}=0.12$ line lies at $\sin^{2}2\theta\sim10^{-10}$--$10^{-11}$ (server) or $\sim10^{-9}$--$10^{-10}$ (published), both above NuSTAR $\lesssim10^{-12}$ at $6$--40~keV and SPI $\lesssim3\times10^{-14}$ above $40$~keV, and above XRISM $\Gamma\sim10^{-27}$~s$^{-1}$ ($\sin^{2}2\theta\lesssim4\times10^{-11}$--$4\times10^{-10}$ at $7.1$~keV depending on conversion). Structure formation then requires $m_{s}>28$--$76$~keV for DW, where X-ray limits are strongest, leaving no surviving DW all-dark-matter interval. This agrees with the literature consensus that minimal DW is essentially excluded and that non-standard production is required.
+
+Tensions and limitations are dominated by incomplete external validation. Several findings remain contested because verbatim quotes or figure readings were not obtained: the $L\gtrsim0.5$ opening of $m_{s}\gtrsim10$~keV, $\sin^{2}2\theta\lesssim10^{-14}$ (arXiv:2507.18752), the XRISM $3\sigma$ $\Gamma\sim10^{-27}$~s$^{-1}$ limit (arXiv:2510.24560), and the NuSTAR $6$--40~keV $\sin^{2}2\theta\lesssim10^{-12}$ and SPI $\lesssim3\times10^{-14}$ ceilings. The server SF heuristic ($0.1\times$ DW, $L\le0.1$, no $\xi_{e}$) is unphysical at $L=0.1$ (overclosing by $40$--$255\times$ at $10^{-14}$) and cannot test the $L>0.5$--1 regime where recent BBN analyses allow $L>1$ at $T>20$~MeV to wash out before BBN. The DW normalization offset factor $\sim12$ means server-based DW statements are not conservative; using the published normalization, DW at $7.1$~keV is excluded by XRISM alone.
+
+Dead ends observed include: searches for 2024--2026 eROSITA and INTEGRAL/SPI line limits returned only older or unrelated papers (1505.07829, 1702.08430, muon capture, 2008 heating); targeted INTEGRAL/SPI searches at $m_{s}\ge40$~keV returned no primary 2024+ source, leaving the SPI entry reliant on the arXiv:2507.18752 quote; web searches for XRISM and NuSTAR suffered DNS resolution failures for \texttt{wt.wikipedia.org.cels.anl.gov}; tool budget exhaustion prevented \texttt{read\_arxiv\_chunk}, \texttt{cite}, \texttt{get\_paper\_figures} and additional \texttt{predict\_sterile\_nu\_xray\_line} calls, so no verbatim Abazajian Eq.~37 or Viel coefficient quotes, no numerically read NuSTAR Fig.~3 observed versus expected limits at $7,10,20,40$~keV, no XRISM Fig.~3, no INTEGRAL/SPI primary (Boyarsky diffuse, Roach SPI) to resolve the $50$~keV lifetime mismatch (tool $\tau=7.84\times10^{26}$~s at $3\times10^{-14}$ versus quoted $10^{20}$~s), no corrected five-row X-ray limit table with provenance per mass, no per-mechanism viability table with Viel translation at $7.1/10/20/50$~keV, no exclusion-plane plot distinguishing tool-internal versus literature limits with $\Omega=0.12$ overlay, and no robustness reruns varying $\omega_{b}h^{2}$ and $\tau_{n}$. The critic verdicts reflected this: initial plans were marked revise, subsequent waves continue with contested findings, and final reports were marked revise until the last wave was marked ok.
+
+\section{Conclusions}
+Established with high confidence from server calculations is that BBN allows keV sterile-neutrino dark matter at $\sin^{2}2\theta\le10^{-10}$ ($\Delta N_{\rm eff}=6\times10^{-5}$ to $2.9\times10^{-3}$, $\Delta\chi^{2}<0$), that DW overclosure is $40\times$ to $5000\times$ stronger than BBN at $1$--100~keV, that the radiative decay rate follows $\Gamma=1.38\times10^{-32}$~s$^{-1}(\sin^{2}2\theta/10^{-10})(m_{s}/{\rm keV})^{5}$ to $1$--$2\%$, and that built-in X-ray limits exclude $7.1$~keV/$7\times10^{-11}$, $10$~keV/$10^{-10}$ and $20$~keV/$10^{-10}$ while $40$--$50$~keV/$10^{-10}$ are not excluded by tabulated limits but overclose. The eV BEST point is BBN-excluded ($\Delta\chi^{2}=23.1$) and overcloses. Viable dark matter at X-ray allowed mixings $\sin^{2}2\theta\lesssim10^{-12}$--$10^{-14}$ requires non-minimal production: SF resonant with $L\gtrsim0.5$--1 at $T>20$~MeV (arXiv:2507.18752, arXiv:2512.00793), flavor-dependent asymmetries (arXiv:2502.17374), reheating/inflaton-decay with branching ratio $\lesssim10^{-4}$ (arXiv:2601.03346, arXiv:2601.02069), nuSMEFT freeze-in (arXiv:2409.08968) or time-dependent mass (arXiv:2502.13123), which are colder and relax structure-formation bounds.
+
+What remained open is the quantitative external X-ray limit table with primary figure numbers and verbatim quotes, the factor $\sim12$ DW normalization provenance with Abazajian Eq.~37 text, the Viel $m_{s}=4.43$~keV$(m_{\rm th}/{\rm keV})^{4/3}$ coefficient verbatim, and the joint BBN+X-ray exclusion overlay distinguishing BBN versus built-in versus literature limits.
+
+Ranked open directions as listed by the board are:
+\begin{enumerate}
+\item Deepen
+
+\section*{Data and code availability}
+All outputs of this session are collected in the project folder \href{file:///Users/nramachandra/hep-genesis-testing/projects/ramp-research-sterile-bbn-xray}{\texttt{/\allowbreak{}Users/\allowbreak{}nramachandra/\allowbreak{}hep-genesis-testing/\allowbreak{}projects/\allowbreak{}ramp-research-sterile-bbn-xray}}.
+The session produced 45 data files; the supplement lists them.
+Full documentation of how these results were obtained is in the supplementary material (\texttt{supplement.pdf}: implementation details, the tool-call log, the research board with every finding and its evidence, figures not shown here, and the code index) and the verbatim transcript (\texttt{transcript.pdf}), generated alongside this report.
+
+
+\end{document}
