@@ -24,6 +24,10 @@ def slugify(s, maxlen=60):
     return re.sub(r"[^a-zA-Z0-9]+", "-", s.strip().lower()).strip("-")[:maxlen].rstrip("-") or "untitled"
 
 def main():
+    DEDUP_MODE = (BASE / "papers/.dedup_per_project").exists()
+    if DEDUP_MODE:
+        print("[papers] dedup mode: keeping only latest report per experiment (project)")
+
     tracked = subprocess.run(
         ["git", "-C", str(BASE), "ls-files", "projects/*/reports/*/bundle.json"],
         capture_output=True, text=True
@@ -65,7 +69,7 @@ def main():
         if len(stem) > 180:
             stem = stem[:180].rstrip("-")
 
-        produced_pdfs.add(f"{stem}.pdf")
+            # Defer dedup until after manifest is built — mark but still collect        produced_pdfs.add(f"{stem}.pdf")
         produced_supp_dirs.add(stem)
 
         # Copy main report (force overwrite so re-reports update)
@@ -100,6 +104,25 @@ def main():
             "source": str(report_dir.relative_to(BASE)),
             "supplementary": f"supplementary/{stem}/",
         })
+
+    # Deduplicate: keep only latest timestamp per project (experiment)
+    if DEDUP_MODE:
+        from collections import defaultdict
+        by_proj = defaultdict(list)
+        for m in manifest:
+            by_proj[m["project"]].append(m)
+        deduped = []
+        dropped_stems = set()
+        for proj, lst in by_proj.items():
+            latest = max(lst, key=lambda x: x["timestamp"])
+            deduped.append(latest)
+            for m in lst:
+                if m is not latest:
+                    dropped_stems.add(m["filename"][:-4])
+                    print(f"[papers] dedup drop {m['project']}/{m['timestamp']} -> {m['filename']}")
+        manifest = deduped
+        produced_pdfs = {m["filename"] for m in manifest}
+        produced_supp_dirs = {m["filename"][:-4] for m in manifest}
 
     # Prune stale PDFs/supplementary dirs no longer in manifest
     for existing in PAPERS.glob("*.pdf"):

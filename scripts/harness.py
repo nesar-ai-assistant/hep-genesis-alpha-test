@@ -231,6 +231,12 @@ def server_specs():
         "IDM": f"command:{SCR}/serve-idm.sh",
         "HYD": f"command:{SCR}/serve-hydro.sh",
         "DOM": "module:hep_genesis.domain.mcp_server",
+        # cosmo-*-mcp-server family (github.com/nesar-ai-assistant, 2026-11)
+        "SN": f"command:{SCR}/serve-sn.sh",
+        "GAL": f"command:{SCR}/serve-galaxy.sh",
+        "CMB": f"command:{SCR}/serve-cmb.sh",
+        "WL": f"command:{SCR}/serve-wl.sh",
+        "CLU": f"command:{SCR}/serve-clusters.sh",
     }
 
 
@@ -271,6 +277,32 @@ def research_topics():
              query=("Survey recent work on hydrostatic mass bias in galaxy clusters. Use the hydrodynamics emulator "
                     "to predict CGD (gas density) and CTP (temperature) profiles at two redshifts and discuss how "
                     "profile shape evolution affects mass reconstruction.")),
+        # cosmo-*-mcp-server family (public survey data + fits)
+        dict(slug="h0-s8-tensions", title="H0 and S8 tensions across CMB, weak lensing and SNe",
+             server_key="CMB",
+             query=("Survey the 2024-2026 status of the H0 and S8 tensions. Use the CMB data tools to get Planck/ACT/SPT "
+                    "parameter constraints and the comparison whisker; quantify tensions in sigma and discuss "
+                    "systematics vs new-physics explanations.")),
+        dict(slug="desi-dark-energy", title="DESI BAO + SNe evidence for evolving dark energy",
+             server_key="GAL",
+             query=("Survey the DESI DR1/DR2 evolving dark energy claims. Use the BAO tools to fit LCDM and w0waCDM to "
+                    "DESI DR2 BAO (with CMB/SN priors as Gaussians) and report Om, h*rd, w0, wa; discuss how robust "
+                    "the preference for w0>-1, wa<0 is.")),
+        dict(slug="sn-cosmology-samples", title="Pantheon+ vs DES-SN5YR vs Union3 cosmology",
+             server_key="SN",
+             query=("Survey recent work on the consistency of SN Ia compilations. Use the SN tools to fit flat LCDM and "
+                    "wCDM to Pantheon+, DES-SN5YR and Union3; quantify differences and discuss calibration/selection "
+                    "systematics (incl. the DES Dovekie recalibration).")),
+        dict(slug="wl-s8", title="Cosmic shear S8 across DES, KiDS, HSC",
+             server_key="WL",
+             query=("Survey the weak-lensing S8 tension (2023-2026, incl. KiDS-Legacy). Use the weak-lensing tools to "
+                    "derive S8 from public DES Y3, KiDS-1000/Legacy chains and compare with Planck; discuss baryonic "
+                    "feedback and intrinsic alignments as explanations.")),
+        dict(slug="cluster-counts", title="SZ and X-ray cluster counts vs LCDM",
+             server_key="CLU",
+             query=("Survey recent cluster-count cosmology (SPT, ACT DR6, eROSITA eRASS1). Use the cluster tools to "
+                    "crossmatch catalogs, compare mass calibrations, and predict LCDM counts vs observed; discuss "
+                    "the sigma8 implications and hydrostatic mass bias.")),
     ]
 
 
@@ -485,6 +517,34 @@ def build_cases(env, run_dir: Path, profile: str = "core"):
             desc="DESC multi-family chain in one conversation", timeout=1500))
         return cases
 
+    if profile == "cosmo":
+        # cosmo-*-mcp-server family: one tour+physics check per server, then a multi-server case
+        Sx = server_specs()
+        def q(cid, srv, chat, prompt, desc, timeout=900):
+            cases.append(dict(id=cid, mode="quick",
+                              args=f'--quick "{prompt}" --servers {Sx[srv]} --project ramp-cosmo --chat {chat}',
+                              desc=desc, timeout=timeout))
+        q("K1-sn", "SN", "sn", "Fit flat LCDM to Pantheon+ with fit_sn_cosmology (z>0.01) and plot the Hubble diagram. "
+          "Report Om +/- sigma [expect 0.33 +/- 0.02].", "SN: Pantheon+ Om")
+        q("K2-bao", "GAL", "bao", "Fit LCDM to DESI DR2 BAO with fit_bao_cosmology and plot the distance diagram. "
+          "Report Om and h*rd [expect 0.297, 101.5 Mpc].", "BAO: DESI DR2 Om, h*rd")
+        q("K3-gswlc", "GAL", "gal", "Load the sdss-gswlc-main-sequence skill and follow it: query GSWLC-A2 and plot the "
+          "star-forming main sequence; report the median logSFR at logM*=10.", "GSWLC main sequence via skill", 1200)
+        q("K4-cmb", "CMB", "cmb", "Plot Planck/ACT/SPT TT spectra against the Planck best fit and analyze the Planck 2018 "
+          "chain: report H0, Om, sigma8 [expect 67.36, 0.315, 0.811].", "CMB: spectra + chain", 1200)
+        q("K5-wl", "WL", "wl", "Compare S8 from DES Y3 and KiDS-1000 public chains with Planck (compare_s8_constraints); "
+          "report each S8 and tension in sigma [expect 0.776, 0.76].", "WL: S8 tension", 1200)
+        q("K6-clusters", "CLU", "clu", "Fetch Planck PSZ2 and eRASS1, plot the mass-redshift plane, and predict LCDM "
+          "counts for PSZ2 above 5e14 Msun. Report catalogue sizes [expect 1653, 12247].", "Clusters: M-z + counts", 1200)
+        q("K7-dispatch", "SN", "sn", "Call auth_status and get_dispatch, then export_dispatch_pack and list the kernel "
+          "function names and pip_deps (do not print file contents).", "Dispatch contract (no submit)", 300)
+        cases.append(dict(id="K8-multi", mode="quick",
+            args=('--quick "Combine probes: fit flat LCDM Om from Pantheon+ (SN tools) and DESI DR2 BAO (galaxy tools), '
+                  'compare with Planck 2018 Om from the CMB chain, and summarize agreement in sigma." '
+                  f'--servers {Sx["SN"]} --servers {Sx["GAL"]} --servers {Sx["CMB"]} --project ramp-cosmo --chat multi'),
+            desc="SN+BAO+CMB Om consistency (3 servers)", timeout=1800))
+        return cases
+
     if profile == "features":
         # find an existing research project for board/run listing (created by
         # the research/combo batteries on previous runs)
@@ -637,7 +697,7 @@ def append_issues(run_id, metas):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--profile", default="core",
-                    choices=["smoke", "core", "research", "research-deep", "combo", "features", "desc"])
+                    choices=["smoke", "core", "research", "research-deep", "combo", "features", "desc", "cosmo"])
     ap.add_argument("--date-suffix", default=None,
                     help="e.g. 'am' to make runs/2026-10-16-am-core/'")
     ap.add_argument("--chat-suffix", default=None,
