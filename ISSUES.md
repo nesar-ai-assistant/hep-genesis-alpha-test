@@ -840,3 +840,8 @@ DESC_TXPIPE_ENV unset — environmental, expected on this host).
 
 Clean run — no flags.
 
+
+## 2026-11-07-rerun-1107-research-deep — 6 pass / 0 flagged
+
+Clean run — no flags.
+
