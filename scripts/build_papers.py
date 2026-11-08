@@ -33,6 +33,10 @@ def main():
         capture_output=True, text=True
     ).stdout.splitlines()
 
+    # Prefer timestamped reports over the CLI's reports/latest rolling alias —
+    # exclude `latest` from the papers/ view so timestamped history stays addressable,
+    # and deduplicate to newest timestamp per project upstream.
+    tracked = [t for t in tracked if not t.endswith("/latest/bundle.json")]
     if not tracked:
         print("[papers] no tracked reports found — nothing to do")
         return
@@ -49,7 +53,17 @@ def main():
         project = report_dir.parent.parent.name
         ts = report_dir.name
         m = re.match(r"(\d{2})(\d{2})(\d{2})_", ts)
-        date = f"20{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else "unknown-date"
+        if m:
+            date = f"20{m.group(1)}-{m.group(2)}-{m.group(3)}"
+        elif ts == "latest":
+            # CLI v0.4.6 writes reports/latest as a rolling symlink — infer date from bundle or mtime
+            try:
+                ca = (json.loads((report_dir / "bundle.json").read_text()).get("created_at") or "")[:10]
+                date = ca if re.match(r"20\d{2}-\d{2}-\d{2}", ca) else __import__("datetime").datetime.fromtimestamp(report_dir.stat().st_mtime).strftime("%Y-%m-%d")
+            except Exception:
+                date = __import__("datetime").datetime.fromtimestamp(report_dir.stat().st_mtime).strftime("%Y-%m-%d")
+        else:
+            date = "unknown-date"
 
         try:
             bundle = json.loads(bundle_path.read_text())
